@@ -190,6 +190,52 @@ namespace Chatterino.Common
             }
         }
 
+        public void LoadSubBadges(int RoomID)
+        {
+            try
+            {
+                var request =
+                WebRequest.Create($"https://badges.twitch.tv/v1/badges/channels/{RoomID}/display");
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                request.Proxy = null;
+                }
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    var parser = new JsonParser();
+
+                    dynamic json = parser.Parse(stream);
+
+                    dynamic badgeSets = json["badge_sets"];
+                    dynamic subscriber = badgeSets["subscriber"];
+                    dynamic versions = subscriber["versions"];
+
+                    foreach (var version in versions)
+                    {
+                        int months = int.Parse(version.Key);
+
+                        dynamic value = version.Value;
+
+                        string imageUrl = value["image_url_1x"];
+                        string title = value["title"];
+                        string description = value["description"];
+                        string clickUrl = value["click_url"];
+
+                        SubscriberBadges[months] = new LazyLoadedImage
+                        {
+                            Name = title,
+                            Url = imageUrl,
+                            Tooltip = "Subscriber Badge" + (months == 0 ? "" : $" ({months} months)")
+                        };
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
         public bool IsBroadcaster
         {
             get
@@ -272,7 +318,7 @@ namespace Chatterino.Common
                 Join();
 
                 ReloadEmotes();
-
+                GuiEngine.Current.LoadBadges();
                 // recent chat
                 Task.Run(() =>
                 {
@@ -280,48 +326,8 @@ namespace Chatterino.Common
 
                     if (RoomID != -1)
                     {
-                        try
-                        {
-                            var request =
-                                WebRequest.Create($"https://badges.twitch.tv/v1/badges/channels/{RoomID}/display");
-                            if (AppSettings.IgnoreSystemProxy)
-                            {
-                                request.Proxy = null;
-                            }
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                var parser = new JsonParser();
-
-                                dynamic json = parser.Parse(stream);
-
-                                dynamic badgeSets = json["badge_sets"];
-                                dynamic subscriber = badgeSets["subscriber"];
-                                dynamic versions = subscriber["versions"];
-
-                                foreach (var version in versions)
-                                {
-                                    int months = int.Parse(version.Key);
-
-                                    dynamic value = version.Value;
-
-                                    string imageUrl = value["image_url_1x"];
-                                    string title = value["title"];
-                                    string description = value["description"];
-                                    string clickUrl = value["click_url"];
-
-                                    SubscriberBadges[months] = new LazyLoadedImage
-                                    {
-                                        Name = title,
-                                        Url = imageUrl,
-                                        Tooltip = "Subscriber Badge" + (months == 0 ? "" : $" ({months} months)")
-                                    };
-                                }
-                            }
-                        }
-                        catch
-                        {
-                        }
+                        
+                        LoadSubBadges(RoomID);
 
                         try
                         {
@@ -641,18 +647,16 @@ namespace Chatterino.Common
         {
             var usernames = new List<KeyValuePair<string, string>>();
 
-            var commaAtEnd = firstWord ? "," : "";
-
             if (AppSettings.ChatMentionUsersWithAt)
             {
-                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value) + commaAtEnd)));
-                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>((allowAt ? "@" : "") + x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value) + commaAtEnd)));
+                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
+                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>((allowAt ? "@" : "") + x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
             }
             else
             {
-                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value) + commaAtEnd)));
+                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
                 if (allowAt)
-                    usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>("@" + x.Key, "@" + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value) + commaAtEnd)));
+                    usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>("@" + x.Key, "@" + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
             }
 
             lock (Commands.CustomCommandsLock)
@@ -946,7 +950,10 @@ namespace Chatterino.Common
 
             var bttvChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"bttv_channel_{channelName}");
             var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{channelName}");
-
+            if (RoomID != -1)
+            {
+                LoadSubBadges(RoomID);
+            }
             // bttv channel emotes
             Task.Run(() =>
             {

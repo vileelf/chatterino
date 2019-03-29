@@ -316,9 +316,32 @@ namespace Chatterino.Common
             if (data.Tags.TryGetValue("badges", out value))
             {
                 var badges = value.Split(',');
-
+                LazyLoadedImage image;
                 foreach (var badge in badges)
                 {
+                    if (badge.StartsWith("subscriber/"))
+                    {
+                        try
+                        {
+                            var n = int.Parse(badge.Substring("subscriber/".Length));
+
+                            Badges |= MessageBadges.Sub;
+                            image = channel.GetSubscriberBadge(n);
+                            if (image!=null) {
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip });
+                            } else {
+                                image = GuiEngine.Current.GetBadge(badge);
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                            }
+                        }
+                        catch { }
+                    } else {
+						image = GuiEngine.Current.GetBadge(badge);
+						if (image != null) {
+							words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+						}
+					}
+/*
                     if (badge.StartsWith("bits/"))
                     {
                         int cheer;
@@ -402,18 +425,7 @@ namespace Chatterino.Common
                             words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(image) { Scale = cheer > 100000 ? 0.25 : 1 }, Tooltip = "Twitch Cheer " + cheer });
                         }
                     }
-                    else if (badge.StartsWith("subscriber/"))
-                    {
-                        try
-                        {
-                            var n = int.Parse(badge.Substring("subscriber/".Length));
-
-                            Badges |= MessageBadges.Sub;
-                            var e = channel.GetSubscriberBadge(n);
-                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = e, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = e.Tooltip });
-                        }
-                        catch { }
-                    }
+                    else 
                     else
                     {
                         switch (badge)
@@ -458,7 +470,7 @@ namespace Chatterino.Common
                                 words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeVerified)), Tooltip = "Twitch Verified" });
                                 break;
                         }
-                    }
+                    }*/
                 }
             }
 

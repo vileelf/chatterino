@@ -28,9 +28,10 @@ namespace Chatterino.Common
         void HandleLink(Link link);
         void PlaySound(NotificationSound sound, bool forceCustom = false);
         object GetImage(ImageType type);
+        LazyLoadedImage GetBadge(String badge);
         void HandleAnimatedTwitchEmote(LazyLoadedImage emote, object image);
         void FlashTaskbar();
-
+        void LoadBadges();
         object ReadImageFromStream(Stream stream);
         object ScaleImage(object image, double scale);
         object DrawImageBackground(object image, HSLColor color);

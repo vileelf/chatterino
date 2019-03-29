@@ -20,7 +20,7 @@ namespace Chatterino.Common
         public Margin Margin { get; set; } = null;
 
         public string Tooltip { get; set; } = null;
-
+        public string click_url {get; set; } = null;
         public bool IsDanke = false;
 
         bool loading = false;
