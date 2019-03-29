@@ -32,6 +32,7 @@ namespace Chatterino.Common
         void HandleAnimatedTwitchEmote(LazyLoadedImage emote, object image);
         void FlashTaskbar();
         void LoadBadges();
+        void log(string log);
         object ReadImageFromStream(Stream stream);
         object ScaleImage(object image, double scale);
         object DrawImageBackground(object image, HSLColor color);

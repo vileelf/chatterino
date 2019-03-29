@@ -323,7 +323,7 @@ namespace Chatterino.Common
                     {
                         try
                         {
-                            var n = int.Parse(badge.Substring("subscriber/".Length));
+                            int n = int.Parse(badge.Substring("subscriber/".Length));
 
                             Badges |= MessageBadges.Sub;
                             image = channel.GetSubscriberBadge(n);
@@ -331,16 +331,34 @@ namespace Chatterino.Common
                                 words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip });
                             } else {
                                 image = GuiEngine.Current.GetBadge(badge);
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                                if (image != null) {
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                                }
                             }
                         }
                         catch { }
+                    } else if (badge.Equals("moderator/1") && channel.ModeratorBadge != null) {
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip });
+                    } else if (badge.StartsWith("bits/")) {
+                        try {
+                            int n = int.Parse(badge.Substring("bits/".Length));
+
+                            image = channel.GetCheerBadge(n);
+                            if (image!=null) {
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                            } else {
+                                image = GuiEngine.Current.GetBadge(badge);
+                                if (image != null) {
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                                }
+                            }
+                        } catch {}
                     } else {
-						image = GuiEngine.Current.GetBadge(badge);
-						if (image != null) {
-							words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
-						}
-					}
+                        image = GuiEngine.Current.GetBadge(badge);
+                        if (image != null) {
+                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
+                        }
+                    }
 /*
                     if (badge.StartsWith("bits/"))
                     {

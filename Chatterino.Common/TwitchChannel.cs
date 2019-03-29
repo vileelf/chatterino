@@ -107,7 +107,8 @@ namespace Chatterino.Common
         }
 
         public ConcurrentDictionary<int, LazyLoadedImage> SubscriberBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
-
+        public ConcurrentDictionary<int, LazyLoadedImage> CheerBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
+        
         public LazyLoadedImage GetSubscriberBadge(int months)
         {
             LazyLoadedImage emote;
@@ -116,11 +117,22 @@ namespace Chatterino.Common
             {
                 return emote;
             }
-
-            return SubscriberBadge;
+            GuiEngine.Current.log("sub "+months);
+            return null;
         }
 
+        public LazyLoadedImage GetCheerBadge(int cheer)
+        {
+            LazyLoadedImage emote;
 
+            if (CheerBadges.TryGetValue(cheer, out emote))
+            {
+                return emote;
+            }
+
+            return null;
+        }
+        
         // Moderator Badge
         public LazyLoadedImage ModeratorBadge { get; private set; } = null;
 
@@ -208,31 +220,54 @@ namespace Chatterino.Common
                     dynamic json = parser.Parse(stream);
 
                     dynamic badgeSets = json["badge_sets"];
-                    dynamic subscriber = badgeSets["subscriber"];
-                    dynamic versions = subscriber["versions"];
-
-                    foreach (var version in versions)
-                    {
-                        int months = int.Parse(version.Key);
-
-                        dynamic value = version.Value;
-
-                        string imageUrl = value["image_url_1x"];
-                        string title = value["title"];
-                        string description = value["description"];
-                        string clickUrl = value["click_url"];
-
-                        SubscriberBadges[months] = new LazyLoadedImage
+                    if (badgeSets.ContainsKey("subscriber")) {
+                        dynamic subscriber = badgeSets["subscriber"];
+                        dynamic versions = subscriber["versions"];
+                        
+                        foreach (var version in versions)
                         {
-                            Name = title,
-                            Url = imageUrl,
-                            Tooltip = "Subscriber Badge" + (months == 0 ? "" : $" ({months} months)")
-                        };
+                            int months = int.Parse(version.Key);
+
+                            dynamic value = version.Value;
+
+                            string imageUrl = value["image_url_1x"];
+                            string title = value["title"];
+                            string description = value["description"];
+                            string clickUrl = value["click_url"];
+
+                            SubscriberBadges.TryAdd(months, new LazyLoadedImage
+                            {
+                                Name = title,
+                                Url = imageUrl,
+                                Tooltip = title
+                            });
+                        }
+                    }
+                    if (badgeSets.ContainsKey("bits")) {
+                        dynamic bits = badgeSets["bits"];
+                        dynamic bitversions = bits["versions"];
+                        foreach (var version in bitversions) {
+                            int cheer = int.Parse(version.Key);
+                            dynamic value = version.Value;
+                            string imageUrl = value["image_url_1x"];
+                            string title = value["title"];
+                            string description = value["description"];
+                            string clickUrl = value["click_url"];
+                            
+                            CheerBadges.TryAdd(cheer, new LazyLoadedImage
+                            {
+                                Name = title,
+                                Url = imageUrl,
+                                Tooltip = title,
+                                click_url = clickUrl
+                            });
+                        }
                     }
                 }
             }
-            catch
+            catch ( Exception e)
             {
+                GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
             }
         }
 

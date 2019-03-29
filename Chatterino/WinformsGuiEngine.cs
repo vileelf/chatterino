@@ -21,6 +21,8 @@ namespace Chatterino
 {
     public class WinformsGuiEngine : IGuiEngine
     {
+        private bool debug = false;
+
         public WinformsGuiEngine()
         {
             AppSettings.FontChanged += (s, e) =>
@@ -29,7 +31,7 @@ namespace Chatterino
                 dwSizeCaches.Clear();
             };
         }
-
+        
         // LINKS
         public void HandleLink(Link _link)
         {
@@ -327,11 +329,13 @@ namespace Chatterino
 
         Dictionary<string, LazyLoadedImage> badges = new Dictionary<string, LazyLoadedImage>();
 
-        private void log(string text)
+        public void log(string text)
         {
-            StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
-            file.WriteLine(text);
-            file.Close();
+            if (debug) {
+                StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
+                file.WriteLine(text);
+                file.Close();
+            }
         }
 
         public void LoadBadges()
