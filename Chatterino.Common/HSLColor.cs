@@ -51,6 +51,11 @@ namespace Chatterino.Common
             return $"H: {Hue:#0.##} S: {Saturation:#0.##} L: {Luminosity:#0.##}";
         }
 
+        public static HSLColor FromRGBHex(string hexstring) {
+            int rgb = int.Parse(hexstring.Substring(1), System.Globalization.NumberStyles.HexNumber);
+            return FromRGB(rgb);
+        }
+
         public static HSLColor FromRGB(float red, float green, float blue)
         {
             var r = red;

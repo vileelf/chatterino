@@ -15,6 +15,7 @@ namespace Chatterino.Common
 
         public static void LoadGlobalBadges()
         {
+            return;
             // fourtf badges
             Task.Run(() =>
             {

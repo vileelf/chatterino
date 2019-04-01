@@ -635,49 +635,34 @@ namespace Chatterino.Common
                         //        });
                         //    }
                         //}
-
-                        if (bits != null && Regex.IsMatch(s, "cheer[1-9][0-9]*"))
+                        Match m = Regex.Match(s, "(\\w+)([1-9][0-9]*)");
+                        if (bits != null && m.Success)
                         {
-                            int cheer;
-
-                            if (int.TryParse(s.Substring("cheer".Length), out cheer))
-                            {
-                                string color = null;
-
-                                HSLColor bitsColor;
-
-                                if (cheer >= 10000)
+                            try{
+                                int cheer;
+                                string prefix = m.Groups[1].Value;
+                                string getcheer = m.Groups[2].Value;
+                                if (int.TryParse(getcheer, out cheer))
                                 {
-                                    color = "red";
-                                    bitsColor = new HSLColor(0, 1f, 0.5f);
-                                }
-                                else if (cheer >= 5000)
-                                {
-                                    color = "blue";
-                                    bitsColor = new HSLColor(0.61f, 1f, 0.4f);
-                                }
-                                else if (cheer >= 1000)
-                                {
-                                    color = "green";
-                                    bitsColor = new HSLColor(0.5f, 1f, 0.5f);
-                                }
-                                else if (cheer >= 100)
-                                {
-                                    color = "purple";
-                                    bitsColor = new HSLColor(0.8f, 1f, 0.5f);
-                                }
-                                else
-                                {
-                                    color = "gray";
-                                    bitsColor = HSLColor.FromRGB(0.5f, 0.5f, 0.5f);
-                                }
+                                    string color;
+                                    string bitsLink;
+                                    bool found = false;
+                                    HSLColor bitsColor;
+                                    LazyLoadedImage emote;
+                                    if (!(found = channel.GetCheerEmote(prefix, cheer, !GuiEngine.Current.IsDarkTheme, out emote, out color))) {
+                                        found = GuiEngine.Current.GetCheerEmote(prefix, cheer, !GuiEngine.Current.IsDarkTheme, out emote, out color);
+                                    }
+                                    if (found) {
+                                        bitsColor = HSLColor.FromRGBHex(color);
+                                        bitsLink = emote.Url;
 
-                                var bitsLink = $"http://static-cdn.jtvnw.net/bits/{(GuiEngine.Current.IsDarkTheme ? "dark" : "light")}/animated/{color}/1";
-
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = "Twitch Bits Donation", CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
-                                words.Add(new Word { Type = SpanType.Text, Value = "x" + s.Substring(5), Font = FontType.Small, Color = bitsColor });
-
-                                continue;
+                                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = "Twitch Bits Donation", CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
+                                        words.Add(new Word { Type = SpanType.Text, Value = getcheer, Font = FontType.Small, Color = bitsColor });
+                                    }
+                                    continue;
+                                }
+                            } catch (Exception e) {
+                                GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
                             }
                         }
 

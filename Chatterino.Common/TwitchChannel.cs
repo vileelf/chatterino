@@ -108,7 +108,8 @@ namespace Chatterino.Common
 
         public ConcurrentDictionary<int, LazyLoadedImage> SubscriberBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
         public ConcurrentDictionary<int, LazyLoadedImage> CheerBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
-        
+        private ConcurrentDictionary<string, CheerEmote> ChannelCheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
+
         public LazyLoadedImage GetSubscriberBadge(int months)
         {
             LazyLoadedImage emote;
@@ -133,6 +134,24 @@ namespace Chatterino.Common
             return null;
         }
         
+        public bool GetCheerEmote(string name,int cheer, bool light, out LazyLoadedImage outemote, out string outcolor)
+        {
+            CheerEmote emote;
+            LazyLoadedImage emoteimage;
+            string color;
+            outemote = null;
+            outcolor = null;
+
+            if (ChannelCheerEmotes.TryGetValue(name.ToUpper(), out emote))
+            {
+                bool ret = emote.GetCheerEmote(cheer,light,out emoteimage,out color);
+                outemote = emoteimage;
+                outcolor = color;
+                return ret;
+            }
+            return false;
+        }
+
         // Moderator Badge
         public LazyLoadedImage ModeratorBadge { get; private set; } = null;
 
@@ -199,6 +218,99 @@ namespace Chatterino.Common
 
                 return IsMod ||
                        string.Equals(Name, IrcManager.Account.Username, StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
+        private CheerEmote JsonLoadCheerEmote(dynamic emote) {
+            CheerEmote customCheer = new CheerEmote();
+            dynamic tiers = emote["tiers"];
+            for(int j=0;j<tiers.Count;j++){
+                int min_bits = int.Parse(tiers[j]["min_bits"]);
+                bool can_use = tiers[j]["can_cheer"];
+                string bitcolor = tiers[j]["color"];
+                if(can_use){
+                    dynamic images = tiers[j]["images"];
+                    string dark = images["dark"]["animated"]["1"];
+                    string light = images["light"]["animated"]["1"];
+
+                    LazyLoadedImage lightemote = new LazyLoadedImage
+                    {
+                        Name = "cheer",
+                        Url = light,
+                        Tooltip = "Twitch Bits Donation",
+                        click_url = "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6"
+                    };
+                    LazyLoadedImage darkemote = new LazyLoadedImage
+                    {
+                        Name = "cheer",
+                        Url = dark,
+                        Tooltip = "Twitch Bits Donation",
+                        click_url = "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6"
+                    };
+                    customCheer.Add(lightemote, darkemote, min_bits, bitcolor);
+                }
+            }
+            return customCheer;
+        }
+
+        public void LoadChannelBits(int RoomID)
+        {
+            try {
+                var request =
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/v5/bits/actions/?channel_id={RoomID}");
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                request.Headers.Add("Client-ID", IrcManager.DefaultClientID);
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    JsonParser parser = new JsonParser();
+
+                    dynamic json = parser.Parse(stream);
+
+                    dynamic actions = json["actions"];
+                    bool addGlobalEmotes = true;
+                    bool cheerexists = false;
+                    string type;
+                    string prefix;
+                    for(int i=0;i<actions.Count;i++){
+                        type = actions[i]["type"];
+                        prefix = actions[i]["prefix"];
+                        if (prefix.ToUpper().Equals("CHEER")) {
+                            cheerexists = true;
+                        }
+                        if(type.Equals("channel_custom")){
+                            //this channels custom bit emote
+                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                            ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
+                        } else if(!GuiEngine.Current.globalEmotesLoaded){
+                            //global bit emote
+                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                            GuiEngine.Current.AddCheerEmote(prefix.ToUpper(), customCheer);
+                        }
+                    }
+                    if (!cheerexists) {
+                        //This is a shortcut for special channels like owl. I'm assuming all emotes are custom.
+                        for(int i=0;i<actions.Count;i++){
+                            type = actions[i]["type"];
+                            prefix = actions[i]["prefix"];
+                            //this channels custom bit emote
+                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                            ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
+                            if (!GuiEngine.Current.globalEmotesLoaded) {
+                                //unload these from global since they arnt actually global Jebaited thx twitch
+                                GuiEngine.Current.ClearCheerEmotes();
+                            }
+                        }
+                    } else {
+                        GuiEngine.Current.globalEmotesLoaded = true;
+                    }
+                }
+            } catch(Exception e){
+                GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
             }
         }
 
@@ -363,6 +475,7 @@ namespace Chatterino.Common
                     {
                         
                         LoadSubBadges(RoomID);
+                        LoadChannelBits(RoomID);
 
                         try
                         {
@@ -988,6 +1101,7 @@ namespace Chatterino.Common
             if (RoomID != -1)
             {
                 LoadSubBadges(RoomID);
+                LoadChannelBits(RoomID);
             }
             // bttv channel emotes
             Task.Run(() =>

@@ -23,6 +23,8 @@ namespace Chatterino
     {
         private bool debug = false;
 
+        public bool globalEmotesLoaded{get; set;} = false;
+
         public WinformsGuiEngine()
         {
             AppSettings.FontChanged += (s, e) =>
@@ -328,6 +330,7 @@ namespace Chatterino
         };
 
         Dictionary<string, LazyLoadedImage> badges = new Dictionary<string, LazyLoadedImage>();
+        private ConcurrentDictionary<string, CheerEmote> CheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
 
         public void log(string text)
         {
@@ -405,6 +408,33 @@ namespace Chatterino
                 LazyLoadedImage img;
                 return badges.TryGetValue(badge, out img) ? img : null;
             }
+        }
+
+        public bool GetCheerEmote(string name,int cheer, bool light, out LazyLoadedImage outemote, out string outcolor)
+        {
+            CheerEmote emote;
+            LazyLoadedImage emoteimage;
+            string color;
+            outemote = null;
+            outcolor = null;
+
+            if (CheerEmotes.TryGetValue(name.ToUpper(), out emote))
+            {
+                bool ret = emote.GetCheerEmote(cheer,light,out emoteimage,out color);
+                outemote = emoteimage;
+                outcolor = color;
+                return ret;
+            }
+            return false;
+        }
+
+        public void AddCheerEmote(string prefix, CheerEmote emote)
+        {
+            CheerEmotes.TryAdd(prefix, emote);
+        }
+
+        public void ClearCheerEmotes(){
+            CheerEmotes.Clear();
         }
 
         public CommonSize GetImageSize(object image)

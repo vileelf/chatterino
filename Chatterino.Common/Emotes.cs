@@ -116,7 +116,7 @@ namespace Chatterino.Common
                 return emote;
             };
 
-            TwitchEmotesByIDCache.TryAdd(17,
+            /*TwitchEmotesByIDCache.TryAdd(17,
                 getEmoteReplacement(17, "StoneLightning",
                     "https://fourtf.com/chatterino/emotes/replacements/StoneLightning.png"));
             TwitchEmotesByIDCache.TryAdd(18,
@@ -127,7 +127,7 @@ namespace Chatterino.Common
                 getEmoteReplacement(22, "RedCoat", "https://fourtf.com/chatterino/emotes/replacements/RedCoat.png"));
             TwitchEmotesByIDCache.TryAdd(33,
                 getEmoteReplacement(33, "DansGame", "https://fourtf.com/chatterino/emotes/replacements/DansGame.png"));
-
+            */
             twitchEmotesCodeReplacements[@"[oO](_|\.)[oO]"] = "o_O";
             twitchEmotesCodeReplacements[@"\&gt\;\("] = ">(";
             twitchEmotesCodeReplacements[@"\&lt\;3"] = "<3";

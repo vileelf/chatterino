@@ -62,6 +62,7 @@
     <Compile Include="HSLColor.cs" />
     <Compile Include="Emojis.cs" />
     <Compile Include="Emotes.cs" />
+    <Compile Include="CheerEmote.cs" />
     <Compile Include="FontType.cs" />
     <Compile Include="GuiEngine.cs" />
     <Compile Include="ImageType.cs" />

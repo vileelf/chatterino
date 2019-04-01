@@ -30,9 +30,13 @@ namespace Chatterino.Common
         object GetImage(ImageType type);
         LazyLoadedImage GetBadge(String badge);
         void HandleAnimatedTwitchEmote(LazyLoadedImage emote, object image);
+        bool GetCheerEmote(string name,int cheer, bool light, out LazyLoadedImage outemote, out string outcolor);
         void FlashTaskbar();
         void LoadBadges();
         void log(string log);
+        bool globalEmotesLoaded{ get; set;}
+        void AddCheerEmote(string prefix, CheerEmote emote);
+        void ClearCheerEmotes();
         object ReadImageFromStream(Stream stream);
         object ScaleImage(object image, double scale);
         object DrawImageBackground(object image, HSLColor color);
