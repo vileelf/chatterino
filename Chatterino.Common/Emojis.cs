@@ -902,6 +902,8 @@ namespace Chatterino.Common
             ShortCodeToEmoji["pen_fountain"] = "\U0001f58b";
             ShortCodeToEmoji["black_nib"] = "\U00002712";
             ShortCodeToEmoji["pencil"] = "\U0001f4dd";
+            ShortCodeToEmoji["memo"] = "\U0001f4dd";
+            //ShortCodeToEmoji["transpride"] = "\U000026A7";
             ShortCodeToEmoji["pencil2"] = "\U0000270f";
             ShortCodeToEmoji["crayon"] = "\U0001f58d";
             ShortCodeToEmoji["paintbrush"] = "\U0001f58c";
