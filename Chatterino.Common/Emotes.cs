@@ -486,6 +486,10 @@ namespace Chatterino.Common
             EmotesLoaded?.Invoke(null, EventArgs.Empty);
         }
 
+        public static void ClearTwitchEmoteCache() {
+            TwitchEmotesByIDCache.Clear();
+        }
+
         public static LazyLoadedImage GetTwitchEmoteById(int id, string name)
         {
             LazyLoadedImage e;
@@ -493,7 +497,6 @@ namespace Chatterino.Common
             if (!TwitchEmotesByIDCache.TryGetValue(id, out e))
             {
                 double scale;
-
                 e = new LazyLoadedImage
                 {
                     Name = name,
@@ -502,7 +505,9 @@ namespace Chatterino.Common
                     Tooltip = name + "\nTwitch Emote",
                     IsEmote = true
                 };
-                TwitchEmotesByIDCache[id] = e;
+                if (e.Image!=null) {
+                    TwitchEmotesByIDCache[id] = e;
+                }
             }
 
             return e;

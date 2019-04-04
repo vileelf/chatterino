@@ -44,6 +44,54 @@ namespace Chatterino.Common
             public string ChannelName { get; set; }
         }
 
+        public static void LoadUsersEmotes() {
+            try
+            {
+                string username = Account.Username, oauth = Account.OauthToken;
+                var request =
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/kraken/users/{username}/emotes?oauth_token={oauth}&client_id={Account.ClientId}");
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    dynamic json = new JsonParser().Parse(stream);
+                    Emotes.TwitchEmotes.Clear();
+
+                    foreach (var set in json["emoticon_sets"])
+                    {
+                        int setID;
+
+                        int.TryParse(set.Key, out setID);
+
+                        foreach (var emote in set.Value)
+                        {
+                            int id;
+
+                            int.TryParse(emote["id"], out id);
+
+                            string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
+
+                            Emotes.TwitchEmotes[code] = new TwitchEmoteValue
+                            {
+                                ID = id,
+                                Set = setID,
+                                ChannelName = "<unknown>"
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                 GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
+            }
+            Emotes.TriggerEmotesLoaded();
+        }
+
         // Connection
         public static void Connect()
         {
@@ -124,49 +172,7 @@ namespace Chatterino.Common
             {
                 Task.Run(() =>
                 {
-                    try
-                    {
-                        var request =
-                            WebRequest.Create(
-                                $"https://api.twitch.tv/kraken/users/{username}/emotes?oauth_token={oauth}&client_id={Account.ClientId}");
-                        if (AppSettings.IgnoreSystemProxy)
-                        {
-                            request.Proxy = null;
-                        }
-                        using (var response = request.GetResponse())
-                        using (var stream = response.GetResponseStream())
-                        {
-                            dynamic json = new JsonParser().Parse(stream);
-                            Emotes.TwitchEmotes.Clear();
-
-                            foreach (var set in json["emoticon_sets"])
-                            {
-                                int setID;
-
-                                int.TryParse(set.Key, out setID);
-
-                                foreach (var emote in set.Value)
-                                {
-                                    int id;
-
-                                    int.TryParse(emote["id"], out id);
-
-                                    string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
-
-                                    Emotes.TwitchEmotes[code] = new TwitchEmoteValue
-                                    {
-                                        ID = id,
-                                        Set = setID,
-                                        ChannelName = "<unknown>"
-                                    };
-                                }
-                            }
-                        }
-                    }
-                    catch
-                    {
-                    }
-                    Emotes.TriggerEmotesLoaded();
+                    LoadUsersEmotes();
                 });
             }
 

@@ -464,7 +464,6 @@ namespace Chatterino.Common
 
                 Join();
 
-                ReloadEmotes();
                 GuiEngine.Current.LoadBadges();
                 // recent chat
                 Task.Run(() =>
@@ -473,10 +472,7 @@ namespace Chatterino.Common
 
                     if (RoomID != -1)
                     {
-                        
-                        LoadSubBadges(RoomID);
-                        LoadChannelBits(RoomID);
-
+                        ReloadEmotes();
                         try
                         {
                             var messages = new List<Message>();
@@ -1103,6 +1099,9 @@ namespace Chatterino.Common
                 LoadSubBadges(RoomID);
                 LoadChannelBits(RoomID);
             }
+            Emotes.ClearTwitchEmoteCache();
+            updateEmoteNameList();
+            IrcManager.LoadUsersEmotes();
             // bttv channel emotes
             Task.Run(() =>
             {
