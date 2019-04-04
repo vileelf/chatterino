@@ -1,4 +1,7 @@
-﻿namespace Chatterino.Controls
+﻿using System;
+using System.IO;
+
+namespace Chatterino.Controls
 {
     partial class SettingsDialog
     {
@@ -18,6 +21,17 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private bool debug = false;
+
+        private void log(string text)
+        {
+            if (debug) {
+                StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
+                file.WriteLine(text);
+                file.Close();
+            }
         }
 
         #region Windows Form Designer generated code
@@ -76,6 +90,9 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.rtbUserBlacklist = new System.Windows.Forms.RichTextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.usernameHightlightTab = new System.Windows.Forms.TabPage();
+            this.rtbUsernamelist = new System.Windows.Forms.RichTextBox();
+            this.usernamelabel = new System.Windows.Forms.Label();
             this.btnTextCustomPing = new System.Windows.Forms.Button();
             this.btnCustomHighlightOpenFile = new System.Windows.Forms.Button();
             this.chkCustomPingSound = new System.Windows.Forms.CheckBox();
@@ -188,6 +205,11 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            try {
+            this.usernameHightlightTab.SuspendLayout();
+            } catch (Exception e) {
+                log(e.ToString());
+            }
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).BeginInit();
@@ -741,6 +763,11 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            try {
+            this.tabControl1.Controls.Add(this.usernameHightlightTab);
+            } catch (Exception e) {
+                log(e.ToString());
+            }
             this.tabControl1.Location = new System.Drawing.Point(17, 110);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -814,6 +841,44 @@
             this.label6.Size = new System.Drawing.Size(204, 13);
             this.label6.TabIndex = 23;
             this.label6.Text = "Users that can not ping you (one per line):";
+            try {
+            // 
+            // usernameHightlightTab
+            // 
+            this.usernameHightlightTab.Controls.Add(this.rtbUsernamelist);
+            this.usernameHightlightTab.Controls.Add(this.usernamelabel);
+            this.usernameHightlightTab.Location = new System.Drawing.Point(4, 22);
+            this.usernameHightlightTab.Name = "usernameHightlightTab";
+            this.usernameHightlightTab.Padding = new System.Windows.Forms.Padding(3);
+            this.usernameHightlightTab.Size = new System.Drawing.Size(407, 263);
+            this.usernameHightlightTab.TabIndex = 1;
+            this.usernameHightlightTab.Text = "Username highlight list";
+            this.usernameHightlightTab.UseVisualStyleBackColor = true;
+            // 
+            // rtbUsernamelist
+            // 
+            this.rtbUsernamelist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbUsernamelist.Location = new System.Drawing.Point(6, 21);
+            this.rtbUsernamelist.Name = "rtbUsernamelist";
+            this.rtbUsernamelist.Size = new System.Drawing.Size(395, 246);
+            this.rtbUsernamelist.TabIndex = 24;
+            this.rtbUsernamelist.Text = "";
+            // 
+            // usernamelabel
+            // 
+            this.usernamelabel.AutoSize = true;
+            this.usernamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.usernamelabel.ForeColor = System.Drawing.Color.Black;
+            this.usernamelabel.Location = new System.Drawing.Point(3, 5);
+            this.usernamelabel.Name = "usernamelabel";
+            this.usernamelabel.Size = new System.Drawing.Size(204, 13);
+            this.usernamelabel.TabIndex = 23;
+            this.usernamelabel.Text = "Usernames to highlight (one per line):";
+            } catch (Exception e) {
+                log(e.ToString());
+            }
             // 
             // btnTextCustomPing
             // 
@@ -1961,6 +2026,12 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            try {
+            this.usernameHightlightTab.ResumeLayout(false);
+            this.usernameHightlightTab.PerformLayout();
+            } catch (Exception e) {
+                log(e.ToString());
+            }
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel5.ResumeLayout(false);
@@ -2035,6 +2106,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RichTextBox rtbUserBlacklist;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TabPage usernameHightlightTab;
+        private System.Windows.Forms.RichTextBox rtbUsernamelist;
+        private System.Windows.Forms.Label usernamelabel;
         private System.Windows.Forms.CheckBox chkMessageSeperators;
         private System.Windows.Forms.ComboBox comboTheme;
         private System.Windows.Forms.Label label7;

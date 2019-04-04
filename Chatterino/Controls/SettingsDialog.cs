@@ -22,7 +22,6 @@ namespace Chatterino.Controls
         private Button BtnOK;
         //private Button btnResetCurrent;
         //private Button btnResetAll;
-
         //CTOR
         public SettingsDialog()
         {
@@ -570,6 +569,18 @@ namespace Chatterino.Controls
             #region highlights
             var customHighlightsOriginal = rtbHighlights.Text = string.Join(Environment.NewLine, AppSettings.ChatCustomHighlights);
             var highlightIgnoredUsersOriginal = rtbUserBlacklist.Text = string.Join(Environment.NewLine, AppSettings.HighlightIgnoredUsers.Keys);
+            var usernameHighlightOriginal = rtbUsernamelist.Text = string.Join(Environment.NewLine, AppSettings.HighlightUserNames.Keys);
+
+            rtbUsernamelist.LostFocus += (s, e) =>
+            {
+                AppSettings.HighlightUserNames.Clear();
+                var reader = new StringReader(rtbUsernamelist.Text);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    AppSettings.HighlightUserNames[line.Trim().ToLower()] = null;
+                }
+            };
 
             rtbHighlights.LostFocus += (s, e) =>
             {
@@ -616,6 +627,17 @@ namespace Chatterino.Controls
                     while ((line = reader.ReadLine()) != null)
                     {
                         AppSettings.HighlightIgnoredUsers[line.Trim().ToLower()] = null;
+                    }
+                }
+
+                // username list
+                {
+                    AppSettings.HighlightUserNames.Clear();
+                    var reader = new StringReader(usernameHighlightOriginal);
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        AppSettings.HighlightUserNames[line.Trim().ToLower()] = null;
                     }
                 }
             };

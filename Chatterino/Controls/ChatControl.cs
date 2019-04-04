@@ -245,11 +245,13 @@ namespace Chatterino.Controls
                 _scroll.RemoveHighlightsWhere(h => h.Position < 0);
             }
 
-            if ((e.Message.HighlightType & (HighlightType.Highlighted | HighlightType.Resub)) != HighlightType.None)
+            if ((e.Message.HighlightType & (HighlightType.Highlighted | HighlightType.Resub | HighlightType.UsernameHighlighted)) != HighlightType.None)
             {
                 _scroll.AddHighlight((channel?.MessageCount ?? 1) - 1,
                     e.Message.HasAnyHighlightType(HighlightType.Highlighted)
                         ? Color.Red
+                        : e.Message.HasAnyHighlightType(HighlightType.UsernameHighlighted)
+                        ? Color.Orange
                         : Color.FromArgb(-16777216 | 0x3F6ABF));
             }
 
@@ -277,11 +279,13 @@ namespace Chatterino.Controls
 
             for (var i = 0; i < e.Value.Length; i++)
             {
-                if (e.Value[i].HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Resub))
+                if (e.Value[i].HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Resub | HighlightType.UsernameHighlighted))
                 {
                     _scroll.AddHighlight(i,
                         e.Value[i].HasAnyHighlightType(HighlightType.Highlighted)
                             ? Color.Red
+                            : e.Value[i].HasAnyHighlightType(HighlightType.UsernameHighlighted)
+                            ? Color.Orange
                             : Color.FromArgb(-16777216 | 0x3F6ABF));
                 }
             }

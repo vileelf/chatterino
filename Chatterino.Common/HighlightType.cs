@@ -16,5 +16,6 @@ namespace Chatterino.Common
         SearchResult = 8,
         Connected = 16,
         Disconnected = 32,
+        UsernameHighlighted = 64,
     }
 }

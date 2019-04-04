@@ -209,6 +209,7 @@ namespace Chatterino.Common
 
         public static ConcurrentDictionary<string, object> IgnoredUsers { get; private set; } = new ConcurrentDictionary<string, object>();
         public static ConcurrentDictionary<string, object> HighlightIgnoredUsers { get; private set; } = new ConcurrentDictionary<string, object>();
+        public static ConcurrentDictionary<string, object> HighlightUserNames { get; private set; } = new ConcurrentDictionary<string, object>();
         public static ConcurrentDictionary<string, object> ChatIgnoredEmotes { get; private set; } = new ConcurrentDictionary<string, object>();
 
         // Custom Highlights

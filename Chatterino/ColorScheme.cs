@@ -17,6 +17,7 @@ namespace Chatterino
         public Color ChatSeperator { get; set; } = Color.Red;
         public Brush ChatBackground { get; set; } = Brushes.White;
         public Brush ChatBackgroundHighlighted { get; set; } = Brushes.LightBlue;
+        public Brush ChatBackgroundUsernameHighlighted { get; set; } = Brushes.LightBlue;
         public Brush ChatBackgroundResub { get; set; } = Brushes.LightBlue;
         public Brush ChatBackgroundWhisper { get; set; } = Brushes.LightBlue;
         public Brush ChatInputOuter { get; set; } = Brushes.White;
@@ -99,6 +100,7 @@ namespace Chatterino
             if (scheme.IsLightTheme)
             {
                 scheme.ChatBackgroundHighlighted = getColor(HSLColor.FromRGB(1f, 0.5f, 0.5f), 0.9f).ToBrush();
+                scheme.ChatBackgroundUsernameHighlighted = new SolidBrush(rgb(0xead09f));
                 scheme.ChatBackgroundResub = getColor(HSLColor.FromRGB(0.5f, 0.5f, 1f), 0.9f).ToBrush();
                 scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 1f, 0.5f), 0.9f).ToBrush();
             }
@@ -109,6 +111,7 @@ namespace Chatterino
 
                 var l = multiplier == -1 ? 0 : 20;
                 scheme.ChatBackgroundHighlighted = new SolidBrush(Color.FromArgb(55 + l, 20 + l, 24 + l));
+                scheme.ChatBackgroundUsernameHighlighted = new SolidBrush(Color.FromArgb(61 + l, 49 + l, 28 + l));
                 scheme.ChatBackgroundResub = new SolidBrush(Color.FromArgb(47 + l, 20 + l, 70 + l));
                 scheme.ChatBackgroundWhisper = new SolidBrush(Color.FromArgb(20 + l, 40 + l, 70 + l));
 

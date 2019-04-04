@@ -87,6 +87,7 @@ namespace Chatterino.Common
             Channel = channel;
 
             var words = new List<Word>();
+            string value;
 
             var text = data.Params ?? "";
 
@@ -111,6 +112,16 @@ namespace Chatterino.Common
                 slashMe = true;
             }
 
+            if (data.Tags.TryGetValue("display-name", out value))
+            {
+                DisplayName = value;
+            }
+
+            // Username
+            if (string.IsNullOrWhiteSpace(DisplayName))
+            {
+                DisplayName = Username;
+            }
             // Highlights
             if (!IrcManager.Account.IsAnon)
             {
@@ -136,6 +147,13 @@ namespace Chatterino.Common
                                     if (AppSettings.ChatEnableHighlightTaskbar)
                                         GuiEngine.Current.FlashTaskbar();
                                 }
+                            } else if (AppSettings.HighlightUserNames != null &&
+                            (AppSettings.HighlightUserNames.ContainsKey(Username)
+                            || AppSettings.HighlightUserNames.ContainsKey(DisplayName))) {
+                                if (AppSettings.ChatEnableHighlight)
+                                {
+                                    HighlightType = HighlightType.UsernameHighlighted;
+                                }
                             }
                         }
                     }
@@ -143,7 +161,6 @@ namespace Chatterino.Common
             }
 
             // Tags
-            string value;
             if (data.Tags.TryGetValue("color", out value))
             {
                 try
@@ -154,10 +171,6 @@ namespace Chatterino.Common
                     }
                 }
                 catch { }
-            }
-            if (data.Tags.TryGetValue("display-name", out value))
-            {
-                DisplayName = value;
             }
 
             // Bits
@@ -498,12 +511,6 @@ namespace Chatterino.Common
                 words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = fourtfBadge, Tooltip = fourtfBadge.Tooltip });
             }
 
-            // Username
-            if (string.IsNullOrWhiteSpace(DisplayName))
-            {
-                DisplayName = Username;
-            }
-
             var messageUser = (isSentWhisper ? IrcManager.Account.Username + " -> " : "");
 
             messageUser += DisplayName;
@@ -668,8 +675,7 @@ namespace Chatterino.Common
 
                         LazyLoadedImage bttvEmote;
                         if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (Emotes.BttvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.BttvChannelEmotes.TryGetValue(s, out bttvEmote))
-                            || (AppSettings.ChatEnableFfzEmotes && (Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote)))
-                            || Emotes.ChatterinoEmotes.TryGetValue(s, out bttvEmote)))
+                            || (AppSettings.ChatEnableFfzEmotes && (Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote)))))
                         {
                             words.Add(new Word
                             {
