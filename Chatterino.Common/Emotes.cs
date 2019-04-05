@@ -505,9 +505,7 @@ namespace Chatterino.Common
                     Tooltip = name + "\nTwitch Emote",
                     IsEmote = true
                 };
-                if (e.Image!=null) {
-                    TwitchEmotesByIDCache[id] = e;
-                }
+                TwitchEmotesByIDCache[id] = e;
             }
 
             return e;
