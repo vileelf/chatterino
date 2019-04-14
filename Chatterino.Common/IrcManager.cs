@@ -276,7 +276,7 @@ namespace Chatterino.Common
             {
                 if (!_message.StartsWith(".color "))
                 {
-                    if (!isMod && nextMessageSendTime > DateTime.Now)
+                    if (!isMod && nextMessageSendTime > DateTime.Now) // do we really need this?
                     {
                         Task.Run(async () =>
                         {
@@ -292,7 +292,7 @@ namespace Chatterino.Common
                 }
 
                 var message = Commands.ProcessMessage(_message, channel, true);
-
+                message = Commands.AddSpace(message, isMod);
                 if (message == null)
                     return;
 
@@ -651,6 +651,12 @@ namespace Chatterino.Common
                 {
                     TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.IsMod = value == "1");
                 }
+                if (msg.Tags.TryGetValue("badges", out value))
+                {
+                    if (value.Contains("vip")) {
+                        TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.IsVip = true);
+                    }
+                }
             }
             else if (msg.Command == "WHISPER")
             {
@@ -733,6 +739,16 @@ namespace Chatterino.Common
                         {
                             c.IsMod = value == "1";
                         });
+                }
+                if (msg.Tags.TryGetValue("badges", out value))
+                {
+                    if (value.Contains("vip")) {
+                        TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#'))
+                            .Process(c =>
+                            {
+                                c.IsVip = true;
+                            });
+                    }
                 }
             }
         }

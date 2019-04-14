@@ -206,21 +206,11 @@ namespace Chatterino.Common
                     }
                 }
             }
-
             if (text != null)
             {
                 text = Emojis.ReplaceShortCodes(text);
-
                 text = Regex.Replace(text, " +", " ");
                 text = text.Trim();
-
-                if (AppSettings.ChatAllowSameMessage)
-                {
-                    if (!executeCommands)
-                    {
-                        text = text + " ";
-                    }
-                }
 
                 return text;
             }
@@ -230,6 +220,17 @@ namespace Chatterino.Common
             }
         }
 
+        private static string last;
+
+        public static string AddSpace(string s, bool isMod) {
+            string space = "";
+            if (AppSettings.ChatAllowSameMessage
+            && !isMod && !s.StartsWith(".") && !s.StartsWith("/") && last == s) {
+                space = " ⁭";
+            }
+            last = s + space;
+            return last;
+        }
         // io
         public static void LoadOrDefault(string path)
         {

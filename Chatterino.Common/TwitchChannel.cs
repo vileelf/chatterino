@@ -209,6 +209,22 @@ namespace Chatterino.Common
             }
         }
 
+        private bool isVip;
+
+        public bool IsVip
+        {
+            get { return isVip; }
+            set
+            {
+                if (isVip != value)
+                {
+                    isVip = value;
+
+                    UserStateChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
+        }
+
         public bool IsModOrBroadcaster
         {
             get
@@ -473,7 +489,8 @@ namespace Chatterino.Common
                     if (RoomID != -1)
                     {
                         ReloadEmotes();
-                        try
+                        //commented out till twitch adds support for the recent messages feature again.
+                        /*try
                         {
                             var messages = new List<Message>();
 
@@ -519,9 +536,10 @@ namespace Chatterino.Common
 
                             AddMessagesAtStart(messages.ToArray());
                         }
-                        catch
+                        catch (Exception e)
                         {
-                        }
+                            GuiEngine.Current.log(e.ToString());
+                        }*/
                     }
                 });
 
@@ -858,14 +876,14 @@ namespace Chatterino.Common
                     if (channel != null)
                     {
                         //IrcManager.Client.Say(text, "fivetf", true);
-                        IrcManager.SendMessage(channel, text, IsModOrBroadcaster);
+                        IrcManager.SendMessage(channel, text, IsModOrBroadcaster || IsVip);
                     }
                 }
 
                 return;
             }
 
-            IrcManager.SendMessage(this, text, IsModOrBroadcaster);
+            IrcManager.SendMessage(this, text, IsModOrBroadcaster || IsVip);
 
             if (AppSettings.Rainbow)
             {
@@ -874,7 +892,7 @@ namespace Chatterino.Common
                 float r, g, b;
                 (new HSLColor(usernameHue % 1, 0.5f, 0.5f)).ToRGB(out r, out g, out b);
 
-                IrcManager.SendMessage(this, $".color #{(int)(r * 255):X}{(int)(g * 255):X}{(int)(b * 255):X}", IsModOrBroadcaster);
+                IrcManager.SendMessage(this, $".color #{(int)(r * 255):X}{(int)(g * 255):X}{(int)(b * 255):X}", IsModOrBroadcaster || IsVip);
             }
         }
 

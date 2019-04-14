@@ -219,13 +219,4 @@ namespace TwitchIrc
         // static
         private static System.Timers.Timer pingTimer = new System.Timers.Timer { Enabled = true, Interval = 12000 };
     }
-    
-    static class MessageTrimmer
-    {
-        private static string last;
-        public static string TrimAll(this string s, bool isMod)
-        {
-            return s.StartsWith(".") || s.StartsWith("/") ? s : s + (isMod || (last = last == s ? null : s) != null ? "" : " ⁭");
-        }
-    }
 }
