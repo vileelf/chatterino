@@ -761,7 +761,19 @@ namespace Chatterino.Common
             // Add timestamp
             if (addTimeStamp && AppSettings.ChatShowTimestamps)
             {
-                var timestamp = DateTime.Now.ToString(AppSettings.ChatShowTimestampSeconds ? "HH:mm:ss" : "HH:mm");
+                //var timestamp = DateTime.Now.ToString(AppSettings.ChatShowTimestampSeconds ? "HH:mm:ss" : "HH:mm");
+                string timestampFormat;
+
+                if (AppSettings.ChatShowTimestampSeconds)
+                {
+                    timestampFormat = AppSettings.TimestampsAmPm ? "hh:mm:ss tt" : "HH:mm:ss";
+                }
+                else
+                {
+                    timestampFormat = AppSettings.TimestampsAmPm ? "hh:mm tt" : "HH:mm";
+                }
+
+                string timestamp = ParseTime.ToString(timestampFormat, enUS);
 
                 Words.Add(new Word
                 {
