@@ -21,7 +21,7 @@ namespace Chatterino
 {
     public class WinformsGuiEngine : IGuiEngine
     {
-        private bool debug = true;
+        private bool debug = false;
 
         public bool globalEmotesLoaded{get; set;} = false;
 
