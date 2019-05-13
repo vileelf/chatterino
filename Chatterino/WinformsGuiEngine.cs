@@ -21,7 +21,7 @@ namespace Chatterino
 {
     public class WinformsGuiEngine : IGuiEngine
     {
-        private bool debug = false;
+        private bool debug = true;
 
         public bool globalEmotesLoaded{get; set;} = false;
 
@@ -334,8 +334,11 @@ namespace Chatterino
 
         public void log(string text)
         {
-            if (debug) {
-                StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
+            if (debug)
+            {
+                string folder = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+                StreamWriter file = new StreamWriter(folder + @"\log.txt", true);
+                //StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
                 file.WriteLine(text);
                 file.Close();
             }

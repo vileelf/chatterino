@@ -25,6 +25,11 @@ namespace Chatterino.Controls
             }
         }
 
+        public void Reload()
+        {
+            TitleChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         private bool _selected;
 
         public bool Selected

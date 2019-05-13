@@ -21,6 +21,7 @@ namespace Chatterino.Controls
             }
         }
 
+
         List<Tuple<Tab, TabPage>> _tabPages = new List<Tuple<Tab, TabPage>>();
         public TabPage Selected { get; private set; }
 

@@ -199,7 +199,8 @@ namespace Chatterino.Controls
 
             protected override void OnResize(EventArgs e)
             {
-                _xRectangle = new Rectangle(Width - 20, Height / 2 - 8, 16, 16);
+                if (!AppSettings.RemoveXButton)
+                    _xRectangle = new Rectangle(Width - 20, Height / 2 - 8, 16, 16);
 
                 base.OnResize(e);
             }
@@ -242,7 +243,9 @@ namespace Chatterino.Controls
                 if (_titleWidth == -1)
                 {
                     var size = TextRenderer.MeasureText(_tabPage.Title, Font);
-                    Width = (int)(Padding.Left + size.Width + Padding.Right) + 12;
+                    Width = (int)(Padding.Left + size.Width + Padding.Right); //+ 12;
+                    if (!AppSettings.RemoveXButton)
+                        Width += 12;
                     Height = GetHeight();
                 }
             }
@@ -283,10 +286,19 @@ namespace Chatterino.Controls
                 e.Graphics.FillRectangle(bg, 0, 0, Width, Height);
 
                 // text
-                TextRenderer.DrawText(e.Graphics, _tabPage.Title ?? "<no name>", Font, new Rectangle(0, 0, _xRectangle.Left + 4, Height), text, App.DefaultTextFormatFlags | TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+                int drawTextWidth;
+
+                if (AppSettings.RemoveXButton)
+                    drawTextWidth = Width; 
+                else
+                    drawTextWidth = _xRectangle.X + 4; // this was the original value
+
+                TextRenderer.DrawText(e.Graphics, _tabPage.Title ?? "<no name>", Font, new Rectangle(0, 0, drawTextWidth, Height), text, App.DefaultTextFormatFlags | TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+                GuiEngine.Current.log("rect left: " + _xRectangle.Left.ToString());
+                GuiEngine.Current.log("parent?: " + Width.ToString());
 
                 // x
-                if (_mouseDownX || !_mouseDown)
+                if ((_mouseDownX || !_mouseDown) && !AppSettings.RemoveXButton)
                 {
                     if (_mouseOver && _mouseOverX)
                     {
@@ -299,7 +311,7 @@ namespace Chatterino.Controls
                     }
                 }
 
-                if (Selected || _mouseOver)
+                if ((Selected || _mouseOver) && !AppSettings.RemoveXButton)
                 {
                     using (var pen = new Pen(text))
                     {

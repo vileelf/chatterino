@@ -71,6 +71,7 @@ namespace Chatterino.Controls
             this.labelThemeNight = new System.Windows.Forms.Label();
             this.checkBoxDifferentThemeAtNight = new System.Windows.Forms.CheckBox();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
+            this.chkRemoveX = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -408,6 +409,7 @@ namespace Chatterino.Controls
             this.panel1.Controls.Add(this.labelThemeNight);
             this.panel1.Controls.Add(this.checkBoxDifferentThemeAtNight);
             this.panel1.Controls.Add(this.chkTopMost);
+            this.panel1.Controls.Add(this.chkRemoveX);
             this.panel1.Controls.Add(this.btnSelectFont);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.trackBar1);
@@ -433,7 +435,7 @@ namespace Chatterino.Controls
             this.groupBox1.Controls.Add(this.chkMessageSeperators);
             this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(17, 226);
+            this.groupBox1.Location = new System.Drawing.Point(17, 249);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(435, 92);
             this.groupBox1.TabIndex = 37;
@@ -622,8 +624,19 @@ namespace Chatterino.Controls
             this.chkTopMost.Name = "chkTopMost";
             this.chkTopMost.Size = new System.Drawing.Size(133, 17);
             this.chkTopMost.TabIndex = 26;
-            this.chkTopMost.Text = "Window always on top\r\n";
+            this.chkTopMost.Text = "Window always on top";
             this.chkTopMost.UseVisualStyleBackColor = true;
+            // 
+            // chkRemoveX
+            // 
+            this.chkRemoveX.AutoSize = true;
+            this.chkRemoveX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkRemoveX.Location = new System.Drawing.Point(17, 216);
+            this.chkRemoveX.Name = "chkRemoveX";
+            this.chkRemoveX.Size = new System.Drawing.Size(133, 17);
+            this.chkRemoveX.TabIndex = 27;
+            this.chkRemoveX.Text = "Remove X button from tabs\r\n";
+            this.chkRemoveX.UseVisualStyleBackColor = true;
             // 
             // btnSelectFont
             // 
@@ -2157,6 +2170,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.Panel panel10;
         private SettingsTabPage spBrowserExtension;
         private System.Windows.Forms.CheckBox chkTopMost;
+        private System.Windows.Forms.CheckBox chkRemoveX;
         private System.Windows.Forms.CheckBox chkEnableInlineWhispers;
         private System.Windows.Forms.CheckBox chkLastReadMessageIndicator;
         private System.Windows.Forms.Panel panel11;

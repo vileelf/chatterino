@@ -263,6 +263,7 @@ namespace Chatterino.Controls
 
             BindCheckBox(chkTabLocalizedNames, "ChatTabLocalizedNames");
             BindCheckBox(chkTopMost, "WindowTopMost");
+            BindCheckBox(chkRemoveX, "RemoveXButton");
 
             BindCheckBox(chkLastReadMessageIndicator, "ChatShowLastReadMessageIndicator");
             chkLastReadMessageIndicator.CheckedChanged += (s, e) =>
@@ -769,6 +770,10 @@ namespace Chatterino.Controls
         {
             DialogResult = DialogResult.OK;
             Close();
+            foreach(TabPage tp in App.MainForm.TabControl.TabPages)
+            {
+                tp.Reload();
+            }
         }
 
         void btnCancel_Click(object sender, EventArgs e)
