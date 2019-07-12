@@ -902,7 +902,7 @@ namespace Chatterino.Common
             }
         }
 
-        void fetchUsernames()
+        public void fetchUsernames()
         {
             try
             {

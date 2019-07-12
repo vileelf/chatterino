@@ -933,6 +933,10 @@ namespace Chatterino.Controls
                 {
                     _selected.Channel.ReloadSubEmotes();
                 }));
+                _contextMenu.MenuItems.Add(new MenuItem("Reload username list", (s, e) =>
+                {
+                    _selected.Channel.fetchUsernames();
+                }));
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
                     IrcManager.Client.Reconnect();
