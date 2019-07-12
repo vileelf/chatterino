@@ -41,7 +41,7 @@ namespace Chatterino.Common
         public string StreamGame { get; private set; }
         public DateTime StreamStart { get; set; }
 
-        public event EventHandler LiveStatusUpdated;
+        public event EventHandler<LiveStatusEventArgs> LiveStatusUpdated;
 
         // Channel Emotes
         public ConcurrentDictionary<string, LazyLoadedImage> BttvChannelEmotes { get; private set; }
@@ -702,7 +702,7 @@ namespace Chatterino.Common
 
                             if (tmpIsLive)
                             {
-                                LiveStatusUpdated?.Invoke(this, EventArgs.Empty);
+                                LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(false));
                             }
                         }
                         else
@@ -714,8 +714,7 @@ namespace Chatterino.Common
                             StreamStatus = channel["status"];
                             StreamGame = channel["game"];
                             StreamStart = DateTime.Parse(stream["created_at"]);
-
-                            LiveStatusUpdated?.Invoke(this, EventArgs.Empty);
+                            LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
                         }
                     }
                 }

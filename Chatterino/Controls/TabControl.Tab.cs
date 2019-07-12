@@ -38,6 +38,7 @@ namespace Chatterino.Controls
             // Context menu
             private ContextMenu _menu = new ContextMenu();
             private MenuItem _allowNewMessageHighlightsMenuItem;
+            private MenuItem _allowGoLiveHighlightsMenuItem;
             private Point _lastP = Point.Empty;
 
             private Rectangle _xRectangle;
@@ -190,10 +191,12 @@ namespace Chatterino.Controls
                 _menu.MenuItems.Add(new MenuItem("Rename", (s, e) => Rename()));
                 _menu.MenuItems.Add(new MenuItem("Close", (s, e) => (Parent as TabControl)?.RemoveTab(tabPage)));
                 _menu.MenuItems.Add(_allowNewMessageHighlightsMenuItem = new MenuItem("Enable highlights on new message", (s, e) => _tabPage.EnableNewMessageHighlights = !_tabPage.EnableNewMessageHighlights));
+                _menu.MenuItems.Add(_allowGoLiveHighlightsMenuItem = new MenuItem("Enable highlights on going live", (s, e) => _tabPage.EnableGoLiveHighlights = !_tabPage.EnableGoLiveHighlights));
 
                 _menu.Popup += (s, e) =>
                 {
                     _allowNewMessageHighlightsMenuItem.Checked = _tabPage.EnableNewMessageHighlights;
+                    _allowGoLiveHighlightsMenuItem.Checked = _tabPage.EnableGoLiveHighlights;
                 };
             }
 
@@ -270,6 +273,11 @@ namespace Chatterino.Controls
                 else if (_tabPage.HighlightType == TabPageHighlightType.Highlighted)
                 {
                     bg = App.ColorScheme.TabHighlightedBG;
+                    text = App.ColorScheme.TabHighlightedText;
+                }
+                else if (_tabPage.HighlightType == TabPageHighlightType.IsLive)
+                {
+                    bg = App.ColorScheme.TabIsLiveBG;
                     text = App.ColorScheme.TabHighlightedText;
                 }
                 else if (_tabPage.HighlightType == TabPageHighlightType.NewMessage)

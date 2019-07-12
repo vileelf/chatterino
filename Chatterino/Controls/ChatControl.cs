@@ -129,8 +129,14 @@ namespace Chatterino.Controls
             }
         }
 
-        private void Channel_LiveStatusUpdated(object sender, EventArgs e)
+        private void Channel_LiveStatusUpdated(object sender, LiveStatusEventArgs e)
         {
+            var parent = Parent as ColumnTabPage;
+            if (e.IsLive == true && parent.EnableGoLiveHighlights == true) {
+                parent.HighlightType = TabPageHighlightType.IsLive;
+                updateMessageBounds();
+                ProposeInvalidation();
+            }
             this.Invoke(() => _header.Invalidate());
         }
 

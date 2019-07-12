@@ -10,6 +10,7 @@ namespace Chatterino.Controls
     {
         None,
         Highlighted,
-        NewMessage
+        NewMessage,
+        IsLive
     }
 }
