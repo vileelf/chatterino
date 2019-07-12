@@ -62,8 +62,9 @@ namespace Chatterino.Common
 
                             GuiEngine.Current.FreezeImage(img);
                         }
-                        catch
+                        catch (Exception e)
                         {
+                            GuiEngine.Current.log(e.ToString());
                             img = null;
                         }
                     }

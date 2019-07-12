@@ -929,6 +929,10 @@ namespace Chatterino.Controls
                 {
                     _selected.Channel.ReloadEmotes();
                 }));
+                _contextMenu.MenuItems.Add(new MenuItem("Reload Sub Emotes", (s, e) =>
+                {
+                    _selected.Channel.ReloadSubEmotes();
+                }));
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
                     IrcManager.Client.Reconnect();

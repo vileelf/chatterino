@@ -280,50 +280,53 @@ namespace Chatterino.Common
                     request.Proxy = null;
                 }
                 request.Headers.Add("Client-ID", IrcManager.DefaultClientID);
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    JsonParser parser = new JsonParser();
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        JsonParser parser = new JsonParser();
 
-                    dynamic json = parser.Parse(stream);
+                        dynamic json = parser.Parse(stream);
 
-                    dynamic actions = json["actions"];
-                    bool addGlobalEmotes = true;
-                    bool cheerexists = false;
-                    string type;
-                    string prefix;
-                    for(int i=0;i<actions.Count;i++){
-                        type = actions[i]["type"];
-                        prefix = actions[i]["prefix"];
-                        if (prefix.ToUpper().Equals("CHEER")) {
-                            cheerexists = true;
-                        }
-                        if(type.Equals("channel_custom")){
-                            //this channels custom bit emote
-                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
-                            ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
-                        } else if(!GuiEngine.Current.globalEmotesLoaded){
-                            //global bit emote
-                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
-                            GuiEngine.Current.AddCheerEmote(prefix.ToUpper(), customCheer);
-                        }
-                    }
-                    if (!cheerexists) {
-                        //This is a shortcut for special channels like owl. I'm assuming all emotes are custom.
+                        dynamic actions = json["actions"];
+                        bool addGlobalEmotes = true;
+                        bool cheerexists = false;
+                        string type;
+                        string prefix;
                         for(int i=0;i<actions.Count;i++){
                             type = actions[i]["type"];
                             prefix = actions[i]["prefix"];
-                            //this channels custom bit emote
-                            CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
-                            ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
-                            if (!GuiEngine.Current.globalEmotesLoaded) {
-                                //unload these from global since they arnt actually global Jebaited thx twitch
-                                GuiEngine.Current.ClearCheerEmotes();
+                            if (prefix.ToUpper().Equals("CHEER")) {
+                                cheerexists = true;
+                            }
+                            if(type.Equals("channel_custom")){
+                                //this channels custom bit emote
+                                CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                                ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
+                            } else if(!GuiEngine.Current.globalEmotesLoaded){
+                                //global bit emote
+                                CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                                GuiEngine.Current.AddCheerEmote(prefix.ToUpper(), customCheer);
                             }
                         }
-                    } else {
-                        GuiEngine.Current.globalEmotesLoaded = true;
+                        if (!cheerexists) {
+                            //This is a shortcut for special channels like owl. I'm assuming all emotes are custom.
+                            for(int i=0;i<actions.Count;i++){
+                                type = actions[i]["type"];
+                                prefix = actions[i]["prefix"];
+                                //this channels custom bit emote
+                                CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
+                                ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
+                                if (!GuiEngine.Current.globalEmotesLoaded) {
+                                    //unload these from global since they arnt actually global Jebaited thx twitch
+                                    GuiEngine.Current.ClearCheerEmotes();
+                                }
+                            }
+                        } else {
+                            GuiEngine.Current.globalEmotesLoaded = true;
+                        }
+                        stream.Close();
                     }
+                    response.Close();
                 }
             } catch(Exception e){
                 GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
@@ -338,59 +341,62 @@ namespace Chatterino.Common
                 WebRequest.Create($"https://badges.twitch.tv/v1/badges/channels/{RoomID}/display");
                 if (AppSettings.IgnoreSystemProxy)
                 {
-                request.Proxy = null;
+                    request.Proxy = null;
                 }
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    var parser = new JsonParser();
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var parser = new JsonParser();
 
-                    dynamic json = parser.Parse(stream);
+                        dynamic json = parser.Parse(stream);
 
-                    dynamic badgeSets = json["badge_sets"];
-                    if (badgeSets.ContainsKey("subscriber")) {
-                        dynamic subscriber = badgeSets["subscriber"];
-                        dynamic versions = subscriber["versions"];
-                        
-                        foreach (var version in versions)
-                        {
-                            int months = int.Parse(version.Key);
-
-                            dynamic value = version.Value;
-
-                            string imageUrl = value["image_url_1x"];
-                            string title = value["title"];
-                            string description = value["description"];
-                            string clickUrl = value["click_url"];
-
-                            SubscriberBadges.TryAdd(months, new LazyLoadedImage
-                            {
-                                Name = title,
-                                Url = imageUrl,
-                                Tooltip = title
-                            });
-                        }
-                    }
-                    if (badgeSets.ContainsKey("bits")) {
-                        dynamic bits = badgeSets["bits"];
-                        dynamic bitversions = bits["versions"];
-                        foreach (var version in bitversions) {
-                            int cheer = int.Parse(version.Key);
-                            dynamic value = version.Value;
-                            string imageUrl = value["image_url_1x"];
-                            string title = value["title"];
-                            string description = value["description"];
-                            string clickUrl = value["click_url"];
+                        dynamic badgeSets = json["badge_sets"];
+                        if (badgeSets.ContainsKey("subscriber")) {
+                            dynamic subscriber = badgeSets["subscriber"];
+                            dynamic versions = subscriber["versions"];
                             
-                            CheerBadges.TryAdd(cheer, new LazyLoadedImage
+                            foreach (var version in versions)
                             {
-                                Name = title,
-                                Url = imageUrl,
-                                Tooltip = title,
-                                click_url = clickUrl
-                            });
+                                int months = int.Parse(version.Key);
+
+                                dynamic value = version.Value;
+
+                                string imageUrl = value["image_url_1x"];
+                                string title = value["title"];
+                                string description = value["description"];
+                                string clickUrl = value["click_url"];
+
+                                SubscriberBadges.TryAdd(months, new LazyLoadedImage
+                                {
+                                    Name = title,
+                                    Url = imageUrl,
+                                    Tooltip = title
+                                });
+                            }
                         }
+                        if (badgeSets.ContainsKey("bits")) {
+                            dynamic bits = badgeSets["bits"];
+                            dynamic bitversions = bits["versions"];
+                            foreach (var version in bitversions) {
+                                int cheer = int.Parse(version.Key);
+                                dynamic value = version.Value;
+                                string imageUrl = value["image_url_1x"];
+                                string title = value["title"];
+                                string description = value["description"];
+                                string clickUrl = value["click_url"];
+                                
+                                CheerBadges.TryAdd(cheer, new LazyLoadedImage
+                                {
+                                    Name = title,
+                                    Url = imageUrl,
+                                    Tooltip = title,
+                                    click_url = clickUrl
+                                });
+                            }
+                        }
+                        stream.Close();
                     }
+                    response.Close();
                 }
             }
             catch ( Exception e)
@@ -1106,6 +1112,12 @@ namespace Chatterino.Common
             AppSettings.MessageLimitChanged -= AppSettings_MessageLimitChanged;
         }
 
+        public void ReloadSubEmotes()
+        {
+            IrcManager.LoadUsersEmotes();
+            updateEmoteNameList();
+        }
+
         public void ReloadEmotes()
         {
             var channelName = Name;
@@ -1117,9 +1129,7 @@ namespace Chatterino.Common
                 LoadSubBadges(RoomID);
                 LoadChannelBits(RoomID);
             }
-            Emotes.ClearTwitchEmoteCache();
-            updateEmoteNameList();
-            IrcManager.LoadUsersEmotes();
+            //Emotes.ClearTwitchEmoteCache();
             // bttv channel emotes
             Task.Run(() =>
             {
