@@ -1,5 +1,22 @@
 ﻿# changelog
 
+## 1.6
+- added tab highlighting for when a channel goes live and a channel setting for it
+- added a new setting to disable the x buttons on tabs
+- added a menu item to manually reload sub emotes and one to reload usernames
+- fixed time displayed on sub messages
+
+## 1.5
+- added a new setting for username based highlighting
+- now recognizes vip for fast messageing
+- now properly respecting the setting for sending duplicate messages
+- overloaded the reload channel emotes button to also reload your other emotes.
+
+## 1.4
+- added support for all bit emotes
+- added support for all badges
+- added support for custom cheer badges
+
 ## 1.3
 - fixed the LSD bug (entire screen filling up with text that never gets cleared)
 - changed access to the ffz api according to their changes
