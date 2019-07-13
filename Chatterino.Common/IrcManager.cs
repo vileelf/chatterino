@@ -26,12 +26,11 @@ namespace Chatterino.Common
 
         public static IrcClient Client { get; set; }
 
-        //static ConcurrentDictionary<string, object> twitchBlockedUsers = new ConcurrentDictionary<string, object>();
+        static ConcurrentDictionary<string, object> twitchBlockedUsers = new ConcurrentDictionary<string, object>();
 
         public static IEnumerable<string> IgnoredUsers
         {
-            //get { return twitchBlockedUsers.Keys; }
-            get { return AppSettings.IgnoredUsers.Keys; }
+            get { return AppSettings.IgnoreViaTwitch==true?twitchBlockedUsers.Keys:AppSettings.IgnoredUsers.Keys; }
         }
 
         public static string LastReceivedWhisperUser { get; set; }
@@ -127,45 +126,45 @@ namespace Chatterino.Common
 
             AppSettings.UpdateCustomHighlightRegex();
 
-            // fetch ignored users
-            //if (!Account.IsAnon)
-            //{
-            //    Task.Run(() =>
-            //    {
-            //        try
-            //        {
-            //            var limit = 100;
-            //            var count = 0;
-            //            string nextLink =
-            //                $"https://api.twitch.tv/kraken/users/{username}/blocks?limit={limit}&client_id={Account.ClientId}";
+            //fetch ignored users
+            if (!Account.IsAnon)
+            {
+               Task.Run(() =>
+               {
+                   try
+                   {
+                       var limit = 100;
+                       var count = 0;
+                       string nextLink =
+                           $"https://api.twitch.tv/kraken/users/{username}/blocks?limit={limit}&client_id={Account.ClientId}";
 
-            //            var request = WebRequest.Create(nextLink + $"&oauth_token={oauth}");
-            //            if (AppSettings.IgnoreSystemProxy)
-            //            {
-            //                request.Proxy = null;
-            //            }
-            //            using (var response = request.GetResponse())
-            //            using (var stream = response.GetResponseStream())
-            //            {
-            //                dynamic json = new JsonParser().Parse(stream);
-            //                dynamic _links = json["_links"];
-            //                nextLink = _links["next"];
-            //                dynamic blocks = json["blocks"];
-            //                count = blocks.Count;
-            //                foreach (var block in blocks)
-            //                {
-            //                    dynamic user = block["user"];
-            //                    string name = user["name"];
-            //                    string display_name = user["display_name"];
-            //                    twitchBlockedUsers[name] = null;
-            //                }
-            //            }
-            //        }
-            //        catch
-            //        {
-            //        }
-            //    });
-            //}
+                       var request = WebRequest.Create(nextLink + $"&oauth_token={oauth}");
+                       if (AppSettings.IgnoreSystemProxy)
+                       {
+                           request.Proxy = null;
+                       }
+                       using (var response = request.GetResponse())
+                       using (var stream = response.GetResponseStream())
+                       {
+                           dynamic json = new JsonParser().Parse(stream);
+                           dynamic _links = json["_links"];
+                           nextLink = _links["next"];
+                           dynamic blocks = json["blocks"];
+                           count = blocks.Count;
+                           foreach (var block in blocks)
+                           {
+                               dynamic user = block["user"];
+                               string name = user["name"];
+                               string display_name = user["display_name"];
+                               twitchBlockedUsers[name] = null;
+                           }
+                       }
+                   }
+                   catch
+                   {
+                   }
+               });
+            }
 
             // fetch available twitch emotes
             if (!Account.IsAnon)
@@ -249,7 +248,7 @@ namespace Chatterino.Common
         {
             var disconnected = false;
 
-            //twitchBlockedUsers.Clear();
+            twitchBlockedUsers.Clear();
 
             if (Client != null)
             {
@@ -309,7 +308,8 @@ namespace Chatterino.Common
 
         public static bool IsIgnoredUser(string username)
         {
-            //return twitchBlockedUsers.ContainsKey(username.ToLower());
+            if (AppSettings.IgnoreViaTwitch == true)
+                return twitchBlockedUsers.ContainsKey(username.ToLower());
             return AppSettings.IgnoredUsers.ContainsKey(username.ToLower());
         }
 
@@ -324,48 +324,52 @@ namespace Chatterino.Common
 
         public static bool TryAddIgnoredUser(string username, out string message)
         {
-            AppSettings.IgnoredUsers[username.ToLower()] = null;
+            if (AppSettings.IgnoreViaTwitch != true) {
+                AppSettings.IgnoredUsers[username.ToLower()] = null;
 
-            message = $"Ignored user \"{username}\".";
+                message = $"Ignored user \"{username}\".";
 
-            return true;
-            //var _username = username.ToLower();
+                return true;
+            }
+            else {
+                var _username = username.ToLower();
 
-            //var success = false;
-            //HttpStatusCode statusCode;
+                var success = false;
+                HttpStatusCode statusCode;
 
-            //try
-            //{
-            //    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{_username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
-            //    if (AppSettings.IgnoreSystemProxy)
-            //    {
-            //        request.Proxy = null;
-            //    }
-            //    request.Method = "PUT";
-            //    using (var response = (HttpWebResponse)request.GetResponse())
-            //    using (var stream = response.GetResponseStream())
-            //    {
-            //        statusCode = response.StatusCode;
-            //        success = true;
-            //    }
-            //}
-            //catch (WebException exc)
-            //{
-            //    statusCode = ((HttpWebResponse)exc.Response).StatusCode;
-            //}
-            //catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
+                try
+                {
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{_username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    request.Method = "PUT";
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                    {
+                        statusCode = response.StatusCode;
+                        success = true;
+                   }
+                }
+                catch (WebException exc)
+                {
+                   statusCode = ((HttpWebResponse)exc.Response).StatusCode;
+                }
+                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
 
-            //if (success)
-            //{
-            //    twitchBlockedUsers[_username] = null;
-            //    message = $"Successfully ignored user \"{username}\".";
-            //    return true;
-            //}
-            //else
-            //{
-            //    message = $"Error \"{(int)statusCode}\" while trying to ignore user \"{username}\".";
-            //    return false;
-            //}
+                if (success)
+                {
+                   twitchBlockedUsers[_username] = null;
+                   message = $"Successfully ignored user \"{username}\".";
+                   return true;
+                }
+                else
+                {
+                   message = $"Error \"{(int)statusCode}\" while trying to ignore user \"{username}\".";
+                   return false;
+                }
+            }
         }
 
         public static void RemoveIgnoredUser(string username)
@@ -379,53 +383,55 @@ namespace Chatterino.Common
 
         public static bool TryRemoveIgnoredUser(string username, out string message)
         {
-            AppSettings.IgnoredUsers.TryRemove(username.ToLower(), out object _);
+            if (AppSettings.IgnoreViaTwitch != true) {
+                AppSettings.IgnoredUsers.TryRemove(username.ToLower(), out object _);
 
-            message = $"Unignored user \"{username}\".";
-            return true;
+                message = $"Unignored user \"{username}\".";
+                return true;
+            } else {
 
-            /*
-            object value;
-            username = username.ToLower();
+            
+                object value;
+                username = username.ToLower();
 
-            var success = false;
-            HttpStatusCode statusCode;
+                var success = false;
+                HttpStatusCode statusCode;
 
-            try
-            {
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
-                request.Method = "DELETE";
-                if (AppSettings.IgnoreSystemProxy)
+                try
                 {
-                    request.Proxy = null;
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
+                    request.Method = "DELETE";
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                    {
+                        statusCode = response.StatusCode;
+                        success = statusCode == HttpStatusCode.NoContent;
+                    }
                 }
-                using (var response = (HttpWebResponse)request.GetResponse())
-                using (var stream = response.GetResponseStream())
+                catch (WebException exc)
                 {
-                    statusCode = response.StatusCode;
+                    statusCode = ((HttpWebResponse)exc.Response).StatusCode;
                     success = statusCode == HttpStatusCode.NoContent;
                 }
-            }
-            catch (WebException exc)
-            {
-                statusCode = ((HttpWebResponse)exc.Response).StatusCode;
-                success = statusCode == HttpStatusCode.NoContent;
-            }
-            catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
+                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
 
-            if (success)
-            {
-                twitchBlockedUsers.TryRemove(username.ToLower(), out value);
+                if (success)
+                {
+                    twitchBlockedUsers.TryRemove(username.ToLower(), out value);
 
-                message = $"Successfully unignored user \"{username}\".";
-                return true;
+                    message = $"Successfully unignored user \"{username}\".";
+                    return true;
+                }
+                else
+                {
+                    message = $"Error \"{(int)statusCode}\" while trying to unignore user \"{username}\".";
+                    return false;
+                }
             }
-            else
-            {
-                message = $"Error \"{(int)statusCode}\" while trying to unignore user \"{username}\".";
-                return false;
-            }
-            */
         }
 
         // Check followed users

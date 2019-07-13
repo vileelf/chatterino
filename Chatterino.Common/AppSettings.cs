@@ -158,6 +158,8 @@ namespace Chatterino.Common
         public static bool PrefereEmotesOverUsernames { get; set; }
 
         public static bool RemoveXButton { get; set; }
+        
+        public static bool IgnoreViaTwitch { get; set; } = true;
 
     // Chat
         public static double ScrollMultiplyer { get; set; } = 1;

@@ -72,6 +72,7 @@ namespace Chatterino.Controls
             this.checkBoxDifferentThemeAtNight = new System.Windows.Forms.CheckBox();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
             this.chkRemoveX = new System.Windows.Forms.CheckBox();
+            this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -1174,6 +1175,7 @@ namespace Chatterino.Controls
             this.panel6.Controls.Add(this.btnIgnoredUserAdd);
             this.panel6.Controls.Add(this.dgvIgnoredUsers);
             this.panel6.Controls.Add(this.label9);
+            this.panel6.Controls.Add(this.chkIgnoreViaTwitch);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
@@ -1267,6 +1269,17 @@ namespace Chatterino.Controls
             this.label9.Size = new System.Drawing.Size(190, 26);
             this.label9.TabIndex = 5;
             this.label9.Text = "/ignore in chat to ignore someone\r\n/unignore in chat to unignore someone";
+            // 
+            // chkIgnoreViaTwitch
+            // 
+            this.chkIgnoreViaTwitch.AutoSize = true;
+            this.chkIgnoreViaTwitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkIgnoreViaTwitch.Location = new System.Drawing.Point(13, 357);
+            this.chkIgnoreViaTwitch.Name = "chkIgnoreViaTwitch";
+            this.chkIgnoreViaTwitch.Size = new System.Drawing.Size(133, 17);
+            this.chkIgnoreViaTwitch.TabIndex = 9;
+            this.chkIgnoreViaTwitch.Text = "Ignore users using the twitch api\r\n";
+            this.chkIgnoreViaTwitch.UseVisualStyleBackColor = true;
             // 
             // panel12
             // 
@@ -2171,6 +2184,7 @@ namespace Chatterino.Controls
         private SettingsTabPage spBrowserExtension;
         private System.Windows.Forms.CheckBox chkTopMost;
         private System.Windows.Forms.CheckBox chkRemoveX;
+        private System.Windows.Forms.CheckBox chkIgnoreViaTwitch;
         private System.Windows.Forms.CheckBox chkEnableInlineWhispers;
         private System.Windows.Forms.CheckBox chkLastReadMessageIndicator;
         private System.Windows.Forms.Panel panel11;

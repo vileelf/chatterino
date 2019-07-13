@@ -5,6 +5,7 @@
 - added a new setting to disable the x buttons on tabs
 - added a menu item to manually reload sub emotes and one to reload usernames
 - fixed time displayed on sub messages
+- added a new setting to ignore users using the twitch api vs chatterinos internal list
 
 ## 1.5
 - added a new setting for username based highlighting
