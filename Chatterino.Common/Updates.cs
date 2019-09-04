@@ -15,6 +15,7 @@ namespace Chatterino.Common
 
         public static void CheckForUpdate(string branchName, VersionNumber currentVersion)
         {
+            return;
             Task.Run(() =>
             {
                 try

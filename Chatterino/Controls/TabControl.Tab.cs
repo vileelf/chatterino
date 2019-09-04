@@ -302,8 +302,8 @@ namespace Chatterino.Controls
                     drawTextWidth = _xRectangle.Left + 4; // this was the original value
 
                 TextRenderer.DrawText(e.Graphics, _tabPage.Title ?? "<no name>", Font, new Rectangle(0, 0, drawTextWidth, Height), text, App.DefaultTextFormatFlags | TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
-                GuiEngine.Current.log("rect left: " + _xRectangle.Left.ToString());
-                GuiEngine.Current.log("parent?: " + Width.ToString());
+                //GuiEngine.Current.log("rect left: " + _xRectangle.Left.ToString());
+                //GuiEngine.Current.log("parent?: " + Width.ToString());
 
                 // x
                 if ((_mouseDownX || !_mouseDown) && !AppSettings.RemoveXButton)

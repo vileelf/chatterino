@@ -32,8 +32,8 @@ namespace Chatterino.Common
         public static ConcurrentDictionary<string, LazyLoadedImage> FfzChannelEmotesCache =
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
-        public static ConcurrentDictionary<int, LazyLoadedImage> TwitchEmotesByIDCache =
-            new ConcurrentDictionary<int, LazyLoadedImage>();
+        public static ConcurrentDictionary<string, LazyLoadedImage> TwitchEmotesByIDCache =
+            new ConcurrentDictionary<string, LazyLoadedImage>();
 
         public static ConcurrentDictionary<string, LazyLoadedImage> MiscEmotesByUrl =
             new ConcurrentDictionary<string, LazyLoadedImage>();
@@ -51,7 +51,7 @@ namespace Chatterino.Common
 
         static Emotes()
         {
-            Func<int, string, string, LazyLoadedImage> getEmoteReplacement = (id, name, url) =>
+            Func<string, string, string, LazyLoadedImage> getEmoteReplacement = (id, name, url) =>
             {
                 var emote = new LazyLoadedImage()
                 {
@@ -150,7 +150,7 @@ namespace Chatterino.Common
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
 
-        private static string GetTwitchEmoteLink(int id, out double scale)
+        private static string GetTwitchEmoteLink(string id, out double scale)
         {
             var _scale = AppSettings.EmoteScale > 2 ? 4 : (AppSettings.EmoteScale > 1 ? 2 : 1);
 
@@ -490,7 +490,7 @@ namespace Chatterino.Common
             TwitchEmotesByIDCache.Clear();
         }
 
-        public static LazyLoadedImage GetTwitchEmoteById(int id, string name)
+        public static LazyLoadedImage GetTwitchEmoteById(string id, string name)
         {
             LazyLoadedImage e;
 

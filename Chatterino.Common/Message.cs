@@ -551,10 +551,9 @@ namespace Chatterino.Common
                     if (emote != "")
                     {
                         var x = emote.Split(':');
-                        var id = int.Parse(x[0]);
-                        foreach (var y in x[1].Split(','))
-                        {
-                            try
+                        try {
+                            var id = x[0];
+                            foreach (var y in x[1].Split(','))
                             {
                                 var coords = y.Split('-');
                                 var index = int.Parse(coords[0]);
@@ -567,9 +566,10 @@ namespace Chatterino.Common
 
                                     twitchEmotes.Add(Tuple.Create(index, e));
                                 }
-                            }
-                            catch { }
-                        };
+                            };
+                        } catch(Exception e){
+                            GuiEngine.Current.log("Generic Exception Handler: " + " " + emote + " " + x[0] + " " + e.ToString());
+                        }
                     }
                 });
                 twitchEmotes.Sort((e1, e2) => e1.Item1.CompareTo(e2.Item1));

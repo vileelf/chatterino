@@ -39,7 +39,7 @@ namespace Chatterino.Common
         public struct TwitchEmoteValue
         {
             public int Set { get; set; }
-            public int ID { get; set; }
+            public string ID { get; set; }
             public string ChannelName { get; set; }
         }
 
@@ -68,9 +68,9 @@ namespace Chatterino.Common
 
                         foreach (var emote in set.Value)
                         {
-                            int id;
+                            string id;
 
-                            int.TryParse(emote["id"], out id);
+                            id = emote["id"];
 
                             string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
 
@@ -212,36 +212,6 @@ namespace Chatterino.Common
                 Client.WriteConnection.MessageReceived += WriteConnection_MessageReceived;
             });
 
-            // secret telemetry, please ignore :)
-            // anonymously count user on fourtf.com with the first 32 characters of a sha 256 hash of the username
-            if (!Account.IsAnon)
-            {
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        string hash;
-                        using (var sha = SHA256.Create())
-                        {
-                            hash = string.Join("", sha
-                                .ComputeHash(Encoding.UTF8.GetBytes(username))
-                                .Select(item => item.ToString("x2")));
-                        }
-                        hash = hash.Remove(32);
-
-                        var request = WebRequest.Create($"https://fourtf.com/chatterino/countuser.php?hash={hash}");
-                        if (AppSettings.IgnoreSystemProxy)
-                        {
-                            request.Proxy = null;
-                        }
-                        using (var response = request.GetResponse())
-                        using (response.GetResponseStream())
-                        {
-                        }
-                    }
-                    catch { }
-                });
-            }
         }
 
         public static void Disconnect()
