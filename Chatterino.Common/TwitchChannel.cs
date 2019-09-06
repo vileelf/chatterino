@@ -68,11 +68,13 @@ namespace Chatterino.Common
 
                             var request =
                                 WebRequest.Create(
-                                    $"https://api.twitch.tv/kraken/chat/{Name}/badges?client_id={IrcManager.DefaultClientID}");
+                                    $"https://api.twitch.tv/kraken/chat/{Name}/badges");
                             if (AppSettings.IgnoreSystemProxy)
                             {
                                 request.Proxy = null;
                             }
+                            ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                            request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
                             using (var response = request.GetResponse())
                             using (var stream = response.GetResponseStream())
                             {
@@ -248,20 +250,21 @@ namespace Chatterino.Common
                     dynamic images = tiers[j]["images"];
                     string dark = images["dark"]["animated"]["1"];
                     string light = images["light"]["animated"]["1"];
-
+                    string darkbig = images["dark"]["animated"]["3"];
+                    string lightbig = images["light"]["animated"]["3"];
                     LazyLoadedImage lightemote = new LazyLoadedImage
                     {
                         Name = "cheer",
                         Url = light,
                         Tooltip = "Twitch Bits Donation",
-                        click_url = "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6"
+                        click_url = lightbig
                     };
                     LazyLoadedImage darkemote = new LazyLoadedImage
                     {
                         Name = "cheer",
                         Url = dark,
                         Tooltip = "Twitch Bits Donation",
-                        click_url = "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6"
+                        click_url = darkbig
                     };
                     customCheer.Add(lightemote, darkemote, min_bits, bitcolor);
                 }
@@ -496,13 +499,13 @@ namespace Chatterino.Common
                     {
                         ReloadEmotes();
                         //commented out till twitch adds support for the recent messages feature again.
-                        /*try
+                        try
                         {
                             var messages = new List<Message>();
 
                             var request =
                                 WebRequest.Create(
-                                    $"https://tmi.twitch.tv/api/rooms/{RoomID}/recent_messages?client_id={IrcManager.DefaultClientID}");
+                                    $"https://recent-messages.robotty.de/api/v2/recent-messages/{channelName}");
                             if (AppSettings.IgnoreSystemProxy)
                             {
                                 request.Proxy = null;
@@ -545,7 +548,7 @@ namespace Chatterino.Common
                         catch (Exception e)
                         {
                             GuiEngine.Current.log(e.ToString());
-                        }*/
+                        }
                     }
                 });
 

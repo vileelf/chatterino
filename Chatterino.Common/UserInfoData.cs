@@ -9,6 +9,7 @@ namespace Chatterino.Common
     public struct UserInfoData
     {
         public string UserName { get; set; }
+        public string UserId { get; set; }
         public TwitchChannel Channel { get; set; }
     }
 }

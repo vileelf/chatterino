@@ -32,6 +32,7 @@ namespace Chatterino.Common
         public bool EmoteBoundsChanged { get; set; } = true;
 
         public string Username { get; set; }
+        public string UserId { get; set; }
         public Word UsernameWord { get; set; } = null;
 
         public string DisplayName { get; set; }
@@ -83,7 +84,6 @@ namespace Chatterino.Common
             //var w = Stopwatch.StartNew();
 
             ParseTime = DateTime.Now;
-
             Channel = channel;
 
             var words = new List<Word>();
@@ -102,7 +102,12 @@ namespace Chatterino.Common
                     Username = login;
                 }
             }
-
+            
+            if (data.Tags.TryGetValue("user-id", out value))
+            {
+                UserId = value;
+            }
+            
             var slashMe = false;
 
             // Handle /me messages
@@ -536,7 +541,7 @@ namespace Chatterino.Common
                 Value = messageUser,
                 Color = UsernameColor,
                 Font = FontType.MediumBold,
-                Link = new Link(LinkType.UserInfo, new UserInfoData { UserName = Username, Channel = channel }),
+                Link = new Link(LinkType.UserInfo, new UserInfoData { UserName = Username, UserId = UserId, Channel = channel }),
                 CopyText = messageUser
             });
 

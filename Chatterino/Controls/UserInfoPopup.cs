@@ -64,12 +64,13 @@ namespace Chatterino.Controls
             {
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/channels/{data.UserName}?client_id={Common.IrcManager.DefaultClientID}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/channels/{data.UserId}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-
+                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                    request.Headers["Client-ID"]=$"{Common.IrcManager.DefaultClientID}";
                     using (var response = request.GetResponse())
                     using (var stream = response.GetResponseStream())
                     {
