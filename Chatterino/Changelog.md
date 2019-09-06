@@ -1,5 +1,12 @@
 ﻿# changelog
 
+## 1.6 hotfix 2
+- converted sub emotes and check if live over to twitch api v5.
+
+## 1.6 hotfix
+- added support for twitches new modified emotes
+- disabled the check for updates functionality
+
 ## 1.6
 - added tab highlighting for when a channel goes live and a channel setting for it
 - added a new setting to disable the x buttons on tabs

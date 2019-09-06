@@ -8,6 +8,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Reflection;
+using Newtonsoft.Json;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -46,18 +48,22 @@ namespace Chatterino.Common
         public static void LoadUsersEmotes() {
             try
             {
-                string username = Account.Username, oauth = Account.OauthToken;
+                string userid = Account.UserId, oauth = Account.OauthToken;
                 var request =
                     WebRequest.Create(
-                        $"https://api.twitch.tv/kraken/users/{username}/emotes?oauth_token={oauth}&client_id={Account.ClientId}");
+                        $"https://api.twitch.tv/kraken/users/{userid}/emotes");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
+                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"]=$"{DefaultClientID}";
+                request.Headers["Authorization"]=$"OAuth {oauth}";
                 using (var response = request.GetResponse())
                 using (var stream = response.GetResponseStream())
                 {
                     dynamic json = new JsonParser().Parse(stream);
+                    //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
                     Emotes.TwitchEmotes.Clear();
 
                     foreach (var set in json["emoticon_sets"])

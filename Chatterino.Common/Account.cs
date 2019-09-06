@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Net;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -12,6 +15,20 @@ namespace Chatterino.Common
         public string Username { get; set; }
         public string OauthToken { get; set; }
         public string ClientId { get; set; }
+        private string userid;
+        public string UserId {
+            get {
+                if (userid != null) {
+                    return userid;
+                } else {
+                    loadUserIDFromTwitch(this, Username, ClientId);
+                    return userid;
+                }
+            }
+            set {
+                userid = value;
+            }
+        }
         [JsonIgnore]
         public bool IsAnon { get; private set; }
 
@@ -20,8 +37,40 @@ namespace Chatterino.Common
             Username = username;
             OauthToken = oauthToken;
             ClientId = clientId;
+            loadUserIDFromTwitch(this, username, clientId);
         }
-
+        protected bool loadUserIDFromTwitch(Account account, string username, string clientId)
+        {
+            // call twitch kraken api
+            if (username != string.Empty && clientId != string.Empty) {
+                try
+                {
+                    var request =
+                        WebRequest.Create(
+                            $"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={clientId}");
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                   // request.Headers["Client-ID"]=$"{clientId}";
+                    //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
+                    using (var response = request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var parser = new JsonParser();
+                        dynamic json = parser.Parse(stream);
+                        
+                        account.UserId = json["users"][0]["_id"];
+                    }
+                }
+                catch
+                {
+                } 
+            }
+            return false;
+        }
+        
         public Account()
         {
             

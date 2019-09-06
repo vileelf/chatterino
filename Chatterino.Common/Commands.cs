@@ -226,7 +226,7 @@ namespace Chatterino.Common
             string space = "";
             if (AppSettings.ChatAllowSameMessage
             && !isMod && !s.StartsWith(".") && !s.StartsWith("/") && last == s) {
-                space = " ⁭";
+                space = " 󠀀";
             }
             last = s + space;
             return last;

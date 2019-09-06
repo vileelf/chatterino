@@ -445,7 +445,7 @@ namespace Chatterino.Common
             {
                 var request =
                     WebRequest.Create(
-                        $"https://api.twitch.tv/kraken/channels/{Name}?client_id={IrcManager.DefaultClientID}");
+                        $"https://api.twitch.tv/kraken/users/?client_id={IrcManager.DefaultClientID}&login={Name}&api_version=5");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
@@ -672,57 +672,59 @@ namespace Chatterino.Common
 
         private void checkIfIsLive()
         {
-            Task.Run(() =>
-            {
-                try
+            if (RoomID != -1) {
+                Task.Run(() =>
                 {
-                    var req =
-                        WebRequest.Create(
-                            $"https://api.twitch.tv/kraken/streams/{Name}?client_id={IrcManager.DefaultClientID}");
-                    if (AppSettings.IgnoreSystemProxy)
+                    try
                     {
-                        req.Proxy = null;
-                    }
-                    using (var res = req.GetResponse())
-                    using (var resStream = res.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-
-                        dynamic json = parser.Parse(resStream);
-
-                        var tmpIsLive = IsLive;
-
-                        IsLive = json["stream"] != null;
-
-                        if (!IsLive)
+                        var req =
+                            WebRequest.Create(
+                                $"https://api.twitch.tv/kraken/streams/{RoomID}");
+                        if (AppSettings.IgnoreSystemProxy)
                         {
-                            StreamViewerCount = 0;
-                            StreamStatus = null;
-                            StreamGame = null;
-
-                            if (tmpIsLive)
+                            req.Proxy = null;
+                        }
+                        ((HttpWebRequest)req).Accept="application/vnd.twitchtv.v5+json";
+                        req.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
+                        using (var res = req.GetResponse())
+                        using (var resStream = res.GetResponseStream())
+                        {
+                            
+                            var parser = new JsonParser();
+                            dynamic json = parser.Parse(resStream);
+                            //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
+                            var tmpIsLive = IsLive;
+                            IsLive = json["stream"] != null;
+                            if (!IsLive)
                             {
-                                LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(false));
+                                StreamViewerCount = 0;
+                                StreamStatus = null;
+                                StreamGame = null;
+
+                                if (tmpIsLive)
+                                {
+                                    LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(false));
+                                }
+                            }
+                            else
+                            {
+                                dynamic stream = json["stream"];
+                                dynamic channel = stream["channel"];
+
+                                StreamViewerCount = int.Parse(stream["viewers"]);
+                                StreamStatus = channel["status"];
+                                StreamGame = channel["game"];
+                                StreamStart = DateTime.Parse(stream["created_at"]);
+                                LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
                             }
                         }
-                        else
-                        {
-                            dynamic stream = json["stream"];
-                            dynamic channel = stream["channel"];
-
-                            StreamViewerCount = int.Parse(stream["viewers"]);
-                            StreamStatus = channel["status"];
-                            StreamGame = channel["game"];
-                            StreamStart = DateTime.Parse(stream["created_at"]);
-                            LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
-                        }
                     }
-                }
-                catch
-                {
-
-                }
-            });
+                    catch (Exception e)
+                    {
+                        GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
+                    }
+                });
+            }
         }
 
         private static void UpdateIsLiveTimerElapsed(object sender, ElapsedEventArgs args)
