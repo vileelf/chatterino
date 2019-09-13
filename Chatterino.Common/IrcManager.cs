@@ -301,9 +301,9 @@ namespace Chatterino.Common
                 }
 
                 var message = Commands.ProcessMessage(_message, channel, true);
-                message = Commands.AddSpace(message, isMod);
                 if (message == null)
                     return;
+                message = Commands.AddSpace(message, isMod);
 
                 if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
                 {
