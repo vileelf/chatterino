@@ -518,17 +518,55 @@ namespace Chatterino.Common
                                 dynamic json = parser.Parse(stream);
 
                                 dynamic _messages = json["messages"];
-
+                                
+                                IrcMessage msg;
+                                string sysMsg;
+                                Message message;
+                                string reason;
+                                string duration;
+                                int iduration;
+                                
                                 foreach (string s in _messages)
                                 {
-                                    IrcMessage msg;
-
                                     if (IrcMessage.TryParse(s, out msg))
                                     {
-                                        Message message = (new Message(msg, this) { HighlightTab = false });
-                                        if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                        if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
+                                            continue; //skip these messages
+                                        } else if (msg.Command == "CLEARCHAT" && !string.IsNullOrWhiteSpace(msg.Params)) {
+                                            msg.Tags.TryGetValue("ban-reason", out reason);
+
+                                            iduration = 0;
+                                            if (msg.Tags.TryGetValue("ban-duration", out duration))
+                                            {
+                                                int.TryParse(duration, out iduration);
+                                            }
+                                            message = new Message(
+                                                $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
+                                                HSLColor.Gray, true);
                                             messages.Add(message);
+                                        } else if (msg.Command == "USERNOTICE") {
+                                            msg.Tags.TryGetValue("system-msg", out sysMsg);
+                                            message = new Message(sysMsg, HSLColor.Gray, true)
+                                            {
+                                                HighlightType = HighlightType.Resub
+                                            };
+                                            messages.Add(message);
+                                            if (!string.IsNullOrEmpty(msg.Params))
+                                            {
+                                                message = new Message(msg, this)
+                                                {
+                                                    HighlightType = HighlightType.Resub
+                                                };
+                                                messages.Add(message);
+                                            }
+                                        } else {
+                                            message = (new Message(msg, this) { HighlightTab = false });
+                                            if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                                messages.Add(message);
+                                            }
                                         }
+                                        
+                                        
                                     }
                                 }
 
