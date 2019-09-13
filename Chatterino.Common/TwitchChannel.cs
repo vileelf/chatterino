@@ -490,10 +490,11 @@ namespace Chatterino.Common
                 Join();
 
                 GuiEngine.Current.LoadBadges();
+                loadData();
                 // recent chat
                 Task.Run(() =>
                 {
-                    loadData();
+                    
 
                     if (RoomID != -1)
                     {
