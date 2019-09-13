@@ -256,7 +256,7 @@ namespace Chatterino.Controls
                     {
                         string message;
 
-                        if (!Common.IrcManager.TryRemoveIgnoredUser(data.UserName, out message))
+                        if (!Common.IrcManager.TryRemoveIgnoredUser(data.UserName, data.UserId, out message))
                         {
                             MessageBox.Show(message, "Error while ignoring user.");
                         }
@@ -265,7 +265,7 @@ namespace Chatterino.Controls
                     {
                         string message;
 
-                        if (!Common.IrcManager.TryAddIgnoredUser(data.UserName, out message))
+                        if (!Common.IrcManager.TryAddIgnoredUser(data.UserName, data.UserId, out message))
                         {
                             MessageBox.Show(message, "Error while unignoring user.");
                         }
@@ -309,7 +309,7 @@ namespace Chatterino.Controls
                     bool result;
                     string message;
 
-                    Common.IrcManager.TryCheckIfFollowing(data.UserName, out result, out message);
+                    Common.IrcManager.TryCheckIfFollowing(data.UserName, data.UserId, out result, out message);
 
                     isFollowing = result;
 
@@ -322,7 +322,7 @@ namespace Chatterino.Controls
                     {
                         string message;
 
-                        if (Common.IrcManager.TryUnfollowUser(data.UserName, out message))
+                        if (Common.IrcManager.TryUnfollowUser(data.UserName, data.UserId, out message))
                         {
                             isFollowing = false;
 
@@ -337,7 +337,7 @@ namespace Chatterino.Controls
                     {
                         string message;
 
-                        if (Common.IrcManager.TryUnfollowUser(data.UserName, out message))
+                        if (Common.IrcManager.TryFollowUser(data.UserName, data.UserId, out message))
                         {
                             isFollowing = true;
 

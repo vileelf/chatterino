@@ -62,7 +62,7 @@ namespace Chatterino.Common
                     var S = s.SplitWords();
                     if (S.Length > 0)
                     {
-                        IrcManager.AddIgnoredUser(S[0]);
+                        IrcManager.AddIgnoredUser(S[0], null);
                     }
                 }
                 return null;
@@ -74,7 +74,7 @@ namespace Chatterino.Common
                     var S = s.SplitWords();
                     if (S.Length > 0)
                     {
-                        IrcManager.RemoveIgnoredUser(S[0]);
+                        IrcManager.RemoveIgnoredUser(S[0], null);
                     }
                 }
                 return null;

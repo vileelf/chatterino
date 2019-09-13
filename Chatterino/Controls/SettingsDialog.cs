@@ -488,7 +488,7 @@ namespace Chatterino.Controls
                     {
                         string message;
 
-                        if (IrcManager.TryAddIgnoredUser(dialog.Value.Trim(), out message))
+                        if (IrcManager.TryAddIgnoredUser(dialog.Value.Trim(), null, out message))
                         {
                             dgvIgnoredUsers.Rows.Add(dialog.Value.Trim());
                         }
@@ -507,7 +507,7 @@ namespace Chatterino.Controls
                     string message;
                     var username = (string)dgvIgnoredUsers.SelectedCells[0].Value;
 
-                    if (IrcManager.TryRemoveIgnoredUser(username, out message))
+                    if (IrcManager.TryRemoveIgnoredUser(username, null, out message))
                     {
                         dgvIgnoredUsers.Rows.RemoveAt(dgvIgnoredUsers.SelectedCells[0].RowIndex);
                     }

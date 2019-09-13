@@ -33,6 +33,7 @@ namespace Chatterino.Common
 
         public string Username { get; set; }
         public string UserId { get; set; }
+        public string Params { get; set; }
         public Word UsernameWord { get; set; } = null;
 
         public string DisplayName { get; set; }
@@ -86,11 +87,11 @@ namespace Chatterino.Common
             ParseTime = DateTime.Now;
             Channel = channel;
 
-            var words = new List<Word>();
+            List<Word> words = new List<Word>();
             string value;
 
-            var text = data.Params ?? "";
-
+            string text = data.Params ?? "";
+            Params = text;
             Username = data.PrefixNickname ?? "";
 
             if (string.IsNullOrWhiteSpace(Username))

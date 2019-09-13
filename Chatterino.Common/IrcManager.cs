@@ -45,6 +45,39 @@ namespace Chatterino.Common
             public string ChannelName { get; set; }
         }
 
+        public static string loadUserIDFromTwitch(string username)
+        {
+            // call twitch kraken api
+            if (username != string.Empty && DefaultClientID != string.Empty) {
+                try
+                {
+                    var request =
+                        WebRequest.Create(
+                            $"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={DefaultClientID}");
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                   // request.Headers["Client-ID"]=$"{DefaultClientID}";
+                    //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
+                    using (var response = request.GetResponse())
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var parser = new JsonParser();
+                        dynamic json = parser.Parse(stream);
+                        
+                        return json["users"][0]["_id"];
+                    }
+                }
+                catch (Exception e)
+                {
+                    GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
+                } 
+            }
+            return null;
+        }
+
         public static void LoadUsersEmotes() {
             try
             {
@@ -103,7 +136,7 @@ namespace Chatterino.Common
             Disconnect();
 
             // Login
-            string username = Account.Username, oauth = Account.OauthToken;
+            string username = Account.Username, oauth = Account.OauthToken, userid = Account.UserId;
 
             try
             {
@@ -142,26 +175,27 @@ namespace Chatterino.Common
                        var limit = 100;
                        var count = 0;
                        string nextLink =
-                           $"https://api.twitch.tv/kraken/users/{username}/blocks?limit={limit}&client_id={Account.ClientId}";
+                           $"https://api.twitch.tv/kraken/users/{userid}/blocks?limit={limit}";
 
-                       var request = WebRequest.Create(nextLink + $"&oauth_token={oauth}");
+                       var request = WebRequest.Create(nextLink);
                        if (AppSettings.IgnoreSystemProxy)
                        {
                            request.Proxy = null;
                        }
+                       ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                        request.Headers["Client-ID"]=$"{Account.ClientId}";
+                        request.Headers["Authorization"]=$"OAuth {oauth}";
                        using (var response = request.GetResponse())
                        using (var stream = response.GetResponseStream())
                        {
                            dynamic json = new JsonParser().Parse(stream);
-                           dynamic _links = json["_links"];
-                           nextLink = _links["next"];
                            dynamic blocks = json["blocks"];
                            count = blocks.Count;
                            foreach (var block in blocks)
                            {
                                dynamic user = block["user"];
                                string name = user["name"];
-                               string display_name = user["display_name"];
+                               //string display_name = user["display_name"];
                                twitchBlockedUsers[name] = null;
                            }
                        }
@@ -289,16 +323,16 @@ namespace Chatterino.Common
             return AppSettings.IgnoredUsers.ContainsKey(username.ToLower());
         }
 
-        public static void AddIgnoredUser(string username)
+        public static void AddIgnoredUser(string username, string userid)
         {
             string message;
 
-            TryAddIgnoredUser(username, out message);
+            TryAddIgnoredUser(username, userid, out message);
 
             NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
         }
 
-        public static bool TryAddIgnoredUser(string username, out string message)
+        public static bool TryAddIgnoredUser(string username, string userid, out string message)
         {
             if (AppSettings.IgnoreViaTwitch != true) {
                 AppSettings.IgnoredUsers[username.ToLower()] = null;
@@ -312,14 +346,19 @@ namespace Chatterino.Common
 
                 var success = false;
                 HttpStatusCode statusCode;
-
+                if (userid == null) {
+                    userid = loadUserIDFromTwitch(_username);
+                }
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{_username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
+                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                    request.Headers["Client-ID"]=$"{Account.ClientId}";
+                    request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                     request.Method = "PUT";
                     using (var response = (HttpWebResponse)request.GetResponse())
                     using (var stream = response.GetResponseStream())
@@ -348,16 +387,16 @@ namespace Chatterino.Common
             }
         }
 
-        public static void RemoveIgnoredUser(string username)
+        public static void RemoveIgnoredUser(string username, string userid)
         {
             string message;
 
-            TryRemoveIgnoredUser(username, out message);
+            TryRemoveIgnoredUser(username, userid, out message);
 
             NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
         }
 
-        public static bool TryRemoveIgnoredUser(string username, out string message)
+        public static bool TryRemoveIgnoredUser(string username, string userid, out string message)
         {
             if (AppSettings.IgnoreViaTwitch != true) {
                 AppSettings.IgnoredUsers.TryRemove(username.ToLower(), out object _);
@@ -372,15 +411,20 @@ namespace Chatterino.Common
 
                 var success = false;
                 HttpStatusCode statusCode;
-
+                if (userid == null) {
+                    userid = loadUserIDFromTwitch(username);
+                }
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/blocks/{username}?oauth_token={Account.OauthToken}&client_id={Account.ClientId}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
                     request.Method = "DELETE";
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
+                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                    request.Headers["Client-ID"]=$"{Account.ClientId}";
+                    request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                     using (var response = (HttpWebResponse)request.GetResponse())
                     using (var stream = response.GetResponseStream())
                     {
@@ -411,15 +455,21 @@ namespace Chatterino.Common
         }
 
         // Check followed users
-        public static bool TryCheckIfFollowing(string username, out bool result, out string message)
+        public static bool TryCheckIfFollowing(string username, string userid, out bool result, out string message)
         {
             try
             {
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/follows/channels/{username}?client_id={Account.ClientId}&oauth_token={Account.OauthToken}");
+                if (userid == null) {
+                    userid = loadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
+                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"]=$"{Account.ClientId}";
+                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                 using (var response = request.GetResponse())
                 using (var stream = response.GetResponseStream())
                 {
@@ -448,17 +498,23 @@ namespace Chatterino.Common
             }
         }
 
-        public static bool TryFollowUser(string username, out string message)
+        public static bool TryFollowUser(string username, string userid, out string message)
         {
             try
             {
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/follows/channels/{username}?client_id={Account.ClientId}&oauth_token={Account.OauthToken}");
+                if (userid == null) {
+                    userid = loadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "PUT";
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-
+                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"]=$"{Account.ClientId}";
+                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
+                
                 using (var response = request.GetResponse())
                 using (var stream = response.GetResponseStream())
                 {
@@ -473,17 +529,22 @@ namespace Chatterino.Common
             }
         }
 
-        public static bool TryUnfollowUser(string username, out string message)
+        public static bool TryUnfollowUser(string username, string userid, out string message)
         {
             try
             {
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.Username}/follows/channels/{username}?client_id={Account.ClientId}&oauth_token={Account.OauthToken}");
+                if (userid == null) {
+                    userid = loadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "DELETE";
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-
+                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"]=$"{Account.ClientId}";
+                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                 using (var response = request.GetResponse())
                 using (var stream = response.GetResponseStream())
                 {
@@ -504,6 +565,33 @@ namespace Chatterino.Common
         public static event EventHandler Connected;
 
         public static event EventHandler<ValueEventArgs<string>> NoticeAdded;
+
+        public static bool IsMessageIgnored(Message msg, TwitchChannel c) {
+            // check if message has an ignored keyword
+            if (AppSettings.IgnoredKeywordsRegex != null && AppSettings.IgnoredKeywordsRegex.IsMatch(msg.Params))
+            {
+                return true;
+            }
+            // check if message user is on the ignore list
+            if (IsIgnoredUser(msg.Username) == true)
+            {
+                //check if message is somewhere that the user has mod or broadcaster
+                switch (AppSettings.ChatShowIgnoredUsersMessages)
+                {
+                    case 1:
+                        if (!c.IsModOrBroadcaster)
+                            return true;
+                        break;
+                    case 2:
+                        if (!c.IsBroadcaster)
+                            return true;
+                        break;
+                    default:
+                        return true;
+                }
+            }
+            return false;
+        }
 
         private static void ReadConnection_MessageReceived(object sender, MessageEventArgs e)
         {

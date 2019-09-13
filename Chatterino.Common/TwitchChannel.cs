@@ -525,7 +525,10 @@ namespace Chatterino.Common
 
                                     if (IrcMessage.TryParse(s, out msg))
                                     {
-                                        messages.Add(new Message(msg, this) { HighlightTab = false });
+                                        Message message = (new Message(msg, this) { HighlightTab = false });
+                                        if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                            messages.Add(message);
+                                        }
                                     }
                                 }
 
