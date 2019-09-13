@@ -1,5 +1,11 @@
 ﻿# changelog
 
+## 1.7
+- fully converted chatterino over to the twith api v5
+- readded in the recent chat feature using third party api used by chatterino 2
+- fixed the follow button to actually follow when clicked
+- fixed the add a space for duplicate message feature
+
 ## 1.6 hotfix 2
 - converted sub emotes and check if live over to twitch api v5.
 
