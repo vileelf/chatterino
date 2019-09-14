@@ -459,10 +459,10 @@ namespace Chatterino.Common
                     var parser = new JsonParser();
 
                     dynamic json = parser.Parse(stream);
+                    dynamic users = json["users"];
+                    int roomID = -1;
 
-                    int roomID;
-
-                    if (int.TryParse(json["_id"], out roomID))
+                    if (users.length>0 && int.TryParse(users[0]["_id"], out roomID))
                     {
                         RoomID = roomID;
                         return true;
