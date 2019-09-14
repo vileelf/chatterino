@@ -1,5 +1,8 @@
 ﻿# changelog
 
+## 1.7 hotfix
+- fixed an issue preventing chatterino from finding the twitch channel id
+
 ## 1.7
 - fully converted chatterino over to the twith api v5
 - readded in the recent chat feature using third party api used by chatterino 2
