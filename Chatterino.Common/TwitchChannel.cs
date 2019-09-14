@@ -462,7 +462,7 @@ namespace Chatterino.Common
                     dynamic users = json["users"];
                     int roomID = -1;
 
-                    if (users.length>0 && int.TryParse(users[0]["_id"], out roomID))
+                    if (users.Count>0 && int.TryParse(users[0]["_id"], out roomID))
                     {
                         RoomID = roomID;
                         return true;
