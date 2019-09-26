@@ -82,8 +82,9 @@ namespace Chatterino.Controls
                         string createdAt = json["created_at"];
                         string followerCount = json["followers"];
                         string viewCount = json["views"];
+                        string broadCasterType = json["broadcaster_type"];
 
-                        lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}");
+                        lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}");
 
                         DateTime createAtTime;
 
