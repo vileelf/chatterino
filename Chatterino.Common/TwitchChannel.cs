@@ -120,7 +120,7 @@ namespace Chatterino.Common
             {
                 return emote;
             }
-            GuiEngine.Current.log("sub "+months);
+            //GuiEngine.Current.log("sub "+months);
             return null;
         }
 

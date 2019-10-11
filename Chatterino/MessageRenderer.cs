@@ -68,6 +68,9 @@ namespace Chatterino
             else if (message.HasAnyHighlightType(HighlightType.Whisper))
             {
                 highlightBrush = App.ColorScheme.ChatBackgroundWhisper;
+            } else if (message.HasAnyHighlightType(HighlightType.SearchResult))
+            {
+                highlightBrush = App.ColorScheme.ChatBackgroundSearchResult;
             }
 
             if (highlightBrush != null)
@@ -325,11 +328,6 @@ namespace Chatterino
             {
                 g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorder, 0, yOffset + 1, message.Width + 128, yOffset + 1);
                 g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorderInner, 0, yOffset, message.Width + 128, yOffset);
-            }
-
-            if (message.HasAnyHighlightType(HighlightType.SearchResult))
-            {
-                g.FillRectangle(Brushes.GreenYellow, 1, yOffset, 1, message.Height - 1);
             }
         }
 

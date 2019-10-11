@@ -775,59 +775,73 @@ namespace Chatterino.Controls
 
         public void SearchFor(string term)
         {
-            //    var searchId = ++CurrentSearchId;
+            ClearSearchHighlights();
+            if (string.IsNullOrEmpty(term))
+            {
+                return;
+            }
+            var searchId = ++CurrentSearchId;
 
-            //    var messages = Channel.CloneMessages();
+            var messages = Channel.CloneMessages();
 
-            //    var results = new Queue<Message>();
+            var results = new Queue<Message>();
 
-            //    for (var i = messages.Length - 1; i >= 0; i--)
-            //    {
-            //        if (searchId != CurrentSearchId)
-            //            return;
+            for (var i = messages.Length - 1; i >= 0; i--)
+            {
+                if (searchId != CurrentSearchId)
+                    return;
 
-            //        var message = messages[i];
+                var message = messages[i];
 
-            //        if ((message.Username != null &&
-            //             message.Username.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1) ||
-            //            message.RawMessage.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1)
-            //        {
-            //            message.HighlightType |= HighlightType.SearchResult;
+                if ((message.Username != null &&
+                    message.Username.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1) ||
+                    message.RawMessage.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    results.Enqueue(message);
+                }
+            }
 
-            //            results.Enqueue(message);
-            //        }
-            //    }
+            lock (Channel.MessageLock)
+            {
+                messages = Channel.Messages;
 
-            //    lock (Channel.MessageLock)
-            //    {
-            //        messages = Channel.Messages;
+                if (results.Count != 0)
+                {
+                    for (var i = messages.Length - 1; i >= 0; i--)
+                    {
+                        var message = messages[i];
+                        var peek = results.Peek();
 
-            //        if (results.Count != 0)
-            //        {
-            //            for (var i = messages.Length - 1; i >= 0; i--)
-            //            {
-            //                var message = messages[i];
-            //                var peek = results.Peek();
+                        if (message.Id == peek.Id)
+                        {
+                            message.HighlightType |= HighlightType.SearchResult;
+                            //_scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right);
+                            SearchResults[results.Dequeue().Id] = null;
 
-            //                if (message.Id == peek.Id)
-            //                {
-            //                    message.HighlightType |= HighlightType.SearchResult;
-            //                    _scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right);
-            //                    SearchResults[results.Dequeue().Id] = null;
+                            if (results.Count == 0)
+                                break;
+                        }
+                    }
+                }
+            }
 
-            //                    if (results.Count == 0)
-            //                        break;
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    this.Invoke(Invalidate);
+            this.Invoke(Invalidate);
         }
 
         public void ClearSearchHighlights()
         {
+            lock (Channel.MessageLock)
+            {
+                var messages = Channel.Messages;
 
+                for (var i = messages.Length - 1; i >= 0; i--)
+                {
+                    var message = messages[i];
+                    message.HighlightType &= ~HighlightType.SearchResult;
+                    //_scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right);
+                }
+            }
+            this.Invoke(Invalidate);
         }
 
         // header
