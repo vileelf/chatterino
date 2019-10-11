@@ -648,7 +648,7 @@ namespace Chatterino.Common
                         //        });
                         //    }
                         //}
-                        Match m = Regex.Match(s, "(\\w+)([1-9][0-9]*)");
+                        Match m = Regex.Match(s, "([A-Za-z]+)([1-9][0-9]*)");
                         if (bits != null && m.Success)
                         {
                             try{
