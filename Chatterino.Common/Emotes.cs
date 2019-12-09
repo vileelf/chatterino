@@ -143,9 +143,11 @@ namespace Chatterino.Common
             twitchEmotesCodeReplacements[@"R-?\)"] = "R-)";
 
             _bttvHatEmotes["IceCold"] = null;
-            //_bttvHatEmotes["SoSnowy"] = null;
+            _bttvHatEmotes["SoSnowy"] = null;
             _bttvHatEmotes["TopHat"] = null;
             _bttvHatEmotes["SantaHat"] = null;
+            _bttvHatEmotes["ReinDeer"] = null;
+            _bttvHatEmotes["CandyCane"] = null;
 
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }

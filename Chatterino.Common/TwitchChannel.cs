@@ -1248,7 +1248,9 @@ namespace Chatterino.Common
                     }
                     updateEmoteNameList();
                 }
-                catch { }
+                catch (Exception e) {
+                    e.Message.Log("emotes");
+                }
             });
 
             // ffz channel emotes
@@ -1322,8 +1324,9 @@ namespace Chatterino.Common
 
                                                 return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
                                             }
-                                            catch
+                                            catch(Exception e)
                                             {
+                                                e.Message.Log("emotes");
                                                 return null;
                                             }
                                         }
@@ -1331,7 +1334,9 @@ namespace Chatterino.Common
                                 }
                             }
                         }
-                        catch { }
+                        catch(Exception e) {
+                            e.Message.Log("emotes");
+                        }
 
                         dynamic sets = json["sets"];
 
@@ -1351,7 +1356,9 @@ namespace Chatterino.Common
                     }
                     updateEmoteNameList();
                 }
-                catch { }
+                catch(Exception e) {
+                    e.Message.Log("emotes");
+                }
             });
         }
     }
