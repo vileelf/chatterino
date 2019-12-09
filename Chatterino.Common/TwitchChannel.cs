@@ -1203,7 +1203,7 @@ namespace Chatterino.Common
                         }
                         catch (Exception e)
                         {
-                            e.Message.Log("emotes");
+                            e.Message.Log("emotes " + e.ToString());
                         }
                     }
 
@@ -1249,7 +1249,7 @@ namespace Chatterino.Common
                     updateEmoteNameList();
                 }
                 catch (Exception e) {
-                    e.Message.Log("emotes");
+                    e.Message.Log("emotes " + e.ToString());
                 }
             });
 
@@ -1280,7 +1280,7 @@ namespace Chatterino.Common
                         }
                         catch (Exception e)
                         {
-                            e.Message.Log("emotes");
+                            e.Message.Log("emotes " + e.ToString());
                         }
                     }
 
@@ -1326,7 +1326,7 @@ namespace Chatterino.Common
                                             }
                                             catch(Exception e)
                                             {
-                                                e.Message.Log("emotes");
+                                                e.Message.Log("emotes " + e.ToString());
                                                 return null;
                                             }
                                         }
@@ -1335,7 +1335,7 @@ namespace Chatterino.Common
                             }
                         }
                         catch(Exception e) {
-                            e.Message.Log("emotes");
+                            e.Message.Log("emotes " + e.ToString());
                         }
 
                         dynamic sets = json["sets"];
@@ -1357,7 +1357,7 @@ namespace Chatterino.Common
                     updateEmoteNameList();
                 }
                 catch(Exception e) {
-                    e.Message.Log("emotes");
+                    e.Message.Log("emotes " + e.ToString());
                 }
             });
         }

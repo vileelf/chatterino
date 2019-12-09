@@ -772,7 +772,7 @@ namespace Chatterino.Controls
         }
 
         public ConcurrentDictionary<long, object> SearchResults { get; } = new ConcurrentDictionary<long, object>();
-
+        static object searchTag = "searchfor";
         public void SearchFor(string term)
         {
             ClearSearchHighlights();
@@ -815,7 +815,7 @@ namespace Chatterino.Controls
                         if (message.Id == peek.Id)
                         {
                             message.HighlightType |= HighlightType.SearchResult;
-                            //_scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right);
+                            _scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
                             SearchResults[results.Dequeue().Id] = null;
 
                             if (results.Count == 0)
@@ -838,9 +838,9 @@ namespace Chatterino.Controls
                 {
                     var message = messages[i];
                     message.HighlightType &= ~HighlightType.SearchResult;
-                    //_scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right);
                 }
             }
+            _scroll.RemoveHighlightsWhere(h => h.Tag == searchTag);
             this.Invoke(Invalidate);
         }
 
