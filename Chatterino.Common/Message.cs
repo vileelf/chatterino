@@ -378,136 +378,6 @@ namespace Chatterino.Common
                             words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip });
                         }
                     }
-/*
-                    if (badge.StartsWith("bits/"))
-                    {
-                        int cheer;
-                        if (int.TryParse(badge.Substring("bits/".Length), out cheer))
-                        {
-                            object image;
-
-                            if (cheer >= 1000000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer1000000);
-                            }
-                            else if (cheer >= 900000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer900000);
-                            }
-                            else if (cheer >= 800000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer800000);
-                            }
-                            else if (cheer >= 700000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer700000);
-                            }
-                            else if (cheer >= 600000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer600000);
-                            }
-                            else if (cheer >= 500000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer500000);
-                            }
-                            else if (cheer >= 400000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer400000);
-                            }
-                            else if (cheer >= 300000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer300000);
-                            }
-                            else if (cheer >= 200000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer200000);
-                            }
-                            else if (cheer >= 100000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer100000);
-                            }
-                            else if (cheer >= 75000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer75000);
-                            }
-                            else if (cheer >= 50000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer50000);
-                            }
-                            else if (cheer >= 25000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer25000);
-                            }
-                            else if (cheer >= 10000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer10000);
-                            }
-                            else if (cheer >= 5000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer5000);
-                            }
-                            else if (cheer >= 1000)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer1000);
-                            }
-                            else if (cheer >= 100)
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer100);
-                            }
-                            else
-                            {
-                                image = GuiEngine.Current.GetImage(ImageType.Cheer1);
-                            }
-
-                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(image) { Scale = cheer > 100000 ? 0.25 : 1 }, Tooltip = "Twitch Cheer " + cheer });
-                        }
-                    }
-                    else 
-                    else
-                    {
-                        switch (badge)
-                        {
-                            case "staff/1":
-                                Badges |= MessageBadges.Staff;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeStaff)), Tooltip = "Twitch Staff" });
-                                break;
-                            case "admin/1":
-                                Badges |= MessageBadges.Admin;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeAdmin)), Tooltip = "Twitch Admin" });
-                                break;
-                            case "global_mod/1":
-                                Badges |= MessageBadges.GlobalMod;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeGlobalmod)), Tooltip = "Global Moderator" });
-                                break;
-                            case "moderator/1":
-                                Badges |= MessageBadges.Mod;
-                                if (channel.ModeratorBadge == null)
-                                {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeModerator)), Tooltip = "Channel Moderator" });
-                                }
-                                else
-                                {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip });
-                                }
-                                break;
-                            case "turbo/1":
-                                Badges |= MessageBadges.Turbo;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeTurbo)), Tooltip = "Turbo Subscriber" });
-                                break;
-                            case "broadcaster/1":
-                                Badges |= MessageBadges.Broadcaster;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeBroadcaster)), Tooltip = "Channel Broadcaster" });
-                                break;
-                            case "premium/1":
-                                Badges |= MessageBadges.Broadcaster;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeTwitchPrime)), Tooltip = "Twitch Prime" });
-                                break;
-                            case "partner/1":
-                                Badges |= MessageBadges.Broadcaster;
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.BadgeVerified)), Tooltip = "Twitch Verified" });
-                                break;
-                        }
-                    }*/
                 }
             }
 
@@ -547,7 +417,17 @@ namespace Chatterino.Common
             });
 
             var twitchEmotes = new List<Tuple<int, LazyLoadedImage>>();
-
+            if (data.Tags.TryGetValue("msg-id", out value)) {
+                if (value.Contains("highlighted-message")) {
+                    //Message message;
+                    //message = new Message("Highlighted Message", HSLColor.Gray, true)
+                    //{
+                    //    HighlightType = HighlightType.Resub
+                    //};
+                    //channel.AddMessage(message);
+                    HighlightType = HighlightType.Resub;
+                }
+            }
             // Twitch Emotes
             if (AppSettings.ChatEnableTwitchEmotes && data.Tags.TryGetValue("emotes", out value))
             {
@@ -581,25 +461,6 @@ namespace Chatterino.Common
                 twitchEmotes.Sort((e1, e2) => e1.Item1.CompareTo(e2.Item1));
             }
 
-            //if (data.Tags.TryGetValue("id", out value))
-            //{
-
-            //}
-            //if (data.Tags.TryGetValue("mod", out value))
-            //{
-
-            //}
-            //if (data.Tags.TryGetValue("subscriber", out value))
-            //{
-            //    if (value == "1")
-            //        Badges |= MessageBadges.Sub;
-            //}
-            //if (data.Tags.TryGetValue("turbo", out value))
-            //{
-            //    if (value == "1")
-            //        Badges |= MessageBadges.Turbo;
-            //}
-
             var i = 0;
             var currentTwitchEmoteIndex = 0;
             var currentTwitchEmote = twitchEmotes.FirstOrDefault();
@@ -631,23 +492,6 @@ namespace Chatterino.Common
 
                     if (s != null)
                     {
-                        //foreach (var match in Regex.Matches(@"\b\w+\b", s))
-                        //{
-                        //    LazyLoadedImage bttvEmote;
-                        //    if (AppSettings.ChatEnableBttvEmotes && (Emotes.BttvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.BttvChannelEmotes.TryGetValue(s, out bttvEmote))
-                        //        || (AppSettings.ChatEnableFfzEmotes && Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote)))
-                        //    {
-                        //        words.Add(new Word
-                        //        {
-                        //            Type = SpanType.LazyLoadedImage,
-                        //            Value = bttvEmote,
-                        //            Color = slashMe ? UsernameColor : new int?(),
-                        //            Tooltip = bttvEmote.Tooltip,
-                        //            Link = bttvEmote.Url,
-                        //            CopyText = bttvEmote.Name
-                        //        });
-                        //    }
-                        //}
                         Match m = Regex.Match(s, "([A-Za-z]+)([1-9][0-9]*)");
                         if (bits != null && m.Success)
                         {
