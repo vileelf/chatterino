@@ -16,6 +16,7 @@ namespace Chatterino.Common
         public static bool EnablePings { get; set; } = true;
 
         public bool HighlightTab { get; set; } = true;
+        
 
         public int X { get; set; } = 0;
         public int Y { get; set; } = 0;
@@ -80,7 +81,7 @@ namespace Chatterino.Common
         static CultureInfo enUS = new CultureInfo("en-US");
 
         public Message(IrcMessage data, TwitchChannel channel, bool enableTimestamp = true, bool enablePingSound = true,
-            bool isReceivedWhisper = false, bool isSentWhisper = false, bool includeChannel = false)
+            bool isReceivedWhisper = false, bool isSentWhisper = false, bool includeChannel = false, bool isPastMessage = false)
         {
             //var w = Stopwatch.StartNew();
 
@@ -419,12 +420,14 @@ namespace Chatterino.Common
             var twitchEmotes = new List<Tuple<int, LazyLoadedImage>>();
             if (data.Tags.TryGetValue("msg-id", out value)) {
                 if (value.Contains("highlighted-message")) {
-                    //Message message;
-                    //message = new Message("Highlighted Message", HSLColor.Gray, true)
-                    //{
-                    //    HighlightType = HighlightType.Resub
-                    //};
-                    //channel.AddMessage(message);
+                    if (!isPastMessage) {
+                        Message message;
+                        message = new Message("Highlighted Message", HSLColor.Gray, true)
+                        {
+                            HighlightType = HighlightType.Resub
+                        };
+                        channel.AddMessage(message);
+                    }
                     HighlightType = HighlightType.Resub;
                 }
             }

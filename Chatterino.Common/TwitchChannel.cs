@@ -561,7 +561,7 @@ namespace Chatterino.Common
                                                 messages.Add(message);
                                             }
                                         } else {
-                                            message = (new Message(msg, this) { HighlightTab = false });
+                                            message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
                                             if (IrcManager.IsMessageIgnored(message, this) != true ) {
                                                 messages.Add(message);
                                             }
