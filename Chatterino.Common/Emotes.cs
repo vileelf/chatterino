@@ -334,14 +334,17 @@ namespace Chatterino.Common
                     {
                         try
                         {
+                            if (File.Exists(bttvEmotesGlobalCache))
+                                File.Delete(bttvEmotesGlobalCache);
+
                             if (Util.IsLinux)
                             {
-                                Util.LinuxDownloadFile("https://api.betterttv.net/2/emotes", bttvEmotesGlobalCache);
+                                Util.LinuxDownloadFile("https://api.betterttv.net/3/cached/emotes/global", bttvEmotesGlobalCache);
                             }
                             else
                             {
                                 using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://api.betterttv.net/2/emotes"))
+                                using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/emotes/global"))
                                 using (var writeStream = File.OpenWrite(bttvEmotesGlobalCache))
                                 {
                                     readStream.CopyTo(writeStream);
@@ -357,9 +360,10 @@ namespace Chatterino.Common
                     using (var stream = File.OpenRead(bttvEmotesGlobalCache))
                     {
                         dynamic json = parser.Parse(stream);
-                        var template = "https:" + json["urlTemplate"]; //{{id}} {{image}}
+                        //var template = "https:" + json["urlTemplate"]; // urlTemplate is outdated, came from bttv v2 api, returned: //cdn.betterttv.net/emote/{{id}}/{{image}}
+                        var template = "https://cdn.betterttv.net/emote/{{id}}/{{image}}";
 
-                        foreach (var e in json["emotes"])
+                        foreach (var e in json)
                         {
                             string id = e["id"];
                             string code = e["code"];
@@ -391,6 +395,9 @@ namespace Chatterino.Common
                     {
                         try
                         {
+                            if (File.Exists(ffzEmotesGlobalCache))
+                                File.Delete(ffzEmotesGlobalCache);
+
                             if (Util.IsLinux)
                             {
                                 Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/set/global", ffzEmotesGlobalCache);

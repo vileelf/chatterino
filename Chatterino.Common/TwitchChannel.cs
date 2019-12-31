@@ -1166,200 +1166,227 @@ namespace Chatterino.Common
 
         public void ReloadEmotes()
         {
-            var channelName = Name;
-
-            var bttvChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"bttv_channel_{channelName}");
-            var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{channelName}");
             if (RoomID != -1)
             {
+                var channelName = Name;
+
+                var bttvChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"bttv_channel_{RoomID}");
+                var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{RoomID}");
+
                 LoadSubBadges(RoomID);
                 LoadChannelBits(RoomID);
-            }
-            //Emotes.ClearTwitchEmoteCache();
-            // bttv channel emotes
-            Task.Run(() =>
-            {
-                try
+
+                //Emotes.ClearTwitchEmoteCache();
+                // bttv channel emotes
+                Task.Run(() =>
                 {
-                    var parser = new JsonParser();
+                    try
+                    {
+                        var parser = new JsonParser();
 
                     //if (!File.Exists(bttvChannelEmotesCache))
                     {
-                        try
-                        {
-                            if (Util.IsLinux)
+                            try
                             {
-                                Util.LinuxDownloadFile("https://api.betterttv.net/2/channels/" + channelName, bttvChannelEmotesCache);
-                            }
-                            else
-                            {
-                                using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://api.betterttv.net/2/channels/" + channelName))
-                                using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
+                                if (File.Exists(bttvChannelEmotesCache))
+                                    File.Delete(bttvChannelEmotesCache);
+
+                                if (Util.IsLinux)
                                 {
-                                    readStream.CopyTo(writeStream);
+                                    Util.LinuxDownloadFile("https://api.betterttv.net/3/cached/users/twitch/" + RoomID, bttvChannelEmotesCache);
+                                }
+                                else
+                                {
+                                    using (var webClient = new WebClient())
+                                    using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID))
+                                    using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
+                                    {
+                                        readStream.CopyTo(writeStream);
+                                    }
                                 }
                             }
+                            catch (Exception e)
+                            {
+                                e.Message.Log("emotes");
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            e.Message.Log("emotes " + e.ToString());
-                        }
-                    }
 
-                    using (var stream = File.OpenRead(bttvChannelEmotesCache))
+                        using (var stream = File.OpenRead(bttvChannelEmotesCache))
+                        {
+                            dynamic json = parser.Parse(stream);
+                            //var template = "https:" + json["urlTemplate"]; // urlTemplate is outdated, came from bttv v2 api, returned: //cdn.betterttv.net/emote/{{id}}/{{image}}
+                            string template = "https://cdn.betterttv.net/emote/{{id}}/{{image}}";
+
+                            BttvChannelEmotes.Clear();
+
+                            foreach (var e in json["channelEmotes"])
+                            {
+                                string channel = channelName;
+
+                                AddBttvEmotes(template, e, channel);
+                            }
+
+                            foreach (var e in json["sharedEmotes"])
+                            {
+                                string channel = e["user"]["displayName"];
+
+                                AddBttvEmotes(template, e, channel);
+                            }
+                        }
+                        updateEmoteNameList();
+                    }
+                    catch (Exception e)
                     {
-                        dynamic json = parser.Parse(stream);
-                        var template = "https:" + json["urlTemplate"]; //{{id}} {{image}}
-
-                        BttvChannelEmotes.Clear();
-
-                        foreach (var e in json["emotes"])
-                        {
-                            string id = e["id"];
-                            string code = e["code"];
-                            string channel = e["channel"];
-
-                            LazyLoadedImage emote;
-                            if (Emotes.BttvChannelEmotesCache.TryGetValue(id, out emote))
-                            {
-                                BttvChannelEmotes[code] = emote;
-                            }
-                            else
-                            {
-                                string imageType = e["imageType"];
-                                string url = template.Replace("{{id}}", id);
-
-                                double scale;
-                                url = Emotes.GetBttvEmoteLink(url, out scale);
-
-                                Emotes.BttvChannelEmotesCache[id] =
-                                    BttvChannelEmotes[code] =
-                                        new LazyLoadedImage
-                                        {
-                                            Name = code,
-                                            Url = url,
-                                            Tooltip = code + "\nBetterTTV Channel Emote\nChannel: " + channel,
-                                            Scale = scale,
-                                            IsEmote = true
-                                        };
-                            }
-                        }
+                        e.Message.Log("emotes");
                     }
-                    updateEmoteNameList();
-                }
-                catch (Exception e) {
-                    e.Message.Log("emotes " + e.ToString());
-                }
-            });
+                });
 
-            // ffz channel emotes
-            Task.Run(() =>
-            {
-                try
+                // ffz channel emotes
+                Task.Run(() =>
                 {
-                    var parser = new JsonParser();
+                    try
+                    {
+                        var parser = new JsonParser();
 
                     //if (!File.Exists(ffzChannelEmotesCache))
                     {
-                        try
-                        {
-                            if (Util.IsLinux)
+                            try
                             {
-                                Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/" + channelName, ffzChannelEmotesCache);
-                            }
-                            else
-                            {
-                                using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/" + channelName))
-                                using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
+                                if (File.Exists(ffzChannelEmotesCache))
+                                    File.Delete(ffzChannelEmotesCache);
+
+                                if (Util.IsLinux)
                                 {
-                                    readStream.CopyTo(writeStream);
+                                    Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/" + channelName, ffzChannelEmotesCache);
                                 }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            e.Message.Log("emotes " + e.ToString());
-                        }
-                    }
-
-                    using (var stream = File.OpenRead(ffzChannelEmotesCache))
-                    {
-                        dynamic json = parser.Parse(stream);
-
-                        dynamic room = json["room"];
-
-                        try
-                        {
-                            object moderator;
-
-                            if (room.TryGetValue("moderator_badge", out moderator))
-                            {
-                                if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
+                                else
                                 {
-                                    var url = "https:" + (moderator as string);
-                                    ModeratorBadge = new LazyLoadedImage
+                                    using (var webClient = new WebClient())
+                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/" + channelName))
+                                    using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
                                     {
-                                        Url = url,
-                                        Tooltip = "custom moderator badge\nFFZ",
-                                        LoadAction = () =>
+                                        readStream.CopyTo(writeStream);
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                e.Message.Log("emotes");
+                            }
+                        }
+
+                        using (var stream = File.OpenRead(ffzChannelEmotesCache))
+                        {
+                            dynamic json = parser.Parse(stream);
+
+                            dynamic room = json["room"];
+
+                            try
+                            {
+                                object moderator;
+
+                                if (room.TryGetValue("moderator_badge", out moderator))
+                                {
+                                    if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
+                                    {
+                                        var url = "https:" + (moderator as string);
+                                        ModeratorBadge = new LazyLoadedImage
                                         {
-                                            try
+                                            Url = url,
+                                            Tooltip = "custom moderator badge\nFFZ",
+                                            LoadAction = () =>
                                             {
-                                                object img;
-
-                                                var request = WebRequest.Create(url);
-                                                if (AppSettings.IgnoreSystemProxy)
+                                                try
                                                 {
-                                                    request.Proxy = null;
+                                                    object img;
+
+                                                    var request = WebRequest.Create(url);
+                                                    if (AppSettings.IgnoreSystemProxy)
+                                                    {
+                                                        request.Proxy = null;
+                                                    }
+                                                    using (var response = request.GetResponse())
+                                                    using (var s = response.GetResponseStream())
+                                                    {
+                                                        img = GuiEngine.Current.ReadImageFromStream(s);
+                                                    }
+
+                                                    GuiEngine.Current.FreezeImage(img);
+
+                                                    return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
                                                 }
-                                                using (var response = request.GetResponse())
-                                                using (var s = response.GetResponseStream())
+                                                catch (Exception e)
                                                 {
-                                                    img = GuiEngine.Current.ReadImageFromStream(s);
+                                                    e.Message.Log("emotes");
+                                                    return null;
                                                 }
-
-                                                GuiEngine.Current.FreezeImage(img);
-
-                                                return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
                                             }
-                                            catch(Exception e)
-                                            {
-                                                e.Message.Log("emotes " + e.ToString());
-                                                return null;
-                                            }
-                                        }
-                                    };
+                                        };
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                e.Message.Log("emotes");
+                            }
+
+                            dynamic sets = json["sets"];
+
+                            FfzChannelEmotes.Clear();
+
+                            foreach (var set in sets.Values)
+                            {
+                                string title = set["title"];
+
+                                dynamic emoticons = set["emoticons"];
+
+                                foreach (LazyLoadedImage emote in Emotes.GetFfzEmoteFromDynamic(emoticons, false))
+                                {
+                                    FfzChannelEmotes[emote.Name] = emote;
                                 }
                             }
                         }
-                        catch(Exception e) {
-                            e.Message.Log("emotes " + e.ToString());
-                        }
-
-                        dynamic sets = json["sets"];
-
-                        FfzChannelEmotes.Clear();
-
-                        foreach (var set in sets.Values)
-                        {
-                            string title = set["title"];
-
-                            dynamic emoticons = set["emoticons"];
-
-                            foreach (LazyLoadedImage emote in Emotes.GetFfzEmoteFromDynamic(emoticons, false))
-                            {
-                                FfzChannelEmotes[emote.Name] = emote;
-                            }
-                        }
+                        updateEmoteNameList();
                     }
-                    updateEmoteNameList();
-                }
-                catch(Exception e) {
-                    e.Message.Log("emotes " + e.ToString());
-                }
-            });
+                    catch (Exception e)
+                    {
+                        e.Message.Log("emotes");
+                    }
+                });
+            }
+        }
+
+        // seperate method to prevent redundant code after moving to bttv v3 api
+        // call once for "channel emotes", and a seperate time for "shared emotes"
+        private void AddBttvEmotes(string template, dynamic e, string channel)
+        {
+            string id = e["id"];
+            string code = e["code"];
+
+            LazyLoadedImage emote;
+            if (Emotes.BttvChannelEmotesCache.TryGetValue(id, out emote))
+            {
+                BttvChannelEmotes[code] = emote;
+            }
+            else
+            {
+                string imageType = e["imageType"];
+                string url = template.Replace("{{id}}", id);
+
+                double scale;
+                url = Emotes.GetBttvEmoteLink(url, out scale);
+
+                Emotes.BttvChannelEmotesCache[id] =
+                    BttvChannelEmotes[code] =
+                        new LazyLoadedImage
+                        {
+                            Name = code,
+                            Url = url,
+                            Tooltip = code + "\nBetterTTV Channel Emote\nChannel: " + channel,
+                            Scale = scale,
+                            IsEmote = true
+                        };
+            }
         }
     }
 }
