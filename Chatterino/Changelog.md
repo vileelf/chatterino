@@ -4,7 +4,7 @@
 - added follower count and streamer type to the user info popup 
 - added the start of a search feature. Type in the chatbox and press ctrl+f to highlight any match. remove all text and press ctrl+f again to clear the search highlights
 - added missing "hat" emotes to the hardcoded list. So things like SoSnowy should work
-- added support for the highlighted messages feature from the new twith points system
+- added support for the highlighted messages feature from the new twitch points system
 - updated to use the new bttv api so bttv emotes load again
 
 ## 1.7 hotfix
