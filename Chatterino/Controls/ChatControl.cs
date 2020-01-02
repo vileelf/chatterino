@@ -242,7 +242,7 @@ namespace Chatterino.Controls
                         selection = null;
                     else
                         selection = new Selection(selection.Start.WithMessageIndex(selection.Start.MessageIndex - 1),
-                            selection.Start.WithMessageIndex(selection.End.MessageIndex - 1));
+                            selection.End.WithMessageIndex(selection.End.MessageIndex - 1));
                 }
 
                 _scroll.Value--;
@@ -309,7 +309,7 @@ namespace Chatterino.Controls
                 else
                     selection =
                         new Selection(selection.Start.WithMessageIndex(selection.Start.MessageIndex - e.Value.Length),
-                            selection.Start.WithMessageIndex(selection.End.MessageIndex - e.Value.Length));
+                            selection.End.WithMessageIndex(selection.End.MessageIndex - e.Value.Length));
             }
 
             _scroll.Value -= e.Value.Length;
@@ -419,7 +419,6 @@ namespace Chatterino.Controls
         {
             base.OnKeyPress(e);
 
-            //if ((ModifierKeys & ~Keys.Shift) == Keys.None)
             {
                 if (e.KeyChar == '\b')
                 {

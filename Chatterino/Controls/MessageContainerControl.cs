@@ -414,7 +414,7 @@ namespace Chatterino.Controls
                     selection = new Selection(position, position);
 
                     var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
-
+                    mouseDownWord = word;
                     if (word != null)
                     {
                         position = msg.MessagePositionAtPoint(graphics, new CommonPoint(word.X + 1, e.Y - msg.Y), index);
@@ -423,7 +423,6 @@ namespace Chatterino.Controls
                         {
                             mouseDownLink = word.Link;
                         }
-                        mouseDownWord = word;
                         mouseDownSelection = new Selection(position, position2);
                     }
                     graphics?.Dispose();
