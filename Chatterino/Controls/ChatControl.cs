@@ -646,9 +646,7 @@ namespace Chatterino.Controls
             {
                 items =
                     tabCompleteItems =
-                        channel.GetCompletionItems(wordStart == 0 || (wordStart == 1 && text[0] == '@'),
-                            (!text.Trim().StartsWith("!") && !text.Trim().StartsWith("/") &&
-                             !text.Trim().StartsWith(".")))
+                        channel.GetCompletionItems(wordStart == 0 || (wordStart == 1 && text[0] == '@'), true)
                             .Where(s => s.Key.StartsWith(word))
                             .Select(x => x.Value)
                             .ToArray();
