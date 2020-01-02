@@ -421,18 +421,7 @@ namespace Chatterino.Controls
 
             //if ((ModifierKeys & ~Keys.Shift) == Keys.None)
             {
-                if (e.KeyChar == '\u007f')
-                    return;
-
-                if (e.KeyChar == ' ' && ModifierKeys == Keys.Control)
-                {
-                    // show autocomplete
-                }
-                else if (e.KeyChar == '\x7F')
-                {
-                    Input.Logic.Delete(true, false);
-                }
-                else if (e.KeyChar == '\b')
+                if (e.KeyChar == '\b')
                 {
                     resetCompletion();
                 }
@@ -646,7 +635,9 @@ namespace Chatterino.Controls
             {
                 items =
                     tabCompleteItems =
-                        channel.GetCompletionItems(wordStart == 0 || (wordStart == 1 && text[0] == '@'), true)
+                        channel.GetCompletionItems(wordStart == 0 || (wordStart == 1 && text[0] == '@'),
+                            (!text.Trim().StartsWith("!") && !text.Trim().StartsWith("/") &&
+                             !text.Trim().StartsWith(".")))
                             .Where(s => s.Key.StartsWith(word))
                             .Select(x => x.Value)
                             .ToArray();

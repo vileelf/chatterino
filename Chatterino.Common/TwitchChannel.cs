@@ -864,13 +864,12 @@ namespace Chatterino.Common
             if (AppSettings.ChatMentionUsersWithAt)
             {
                 usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
-                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>((allowAt ? "@" : "") + x.Key, (allowAt ? "@" : "") + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
+                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>("@" + x.Key, "@" + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
             }
             else
             {
                 usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>(x.Key, (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
-                if (allowAt)
-                    usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>("@" + x.Key, "@" + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
+                usernames.AddRange(Users.Select(x => new KeyValuePair<string, string>("@" + x.Key, "@" + (!AppSettings.ChatTabLocalizedNames && !string.Equals(x.Value, x.Key, StringComparison.OrdinalIgnoreCase) ? x.Key.ToLower() : x.Value))));
             }
 
             lock (Commands.CustomCommandsLock)

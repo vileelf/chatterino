@@ -73,6 +73,7 @@ namespace Chatterino.Controls
 
         protected Link mouseDownLink = null;
         protected Word mouseDownWord = null;
+        protected Selection mouseDownSelection = null;
         protected Selection selection = null;
         protected bool mouseDown = false;
 
@@ -409,19 +410,23 @@ namespace Chatterino.Controls
                 {
                     var graphics = App.UseDirectX ? null : CreateGraphics();
                     var position = msg.MessagePositionAtPoint(graphics, new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y), index);
-                    graphics?.Dispose();
 
                     selection = new Selection(position, position);
 
                     var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
+
                     if (word != null)
                     {
+                        position = msg.MessagePositionAtPoint(graphics, new CommonPoint(word.X + 1, e.Y - msg.Y), index);
+                        var position2 = msg.MessagePositionAtPoint(graphics, new CommonPoint((word.X + 1 + word.Width), e.Y - msg.Y), index);
                         if (word.Link != null)
                         {
                             mouseDownLink = word.Link;
-                            mouseDownWord = word;
                         }
+                        mouseDownWord = word;
+                        mouseDownSelection = new Selection(position, position2);
                     }
+                    graphics?.Dispose();
                 }
                 else
                     selection = null;
@@ -476,11 +481,16 @@ namespace Chatterino.Controls
         {
             base.OnDoubleClick(e);
 
-            if (AppSettings.ChatLinksDoubleClickOnly)
+            if (AppSettings.ChatLinksDoubleClickOnly && mouseDownLink != null)
             {
-                if (mouseDownLink != null)
+                GuiEngine.Current.HandleLink(mouseDownLink);
+            } else {
+                //select the word
+                if (mouseDownWord != null)
                 {
-                    GuiEngine.Current.HandleLink(mouseDownLink);
+                    clearOtherSelections();
+                    Invalidate();
+                    selection = mouseDownSelection;
                 }
             }
         }
