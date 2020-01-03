@@ -731,7 +731,6 @@ namespace Chatterino.Common
             else if (msg.Command == "WHISPER")
             {
                 TwitchChannel.WhisperChannel.AddMessage(new Message(msg, TwitchChannel.WhisperChannel, true, false, isReceivedWhisper: true));
-
                 LastReceivedWhisperUser = msg.PrefixUser;
 
                 if (AppSettings.ChatEnableInlineWhispers)
@@ -762,7 +761,6 @@ namespace Chatterino.Common
                             HighlightType = HighlightType.Resub
                         };
                         c.AddMessage(sysMessage);
-
                         if (!string.IsNullOrEmpty(msg.Params))
                         {
                             var message = new Message(msg, c)
@@ -770,6 +768,16 @@ namespace Chatterino.Common
                                 HighlightType = HighlightType.Resub
                             };
                             c.AddMessage(message);
+                            c.Users[message.Username.ToUpper()] = message.DisplayName;
+                        } else {
+                            string name;
+                            msg.Tags.TryGetValue("msg-param-recipient-display-name", out name);
+                            if (string.IsNullOrEmpty(name)) {
+                                msg.Tags.TryGetValue("display-name", out name);
+                            }
+                            if (!string.IsNullOrEmpty(name)) {
+                                c.Users[name.ToUpper()] = name;
+                            }
                         }
                     }
                     catch { }

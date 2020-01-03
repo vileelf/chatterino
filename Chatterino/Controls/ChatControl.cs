@@ -933,17 +933,10 @@ namespace Chatterino.Controls
                         }
                     }));
                 _contextMenu.MenuItems.Add("-");
-                _contextMenu.MenuItems.Add(new MenuItem("Reload Channel Emotes", (s, e) =>
+                _contextMenu.MenuItems.Add(new MenuItem("Reload Emotes", (s, e) =>
                 {
                     _selected.Channel.ReloadEmotes();
-                }));
-                _contextMenu.MenuItems.Add(new MenuItem("Reload Sub Emotes", (s, e) =>
-                {
                     _selected.Channel.ReloadSubEmotes();
-                }));
-                _contextMenu.MenuItems.Add(new MenuItem("Reload username list", (s, e) =>
-                {
-                    _selected.Channel.fetchUsernames();
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
