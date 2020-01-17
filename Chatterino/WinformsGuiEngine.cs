@@ -229,29 +229,30 @@ namespace Chatterino
         {
             if (image != null)
             {
-                var img = (Image)image;
+                Image img = (Image)image;
 
-                var animated = ImageAnimator.CanAnimate(img);
+                bool animated = ImageAnimator.CanAnimate(img);
 
                 if (animated)
                 {
                     try
                     {
-                        var dimension = new FrameDimension(img.FrameDimensionsList[0]);
-                        var frameCount = img.GetFrameCount(dimension);
-                        var frameDuration = new int[frameCount];
-                        var currentFrame = 0;
-                        var currentFrameOffset = 0;
+                        FrameDimension dimension = new FrameDimension(img.FrameDimensionsList[0]);
+                        int frameCount = img.GetFrameCount(dimension);
+                        int[] frameDuration = new int[frameCount];
+                        int currentFrame = 0;
+                        int currentFrameOffset = 0;
 
-                        var times = img.GetPropertyItem(0x5100).Value;
-                        var frame = 0;
-                        for (var i = 0; i < frameCount; i++)
+                        PropertyItem framedelay = img.GetPropertyItem(0x5100);
+                        Byte[] times = framedelay.Value;
+                        int num = 0;
+                        for (int i = 0; i < frameCount; i++)
                         {
-                            var num = BitConverter.ToInt32(times, 4 * frame);
+                            num = BitConverter.ToInt32(times, 4 * i);
 
-                            if (num == 0)
+                            if (num <= 1)
                             {
-                                frameDuration[i] = 4;
+                                frameDuration[i] = 10;
                             }
                             else
                             {
@@ -259,8 +260,6 @@ namespace Chatterino
                             }
                         }
                         emote.IsAnimated = true;
-
-                        Console.WriteLine("new gif emote " + emote.Name);
 
                         App.GifEmoteFramesUpdating += (s, e) =>
                         {
@@ -288,7 +287,9 @@ namespace Chatterino
                             }
                         };
                     }
-                    catch { }
+                    catch (Exception e){ 
+                        this.log(e.ToString());
+                    }
                 }
             }
         }
