@@ -185,7 +185,7 @@ namespace Chatterino.Controls
 
             // username
             {
-                var match = Regex.Match(text, @"username=(?<value>[0-9a-zA-Z]+)");
+                var match = Regex.Match(text, @"username=(?<value>[0-9a-zA-Z_]+)");
 
                 var group = match.Groups["value"];
 
