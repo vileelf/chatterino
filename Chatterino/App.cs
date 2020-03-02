@@ -139,13 +139,19 @@ namespace Chatterino
             {
                 (e.ExceptionObject as Exception).Log("exception", "{0}\n");
             };
-
             // Update gif emotes
             new Timer { Interval = 30, Enabled = true }.Tick += (s, e) =>
                 {
                     if (AppSettings.ChatEnableGifAnimations)
                     {
-                        GifEmoteFramesUpdating?.Invoke(null, EventArgs.Empty);
+                        lock (GuiEngine.Current.GifEmotesLock)
+                        {
+                            foreach (LazyLoadedImage emote in GuiEngine.Current.GifEmotesOnScreen) {
+                                if (emote.HandleAnimation != null) {
+                                    emote.HandleAnimation();
+                                }
+                            }
+                        }
                         GifEmoteFramesUpdated?.Invoke(null, EventArgs.Empty);
                     }
                 };

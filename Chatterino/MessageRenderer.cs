@@ -159,7 +159,7 @@ namespace Chatterino
                 //}
             }
 
-            Action<int, bool> addWordToGifList = (i, selected) =>
+            Action<int, bool, LazyLoadedImage> addWordToGifList = (i, selected, emote) =>
              {
                  var word = message.Words[i];
                  var words = new List<Word>();
@@ -191,6 +191,8 @@ namespace Chatterino
                  }
 
                  gifEmotesOnScreen?.Add(new GifEmoteState(word.X + xOffset, word.Y + yOffset, word.Width, word.Height, words, selected, message.HighlightType, message.Disabled, yOffset, xOffset));
+                 
+                 GuiEngine.Current.GifEmotesOnScreen.Add(emote);
              };
 
             if (selection != null && !selection.IsEmpty && selection.First.MessageIndex <= currentLine &&
@@ -286,7 +288,7 @@ namespace Chatterino
 
                             if (emote.IsAnimated)
                             {
-                                addWordToGifList(i, true);
+                                addWordToGifList(i, true, emote);
                             }
                             else
                             {
@@ -302,7 +304,7 @@ namespace Chatterino
                             var emote = (LazyLoadedImage)word.Value;
                             if (emote.IsAnimated)
                             {
-                                addWordToGifList(i, true);
+                                addWordToGifList(i, true, emote);
                             }
                         }
                     }
@@ -318,7 +320,7 @@ namespace Chatterino
                         var emote = (LazyLoadedImage)word.Value;
                         if (emote.IsAnimated)
                         {
-                            addWordToGifList(i, false);
+                            addWordToGifList(i, false, emote);
                         }
                     }
                 }

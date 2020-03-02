@@ -262,56 +262,6 @@ namespace Chatterino.Controls
                     graphics?.Dispose();
                 }
 
-
-
-                //int scrollDistance = (int)(e.Delta * AppSettings.ScrollMultiplyer);
-
-                //double value = _scroll.Value;
-                //int index = (int)_scroll.Value;
-
-                //if (MessageLock != null)
-                //{
-                //    Graphics graphics = App.UseDirectX ? null : CreateGraphics();
-
-                //    lock (MessageLock)
-                //    {
-                //        while (true)
-                //        {
-                //            Messages[index].CalculateBounds(graphics, Width - MessagePadding.Left - MessagePadding.Right);
-
-                //            if (scrollDistance - (Messages[index].Height * (value % 1)) < 0)
-                //            {
-
-
-                //                break;
-                //            }
-                //            else
-                //            {
-                //                scrollDistance -= Messages[index].Height;
-
-                //                value -= _scroll.Value % 1;
-                //            }
-
-                //            index--;
-                //        }
-
-                //        _scroll.Value = value;
-                //    }
-
-                //    graphics?.Dispose();
-                //}
-
-                //if (e.Delta > 0)
-                //    scrollAtBottom = false;
-                //else
-                //    checkScrollBarPosition();
-
-                //updateMessageBounds();
-
-                //Invalidate();
-
-                //_scroll.Value -= ((double)e.Delta / 40 * mouseScrollMultiplyer * AppSettings.ScrollMultiplyer);
-
                 if (e.Delta > 0)
                     scrollAtBottom = false;
                 else
@@ -542,223 +492,232 @@ namespace Chatterino.Controls
         {
             lock (bufferLock)
             {
-                try
-                {
-                    var gifEmotesOnScreen = new List<GifEmoteState>();
-
-                    if (buffer == null)
+                lock (GuiEngine.Current.GifEmotesLock) {
+                    try
                     {
-                        buffer = context.Allocate(e.Graphics, ClientRectangle);
-                    }
-
-                    var g = buffer.Graphics;
-                    //var g = e.Graphics;
-
-                    g.Clear((App.ColorScheme.ChatBackground as SolidBrush).Color);
-
-                    var borderPen = Selected ? App.ColorScheme.ChatBorderFocused : App.ColorScheme.ChatBorder;
-
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                    // DRAW MESSAGES
-                    var M = GetMessagesClone();
-
-                    if (M != null && M.Length > 0)
-                    {
-                        var startIndex = Math.Max(0, (int)_scroll.Value);
-                        if (startIndex < M.Length)
+                        GifEmotesOnScreen.Clear();
+                        GuiEngine.Current.GifEmotesOnScreen.Clear();
+                        if (buffer == null)
                         {
-                            var yStart = MessagePadding.Top - (int)(M[startIndex].Height * (_scroll.Value % 1));
-                            var h = Height - MessagePadding.Top - MessagePadding.Bottom;
+                            buffer = context.Allocate(e.Graphics, ClientRectangle);
+                        }
 
+                        var g = buffer.Graphics;
+                        //var g = e.Graphics;
+
+                        g.Clear((App.ColorScheme.ChatBackground as SolidBrush).Color);
+
+                        var borderPen = Selected ? App.ColorScheme.ChatBorderFocused : App.ColorScheme.ChatBorder;
+
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                        // DRAW MESSAGES
+                        var M = GetMessagesClone();
+
+                        if (M != null && M.Length > 0)
+                        {
+                            var startIndex = Math.Max(0, (int)_scroll.Value);
                             if (startIndex < M.Length)
                             {
-                                var y = yStart;
+                                var yStart = MessagePadding.Top - (int)(M[startIndex].Height * (_scroll.Value % 1));
+                                var h = Height - MessagePadding.Top - MessagePadding.Bottom;
 
-                                //for (int i = 0; i < startIndex; i++)
-                                //{
-                                //    M[i].IsVisible = false;
-                                //}
-
-                                for (var i = startIndex; i < M.Length; i++)
+                                if (startIndex < M.Length)
                                 {
-                                    var msg = M[i];
-                                    //msg.IsVisible = true;
+                                    var y = yStart;
 
-                                    MessageRenderer.DrawMessage(g, msg, MessagePadding.Left, y, selection, i, !App.UseDirectX, gifEmotesOnScreen, allowMessageSeperator: AllowMessageSeperator);
+                                    //for (int i = 0; i < startIndex; i++)
+                                    //{
+                                    //    M[i].IsVisible = false;
+                                    //}
 
-                                    if (y - msg.Height > h)
+                                    for (var i = startIndex; i < M.Length; i++)
                                     {
-                                        //for (; i < M.Length; i++)
-                                        //{
-                                        //    M[i].IsVisible = false;
-                                        //}
+                                        var msg = M[i];
+                                        //msg.IsVisible = true;
 
-                                        break;
-                                    }
+                                        MessageRenderer.DrawMessage(g, msg, MessagePadding.Left, y, 
+                                            selection, i, !App.UseDirectX, GifEmotesOnScreen, 
+                                            allowMessageSeperator: AllowMessageSeperator);
 
-                                    y += msg.Height;
-
-                                    if (AppSettings.ChatShowLastReadMessageIndicator && LastReadMessage == msg && i != M.Length - 1)
-                                    {
-                                        g.FillRectangle(lastReadMessageBrush, 0, y, Width, 1);
-                                    }
-                                }
-
-                                GifEmotesOnScreen = gifEmotesOnScreen;
-                            }
-
-                            if (App.UseDirectX)
-                            {
-                                SharpDX.Direct2D1.DeviceContextRenderTarget renderTarget = null;
-                                var dc = g.GetHdc();
-
-                                renderTarget = new SharpDX.Direct2D1.DeviceContextRenderTarget(MessageRenderer.D2D1Factory, MessageRenderer.RenderTargetProperties);
-
-                                renderTarget.BindDeviceContext(dc, new RawRectangle(0, 0, Width, Height));
-
-                                renderTarget.BeginDraw();
-
-                                //renderTarget.TextRenderingParams = new SharpDX.DirectWrite.RenderingParams(Fonts.Factory, 1, 1, 1, SharpDX.DirectWrite.PixelGeometry.Flat, SharpDX.DirectWrite.RenderingMode.CleartypeGdiClassic);
-                                renderTarget.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
-
-                                var y = yStart;
-
-                                var brushes = new Dictionary<RawColor4, SCB>();
-
-                                var textColor = App.ColorScheme.Text;
-                                var textBrush = new SCB(renderTarget, new RawColor4(textColor.R / 255f, textColor.G / 255f, textColor.B / 255f, 1));
-
-                                for (var i = startIndex; i < M.Length; i++)
-                                {
-                                    var msg = M[i];
-
-                                    foreach (var word in msg.Words)
-                                    {
-                                        if (word.Type == SpanType.Text)
+                                        if (y - msg.Height > h)
                                         {
-                                            SCB brush;
+                                            //for (; i < M.Length; i++)
+                                            //{
+                                            //    M[i].IsVisible = false;
+                                            //}
 
-                                            if (word.Color == null)
-                                            {
-                                                brush = textBrush;
-                                            }
-                                            else
-                                            {
-                                                var hsl = word.Color.Value;
+                                            break;
+                                        }
 
-                                                if (App.ColorScheme.IsLightTheme)
-                                                {
-                                                    if (hsl.Saturation > 0.4f)
-                                                    {
-                                                        hsl = hsl.WithSaturation(0.4f);
-                                                    }
-                                                    if (hsl.Luminosity > 0.5f)
-                                                    {
-                                                        hsl = hsl.WithLuminosity(0.5f);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (hsl.Luminosity < 0.5f)
-                                                    {
-                                                        hsl = hsl.WithLuminosity(0.5f);
-                                                    }
+                                        y += msg.Height;
 
-                                                    if (hsl.Luminosity < 0.6f && hsl.Hue > 0.54444 && hsl.Hue < 0.8333)
-                                                    {
-                                                        hsl = hsl.WithLuminosity(hsl.Luminosity + (float)Math.Sin((hsl.Hue - 0.54444) / (0.8333 - 0.54444) * Math.PI) * hsl.Saturation * 0.2f);
-                                                    }
-
-                                                    if (hsl.Luminosity < 0.8f && (hsl.Hue < 0.06 || hsl.Hue > 0.92))
-                                                    {
-                                                        hsl = hsl.WithLuminosity(hsl.Luminosity + (msg.HasAnyHighlightType(HighlightType.Highlighted) ? 0.27f : 0.1f) * hsl.Saturation);
-                                                    }
-                                                }
-
-                                                if (hsl.Luminosity >= 0.95f)
-                                                {
-                                                    hsl = hsl.WithLuminosity(0.95f);
-                                                }
-
-                                                float r, _g, b;
-                                                hsl.ToRGB(out r, out _g, out b);
-                                                var color = new RawColor4(r, _g, b, 1f);
-
-                                                if (!brushes.TryGetValue(color, out brush))
-                                                {
-                                                    brushes[color] = brush = new SCB(renderTarget, color);
-                                                }
-                                            }
-
-                                            if (word.SplitSegments == null)
-                                            {
-                                                renderTarget.DrawText((string)word.Value, Fonts.GetTextFormat(word.Font), new RawRectangleF(MessagePadding.Left + word.X, y + word.Y, 10000, 10000), brush);
-                                            }
-                                            else
-                                            {
-                                                foreach (var split in word.SplitSegments)
-                                                    renderTarget.DrawText(split.Item1, Fonts.GetTextFormat(word.Font), new RawRectangleF(MessagePadding.Left + split.Item2.X, y + split.Item2.Y, 10000, 10000), brush);
-                                            }
+                                        if (AppSettings.ChatShowLastReadMessageIndicator && 
+                                            LastReadMessage == msg && i != M.Length - 1)
+                                        {
+                                            g.FillRectangle(lastReadMessageBrush, 0, y, Width, 1);
                                         }
                                     }
 
-                                    if (y - msg.Height > h)
-                                    {
-                                        break;
-                                    }
-
-                                    y += msg.Height;
+       
                                 }
 
-                                foreach (var b in brushes.Values)
+                                if (App.UseDirectX)
                                 {
-                                    b.Dispose();
+                                    SharpDX.Direct2D1.DeviceContextRenderTarget renderTarget = null;
+                                    var dc = g.GetHdc();
+
+                                    renderTarget = new SharpDX.Direct2D1.DeviceContextRenderTarget(MessageRenderer.D2D1Factory,
+                                        MessageRenderer.RenderTargetProperties);
+
+                                    renderTarget.BindDeviceContext(dc, new RawRectangle(0, 0, Width, Height));
+
+                                    renderTarget.BeginDraw();
+
+                                    //renderTarget.TextRenderingParams = new SharpDX.DirectWrite.RenderingParams(Fonts.Factory, 1, 1, 1, SharpDX.DirectWrite.PixelGeometry.Flat, SharpDX.DirectWrite.RenderingMode.CleartypeGdiClassic);
+                                    renderTarget.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
+
+                                    var y = yStart;
+
+                                    var brushes = new Dictionary<RawColor4, SCB>();
+
+                                    var textColor = App.ColorScheme.Text;
+                                    var textBrush = new SCB(renderTarget, 
+                                        new RawColor4(textColor.R / 255f, textColor.G / 255f, textColor.B / 255f, 1));
+
+                                    for (var i = startIndex; i < M.Length; i++)
+                                    {
+                                        var msg = M[i];
+
+                                        foreach (var word in msg.Words)
+                                        {
+                                            if (word.Type == SpanType.Text)
+                                            {
+                                                SCB brush;
+
+                                                if (word.Color == null)
+                                                {
+                                                    brush = textBrush;
+                                                }
+                                                else
+                                                {
+                                                    var hsl = word.Color.Value;
+
+                                                    if (App.ColorScheme.IsLightTheme)
+                                                    {
+                                                        if (hsl.Saturation > 0.4f)
+                                                        {
+                                                            hsl = hsl.WithSaturation(0.4f);
+                                                        }
+                                                        if (hsl.Luminosity > 0.5f)
+                                                        {
+                                                            hsl = hsl.WithLuminosity(0.5f);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (hsl.Luminosity < 0.5f)
+                                                        {
+                                                            hsl = hsl.WithLuminosity(0.5f);
+                                                        }
+
+                                                        if (hsl.Luminosity < 0.6f && hsl.Hue > 0.54444 && hsl.Hue < 0.8333)
+                                                        {
+                                                            hsl = hsl.WithLuminosity(hsl.Luminosity + (float)Math.Sin((hsl.Hue - 0.54444) / (0.8333 - 0.54444) * Math.PI) * hsl.Saturation * 0.2f);
+                                                        }
+
+                                                        if (hsl.Luminosity < 0.8f && (hsl.Hue < 0.06 || hsl.Hue > 0.92))
+                                                        {
+                                                            hsl = hsl.WithLuminosity(hsl.Luminosity + (msg.HasAnyHighlightType(HighlightType.Highlighted) ? 0.27f : 0.1f) * hsl.Saturation);
+                                                        }
+                                                    }
+
+                                                    if (hsl.Luminosity >= 0.95f)
+                                                    {
+                                                        hsl = hsl.WithLuminosity(0.95f);
+                                                    }
+
+                                                    float r, _g, b;
+                                                    hsl.ToRGB(out r, out _g, out b);
+                                                    var color = new RawColor4(r, _g, b, 1f);
+
+                                                    if (!brushes.TryGetValue(color, out brush))
+                                                    {
+                                                        brushes[color] = brush = new SCB(renderTarget, color);
+                                                    }
+                                                }
+
+                                                if (word.SplitSegments == null)
+                                                {
+                                                    renderTarget.DrawText((string)word.Value, Fonts.GetTextFormat(word.Font),
+                                                        new RawRectangleF(MessagePadding.Left + word.X, y + word.Y, 10000, 10000), brush);
+                                                }
+                                                else
+                                                {
+                                                    foreach (var split in word.SplitSegments)
+                                                        renderTarget.DrawText(split.Item1, Fonts.GetTextFormat(word.Font), 
+                                                            new RawRectangleF(MessagePadding.Left + split.Item2.X, y + split.Item2.Y, 10000, 10000), brush);
+                                                }
+                                            }
+                                        }
+
+                                        if (y - msg.Height > h)
+                                        {
+                                            break;
+                                        }
+
+                                        y += msg.Height;
+                                    }
+
+                                    foreach (var b in brushes.Values)
+                                    {
+                                        b.Dispose();
+                                    }
+
+                                    renderTarget.EndDraw();
+
+                                    textBrush.Dispose();
+                                    g.ReleaseHdc(dc);
+                                    renderTarget.Dispose();
                                 }
 
-                                renderTarget.EndDraw();
-
-                                textBrush.Dispose();
-                                g.ReleaseHdc(dc);
-                                renderTarget.Dispose();
-                            }
-
-                            {
-                                var y = yStart;
-
-                                Brush disabledBrush = new SolidBrush(Color.FromArgb(172, (App.ColorScheme.ChatBackground as SolidBrush)?.Color ?? Color.Black));
-                                for (var i = startIndex; i < M.Length; i++)
                                 {
-                                    var msg = M[i];
+                                    var y = yStart;
 
-                                    if (msg.Disabled)
+                                    Brush disabledBrush = new SolidBrush(Color.FromArgb(172, (App.ColorScheme.ChatBackground as SolidBrush)?.Color ?? Color.Black));
+                                    for (var i = startIndex; i < M.Length; i++)
                                     {
-                                        g.SmoothingMode = SmoothingMode.None;
+                                        var msg = M[i];
 
-                                        g.FillRectangle(disabledBrush, 0, y + 1, Width, msg.Height - 1);
+                                        if (msg.Disabled)
+                                        {
+                                            g.SmoothingMode = SmoothingMode.None;
+
+                                            g.FillRectangle(disabledBrush, 0, y + 1, Width, msg.Height - 1);
+                                        }
+
+                                        if (y - msg.Height > h)
+                                        {
+                                            break;
+                                        }
+
+                                        y += msg.Height;
                                     }
-
-                                    if (y - msg.Height > h)
-                                    {
-                                        break;
-                                    }
-
-                                    y += msg.Height;
+                                    disabledBrush.Dispose();
                                 }
-                                disabledBrush.Dispose();
                             }
                         }
+
+                        g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
+
+                        OnPaintOnBuffer(g);
+
+                        buffer.Render(e.Graphics);
                     }
-
-                    g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
-
-                    OnPaintOnBuffer(g);
-
-                    buffer.Render(e.Graphics);
-                }
-                catch (Exception exc)
-                {
-                    exc.Log("graphics");
+                    catch (Exception exc)
+                    {
+                        exc.Log("graphics");
+                    }
                 }
             }
         }

@@ -22,6 +22,8 @@ namespace Chatterino.Common
         public string Tooltip { get; set; } = null;
         public string click_url {get; set; } = null;
         public bool IsDanke = false;
+        public delegate void HA();
+        public HA HandleAnimation = null;
 
         bool loading = false;
         private object image = null;

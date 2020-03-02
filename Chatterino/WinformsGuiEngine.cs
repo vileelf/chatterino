@@ -24,7 +24,9 @@ namespace Chatterino
         private bool debug = false;
 
         public bool globalEmotesLoaded{get; set;} = false;
-
+        public  HashSet<LazyLoadedImage> GifEmotesOnScreen{get;} =  new HashSet<LazyLoadedImage>();
+        public object GifEmotesLock{get;} =  new object();
+        
         public WinformsGuiEngine()
         {
             AppSettings.FontChanged += (s, e) =>
@@ -261,7 +263,7 @@ namespace Chatterino
                         }
                         emote.IsAnimated = true;
 
-                        App.GifEmoteFramesUpdating += (s, e) =>
+                        emote.HandleAnimation += () =>
                         {
                             currentFrameOffset += 3;
 
