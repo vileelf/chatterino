@@ -21,6 +21,7 @@ namespace Chatterino
         public Brush ChatBackgroundResub { get; set; } = Brushes.LightBlue;
         public Brush ChatBackgroundWhisper { get; set; } = Brushes.LightBlue;
         public Brush ChatBackgroundSearchResult { get; set; } = Brushes.GreenYellow;
+        public Brush ChatBackgroundHighlightedMessage { get; set; } = Brushes.Teal;
         public Brush ChatInputOuter { get; set; } = Brushes.White;
         public Brush ChatInputInner { get; set; } = Brushes.White;
         public Pen ChatInputBorder { get; set; } = Pens.White;
@@ -105,7 +106,8 @@ namespace Chatterino
                 scheme.ChatBackgroundUsernameHighlighted = new SolidBrush(rgb(0xead09f));
                 scheme.ChatBackgroundResub = getColor(HSLColor.FromRGB(0.5f, 0.5f, 1f), 0.9f).ToBrush();
                 scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 1f, 0.5f), 0.9f).ToBrush();
-                scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0xaaf9a4));;
+                scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0xaaf9a4));
+                scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0xccfffc));
             }
             else
             {
@@ -117,7 +119,8 @@ namespace Chatterino
                 scheme.ChatBackgroundUsernameHighlighted = new SolidBrush(Color.FromArgb(61 + l, 49 + l, 28 + l));
                 scheme.ChatBackgroundResub = new SolidBrush(Color.FromArgb(47 + l, 20 + l, 70 + l));
                 scheme.ChatBackgroundWhisper = new SolidBrush(Color.FromArgb(20 + l, 40 + l, 70 + l));
-                scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0x043000));;
+                scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0x043000));
+                scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0x002e2b));
 
                 //scheme.ChatBackgroundResub = getColor(HSLColor.FromRGB(0.52f, 0.5f, 0.6f), 0.8f).ToBrush();
                 //scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 0.55f, 0.5f), 0.8f).ToBrush();

@@ -382,12 +382,6 @@ namespace Chatterino.Common
                 }
             }
 
-            LazyLoadedImage fourtfBadge;
-            if (Common.Badges.FourtfGlobalBadges.TryGetValue(Username, out fourtfBadge))
-            {
-                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = fourtfBadge, Tooltip = fourtfBadge.Tooltip });
-            }
-
             var messageUser = (isSentWhisper ? IrcManager.Account.Username + " -> " : "");
 
             messageUser += DisplayName;
@@ -424,11 +418,11 @@ namespace Chatterino.Common
                         Message message;
                         message = new Message("Highlighted Message", HSLColor.Gray, true)
                         {
-                            HighlightType = HighlightType.Resub
+                            HighlightType = HighlightType.HighlightedMessage
                         };
                         channel.AddMessage(message);
                     }
-                    HighlightType = HighlightType.Resub;
+                    HighlightType = HighlightType.HighlightedMessage;
                 }
             }
             // Twitch Emotes

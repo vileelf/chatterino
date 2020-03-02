@@ -17,5 +17,6 @@ namespace Chatterino.Common
         Connected = 16,
         Disconnected = 32,
         UsernameHighlighted = 64,
+        HighlightedMessage = 128,
     }
 }

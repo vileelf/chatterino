@@ -71,6 +71,9 @@ namespace Chatterino
             } else if (message.HasAnyHighlightType(HighlightType.SearchResult))
             {
                 highlightBrush = App.ColorScheme.ChatBackgroundSearchResult;
+            } else if (message.HasAnyHighlightType(HighlightType.HighlightedMessage))
+            {
+                highlightBrush = App.ColorScheme.ChatBackgroundHighlightedMessage;
             }
 
             if (highlightBrush != null)
