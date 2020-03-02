@@ -54,7 +54,10 @@ namespace Chatterino
 
             Brush highlightBrush = null;
 
-            if (message.HasAnyHighlightType(HighlightType.Highlighted))
+            if (message.HasAnyHighlightType(HighlightType.SearchResult))
+            {
+                highlightBrush = App.ColorScheme.ChatBackgroundSearchResult;
+            } else if (message.HasAnyHighlightType(HighlightType.Highlighted))
             {
                 highlightBrush = App.ColorScheme.ChatBackgroundHighlighted;
             } else if (message.HasAnyHighlightType(HighlightType.UsernameHighlighted))
@@ -68,9 +71,6 @@ namespace Chatterino
             else if (message.HasAnyHighlightType(HighlightType.Whisper))
             {
                 highlightBrush = App.ColorScheme.ChatBackgroundWhisper;
-            } else if (message.HasAnyHighlightType(HighlightType.SearchResult))
-            {
-                highlightBrush = App.ColorScheme.ChatBackgroundSearchResult;
             } else if (message.HasAnyHighlightType(HighlightType.HighlightedMessage))
             {
                 highlightBrush = App.ColorScheme.ChatBackgroundHighlightedMessage;
