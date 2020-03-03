@@ -107,7 +107,7 @@ namespace Chatterino
                 scheme.ChatBackgroundResub = getColor(HSLColor.FromRGB(0.5f, 0.5f, 1f), 0.9f).ToBrush();
                 scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 1f, 0.5f), 0.9f).ToBrush();
                 scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0xaaf9a4));
-                scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0xccfffc));
+                scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0xc3e0df));
             }
             else
             {
