@@ -35,6 +35,13 @@ namespace Chatterino.Controls
                 TopMost = AppSettings.WindowTopMost;
             };
         }
+        
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            container.ClearBuffer();
+            container = null;
+            base.OnFormClosed(e);
+        }
 
         public void SetChannel(TwitchChannel channel)
         {

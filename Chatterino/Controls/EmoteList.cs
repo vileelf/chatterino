@@ -9,13 +9,13 @@ namespace Chatterino.Controls
 {
     public class EmoteList : MessageContainerControl
     {
-        private Message[] _messages = new Message[0];
+        private List<Message> _messages = new List<Message>();
 
         protected override Message[] Messages
         {
             get
             {
-                return _messages;
+                return _messages.ToArray();
             }
         }
 
@@ -31,7 +31,8 @@ namespace Chatterino.Controls
         {
             lock (MessageLock)
             {
-                var messages = new List<Message>();
+                var messages = _messages;
+                messages.Clear();
 
                 // twitch emotes
                 {
@@ -59,22 +60,6 @@ namespace Chatterino.Controls
                         }
                     }
                 }
-
-                // chatterino emotes
-                //{
-                //    List<Word> words = new List<Word>();
-
-                //    foreach (var emote in Emotes.ChatterinoEmotes.Values)
-                //    {
-                //        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Value = emote.Value, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
-                //    }
-
-                //    if (words.Count != 0)
-                //    {
-                //        messages.Add(new Message("Chatterino Global Emotes"));
-                //        messages.Add(new Message(words));
-                //    }
-                //}
 
                 // bttv channel emotes
                 if (channel != null)
@@ -141,8 +126,6 @@ namespace Chatterino.Controls
                         messages.Add(new Message(words));
                     }
                 }
-
-                _messages = messages.ToArray();
 
                 scrollAtBottom = false;
                 _scroll.Value = 0;
