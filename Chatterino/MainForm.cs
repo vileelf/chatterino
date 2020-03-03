@@ -100,6 +100,17 @@ namespace Chatterino
                         Selected = tab?.Columns.FirstOrDefault()?.Widgets.FirstOrDefault();
 
                     Selected?.Focus();
+                    if (lastTabPage != null) {
+                         foreach (var col in lastTabPage.Columns)
+                        {
+                            foreach (var control in col.Widgets)
+                            {
+                                var container = control as MessageContainerControl;
+
+                                container.ClearBuffer();
+                            }
+                        }
+                    }
                 }
 
                 lastTabPage = tab;

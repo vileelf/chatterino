@@ -115,6 +115,15 @@ namespace Chatterino.Controls
             };
         }
 
+        public void ClearBuffer()
+        {
+            lock (bufferLock) {
+                if (buffer != null) {
+                    buffer.Dispose();
+                    buffer = null;
+                }
+            }
+        }
         private void App_GifEmoteFramesUpdated(object s, EventArgs e)
         {
             try
