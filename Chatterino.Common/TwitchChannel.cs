@@ -408,6 +408,11 @@ namespace Chatterino.Common
             }
         }
 
+        public void PubSub ()
+        {
+            
+        }
+
         public bool IsBroadcaster
         {
             get
@@ -1256,12 +1261,12 @@ namespace Chatterino.Common
 
                                 if (Util.IsLinux)
                                 {
-                                    Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/" + channelName, ffzChannelEmotesCache);
+                                    Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/id/" + RoomID, ffzChannelEmotesCache);
                                 }
                                 else
                                 {
                                     using (var webClient = new WebClient())
-                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/" + channelName))
+                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID))
                                     using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
                                     {
                                         readStream.CopyTo(writeStream);

@@ -143,7 +143,7 @@ namespace TwitchIrc
                         {
                             int count = messageQueue.Count;
 
-                            if (messageQueue.Count > 50)
+                            if (messageQueue.Count > 500)
                             {
                                 IrcMessage.TryParse($"@system-msg=ignored\\s{count}\\smessages USERNOTICE #{message.Middle}", out message);
 
