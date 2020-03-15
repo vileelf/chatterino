@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Chatterino.Common
@@ -51,6 +52,8 @@ namespace Chatterino.Common
                     {
                         try
                         {
+                            //Stopwatch stopWatch = new Stopwatch();
+                            //stopWatch.Start();
                             var request = WebRequest.Create(Url);
                             if (AppSettings.IgnoreSystemProxy)
                             {
@@ -59,24 +62,31 @@ namespace Chatterino.Common
                             using (var response = request.GetResponse())
                             using (var stream = response.GetResponseStream())
                             {
+                                /*stopWatch.Stop();
+                                TimeSpan ts = stopWatch.Elapsed;
+                                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                    ts.Hours, ts.Minutes, ts.Seconds,
+                                    ts.Milliseconds / 10);
+                                GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
                                 img = GuiEngine.Current.ReadImageFromStream(stream);
+                                response.Close();
                             }
 
                             GuiEngine.Current.FreezeImage(img);
                         }
                         catch (Exception e)
                         {
-                            GuiEngine.Current.log(e.ToString());
+                            GuiEngine.Current.log("emote faild to losd " + Name + " " + Url+ " " +e.ToString());
                             img = null;
                         }
                     }
                     if (img != null)
                     {
                         GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
+                        image = img;
+                        GuiEngine.Current.TriggerEmoteLoaded();
                     }
-                    image = img;
-
-                    GuiEngine.Current.TriggerEmoteLoaded();
+                    loading = false;
                 }));
                 return null;
             }

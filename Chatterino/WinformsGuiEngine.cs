@@ -335,15 +335,18 @@ namespace Chatterino
         Dictionary<string, LazyLoadedImage> badges = new Dictionary<string, LazyLoadedImage>();
         private ConcurrentDictionary<string, CheerEmote> CheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
 
+        protected object logLock = new object();
+        
         public void log(string text)
         {
             if (debug)
             {
-                string folder = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
-                StreamWriter file = new StreamWriter(folder + @"\log.txt", true);
-                //StreamWriter file = new StreamWriter(@"B:\Dev folder\Elf-chat\code_references\chatterino\Chatterino\bin\Debug\log.txt", true);
-                file.WriteLine(text);
-                file.Close();
+                lock (logLock) {
+                    string folder = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+                    StreamWriter file = new StreamWriter(folder + @"\log.txt", true);
+                    file.WriteLine(text);
+                    file.Close();
+                }
             }
         }
 
@@ -390,6 +393,7 @@ namespace Chatterino
                                 });
                             }
                         }
+                        response.Close();
                     }
                 }
                 catch

@@ -84,6 +84,7 @@ namespace Chatterino.Common
                                     (string)
                                     (((Dictionary<string, object>)
                                         ((Dictionary<string, object>)json)["subscriber"])["image"]);
+                                response.Close();
                             }
 
                             request = WebRequest.Create(imageUrl);
@@ -96,6 +97,7 @@ namespace Chatterino.Common
                             {
                                 var img = GuiEngine.Current.ReadImageFromStream(stream);
                                 GuiEngine.Current.FreezeImage(img);
+                                response.Close();
                                 return img;
                             }
                         }
@@ -472,6 +474,7 @@ namespace Chatterino.Common
                         RoomID = roomID;
                         return true;
                     }
+                    response.Close();
                 }
             }
             catch
@@ -588,6 +591,7 @@ namespace Chatterino.Common
                                 //            messages.Add(new Message(msg, this, false, false));
                                 //    }
                                 //}
+                                response.Close();
                             }
 
                             AddMessagesAtStart(messages.ToArray());
@@ -767,6 +771,7 @@ namespace Chatterino.Common
                                 StreamStart = DateTime.Parse(stream["created_at"]);
                                 LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
                             }
+                            res.Close();
                         }
                     }
                     catch (Exception e)
@@ -977,6 +982,7 @@ namespace Chatterino.Common
                             Users[user.ToUpper()] = user;
                         }
                     }
+                    response.Close();
                 }
             }
             catch { }
@@ -1206,6 +1212,7 @@ namespace Chatterino.Common
                                     using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
                                     {
                                         readStream.CopyTo(writeStream);
+                                        readStream.Close();
                                     }
                                 }
                             }
@@ -1270,6 +1277,7 @@ namespace Chatterino.Common
                                     using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
                                     {
                                         readStream.CopyTo(writeStream);
+                                        readStream.Close();
                                     }
                                 }
                             }
