@@ -1,5 +1,20 @@
 ﻿# changelog
 
+## 1.9
+- you can now tab complete using @ in commands
+- added the ability to double click a word to select it
+- fixed a bug causing you to lose your selection whenever there's a new message
+- recombined reload channel and reload subemotes
+- removed reload username list button
+- subs and sub gifts are now added to the username tab complete list
+- fixed issue causing some gifs to be too fast
+- fixed issue preventing login for users with an _ in their name
+- made gif emotes only animate when they are on screen
+- changed the color of highlighted messages and removed them from the scrollbar
+- search results now have highest priority for highlighting.
+- made chatterino run much more efficiently
+- updated message queue limit from 50 to 500 so you should get that ignored x messages less
+
 ## 1.8
 - added follower count and streamer type to the user info popup 
 - added the start of a search feature. Type in the chatbox and press ctrl+f to highlight any match. remove all text and press ctrl+f again to clear the search highlights
