@@ -7,6 +7,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Chatterino.Common
 {
@@ -62,7 +63,7 @@ namespace Chatterino.Common
                 };
                 emote.LoadAction = () =>
                 {
-                    object img;
+                    Image img;
 
                     try
                     {
@@ -71,10 +72,12 @@ namespace Chatterino.Common
                         {
                             request.Proxy = null;
                         }
-                        using (var response = request.GetResponse())
-                        using (var stream = response.GetResponseStream())
-                        {
-                            img = GuiEngine.Current.ReadImageFromStream(stream);
+                        using (var response = request.GetResponse()) {
+                            using (var stream = response.GetResponseStream())
+                            {
+                                img = GuiEngine.Current.ReadImageFromStream(stream);
+                            }
+                            response.Close();
                         }
 
                         GuiEngine.Current.FreezeImage(img);
@@ -97,10 +100,12 @@ namespace Chatterino.Common
                             {
                                 request.Proxy = null;
                             }
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                img = GuiEngine.Current.ReadImageFromStream(stream);
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    img = GuiEngine.Current.ReadImageFromStream(stream);
+                                }
+                                response.Close();
                             }
 
                             GuiEngine.Current.FreezeImage(img);
@@ -182,19 +187,19 @@ namespace Chatterino.Common
 
                 int maxScale = 1;
 
-                var urlX1 = "http:" + urls["1"];
+                var urlX1 = "https:" + urls["1"];
 
                 string urlX2 = null;
                 if (urls.ContainsKey("2"))
                 {
-                    urlX2 = "http:" + urls["2"];
+                    urlX2 = "https:" + urls["2"];
                     maxScale = 2;
                 }
 
                 string urlX4 = null;
                 if (urls.ContainsKey("4"))
                 {
-                    urlX4 = "http:" + urls["4"];
+                    urlX4 = "https:" + urls["4"];
                     maxScale = 4;
                 }
 
@@ -343,11 +348,15 @@ namespace Chatterino.Common
                             }
                             else
                             {
-                                using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/emotes/global"))
-                                using (var writeStream = File.OpenWrite(bttvEmotesGlobalCache))
-                                {
-                                    readStream.CopyTo(writeStream);
+                                using (var webClient = new WebClient()) {
+                                    using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/emotes/global")) {
+                                        using (var writeStream = File.OpenWrite(bttvEmotesGlobalCache))
+                                        {
+                                            readStream.CopyTo(writeStream);
+                                        }
+                                        readStream.Close();
+                                    }
+                                    webClient.Dispose();
                                 }
                             }
                         }
@@ -404,11 +413,15 @@ namespace Chatterino.Common
                             }
                             else
                             {
-                                using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/set/global"))
-                                using (var writeStream = File.OpenWrite(ffzEmotesGlobalCache))
-                                {
-                                    readStream.CopyTo(writeStream);
+                                using (var webClient = new WebClient()) {
+                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/set/global")) {
+                                        using (var writeStream = File.OpenWrite(ffzEmotesGlobalCache))
+                                        {
+                                            readStream.CopyTo(writeStream);
+                                        }
+                                        readStream.Close();
+                                    }
+                                    webClient.Dispose();
                                 }
                             }
                         }
@@ -448,30 +461,36 @@ namespace Chatterino.Common
                     var set = 0;
 
                     var parser = new System.Text.Json.JsonParser();
-                    using (var webClient = new WebClient())
-                    using (var readStream = webClient.OpenRead("https://cdn.frankerfacez.com/script/event.json"))
-                    {
-                        dynamic json = parser.Parse(readStream);
+                    using (var webClient = new WebClient()) {
+                        using (var readStream = webClient.OpenRead("https://cdn.frankerfacez.com/script/event.json"))
+                        {
+                            dynamic json = parser.Parse(readStream);
 
-                        string _set = json["set"];
+                            string _set = json["set"];
 
-                        int.TryParse(_set, out set);
+                            int.TryParse(_set, out set);
+                            readStream.Close();
+                        }
+                        webClient.Dispose();
                     }
 
                     if (set != 0)
                     {
-                        using (var webClient = new WebClient())
-                        using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/set/" + set))
-                        {
-                            dynamic json = parser.Parse(readStream);
-                            dynamic _set = json["set"];
-
-                            dynamic emoticons = _set["emoticons"];
-
-                            foreach (LazyLoadedImage emote in GetFfzEmoteFromDynamic(emoticons, true))
+                        using (var webClient = new WebClient()) {
+                            using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/set/" + set))
                             {
-                                FfzGlobalEmotes[emote.Name] = emote;
+                                dynamic json = parser.Parse(readStream);
+                                dynamic _set = json["set"];
+
+                                dynamic emoticons = _set["emoticons"];
+
+                                foreach (LazyLoadedImage emote in GetFfzEmoteFromDynamic(emoticons, true))
+                                {
+                                    FfzGlobalEmotes[emote.Name] = emote;
+                                }
+                                readStream.Close();
                             }
+                            webClient.Dispose();
                         }
                     }
                 }

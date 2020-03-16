@@ -26,19 +26,21 @@ namespace Chatterino.Common
                     {
                         request.Proxy = null;
                     }
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-                        dynamic json = parser.Parse(stream);
-                        foreach (var badge in json["badges"])
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
                         {
-                            var emote = new LazyLoadedImage { Url = badge["image"], Tooltip = badge["tooltip"] };
-                            foreach (string user in badge["users"])
+                            var parser = new JsonParser();
+                            dynamic json = parser.Parse(stream);
+                            foreach (var badge in json["badges"])
                             {
-                                FourtfGlobalBadges[user] = emote;
+                                var emote = new LazyLoadedImage { Url = badge["image"], Tooltip = badge["tooltip"] };
+                                foreach (string user in badge["users"])
+                                {
+                                    FourtfGlobalBadges[user] = emote;
+                                }
                             }
                         }
+                        response.Close();
                     }
                 }
                 catch { }

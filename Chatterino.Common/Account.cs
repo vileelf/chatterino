@@ -55,13 +55,15 @@ namespace Chatterino.Common
                     //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                    // request.Headers["Client-ID"]=$"{clientId}";
                     //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-                        dynamic json = parser.Parse(stream);
-                        
-                        account.UserId = json["users"][0]["_id"];
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var parser = new JsonParser();
+                            dynamic json = parser.Parse(stream);
+                            
+                            account.UserId = json["users"][0]["_id"];
+                        }
+                        response.Close();
                     }
                 }
                 catch

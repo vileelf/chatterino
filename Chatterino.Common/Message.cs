@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Drawing;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -310,7 +311,7 @@ namespace Chatterino.Common
                             tooltip += tmpAmount + " secs ";
                         }
 
-                        object image;
+                        Image image;
                         if (AppSettings.TimeoutButtons.Count > 1)
                         {
                             image = ((dynamic)GuiEngine.Current).GetImageForTimeout(amount);

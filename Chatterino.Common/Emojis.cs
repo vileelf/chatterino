@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Chatterino.Common
 {
@@ -79,7 +80,7 @@ namespace Chatterino.Common
                                         Name = emoji,
                                         LoadAction = () =>
                                         {
-                                            object img;
+                                            Image img;
                                             try
                                             {
                                                 var request = WebRequest.Create(url);
@@ -87,13 +88,15 @@ namespace Chatterino.Common
                                                 {
                                                     request.Proxy = null;
                                                 }
-                                                using (var response = request.GetResponse())
-                                                using (var stream = response.GetResponseStream())
-                                                {
-                                                    img = GuiEngine.Current.ReadImageFromStream(stream);
-                                                    //img = GuiEngine.Current.ScaleImage(img, 0.35);
-                                                    GuiEngine.Current.FreezeImage(img);
-                                                    return img;
+                                                using (var response = request.GetResponse()) {
+                                                    using (var stream = response.GetResponseStream())
+                                                    {
+                                                        img = GuiEngine.Current.ReadImageFromStream(stream);
+                                                        //img = GuiEngine.Current.ScaleImage(img, 0.35);
+                                                        GuiEngine.Current.FreezeImage(img);
+                                                        return img;
+                                                    }
+                                                    response.Close();
                                                 }
                                             }
                                             catch

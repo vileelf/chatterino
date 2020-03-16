@@ -65,7 +65,8 @@ namespace Chatterino.Common
                         try
                         {
                             string imageUrl = null;
-
+                            Image img = null;
+                            
                             var request =
                                 WebRequest.Create(
                                     $"https://api.twitch.tv/kraken/chat/{Name}/badges");
@@ -75,15 +76,16 @@ namespace Chatterino.Common
                             }
                             ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                             request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                var json = new JsonParser().Parse(stream);
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    var json = new JsonParser().Parse(stream);
 
-                                imageUrl =
-                                    (string)
-                                    (((Dictionary<string, object>)
-                                        ((Dictionary<string, object>)json)["subscriber"])["image"]);
+                                    imageUrl =
+                                        (string)
+                                        (((Dictionary<string, object>)
+                                            ((Dictionary<string, object>)json)["subscriber"])["image"]);
+                                }
                                 response.Close();
                             }
 
@@ -92,11 +94,12 @@ namespace Chatterino.Common
                             {
                                 request.Proxy = null;
                             }
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                var img = GuiEngine.Current.ReadImageFromStream(stream);
-                                GuiEngine.Current.FreezeImage(img);
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    img = GuiEngine.Current.ReadImageFromStream(stream);
+                                    GuiEngine.Current.FreezeImage(img);
+                                }
                                 response.Close();
                                 return img;
                             }
@@ -460,19 +463,20 @@ namespace Chatterino.Common
                 {
                     request.Proxy = null;
                 }
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    var parser = new JsonParser();
-
-                    dynamic json = parser.Parse(stream);
-                    dynamic users = json["users"];
-                    int roomID = -1;
-
-                    if (users.Count>0 && int.TryParse(users[0]["_id"], out roomID))
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
                     {
-                        RoomID = roomID;
-                        return true;
+                        var parser = new JsonParser();
+
+                        dynamic json = parser.Parse(stream);
+                        dynamic users = json["users"];
+                        int roomID = -1;
+
+                        if (users.Count>0 && int.TryParse(users[0]["_id"], out roomID))
+                        {
+                            RoomID = roomID;
+                            return true;
+                        }
                     }
                     response.Close();
                 }
@@ -519,78 +523,79 @@ namespace Chatterino.Common
                             {
                                 request.Proxy = null;
                             }
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                var parser = new JsonParser();
-
-                                dynamic json = parser.Parse(stream);
-
-                                dynamic _messages = json["messages"];
-                                
-                                IrcMessage msg;
-                                string sysMsg;
-                                Message message;
-                                string reason;
-                                string duration;
-                                int iduration;
-                                
-                                foreach (string s in _messages)
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
                                 {
-                                    if (IrcMessage.TryParse(s, out msg))
-                                    {
-                                        if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
-                                            continue; //skip these messages
-                                        } else if (msg.Command == "CLEARCHAT" && !string.IsNullOrWhiteSpace(msg.Params)) {
-                                            msg.Tags.TryGetValue("ban-reason", out reason);
+                                    var parser = new JsonParser();
 
-                                            iduration = 0;
-                                            if (msg.Tags.TryGetValue("ban-duration", out duration))
-                                            {
-                                                int.TryParse(duration, out iduration);
-                                            }
-                                            message = new Message(
-                                                $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
-                                                HSLColor.Gray, true);
-                                            messages.Add(message);
-                                        } else if (msg.Command == "USERNOTICE") {
-                                            msg.Tags.TryGetValue("system-msg", out sysMsg);
-                                            message = new Message(sysMsg, HSLColor.Gray, true)
-                                            {
-                                                HighlightType = HighlightType.Resub
-                                            };
-                                            messages.Add(message);
-                                            if (!string.IsNullOrEmpty(msg.Params))
-                                            {
-                                                message = new Message(msg, this)
+                                    dynamic json = parser.Parse(stream);
+
+                                    dynamic _messages = json["messages"];
+                                    
+                                    IrcMessage msg;
+                                    string sysMsg;
+                                    Message message;
+                                    string reason;
+                                    string duration;
+                                    int iduration;
+                                    
+                                    foreach (string s in _messages)
+                                    {
+                                        if (IrcMessage.TryParse(s, out msg))
+                                        {
+                                            if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
+                                                continue; //skip these messages
+                                            } else if (msg.Command == "CLEARCHAT" && !string.IsNullOrWhiteSpace(msg.Params)) {
+                                                msg.Tags.TryGetValue("ban-reason", out reason);
+
+                                                iduration = 0;
+                                                if (msg.Tags.TryGetValue("ban-duration", out duration))
+                                                {
+                                                    int.TryParse(duration, out iduration);
+                                                }
+                                                message = new Message(
+                                                    $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
+                                                    HSLColor.Gray, true);
+                                                messages.Add(message);
+                                            } else if (msg.Command == "USERNOTICE") {
+                                                msg.Tags.TryGetValue("system-msg", out sysMsg);
+                                                message = new Message(sysMsg, HSLColor.Gray, true)
                                                 {
                                                     HighlightType = HighlightType.Resub
                                                 };
                                                 messages.Add(message);
+                                                if (!string.IsNullOrEmpty(msg.Params))
+                                                {
+                                                    message = new Message(msg, this)
+                                                    {
+                                                        HighlightType = HighlightType.Resub
+                                                    };
+                                                    messages.Add(message);
+                                                }
+                                            } else {
+                                                message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
+                                                if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                                    messages.Add(message);
+                                                }
                                             }
-                                        } else {
-                                            message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
-                                            if (IrcManager.IsMessageIgnored(message, this) != true ) {
-                                                messages.Add(message);
-                                            }
+                                            
+                                            
                                         }
-                                        
-                                        
                                     }
+
+                                    //StreamReader reader = new StreamReader(stream);
+                                    //string line;
+                                    //while ((line = reader.ReadLine()) != null)
+                                    //{
+                                    //    IrcMessage msg;
+
+                                    //    if (IrcMessage.TryParse(line, out msg))
+                                    //    {
+                                    //        if (msg.Params != null)
+                                    //            messages.Add(new Message(msg, this, false, false));
+                                    //    }
+                                    //}
                                 }
-
-                                //StreamReader reader = new StreamReader(stream);
-                                //string line;
-                                //while ((line = reader.ReadLine()) != null)
-                                //{
-                                //    IrcMessage msg;
-
-                                //    if (IrcMessage.TryParse(line, out msg))
-                                //    {
-                                //        if (msg.Params != null)
-                                //            messages.Add(new Message(msg, this, false, false));
-                                //    }
-                                //}
                                 response.Close();
                             }
 
@@ -740,36 +745,37 @@ namespace Chatterino.Common
                         }
                         ((HttpWebRequest)req).Accept="application/vnd.twitchtv.v5+json";
                         req.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
-                        using (var res = req.GetResponse())
-                        using (var resStream = res.GetResponseStream())
-                        {
-                            
-                            var parser = new JsonParser();
-                            dynamic json = parser.Parse(resStream);
-                            //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
-                            var tmpIsLive = IsLive;
-                            IsLive = json["stream"] != null;
-                            if (!IsLive)
+                        using (var res = req.GetResponse()) {
+                            using (var resStream = res.GetResponseStream())
                             {
-                                StreamViewerCount = 0;
-                                StreamStatus = null;
-                                StreamGame = null;
-
-                                if (tmpIsLive)
+                                
+                                var parser = new JsonParser();
+                                dynamic json = parser.Parse(resStream);
+                                //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
+                                var tmpIsLive = IsLive;
+                                IsLive = json["stream"] != null;
+                                if (!IsLive)
                                 {
-                                    LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(false));
-                                }
-                            }
-                            else
-                            {
-                                dynamic stream = json["stream"];
-                                dynamic channel = stream["channel"];
+                                    StreamViewerCount = 0;
+                                    StreamStatus = null;
+                                    StreamGame = null;
 
-                                StreamViewerCount = int.Parse(stream["viewers"]);
-                                StreamStatus = channel["status"];
-                                StreamGame = channel["game"];
-                                StreamStart = DateTime.Parse(stream["created_at"]);
-                                LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
+                                    if (tmpIsLive)
+                                    {
+                                        LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(false));
+                                    }
+                                }
+                                else
+                                {
+                                    dynamic stream = json["stream"];
+                                    dynamic channel = stream["channel"];
+
+                                    StreamViewerCount = int.Parse(stream["viewers"]);
+                                    StreamStatus = channel["status"];
+                                    StreamGame = channel["game"];
+                                    StreamStart = DateTime.Parse(stream["created_at"]);
+                                    LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
+                                }
                             }
                             res.Close();
                         }
@@ -961,25 +967,26 @@ namespace Chatterino.Common
         {
             try
             {
-                var request = WebRequest.Create($"http://tmi.twitch.tv/group/user/{Name}/chatters");
+                var request = WebRequest.Create($"https://tmi.twitch.tv/group/user/{Name}/chatters");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    var parser = new JsonParser();
-                    dynamic json = parser.Parse(stream);
-                    dynamic chatters = json["chatters"];
-
-                    Users.Clear();
-
-                    foreach (var group in chatters)
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
                     {
-                        foreach (string user in group.Value)
+                        var parser = new JsonParser();
+                        dynamic json = parser.Parse(stream);
+                        dynamic chatters = json["chatters"];
+
+                        Users.Clear();
+
+                        foreach (var group in chatters)
                         {
-                            Users[user.ToUpper()] = user;
+                            foreach (string user in group.Value)
+                            {
+                                Users[user.ToUpper()] = user;
+                            }
                         }
                     }
                     response.Close();
@@ -1208,10 +1215,11 @@ namespace Chatterino.Common
                                 else
                                 {
                                     using (var webClient = new WebClient())
-                                    using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID))
-                                    using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
-                                    {
-                                        readStream.CopyTo(writeStream);
+                                    using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID)) {
+                                        using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
+                                        {
+                                            readStream.CopyTo(writeStream);
+                                        }
                                         readStream.Close();
                                     }
                                 }
@@ -1273,10 +1281,11 @@ namespace Chatterino.Common
                                 else
                                 {
                                     using (var webClient = new WebClient())
-                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID))
-                                    using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
-                                    {
-                                        readStream.CopyTo(writeStream);
+                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID)) {
+                                        using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
+                                        {
+                                            readStream.CopyTo(writeStream);
+                                        }
                                         readStream.Close();
                                     }
                                 }
@@ -1310,7 +1319,7 @@ namespace Chatterino.Common
                                             {
                                                 try
                                                 {
-                                                    object img;
+                                                    Image img;
 
                                                     var request = WebRequest.Create(url);
                                                     if (AppSettings.IgnoreSystemProxy)

@@ -216,7 +216,7 @@ namespace Chatterino
 
 
         // IMAGES
-        public object ReadImageFromStream(Stream stream)
+        public Image ReadImageFromStream(Stream stream)
         {
             try
             {
@@ -227,7 +227,7 @@ namespace Chatterino
             return null;
         }
 
-        public void HandleAnimatedTwitchEmote(LazyLoadedImage emote, object image)
+        public void HandleAnimatedTwitchEmote(LazyLoadedImage emote, Image image)
         {
             if (image != null)
             {
@@ -402,7 +402,7 @@ namespace Chatterino
             }
         }
 
-        public object GetImage(ImageType type)
+        public Image GetImage(ImageType type)
         {
             lock (images)
             {
@@ -447,7 +447,7 @@ namespace Chatterino
             CheerEmotes.Clear();
         }
 
-        public CommonSize GetImageSize(object image)
+        public CommonSize GetImageSize(Image image)
         {
             if (image == null)
             {
@@ -555,7 +555,7 @@ namespace Chatterino
             }
         }
 
-        public object ScaleImage(object image, double scale)
+        public Image ScaleImage(Image image, double scale)
         {
             var img = (Image)image;
 
@@ -572,12 +572,12 @@ namespace Chatterino
             return newImage;
         }
 
-        public void FreezeImage(object img)
+        public void FreezeImage(Image img)
         {
 
         }
 
-        public object DrawImageBackground(object image, HSLColor color)
+        public Image DrawImageBackground(Image image, HSLColor color)
         {
             var img = (Image)image;
 

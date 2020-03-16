@@ -61,13 +61,15 @@ namespace Chatterino.Common
                     //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                    // request.Headers["Client-ID"]=$"{DefaultClientID}";
                     //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-                        dynamic json = parser.Parse(stream);
-                        
-                        return json["users"][0]["_id"];
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var parser = new JsonParser();
+                            dynamic json = parser.Parse(stream);
+                            
+                            return json["users"][0]["_id"];
+                        }
+                        response.Close();
                     }
                 }
                 catch (Exception e)
@@ -92,35 +94,37 @@ namespace Chatterino.Common
                 ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"]=$"{DefaultClientID}";
                 request.Headers["Authorization"]=$"OAuth {oauth}";
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    dynamic json = new JsonParser().Parse(stream);
-                    //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
-                    Emotes.TwitchEmotes.Clear();
-
-                    foreach (var set in json["emoticon_sets"])
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
                     {
-                        int setID;
+                        dynamic json = new JsonParser().Parse(stream);
+                        //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
+                        Emotes.TwitchEmotes.Clear();
 
-                        int.TryParse(set.Key, out setID);
-
-                        foreach (var emote in set.Value)
+                        foreach (var set in json["emoticon_sets"])
                         {
-                            string id;
+                            int setID;
 
-                            id = emote["id"];
+                            int.TryParse(set.Key, out setID);
 
-                            string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
-
-                            Emotes.TwitchEmotes[code] = new TwitchEmoteValue
+                            foreach (var emote in set.Value)
                             {
-                                ID = id,
-                                Set = setID,
-                                ChannelName = "<unknown>"
-                            };
+                                string id;
+
+                                id = emote["id"];
+
+                                string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
+
+                                Emotes.TwitchEmotes[code] = new TwitchEmoteValue
+                                {
+                                    ID = id,
+                                    Set = setID,
+                                    ChannelName = "<unknown>"
+                                };
+                            }
                         }
                     }
+                    response.Close();
                 }
             }
             catch (Exception e)
@@ -185,19 +189,22 @@ namespace Chatterino.Common
                        ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                         request.Headers["Client-ID"]=$"{Account.ClientId}";
                         request.Headers["Authorization"]=$"OAuth {oauth}";
-                       using (var response = request.GetResponse())
-                       using (var stream = response.GetResponseStream())
-                       {
-                           dynamic json = new JsonParser().Parse(stream);
-                           dynamic blocks = json["blocks"];
-                           count = blocks.Count;
-                           foreach (var block in blocks)
+                       using (var response = request.GetResponse()) {
+                           using (var stream = response.GetResponseStream())
                            {
-                               dynamic user = block["user"];
-                               string name = user["name"];
-                               //string display_name = user["display_name"];
-                               twitchBlockedUsers[name] = null;
+                               dynamic json = new JsonParser().Parse(stream);
+                               dynamic blocks = json["blocks"];
+                               count = blocks.Count;
+                               foreach (var block in blocks)
+                               {
+                                   dynamic user = block["user"];
+                                   string name = user["name"];
+                                   //string display_name = user["display_name"];
+                                   twitchBlockedUsers[name] = null;
+                               }
+                               
                            }
+                           response.Close();
                        }
                    }
                    catch
@@ -360,12 +367,14 @@ namespace Chatterino.Common
                     request.Headers["Client-ID"]=$"{Account.ClientId}";
                     request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                     request.Method = "PUT";
-                    using (var response = (HttpWebResponse)request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        statusCode = response.StatusCode;
-                        success = true;
-                   }
+                    using (var response = (HttpWebResponse)request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            statusCode = response.StatusCode;
+                            success = true;
+                        }
+                        response.Close();
+                    }
                 }
                 catch (WebException exc)
                 {
@@ -425,11 +434,13 @@ namespace Chatterino.Common
                     ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                     request.Headers["Client-ID"]=$"{Account.ClientId}";
                     request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                    using (var response = (HttpWebResponse)request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        statusCode = response.StatusCode;
-                        success = statusCode == HttpStatusCode.NoContent;
+                    using (var response = (HttpWebResponse)request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            statusCode = response.StatusCode;
+                            success = statusCode == HttpStatusCode.NoContent;
+                        }
+                        response.Close();
                     }
                 }
                 catch (WebException exc)
@@ -470,12 +481,14 @@ namespace Chatterino.Common
                 ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"]=$"{Account.ClientId}";
                 request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    result = true;
-                    message = null;
-                    return true;
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        result = true;
+                        message = null;
+                        return true;
+                    }
+                    response.Close();
                 }
             }
             catch (Exception exc)
@@ -515,11 +528,13 @@ namespace Chatterino.Common
                 request.Headers["Client-ID"]=$"{Account.ClientId}";
                 request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
                 
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    message = null;
-                    return true;
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        message = null;
+                        return true;
+                    }
+                    response.Close();
                 }
             }
             catch (Exception exc)
@@ -545,11 +560,13 @@ namespace Chatterino.Common
                 ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"]=$"{Account.ClientId}";
                 request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    message = null;
-                    return true;
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        message = null;
+                        return true;
+                    }
+                    response.Close();
                 }
             }
             catch (Exception exc)

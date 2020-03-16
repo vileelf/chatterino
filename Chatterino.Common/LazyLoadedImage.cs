@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Chatterino.Common
 {
@@ -12,7 +13,7 @@ namespace Chatterino.Common
         public string Url { get; set; } = null;
         public string Name { get; set; } = null;
         public bool IsAnimated { get; set; } = false;
-        public Func<object> LoadAction { get; set; } = null;
+        public Func<Image> LoadAction { get; set; } = null;
         public bool IsHat { get; set; } = false;
         public bool HasTrailingSpace { get; set; } = true;
         public bool IsEmote { get; set; }
@@ -27,10 +28,9 @@ namespace Chatterino.Common
         public HA HandleAnimation = null;
 
         bool loading = false;
-        private object image = null;
-        public object xd; 
+        private Image image = null;
 
-        public object Image
+        public Image Image
         {
             get
             {
@@ -42,7 +42,7 @@ namespace Chatterino.Common
                 loading = true;
                 Task.Run((() =>
                 {
-                    object img;
+                    Image img;
 
                     if (LoadAction != null)
                     {
@@ -76,7 +76,7 @@ namespace Chatterino.Common
                         }
                         catch (Exception e)
                         {
-                            GuiEngine.Current.log("emote faild to losd " + Name + " " + Url+ " " +e.ToString());
+                            GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
                             img = null;
                         }
                     }
@@ -97,7 +97,7 @@ namespace Chatterino.Common
             
         }
 
-        public LazyLoadedImage(object image)
+        public LazyLoadedImage(Image image)
         {
             this.image = image;
             loading = false;

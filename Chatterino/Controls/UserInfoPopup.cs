@@ -71,48 +71,52 @@ namespace Chatterino.Controls
                     }
                     ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
                     request.Headers["Client-ID"]=$"{Common.IrcManager.DefaultClientID}";
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-
-                        dynamic json = parser.Parse(stream);
-
-                        string logo = json["logo"];
-                        string createdAt = json["created_at"];
-                        string followerCount = json["followers"];
-                        string viewCount = json["views"];
-                        string broadCasterType = json["broadcaster_type"];
-
-                        lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}");
-
-                        DateTime createAtTime;
-
-                        if (DateTime.TryParse(createdAt, out createAtTime))
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
                         {
-                            lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime.ToString()}");
-                        }
+                            var parser = new JsonParser();
 
-                        Task.Run(() =>
-                        {
-                            try
+                            dynamic json = parser.Parse(stream);
+
+                            string logo = json["logo"];
+                            string createdAt = json["created_at"];
+                            string followerCount = json["followers"];
+                            string viewCount = json["views"];
+                            string broadCasterType = json["broadcaster_type"];
+
+                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}");
+
+                            DateTime createAtTime;
+
+                            if (DateTime.TryParse(createdAt, out createAtTime))
                             {
-                                var req = WebRequest.Create(logo);
-                                if (AppSettings.IgnoreSystemProxy)
-                                {
-                                    request.Proxy = null;
-                                }
-
-                                using (var res = req.GetResponse())
-                                using (var s = res.GetResponseStream())
-                                {
-                                    var image = Image.FromStream(s);
-
-                                    picAvatar.Invoke(() => picAvatar.Image = image);
-                                }
+                                lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime.ToString()}");
                             }
-                            catch { }
-                        });
+
+                            Task.Run(() =>
+                            {
+                                try
+                                {
+                                    var req = WebRequest.Create(logo);
+                                    if (AppSettings.IgnoreSystemProxy)
+                                    {
+                                        request.Proxy = null;
+                                    }
+
+                                    using (var res = req.GetResponse()) {
+                                        using (var s = res.GetResponseStream())
+                                        {
+                                            var image = Image.FromStream(s);
+
+                                            picAvatar.Invoke(() => picAvatar.Image = image);
+                                        }
+                                        res.Close();
+                                    }
+                                }
+                                catch { }
+                            });
+                        }
+                        response.Close();
                     }
                 }
                 catch { }
