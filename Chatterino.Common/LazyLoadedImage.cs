@@ -36,7 +36,9 @@ namespace Chatterino.Common
             {
                 if (image != null)
                     return image;
-
+                if ((image = EmoteCache.GetEmote(Url)) != null) {
+                    return image;
+                }
                 if (loading) return null;
 
                 loading = true;
@@ -59,16 +61,17 @@ namespace Chatterino.Common
                             {
                                 request.Proxy = null;
                             }
-                            using (var response = request.GetResponse())
-                            using (var stream = response.GetResponseStream())
-                            {
-                                /*stopWatch.Stop();
-                                TimeSpan ts = stopWatch.Elapsed;
-                                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                                    ts.Hours, ts.Minutes, ts.Seconds,
-                                    ts.Milliseconds / 10);
-                                GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
-                                img = GuiEngine.Current.ReadImageFromStream(stream);
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    /*stopWatch.Stop();
+                                    TimeSpan ts = stopWatch.Elapsed;
+                                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                        ts.Hours, ts.Minutes, ts.Seconds,
+                                        ts.Milliseconds / 10);
+                                    GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
+                                    img = GuiEngine.Current.ReadImageFromStream(stream);
+                                }
                                 response.Close();
                             }
 
@@ -84,6 +87,7 @@ namespace Chatterino.Common
                     {
                         GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
                         image = img;
+                        EmoteCache.AddEmote(Url, image);
                         GuiEngine.Current.TriggerEmoteLoaded();
                     }
                     loading = false;

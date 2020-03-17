@@ -46,6 +46,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="HSLColor.cs" />
     <Compile Include="Emojis.cs" />
     <Compile Include="Emotes.cs" />
+    <Compile Include="EmoteCache.cs" />
     <Compile Include="CheerEmote.cs" />
     <Compile Include="FontType.cs" />
     <Compile Include="GuiEngine.cs" />

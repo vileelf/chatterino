@@ -21,7 +21,11 @@ namespace Chatterino
 {
     public class WinformsGuiEngine : IGuiEngine
     {
+        #if DEBUG
+        private bool debug = true;
+        #else
         private bool debug = false;
+        #endif
 
         public bool globalEmotesLoaded{get; set;} = false;
         public  HashSet<LazyLoadedImage> GifEmotesOnScreen{get;} =  new HashSet<LazyLoadedImage>();

@@ -139,6 +139,7 @@ namespace Chatterino
             {
                 (e.ExceptionObject as Exception).Log("exception", "{0}\n");
             };
+            EmoteCache.init();
             // Update gif emotes
             new Timer { Interval = 30, Enabled = true }.Tick += (s, e) =>
                 {
@@ -329,27 +330,21 @@ namespace Chatterino
                 new WelcomeForm().Show();
             }
 
-            MainForm.Closed += (s, e) =>
+            MainForm.FormClosed += (s, e) =>
             {
                 Application.Exit();
+                
+                // Save settings
+                AppSettings.Save();
+
+                Cache.Save();
+                
+                EmoteCache.SaveEmoteList();
+                
+                Commands.Save(Path.Combine(Util.GetUserDataPath(), "Custom", "Commands.txt"));
             };
 
             Application.Run();
-
-            // Save settings
-            AppSettings.Save();
-
-            Cache.Save();
-
-            Commands.Save(Path.Combine(Util.GetUserDataPath(), "Custom", "Commands.txt"));
-
-            // Install updates
-            if (installUpdatesOnExit)
-            {
-                Process.Start(UpdaterPath, restartAfterUpdates ? "--restart" : "");
-                System.Threading.Thread.Sleep(1000);
-            }
-
             Environment.Exit(0);
         }
 
