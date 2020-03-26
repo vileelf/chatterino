@@ -24,9 +24,6 @@ namespace Chatterino.Common
         public static ConcurrentDictionary<string, LazyLoadedImage> FfzGlobalEmotes =
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
-        public static ConcurrentDictionary<string, LazyLoadedImage> ChatterinoEmotes =
-            new ConcurrentDictionary<string, LazyLoadedImage>();
-
         public static ConcurrentDictionary<string, LazyLoadedImage> BttvChannelEmotesCache =
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
@@ -153,6 +150,7 @@ namespace Chatterino.Common
             _bttvHatEmotes["SantaHat"] = null;
             _bttvHatEmotes["ReinDeer"] = null;
             _bttvHatEmotes["CandyCane"] = null;
+            _bttvHatEmotes["cvHazmat"] = null;
 
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
