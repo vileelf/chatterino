@@ -151,6 +151,7 @@ namespace Chatterino.Common
             _bttvHatEmotes["ReinDeer"] = null;
             _bttvHatEmotes["CandyCane"] = null;
             _bttvHatEmotes["cvHazmat"] = null;
+            _bttvHatEmotes["cvMask"] = null;
 
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
