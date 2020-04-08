@@ -317,7 +317,7 @@ namespace Chatterino
             // Start irc
             Emotes.LoadGlobalEmotes();
             Badges.LoadGlobalBadges();
-
+            GuiEngine.Current.LoadBadges();
             Net.StartHttpServer();
 
             // Show form

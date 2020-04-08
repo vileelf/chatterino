@@ -336,7 +336,7 @@ namespace Chatterino
             [ImageType.TimeoutAlt] = Properties.Resources.timeoutalt,
         };
 
-        Dictionary<string, LazyLoadedImage> badges = new Dictionary<string, LazyLoadedImage>();
+        ConcurrentDictionary<string, LazyLoadedImage> badges = new ConcurrentDictionary<string, LazyLoadedImage>();
         private ConcurrentDictionary<string, CheerEmote> CheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
 
         protected object logLock = new object();
@@ -356,53 +356,50 @@ namespace Chatterino
 
         public void LoadBadges()
         {
-            lock (badges)
+            try
             {
-                try
+                var request =
+                    WebRequest.Create($"https://badges.twitch.tv/v1/badges/global/display?language=en");
+                if (AppSettings.IgnoreSystemProxy)
                 {
-                    var request =
-                        WebRequest.Create($"https://badges.twitch.tv/v1/badges/global/display?language=en");
-                    if (AppSettings.IgnoreSystemProxy)
+                    request.Proxy = null;
+                }
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    var parser = new JsonParser();
+                    dynamic json = parser.Parse(stream);
+                    dynamic badgeSets = json["badge_sets"];
+                    foreach (var badge in badgeSets)
                     {
-                        request.Proxy = null;
-                    }
-                    using (var response = request.GetResponse())
-                    using (var stream = response.GetResponseStream())
-                    {
-                        var parser = new JsonParser();
-                        dynamic json = parser.Parse(stream);
-                        dynamic badgeSets = json["badge_sets"];
-                        foreach (var badge in badgeSets)
+                        string name = badge.Key;
+                        dynamic versions = badge.Value["versions"];
+
+                        foreach (var version in versions)
                         {
-                            string name = badge.Key;
-                            dynamic versions = badge.Value["versions"];
+                            string key = version.Key;
 
-                            foreach (var version in versions)
+                            dynamic value = version.Value;
+
+                            string imageUrl = value["image_url_1x"];
+                            string title = value["title"];
+                            string description = value["description"];
+                            string clickUrl = value["click_url"];
+
+                            badges.TryAdd(name+"/"+key,
+                            new LazyLoadedImage
                             {
-                                string key = version.Key;
-
-                                dynamic value = version.Value;
-
-                                string imageUrl = value["image_url_1x"];
-                                string title = value["title"];
-                                string description = value["description"];
-                                string clickUrl = value["click_url"];
-
-                                badges.Add(name+"/"+key,
-                                new LazyLoadedImage
-                                {
-                                    Name = title,
-                                    Url = imageUrl,
-                                    Tooltip = title
-                                });
-                            }
+                                Name = title,
+                                Url = imageUrl,
+                                Tooltip = title
+                            });
                         }
-                        response.Close();
                     }
+                    response.Close();
                 }
-                catch
-                {
-                }
+            }
+            catch
+            {
             }
         }
 

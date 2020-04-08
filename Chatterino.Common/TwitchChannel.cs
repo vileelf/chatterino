@@ -50,69 +50,6 @@ namespace Chatterino.Common
         public ConcurrentDictionary<string, LazyLoadedImage> FfzChannelEmotes { get; private set; }
         = new ConcurrentDictionary<string, LazyLoadedImage>();
 
-
-        // Sub Badge
-        private LazyLoadedImage subBadge;
-
-        public LazyLoadedImage SubscriberBadge
-        {
-            get
-            {
-                return subBadge ?? (subBadge = new LazyLoadedImage
-                {
-                    LoadAction = () =>
-                    {
-                        try
-                        {
-                            string imageUrl = null;
-                            Image img = null;
-                            
-                            var request =
-                                WebRequest.Create(
-                                    $"https://api.twitch.tv/kraken/chat/{Name}/badges");
-                            if (AppSettings.IgnoreSystemProxy)
-                            {
-                                request.Proxy = null;
-                            }
-                            ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                            request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
-                            using (var response = request.GetResponse()) {
-                                using (var stream = response.GetResponseStream())
-                                {
-                                    var json = new JsonParser().Parse(stream);
-
-                                    imageUrl =
-                                        (string)
-                                        (((Dictionary<string, object>)
-                                            ((Dictionary<string, object>)json)["subscriber"])["image"]);
-                                }
-                                response.Close();
-                            }
-
-                            request = WebRequest.Create(imageUrl);
-                            if (AppSettings.IgnoreSystemProxy)
-                            {
-                                request.Proxy = null;
-                            }
-                            using (var response = request.GetResponse()) {
-                                using (var stream = response.GetResponseStream())
-                                {
-                                    img = GuiEngine.Current.ReadImageFromStream(stream);
-                                    GuiEngine.Current.FreezeImage(img);
-                                }
-                                response.Close();
-                                return img;
-                            }
-                        }
-                        catch
-                        {
-                            return null;
-                        }
-                    }
-                });
-            }
-        }
-
         public ConcurrentDictionary<int, LazyLoadedImage> SubscriberBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
         public ConcurrentDictionary<int, LazyLoadedImage> CheerBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
         private ConcurrentDictionary<string, CheerEmote> ChannelCheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
@@ -500,8 +437,7 @@ namespace Chatterino.Common
                 PopoutPlayerLink = $"https://player.twitch.tv/?channel={Name}";
 
                 Join();
-
-                GuiEngine.Current.LoadBadges();
+                
                 loadData();
                 // recent chat
                 Task.Run(() =>
@@ -613,7 +549,6 @@ namespace Chatterino.Common
                 {
                     fetchUsernames();
                 });
-
                 checkIfIsLive();
             }
 
@@ -1191,7 +1126,10 @@ namespace Chatterino.Common
                 var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{RoomID}");
 
                 LoadSubBadges(RoomID);
-                LoadChannelBits(RoomID);
+                Task.Run(() =>
+                {
+                    LoadChannelBits(RoomID);
+                });
 
                 //Emotes.ClearTwitchEmoteCache();
                 // bttv channel emotes
@@ -1201,21 +1139,26 @@ namespace Chatterino.Common
                     {
                         var parser = new JsonParser();
 
-                    //if (!File.Exists(bttvChannelEmotesCache))
-                    {
+                        //if (!File.Exists(bttvChannelEmotesCache))
+                        {
                             try
                             {
-                                if (File.Exists(bttvChannelEmotesCache))
-                                    File.Delete(bttvChannelEmotesCache);
+                                
 
                                 if (Util.IsLinux)
                                 {
+                                    if (File.Exists(bttvChannelEmotesCache)) {
+                                        File.Delete(bttvChannelEmotesCache);
+                                    }
                                     Util.LinuxDownloadFile("https://api.betterttv.net/3/cached/users/twitch/" + RoomID, bttvChannelEmotesCache);
                                 }
                                 else
                                 {
                                     using (var webClient = new WebClient())
                                     using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID)) {
+                                        if (File.Exists(bttvChannelEmotesCache)) {
+                                            File.Delete(bttvChannelEmotesCache);
+                                        }
                                         using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
                                         {
                                             readStream.CopyTo(writeStream);
@@ -1271,22 +1214,27 @@ namespace Chatterino.Common
                     {
                             try
                             {
-                                if (File.Exists(ffzChannelEmotesCache))
-                                    File.Delete(ffzChannelEmotesCache);
 
                                 if (Util.IsLinux)
                                 {
+                                    if (File.Exists(ffzChannelEmotesCache)) {
+                                        File.Delete(ffzChannelEmotesCache);
+                                    }
                                     Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/id/" + RoomID, ffzChannelEmotesCache);
                                 }
                                 else
                                 {
-                                    using (var webClient = new WebClient())
-                                    using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID)) {
-                                        using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
-                                        {
-                                            readStream.CopyTo(writeStream);
+                                    using (var webClient = new WebClient()) {
+                                        using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID)) {
+                                            if (File.Exists(ffzChannelEmotesCache)) {
+                                                File.Delete(ffzChannelEmotesCache);
+                                            }
+                                            using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
+                                            {
+                                                readStream.CopyTo(writeStream);
+                                            }
+                                            readStream.Close();
                                         }
-                                        readStream.Close();
                                     }
                                 }
                             }
