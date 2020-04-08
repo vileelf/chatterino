@@ -28,6 +28,7 @@ namespace Chatterino.Controls
         public bool EnableHatEmotes { get; protected set; } = true;
 
         static ContextMenu urlContextMenu;
+        private ContextMenu normalContextMenu = new ContextMenu();
         static Link urlContextMenuLink;
 
         static MessageContainerControl()
@@ -35,6 +36,7 @@ namespace Chatterino.Controls
             urlContextMenu = new ContextMenu();
             urlContextMenu.MenuItems.Add(new MenuItem("Open in Browser", (s, e) => GuiEngine.Current.HandleLink(urlContextMenuLink)));
             urlContextMenu.MenuItems.Add(new MenuItem("Copy link", (s, e) => Clipboard.SetText(urlContextMenuLink.Value as string ?? "")));
+            
         }
 
         protected bool scrollAtBottom = true;
@@ -76,6 +78,7 @@ namespace Chatterino.Controls
         protected Selection mouseDownSelection = null;
         protected Selection selection = null;
         protected bool mouseDown = false;
+        protected bool leftClick = false;
 
         // buffer
         protected BufferedGraphicsContext context = BufferedGraphicsManager.Current;
@@ -102,7 +105,9 @@ namespace Chatterino.Controls
 
                 ProposeInvalidation();
             };
-
+            
+            normalContextMenu.MenuItems.Add("Copy Selection", (s, e) => { CopySelection(false);});
+            
             Controls.Add(_scroll);
 
             App.GifEmoteFramesUpdated += App_GifEmoteFramesUpdated;
@@ -295,10 +300,10 @@ namespace Chatterino.Controls
             {
                 var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
 
-                var pos = msg.MessagePositionAtPoint(graphics, new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y), index);
+                MessagePosition pos = msg.MessagePositionAtPoint(graphics, new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y), index);
                 //Console.WriteLine($"pos: {pos.MessageIndex} : {pos.WordIndex} : {pos.SplitIndex} : {pos.CharIndex}");
 
-                if (selection != null && mouseDown)
+                if (selection != null && mouseDown && leftClick)
                 {
                     var newSelection = new Selection(selection.Start, pos);
                     if (!newSelection.Equals(selection))
@@ -358,36 +363,40 @@ namespace Chatterino.Controls
         {
             base.OnMouseDown(e);
 
-            //if (e.Button == MouseButtons.Left)
+            
+            mouseDown = true;
+
+            leftClick = (e.Button == MouseButtons.Left);
+            int index;
+
+            var msg = MessageAtPoint(e.Location, out index);
+            if (msg != null)
             {
-                mouseDown = true;
-
-                int index;
-
-                var msg = MessageAtPoint(e.Location, out index);
-                if (msg != null)
-                {
-                    var graphics = App.UseDirectX ? null : CreateGraphics();
-                    var position = msg.MessagePositionAtPoint(graphics, new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y), index);
-
+                var graphics = App.UseDirectX ? null : CreateGraphics();
+                MessagePosition position;
+                if (e.Button == MouseButtons.Left) {
+                    position = msg.MessagePositionAtPoint(graphics, new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y), index);
                     selection = new Selection(position, position);
+                }
 
-                    var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
-                    mouseDownWord = word;
-                    if (word != null)
-                    {
+                var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
+                mouseDownWord = word;
+                if (word != null)
+                {
+                    if (e.Button == MouseButtons.Left) {
                         position = msg.MessagePositionAtPoint(graphics, new CommonPoint(word.X + 1, e.Y - msg.Y), index);
-                        var position2 = msg.MessagePositionAtPoint(graphics, new CommonPoint((word.X + 1 + word.Width), e.Y - msg.Y), index);
-                        if (word.Link != null)
-                        {
-                            mouseDownLink = word.Link;
-                        }
+                        MessagePosition position2 = msg.MessagePositionAtPoint(graphics, new CommonPoint((word.X + 1 + word.Width), e.Y - msg.Y), index);
                         mouseDownSelection = new Selection(position, position2);
                     }
-                    graphics?.Dispose();
+                    if (word.Link != null)
+                    {
+                        mouseDownLink = word.Link;
+                    }
                 }
-                else
-                    selection = null;
+                graphics?.Dispose();
+            }
+            else if (e.Button == MouseButtons.Left) {
+                selection = null;
             }
 
             Invalidate();
@@ -429,6 +438,10 @@ namespace Chatterino.Controls
                     }
                 }
             }
+            
+            if (e.Button == MouseButtons.Right && mouseDownLink == null) {
+                normalContextMenu.Show(this, e.Location);
+            }
 
             mouseDownLink = null;
 
@@ -444,7 +457,7 @@ namespace Chatterino.Controls
                 GuiEngine.Current.HandleLink(mouseDownLink);
             } else {
                 //select the word
-                if (mouseDownWord != null)
+                if (mouseDownWord != null && leftClick)
                 {
                     clearOtherSelections();
                     Invalidate();
