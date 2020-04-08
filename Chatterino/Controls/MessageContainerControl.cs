@@ -106,7 +106,8 @@ namespace Chatterino.Controls
                 ProposeInvalidation();
             };
             
-            normalContextMenu.MenuItems.Add("Copy Selection", (s, e) => { CopySelection(false);});
+            normalContextMenu.MenuItems.Add("Copy Selection ", (s, e) => { CopySelection(false);});
+            normalContextMenu.MenuItems.Add("Append selection to message", (s, e) => {(App.MainForm.Selected as ChatControl)?.PasteText(GetSelectedText(false));});
             
             Controls.Add(_scroll);
 
