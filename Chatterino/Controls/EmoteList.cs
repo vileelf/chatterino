@@ -35,6 +35,22 @@ namespace Chatterino.Controls
                 LazyLoadedImage twitchemote;
                 messages.Clear();
 
+                // recently used emotes
+                if (AppSettings.RecentlyUsedEmoteList) {
+                    var words = new List<Word>();
+
+                    foreach (var emote in Emotes.RecentlyUsedEmotes.Values)
+                    {
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
+                    }
+
+                    if (words.Count != 0)
+                    {
+                        messages.Add(new Message("Recently Used Emotes"));
+                        messages.Add(new Message(words));
+                    }
+                }
+
                 // twitch emotes
                 {
                     foreach (var emotes in Emotes.TwitchEmotes.GroupBy(x => x.Value.Set))

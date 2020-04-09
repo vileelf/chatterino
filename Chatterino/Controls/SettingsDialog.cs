@@ -264,6 +264,7 @@ namespace Chatterino.Controls
             BindCheckBox(chkTabLocalizedNames, "ChatTabLocalizedNames");
             BindCheckBox(chkTopMost, "WindowTopMost");
             BindCheckBox(chkRemoveX, "RemoveXButton");
+            BindCheckBox(chkRecentlyUsedEmoteList, "RecentlyUsedEmoteList");
             BindCheckBox(chkShowEmoteTooltip, "ShowEmoteTooltip");
             BindCheckBox(chkIgnoreViaTwitch, "IgnoreViaTwitch");
 
@@ -776,6 +777,7 @@ namespace Chatterino.Controls
             {
                 tp.Reload();
             }
+            Emotes.EmoteAdded();
         }
 
         void btnCancel_Click(object sender, EventArgs e)

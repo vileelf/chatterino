@@ -449,6 +449,11 @@ namespace Chatterino.Common
                                     var e = Emotes.GetTwitchEmoteById(id, name);
 
                                     twitchEmotes.Add(Tuple.Create(index, e));
+                                    
+                                    if (AppSettings.RecentlyUsedEmoteList && Username.Equals(IrcManager.Account.Username.ToLower()) && !Emotes.TwitchEmotes.ContainsKey(name) && !Emotes.RecentlyUsedEmotes.ContainsKey(name)) {
+                                        Emotes.RecentlyUsedEmotes.TryAdd(name, e);
+                                        Emotes.EmoteAdded();
+                                    }
                                 }
                             };
                         } catch(Exception e){

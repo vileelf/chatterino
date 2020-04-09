@@ -15,6 +15,9 @@ namespace Chatterino.Common
     {
         public static event EventHandler EmotesLoaded;
 
+        public static ConcurrentDictionary<string, LazyLoadedImage> RecentlyUsedEmotes =
+            new ConcurrentDictionary<string, LazyLoadedImage>();
+
         public static ConcurrentDictionary<string, IrcManager.TwitchEmoteValue> TwitchEmotes =
             new ConcurrentDictionary<string, IrcManager.TwitchEmoteValue>();
 
@@ -278,6 +281,10 @@ namespace Chatterino.Common
             string code;
 
             return twitchEmotesCodeReplacements.TryGetValue(emoteCode, out code) ? code : emoteCode;
+        }
+        
+        public static void EmoteAdded() {
+            EmotesLoaded?.Invoke(null, EventArgs.Empty);
         }
 
         public static void LoadGlobalEmotes()

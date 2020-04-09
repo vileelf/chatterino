@@ -161,6 +161,8 @@ namespace Chatterino.Common
         
         public static bool ShowEmoteTooltip { get; set; } = true;
         
+        public static bool RecentlyUsedEmoteList { get; set; } = true;
+        
         public static bool IgnoreViaTwitch { get; set; } = true;
 
     // Chat

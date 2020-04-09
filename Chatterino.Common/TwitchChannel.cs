@@ -796,16 +796,19 @@ namespace Chatterino.Common
 
         void updateEmoteNameList()
         {
-            var names = new List<KeyValuePair<string, string>>();
+            var names = new HashSet<KeyValuePair<string, string>>();
 
-            names.AddRange(Emotes.TwitchEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.AddRange(Emotes.BttvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.AddRange(Emotes.FfzGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.AddRange(BttvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.AddRange(FfzChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.AddRange(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
+            names.UnionWith(Emotes.TwitchEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            if (AppSettings.RecentlyUsedEmoteList) {
+                names.UnionWith(Emotes.RecentlyUsedEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            }
+            names.UnionWith(Emotes.BttvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            names.UnionWith(Emotes.FfzGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            names.UnionWith(BttvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            names.UnionWith(FfzChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            names.UnionWith(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
 
-            emoteNames = names;
+            emoteNames = new List<KeyValuePair<string, string>>(names);
         }
 
         public IEnumerable<KeyValuePair<string, string>> GetCompletionItems(bool firstWord, bool allowAt)

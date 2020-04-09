@@ -145,6 +145,7 @@ namespace Chatterino.Controls
             this.chkStreamlinkPath = new System.Windows.Forms.CheckBox();
             this.btnStreamlinkPath = new System.Windows.Forms.Button();
             this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
+            this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
             this.chkTabLocalizedNames = new System.Windows.Forms.CheckBox();
             this.chkMentionUserWithAt = new System.Windows.Forms.CheckBox();
             this.lblScrollSpeed = new System.Windows.Forms.Label();
@@ -1299,6 +1300,7 @@ namespace Chatterino.Controls
             this.panel12.Controls.Add(this.chkPrefereEmotes);
             this.panel12.Controls.Add(this.groupBox2);
             this.panel12.Controls.Add(this.chkAllowSameMessages);
+            this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
             this.panel12.Controls.Add(this.chkTabLocalizedNames);
             this.panel12.Controls.Add(this.chkMentionUserWithAt);
             this.panel12.Controls.Add(this.lblScrollSpeed);
@@ -1467,6 +1469,17 @@ namespace Chatterino.Controls
             this.chkAllowSameMessages.TabIndex = 53;
             this.chkAllowSameMessages.Text = "Allow sending duplicate messages (add a space at the end)";
             this.chkAllowSameMessages.UseVisualStyleBackColor = true;
+            // 
+            // chkRecentlyUsedEmoteList
+            // 
+            this.chkRecentlyUsedEmoteList.AutoSize = true;
+            this.chkRecentlyUsedEmoteList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkRecentlyUsedEmoteList.Location = new System.Drawing.Point(15, 159);
+            this.chkRecentlyUsedEmoteList.Name = "chkRecentlyUsedEmoteList";
+            this.chkRecentlyUsedEmoteList.Size = new System.Drawing.Size(306, 17);
+            this.chkRecentlyUsedEmoteList.TabIndex = 54;
+            this.chkRecentlyUsedEmoteList.Text = "Keep a list of recently used emotes not from twitches emote list";
+            this.chkRecentlyUsedEmoteList.UseVisualStyleBackColor = true;
             // 
             // chkTabLocalizedNames
             // 
@@ -2231,6 +2244,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.Panel panel12;
         private SettingsTabPage settingsTabPage1;
         private System.Windows.Forms.CheckBox chkAllowSameMessages;
+        private System.Windows.Forms.CheckBox chkRecentlyUsedEmoteList;
         private System.Windows.Forms.CheckBox chkTabLocalizedNames;
         private System.Windows.Forms.CheckBox chkMentionUserWithAt;
         private System.Windows.Forms.Label lblScrollSpeed;
