@@ -147,6 +147,9 @@ namespace Chatterino
                     {
                         lock (GuiEngine.Current.GifEmotesLock)
                         {
+                            if (EmoteList!=null && EmoteList.GetGifEmotes()!=null) {
+                                GuiEngine.Current.GifEmotesOnScreen.UnionWith(EmoteList.GetGifEmotes());
+                            }
                             foreach (LazyLoadedImage emote in GuiEngine.Current.GifEmotesOnScreen) {
                                 if (emote.HandleAnimation != null) {
                                     emote.HandleAnimation();

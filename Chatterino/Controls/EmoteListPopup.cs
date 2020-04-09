@@ -36,6 +36,13 @@ namespace Chatterino.Controls
             };
         }
         
+        public HashSet<LazyLoadedImage> GetGifEmotes() {
+            if (container!=null) {
+                return container.GifEmotes;
+            }
+            return null;
+        }
+        
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             container.ClearBuffer();

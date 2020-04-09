@@ -10,6 +10,8 @@ namespace Chatterino.Controls
     public class EmoteList : MessageContainerControl
     {
         private List<Message> _messages = new List<Message>();
+        
+        public HashSet<LazyLoadedImage> GifEmotes = new HashSet<LazyLoadedImage>();
 
         protected override Message[] Messages
         {
@@ -34,6 +36,7 @@ namespace Chatterino.Controls
                 var messages = _messages;
                 LazyLoadedImage twitchemote;
                 messages.Clear();
+                GifEmotes.Clear();
 
                 // recently used emotes
                 if (AppSettings.RecentlyUsedEmoteList) {
@@ -41,6 +44,15 @@ namespace Chatterino.Controls
 
                     foreach (var emote in Emotes.RecentlyUsedEmotes.Values)
                     {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
                     }
 
@@ -60,6 +72,15 @@ namespace Chatterino.Controls
                         foreach (var emote in emotes.OrderBy(x => x.Key))
                         {
                             twitchemote = Emotes.GetTwitchEmoteById(emote.Value.ID, emote.Key);
+                            if (twitchemote.IsAnimated) {
+                                GifEmotes.Add(twitchemote);
+                            } else if (twitchemote.Image==null) {
+                                twitchemote.ImageLoaded += (s, e) => {
+                                    if (twitchemote.IsAnimated) {
+                                        GifEmotes.Add(twitchemote);
+                                    }
+                                };
+                            }
                             words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = twitchemote, Tooltip = twitchemote.Tooltip, TooltipImageUrl = twitchemote.TooltipImageUrl, CopyText = twitchemote.Name, Link = new Link(LinkType.InsertText, emote.Key + " ") });
                         }
 
@@ -86,6 +107,15 @@ namespace Chatterino.Controls
 
                     foreach (var emote in channel.BttvChannelEmotes.Values)
                     {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
                     }
 
@@ -102,6 +132,15 @@ namespace Chatterino.Controls
 
                     foreach (var emote in Emotes.BttvGlobalEmotes.Values)
                     {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
                     }
 
@@ -119,6 +158,15 @@ namespace Chatterino.Controls
 
                     foreach (var emote in channel.FfzChannelEmotes.Values)
                     {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
                     }
 
@@ -135,6 +183,15 @@ namespace Chatterino.Controls
 
                     foreach (var emote in Emotes.FfzGlobalEmotes.Values)
                     {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
                     }
 
