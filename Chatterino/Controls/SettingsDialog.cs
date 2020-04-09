@@ -264,6 +264,7 @@ namespace Chatterino.Controls
             BindCheckBox(chkTabLocalizedNames, "ChatTabLocalizedNames");
             BindCheckBox(chkTopMost, "WindowTopMost");
             BindCheckBox(chkRemoveX, "RemoveXButton");
+            BindCheckBox(chkShowEmoteTooltip, "ShowEmoteTooltip");
             BindCheckBox(chkIgnoreViaTwitch, "IgnoreViaTwitch");
 
             BindCheckBox(chkLastReadMessageIndicator, "ChatShowLastReadMessageIndicator");

@@ -87,8 +87,12 @@ namespace Chatterino.Common
                     if (img == null)
                     {
                         double scale;
-                        url = GetTwitchEmoteLink(id, out scale);
+                        double fake;
+                        string tooltipurl;
+                        url = GetTwitchEmoteLink(id, false, out scale);
+                        tooltipurl = GetTwitchEmoteLink(id, true, out fake);
                         emote.Url = url;
+                        emote.TooltipImageUrl = tooltipurl;
 
                         try
                         {
@@ -156,22 +160,27 @@ namespace Chatterino.Common
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
 
-        private static string GetTwitchEmoteLink(string id, out double scale)
+        private static string GetTwitchEmoteLink(string id, bool getMax, out double scale)
         {
             var _scale = AppSettings.EmoteScale > 2 ? 4 : (AppSettings.EmoteScale > 1 ? 2 : 1);
-
+            if (getMax) {
+              _scale = 4;  
+            }
             scale = 1.0 / _scale;
 
             return TwitchEmoteTemplate.Replace("{id}", id.ToString()).Replace("{scale}", _scale.ToString());
         }
 
-        public static string GetBttvEmoteLink(string link, out double scale)
+        public static string GetBttvEmoteLink(string link, bool getMax, out double scale)
         {
             var _scale = AppSettings.EmoteScale > 2 ? 4 : (AppSettings.EmoteScale > 1 ? 2 : 1);
+            if (getMax) {
+              _scale = 4;  
+            }
 
             scale = 1.0 / _scale;
 
-            return link.Replace("{{image}}", (_scale == 4 ? 3 : _scale) + "x");
+            return link.Replace("{{image}}", ((_scale == 4) ? 3 : _scale) + "x");
         }
 
         public static IEnumerable<LazyLoadedImage> GetFfzEmoteFromDynamic(dynamic d, bool global)
@@ -224,6 +233,7 @@ namespace Chatterino.Common
                 var scale = 1.0 / _scale;
 
                 string margins = emote["margins"];
+                string tooltipurl = urlX4!=null?urlX4:urlX2!=null?urlX2:url;
 
                 Margin margin = null;
 
@@ -257,7 +267,7 @@ namespace Chatterino.Common
                     }
                 }
 
-                emotes.Add(new LazyLoadedImage { Name = name, Url = url, Scale = scale, Margin = margin, Tooltip = name + $"\nFrankerFaceZ {(global ? "Global" : "Channel")} Emote", IsEmote = true });
+                emotes.Add(new LazyLoadedImage { Name = name, Url = url, TooltipImageUrl = tooltipurl, Scale = scale, Margin = margin, Tooltip = name + $"\nFrankerFaceZ {(global ? "Global" : "Channel")} Emote", IsEmote = true });
             }
 
             return emotes;
@@ -272,59 +282,6 @@ namespace Chatterino.Common
 
         public static void LoadGlobalEmotes()
         {
-            // twitchemotes
-            /*
-            Task.Run(() =>
-            {
-                try
-                {
-                    Directory.CreateDirectory("./Cache");
-
-                    System.Text.Json.JsonParser parser = new System.Text.Json.JsonParser();
-
-                    // twitchemotes api global emotes
-                    if (!File.Exists(twitchemotesGlobalCache) || DateTime.Now - new FileInfo(twitchemotesGlobalCache).LastWriteTime > TimeSpan.FromHours(24))
-                    {
-                        try
-                        {
-                            if (Util.IsLinux)
-                            {
-                                Util.LinuxDownloadFile("https://twitchemotes.com/api_cache/v2/global.json", twitchemotesGlobalCache);
-                            }
-                            else
-                            {
-                                using (var webClient = new WebClient())
-                                using (var readStream = webClient.OpenRead("https://twitchemotes.com/api_cache/v2/global.json"))
-                                using (var writeStream = File.OpenWrite(twitchemotesGlobalCache))
-                                {
-                                    readStream.CopyTo(writeStream);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            e.Message.Log("emotes");
-                        }
-                    }
-
-                    using (var stream = File.OpenRead(twitchemotesGlobalCache))
-                    {
-                        dynamic json = parser.Parse(stream);
-                        dynamic templates = json["template"];
-                        string template112 = templates["large"];
-
-                        foreach (KeyValuePair<string, object> e in json["emotes"])
-                        {
-                            string code = e.Key;
-
-                            TwitchGlobalEmotes[code.ToUpper()] = code;
-                        }
-                    }
-                    EmotesLoaded?.Invoke(null, EventArgs.Empty);
-                }
-                catch { }
-            });
-            */
 
             // bttv emotes
             Task.Run(() =>
@@ -338,8 +295,6 @@ namespace Chatterino.Common
                     {
                         try
                         {
-                            if (File.Exists(bttvEmotesGlobalCache))
-                                File.Delete(bttvEmotesGlobalCache);
 
                             if (Util.IsLinux)
                             {
@@ -349,6 +304,9 @@ namespace Chatterino.Common
                             {
                                 using (var webClient = new WebClient()) {
                                     using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/emotes/global")) {
+                                        if (File.Exists(bttvEmotesGlobalCache)) {
+                                            File.Delete(bttvEmotesGlobalCache);
+                                        }
                                         using (var writeStream = File.OpenWrite(bttvEmotesGlobalCache))
                                         {
                                             readStream.CopyTo(writeStream);
@@ -377,11 +335,13 @@ namespace Chatterino.Common
                             string code = e["code"];
                             string imageType = e["imageType"];
                             string url = template.Replace("{{id}}", id);
+                            double fake;
+                            string tooltipurl = GetBttvEmoteLink(url, true, out fake);
 
                             double scale;
-                            url = GetBttvEmoteLink(url, out scale);
+                            url = GetBttvEmoteLink(url, false, out scale);
 
-                            BttvGlobalEmotes[code] = new LazyLoadedImage { Name = code, Url = url, IsHat = IsBttvEmoteAHat(code), Scale = scale, Tooltip = code + "\nBetterTTV Global Emote", IsEmote = true };
+                            BttvGlobalEmotes[code] = new LazyLoadedImage { Name = code, Url = url, TooltipImageUrl = tooltipurl, IsHat = IsBttvEmoteAHat(code), Scale = scale, Tooltip = code + "\nBetterTTV Global Emote", IsEmote = true };
                         }
                     }
                     EmotesLoaded?.Invoke(null, EventArgs.Empty);
@@ -403,8 +363,6 @@ namespace Chatterino.Common
                     {
                         try
                         {
-                            if (File.Exists(ffzEmotesGlobalCache))
-                                File.Delete(ffzEmotesGlobalCache);
 
                             if (Util.IsLinux)
                             {
@@ -414,6 +372,9 @@ namespace Chatterino.Common
                             {
                                 using (var webClient = new WebClient()) {
                                     using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/set/global")) {
+                                        if (File.Exists(ffzEmotesGlobalCache)) {
+                                            File.Delete(ffzEmotesGlobalCache);
+                                        }
                                         using (var writeStream = File.OpenWrite(ffzEmotesGlobalCache))
                                         {
                                             readStream.CopyTo(writeStream);
@@ -524,10 +485,12 @@ namespace Chatterino.Common
             if (!TwitchEmotesByIDCache.TryGetValue(id, out e))
             {
                 double scale;
+                double fake;
                 e = new LazyLoadedImage
                 {
                     Name = name,
-                    Url = GetTwitchEmoteLink(id, out scale),
+                    Url = GetTwitchEmoteLink(id, false, out scale),
+                    TooltipImageUrl = GetTwitchEmoteLink(id, true, out fake),
                     Scale = scale,
                     Tooltip = name + "\nTwitch Emote",
                     IsEmote = true

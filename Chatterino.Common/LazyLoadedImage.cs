@@ -22,10 +22,12 @@ namespace Chatterino.Common
         public Margin Margin { get; set; } = null;
 
         public string Tooltip { get; set; } = null;
+        public string TooltipImageUrl { get; set; } = null;
         public string click_url {get; set; } = null;
         public bool IsDanke = false;
         public delegate void HA();
         public HA HandleAnimation = null;
+        public event EventHandler ImageLoaded;
 
         bool loading = false;
         private Image image = null;
@@ -37,6 +39,8 @@ namespace Chatterino.Common
                 if (image != null)
                     return image;
                 if ((image = EmoteCache.GetEmote(Url)) != null) {
+                    GuiEngine.Current.HandleAnimatedTwitchEmote(this, image);
+                    ImageLoaded?.Invoke(null, null);
                     return image;
                 }
                 if (loading) return null;
@@ -89,6 +93,7 @@ namespace Chatterino.Common
                         image = img;
                         EmoteCache.AddEmote(Url, image);
                         GuiEngine.Current.TriggerEmoteLoaded();
+                        ImageLoaded?.Invoke(null, null);
                     }
                     loading = false;
                 }));

@@ -72,6 +72,7 @@ namespace Chatterino.Controls
             this.checkBoxDifferentThemeAtNight = new System.Windows.Forms.CheckBox();
             this.chkTopMost = new System.Windows.Forms.CheckBox();
             this.chkRemoveX = new System.Windows.Forms.CheckBox();
+            this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
             this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -411,6 +412,7 @@ namespace Chatterino.Controls
             this.panel1.Controls.Add(this.checkBoxDifferentThemeAtNight);
             this.panel1.Controls.Add(this.chkTopMost);
             this.panel1.Controls.Add(this.chkRemoveX);
+            this.panel1.Controls.Add(this.chkShowEmoteTooltip);
             this.panel1.Controls.Add(this.btnSelectFont);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.trackBar1);
@@ -436,7 +438,7 @@ namespace Chatterino.Controls
             this.groupBox1.Controls.Add(this.chkMessageSeperators);
             this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(17, 249);
+            this.groupBox1.Location = new System.Drawing.Point(17, 265);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(435, 92);
             this.groupBox1.TabIndex = 37;
@@ -638,6 +640,17 @@ namespace Chatterino.Controls
             this.chkRemoveX.TabIndex = 27;
             this.chkRemoveX.Text = "Remove X button from tabs\r\n";
             this.chkRemoveX.UseVisualStyleBackColor = true;
+            // 
+            // chkShowEmoteTooltip
+            // 
+            this.chkShowEmoteTooltip.AutoSize = true;
+            this.chkShowEmoteTooltip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkShowEmoteTooltip.Location = new System.Drawing.Point(17, 239);
+            this.chkShowEmoteTooltip.Name = "chkShowEmoteTooltip";
+            this.chkShowEmoteTooltip.Size = new System.Drawing.Size(133, 17);
+            this.chkShowEmoteTooltip.TabIndex = 28;
+            this.chkShowEmoteTooltip.Text = "Show large emotes in tooltip\r\n";
+            this.chkShowEmoteTooltip.UseVisualStyleBackColor = true;
             // 
             // btnSelectFont
             // 
@@ -2184,6 +2197,7 @@ namespace Chatterino.Controls
         private SettingsTabPage spBrowserExtension;
         private System.Windows.Forms.CheckBox chkTopMost;
         private System.Windows.Forms.CheckBox chkRemoveX;
+        private System.Windows.Forms.CheckBox chkShowEmoteTooltip;
         private System.Windows.Forms.CheckBox chkIgnoreViaTwitch;
         private System.Windows.Forms.CheckBox chkEnableInlineWhispers;
         private System.Windows.Forms.CheckBox chkLastReadMessageIndicator;

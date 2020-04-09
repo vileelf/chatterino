@@ -14,6 +14,7 @@ namespace Chatterino.Common
         public HSLColor? Color { get; set; }
         public Link Link { get; set; }
         public string Tooltip { get; set; }
+        public string TooltipImageUrl { get; set; }
         public string CopyText { get; set; } = null;
         public bool Highlighted { get; set; } = false;
 

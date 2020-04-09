@@ -475,6 +475,7 @@ namespace Chatterino.Common
                             Value = currentTwitchEmote.Item2,
                             Link = new Link(LinkType.Url, currentTwitchEmote.Item2.Url),
                             Tooltip = currentTwitchEmote.Item2.Tooltip,
+                            TooltipImageUrl = currentTwitchEmote.Item2.TooltipImageUrl,
                             CopyText = currentTwitchEmote.Item2.Name
                         });
                         i += split.Length + 1;
@@ -531,6 +532,7 @@ namespace Chatterino.Common
                                 Value = bttvEmote,
                                 Color = slashMe ? UsernameColor : new HSLColor?(),
                                 Tooltip = bttvEmote.Tooltip,
+                                TooltipImageUrl = bttvEmote.TooltipImageUrl,
                                 Link = new Link(LinkType.Url, bttvEmote.Url),
                                 CopyText = bttvEmote.Name
                             });
@@ -561,6 +563,7 @@ namespace Chatterino.Common
                                 Value = e,
                                 Link = new Link(LinkType.Url, e.Url),
                                 Tooltip = e.Tooltip,
+                                TooltipImageUrl = e.TooltipImageUrl,
                                 CopyText = e.Name,
                                 HasTrailingSpace = e.HasTrailingSpace
                             });

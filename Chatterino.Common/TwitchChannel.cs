@@ -1343,7 +1343,11 @@ namespace Chatterino.Common
                 string url = template.Replace("{{id}}", id);
 
                 double scale;
-                url = Emotes.GetBttvEmoteLink(url, out scale);
+                double fake;
+                string tooltipurl;
+                tooltipurl = Emotes.GetBttvEmoteLink(url, true, out fake);
+                url = Emotes.GetBttvEmoteLink(url, false, out scale);
+                
 
                 Emotes.BttvChannelEmotesCache[id] =
                     BttvChannelEmotes[code] =
@@ -1352,6 +1356,7 @@ namespace Chatterino.Common
                             Name = code,
                             Url = url,
                             Tooltip = code + "\nBetterTTV Channel Emote\nChannel: " + channel,
+                            TooltipImageUrl = tooltipurl,
                             Scale = scale,
                             IsEmote = true
                         };

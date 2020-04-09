@@ -332,7 +332,7 @@ namespace Chatterino.Controls
 
                     if (word.Tooltip != null)
                     {
-                        App.ShowToolTip(PointToScreen(new Point(e.Location.X + 16, e.Location.Y + 16)), word.Tooltip);
+                        App.ShowToolTip(PointToScreen(new Point(e.Location.X + 16, e.Location.Y + 16)), word.Tooltip, word.TooltipImageUrl);
                     }
                     else
                     {

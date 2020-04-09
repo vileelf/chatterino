@@ -236,7 +236,6 @@ namespace Chatterino
             if (image != null)
             {
                 Image img = (Image)image;
-
                 bool animated = ImageAnimator.CanAnimate(img);
 
                 if (animated)
@@ -266,7 +265,6 @@ namespace Chatterino
                             }
                         }
                         emote.IsAnimated = true;
-
                         emote.HandleAnimation += () =>
                         {
                             currentFrameOffset += 3;

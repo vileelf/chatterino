@@ -51,7 +51,7 @@ namespace Chatterino
         {
             c.MouseMove += (s, e) =>
             {
-                App.ShowToolTip(c.PointToScreen(new Point(e.X + 16, e.Y + 16)), tooltip, true);
+                App.ShowToolTip(c.PointToScreen(new Point(e.X + 16, e.Y + 16)), tooltip, null, true);
             };
 
             c.MouseLeave += (s, e) =>
@@ -67,7 +67,7 @@ namespace Chatterino
                 var val = tooltip.Value;
                 if (val != null)
                 {
-                    App.ShowToolTip(c.PointToScreen(new Point(e.X + 16, e.Y + 16)), val, true);
+                    App.ShowToolTip(c.PointToScreen(new Point(e.X + 16, e.Y + 16)), val, null, true);
                 }
             };
 

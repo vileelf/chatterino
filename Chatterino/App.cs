@@ -152,6 +152,10 @@ namespace Chatterino
                                     emote.HandleAnimation();
                                 }
                             }
+                            if (ToolTip != null && ToolTip.Image != null && ToolTip.Image.HandleAnimation != null) {
+                                ToolTip.Image.HandleAnimation();
+                                ToolTip.redraw();
+                            }
                         }
                         GifEmoteFramesUpdated?.Invoke(null, EventArgs.Empty);
                     }
@@ -376,7 +380,7 @@ namespace Chatterino
             }
         }
 
-        public static void ShowToolTip(Point point, string text, bool force = false)
+        public static void ShowToolTip(Point point, string text, string imgurl, bool force = false)
         {
             //if (force || WindowFocused || (EmoteList?.ContainsFocus ?? false))
             {
@@ -390,7 +394,16 @@ namespace Chatterino
                 var screen = Screen.FromPoint(Cursor.Position);
 
                 ToolTip.TooltipText = text;
-
+                
+                if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || ToolTip.Image.Url.Equals(imgurl))) {
+                    LazyLoadedImage img = new LazyLoadedImage();
+                    img.Url = imgurl;
+                    img.ImageLoaded += (s, e) => {
+                        ToolTip.redraw();
+                    };
+                    ToolTip.Image = img;
+                }
+                //GuiEngine.Current.log(text + " can animate " + ImageAnimator.CanAnimate(ToolTip.Image?.Image));
                 if (!ToolTip.Visible)
                 {
                     ToolTip.Show();

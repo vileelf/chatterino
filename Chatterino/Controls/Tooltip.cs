@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chatterino.Common;
 
 namespace Chatterino.Controls
 {
@@ -21,21 +22,20 @@ namespace Chatterino.Controls
                 if (tooltip != value)
                 {
                     tooltip = value;
-                    calcSize();
-                    Invalidate();
+                    redraw();
                 }
             }
         }
 
-        private Image image;
+        private LazyLoadedImage _image;
 
-        public Image Image
+        public LazyLoadedImage Image
         {
-            get { return image; }
+            get { return _image; }
             set
-            {
-                image = value;
-                calcSize();
+            { 
+                _image = value;
+                redraw();
             }
         }
 
@@ -43,11 +43,18 @@ namespace Chatterino.Controls
         {
             if (tooltip != null)
             {
+                Image image = _image?.Image;
                 var size = CreateGraphics().MeasureString(tooltip, Font, 1000, format);
-                Size = new Size(Math.Max((image?.Width ?? 0) + 8, Padding.Left + (int)size.Width + Padding.Right), (image?.Height ?? -8) + 8 + Padding.Top + (int)size.Height + Padding.Bottom);
+                Size = new Size(Math.Max( Padding.Left + (image?.Width ?? 0) + Padding.Right, Padding.Left + (int)size.Width + Padding.Right), (image?.Height ?? -8) + 8 + Padding.Top + (int)size.Height + Padding.Bottom);
             }
         }
-
+        
+        public void redraw() {
+            calcSize();
+            Invalidate();
+            Update();
+        }
+        
         public ToolTip()
         {
             Font = Fonts.GetFont(Common.FontType.Small);
@@ -109,10 +116,11 @@ namespace Chatterino.Controls
             base.OnPaint(e);
 
             e.Graphics.FillRectangle(App.ColorScheme.TooltipBackground, e.ClipRectangle);
+            Image image = _image?.Image;
 
             if (image != null)
             {
-                e.Graphics.DrawImage(image, 4, 4);
+                e.Graphics.DrawImage(image, 4, 4, image.Width, image.Height);
             }
 
             if (tooltip != null)
