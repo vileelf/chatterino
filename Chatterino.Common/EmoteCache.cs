@@ -34,7 +34,9 @@ namespace Chatterino.Common
                 ecache.usedLastTime = true;
                 if (ecache.emote == null && File.Exists(ecache.emotePath)) {
                     try {
-                        ecache.emote = Image.FromFile(ecache.emotePath);
+                        using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
+                            ecache.emote = Image.FromStream(stream);
+                        }
                     } catch (Exception e) {
                         GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
                     }
