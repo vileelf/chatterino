@@ -398,7 +398,7 @@ namespace Chatterino
 
                 ToolTip.TooltipText = text;
                 
-                if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || ToolTip.Image.Url.Equals(imgurl))) {
+                if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || !ToolTip.Image.Url.Equals(imgurl))) {
                     LazyLoadedImage img = new LazyLoadedImage();
                     img.Url = imgurl;
                     img.ImageLoaded += (s, e) => {
