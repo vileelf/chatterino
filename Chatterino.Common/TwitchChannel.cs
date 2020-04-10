@@ -199,6 +199,7 @@ namespace Chatterino.Common
                         Name = "cheer",
                         Url = light,
                         Tooltip = "Twitch Bits Donation",
+                        TooltipImageUrl = lightbig,
                         click_url = lightbig
                     };
                     LazyLoadedImage darkemote = new LazyLoadedImage
@@ -206,6 +207,7 @@ namespace Chatterino.Common
                         Name = "cheer",
                         Url = dark,
                         Tooltip = "Twitch Bits Donation",
+                        TooltipImageUrl = darkbig,
                         click_url = darkbig
                     };
                     customCheer.Add(lightemote, darkemote, min_bits, bitcolor);
@@ -310,11 +312,13 @@ namespace Chatterino.Common
                                 string title = value["title"];
                                 string description = value["description"];
                                 string clickUrl = value["click_url"];
+                                string tooltipurl = value["image_url_4x"];
 
                                 SubscriberBadges.TryAdd(months, new LazyLoadedImage
                                 {
                                     Name = title,
                                     Url = imageUrl,
+                                    TooltipImageUrl = tooltipurl,
                                     Tooltip = title
                                 });
                             }
@@ -329,12 +333,14 @@ namespace Chatterino.Common
                                 string title = value["title"];
                                 string description = value["description"];
                                 string clickUrl = value["click_url"];
+                                string tooltipurl = value["image_url_4x"];
                                 
                                 CheerBadges.TryAdd(cheer, new LazyLoadedImage
                                 {
                                     Name = title,
                                     Url = imageUrl,
                                     Tooltip = title,
+                                    TooltipImageUrl = tooltipurl,
                                     click_url = clickUrl
                                 });
                             }
@@ -1266,6 +1272,7 @@ namespace Chatterino.Common
                                         {
                                             Url = url,
                                             Tooltip = "custom moderator badge\nFFZ",
+                                            TooltipImageUrl = url,
                                             LoadAction = () =>
                                             {
                                                 try
@@ -1280,7 +1287,9 @@ namespace Chatterino.Common
                                                     using (var response = request.GetResponse())
                                                     using (var s = response.GetResponseStream())
                                                     {
-                                                        img = GuiEngine.Current.ReadImageFromStream(s);
+                                                        MemoryStream mem = new MemoryStream();
+                                                        s.CopyTo(mem);
+                                                        img = GuiEngine.Current.ReadImageFromStream(mem);
                                                     }
 
                                                     GuiEngine.Current.FreezeImage(img);

@@ -383,12 +383,14 @@ namespace Chatterino
                             string title = value["title"];
                             string description = value["description"];
                             string clickUrl = value["click_url"];
+                            string tooltipimageurl = value["image_url_4x"];
 
                             badges.TryAdd(name+"/"+key,
                             new LazyLoadedImage
                             {
                                 Name = title,
                                 Url = imageUrl,
+                                TooltipImageUrl = tooltipimageurl,
                                 Tooltip = title
                             });
                         }
