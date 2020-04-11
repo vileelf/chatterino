@@ -140,14 +140,11 @@ namespace Chatterino
                     var img = (Image)emote.Image;
                     if (img != null)
                     {
-                        lock (img)
+                        try
                         {
-                            try
-                            {
-                                g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
-                            }
-                            catch { }
+                            g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
                         }
+                        catch { }
                     }
                     else
                     {
@@ -383,11 +380,8 @@ namespace Chatterino
 
                             if (img != null)
                             {
-                                lock (img)
-                                {
-                                    g.DrawImage(img, word.X + state.MessageXOffset,
-                                        word.Y + state.MessageYOffset, word.Width, word.Height);
-                                }
+                                g.DrawImage(img, word.X + state.MessageXOffset,
+                                    word.Y + state.MessageYOffset, word.Width, word.Height);
                             }
                             break;
                             //    case SpanType.Image:

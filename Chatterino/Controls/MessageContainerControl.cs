@@ -132,9 +132,10 @@ namespace Chatterino.Controls
         }
         private void App_GifEmoteFramesUpdated(object s, EventArgs e)
         {
-            try
+            
+            lock (bufferLock)
             {
-                lock (bufferLock)
+                try
                 {
                     if (buffer != null)
                     {
@@ -144,16 +145,6 @@ namespace Chatterino.Controls
                         {
                             lock (MessageLock)
                             {
-                                //for (int i = 0; i < Messages.Length; i++)
-                                //{
-                                //    var msg = Messages[i];
-                                //    if (msg.IsVisible)
-                                //    {
-                                //        hasUpdated = true;
-
-                                //        MessageRenderer.DrawGifEmotes(buffer.Graphics, msg, selection, i);
-                                //    }
-                                //}
 
                                 hasUpdated = true;
 
@@ -174,8 +165,9 @@ namespace Chatterino.Controls
                         }
                     }
                 }
+                catch { }
             }
-            catch { }
+            
         }
 
         private void App_EmoteLoaded(object s, EventArgs e)

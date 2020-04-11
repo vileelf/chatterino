@@ -75,7 +75,9 @@ namespace Chatterino.Common
                         using (var response = request.GetResponse()) {
                             using (var stream = response.GetResponseStream())
                             {
-                                img = GuiEngine.Current.ReadImageFromStream(stream);
+                                MemoryStream mem = new MemoryStream();
+                                stream.CopyTo(mem);
+                                img = GuiEngine.Current.ReadImageFromStream(mem);
                             }
                             response.Close();
                         }
@@ -107,7 +109,9 @@ namespace Chatterino.Common
                             using (var response = request.GetResponse()) {
                                 using (var stream = response.GetResponseStream())
                                 {
-                                    img = GuiEngine.Current.ReadImageFromStream(stream);
+                                    MemoryStream mem = new MemoryStream();
+                                    stream.CopyTo(mem);
+                                    img = GuiEngine.Current.ReadImageFromStream(mem);
                                 }
                                 response.Close();
                             }

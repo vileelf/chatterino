@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Drawing;
@@ -38,65 +39,85 @@ namespace Chatterino.Common
             {
                 if (image != null)
                     return image;
-                if ((image = EmoteCache.GetEmote(Url)) != null) {
-                    GuiEngine.Current.HandleAnimatedTwitchEmote(this, image);
-                    ImageLoaded?.Invoke(null, null);
-                    return image;
-                }
+                
                 if (loading) return null;
 
                 loading = true;
-                Task.Run((() =>
-                {
-                    Image img;
-
-                    if (LoadAction != null)
-                    {
-                        img = LoadAction();
+                
+                if (EmoteCache.CheckEmote(Url)) {
+                    if (EmoteCache.IsEmoteLoaded(Url)) {
+                        image = EmoteCache.GetEmoteSync(Url);
+                        loading = false;
+                        if (image != null) {
+                            GuiEngine.Current.HandleAnimatedTwitchEmote(this, image);
+                        }
+                        return image;
+                    } else {
+                        EmoteCache.GetEmote(Url, (emote) => {
+                            image = emote;
+                            loading = false;
+                            if (image != null) {
+                                GuiEngine.Current.HandleAnimatedTwitchEmote(this, image);
+                                GuiEngine.Current.TriggerEmoteLoaded();
+                                ImageLoaded?.Invoke(null, null);
+                            }
+                        });
                     }
-                    else
+                } else {
+                    Task.Run((() =>
                     {
-                        try
+                        Image img;
+
+                        if (LoadAction != null)
                         {
-                            //Stopwatch stopWatch = new Stopwatch();
-                            //stopWatch.Start();
-                            var request = WebRequest.Create(Url);
-                            if (AppSettings.IgnoreSystemProxy)
+                            img = LoadAction();
+                        }
+                        else
+                        {
+                            try
                             {
-                                request.Proxy = null;
-                            }
-                            using (var response = request.GetResponse()) {
-                                using (var stream = response.GetResponseStream())
+                                //Stopwatch stopWatch = new Stopwatch();
+                                //stopWatch.Start();
+                                var request = WebRequest.Create(Url);
+                                if (AppSettings.IgnoreSystemProxy)
                                 {
-                                    /*stopWatch.Stop();
-                                    TimeSpan ts = stopWatch.Elapsed;
-                                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                                        ts.Hours, ts.Minutes, ts.Seconds,
-                                        ts.Milliseconds / 10);
-                                    GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
-                                    img = GuiEngine.Current.ReadImageFromStream(stream);
+                                    request.Proxy = null;
                                 }
-                                response.Close();
-                            }
+                                using (var response = request.GetResponse()) {
+                                    using (var stream = response.GetResponseStream())
+                                    {
+                                        /*stopWatch.Stop();
+                                        TimeSpan ts = stopWatch.Elapsed;
+                                        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                            ts.Hours, ts.Minutes, ts.Seconds,
+                                            ts.Milliseconds / 10);
+                                        GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
+                                        MemoryStream mem = new MemoryStream();
+                                        stream.CopyTo(mem);
+                                        img = GuiEngine.Current.ReadImageFromStream(mem);
+                                    }
+                                    response.Close();
+                                }
 
-                            GuiEngine.Current.FreezeImage(img);
+                                GuiEngine.Current.FreezeImage(img);
+                            }
+                            catch (Exception e)
+                            {
+                                GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
+                                img = null;
+                            }
                         }
-                        catch (Exception e)
+                        if (img != null)
                         {
-                            GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
-                            img = null;
+                            GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
+                            image = img;
+                            EmoteCache.AddEmote(Url, image);
+                            GuiEngine.Current.TriggerEmoteLoaded();
+                            ImageLoaded?.Invoke(null, null);
                         }
-                    }
-                    if (img != null)
-                    {
-                        GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
-                        image = img;
-                        EmoteCache.AddEmote(Url, image);
-                        GuiEngine.Current.TriggerEmoteLoaded();
-                        ImageLoaded?.Invoke(null, null);
-                    }
-                    loading = false;
-                }));
+                        loading = false;
+                    }));
+                }
                 return null;
             }
         }
