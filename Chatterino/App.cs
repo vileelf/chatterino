@@ -387,6 +387,37 @@ namespace Chatterino
             }
         }
 
+        private static Point calcTooltipLocation(Point point) {
+            Point ret;
+            Screen.FromPoint(point);
+
+            var screen = Screen.FromPoint(Cursor.Position);
+            
+            int x = point.X, y = point.Y;
+
+            if (point.X < screen.WorkingArea.X)
+            {
+                x = screen.WorkingArea.X;
+            }
+            else if (point.X + ToolTip.Width > screen.WorkingArea.Right)
+            {
+                x = screen.WorkingArea.Right - ToolTip.Width;
+            }
+
+            if (point.Y < screen.WorkingArea.Y)
+            {
+                y = screen.WorkingArea.Y;
+            }
+            else if (point.Y + ToolTip.Height > screen.WorkingArea.Bottom)
+            {
+                y = y - 24 - ToolTip.Height;
+            }
+
+            ret = new Point(x, y);
+            
+            return ret;
+        }
+
         public static void ShowToolTip(Point point, string text, string imgurl, bool force = false)
         {
             //if (force || WindowFocused || (EmoteList?.ContainsFocus ?? false))
@@ -396,16 +427,17 @@ namespace Chatterino
                     ToolTip = new Controls.ToolTip() { Enabled = false };
                 }
 
-                Screen.FromPoint(point);
-
-                var screen = Screen.FromPoint(Cursor.Position);
-
                 ToolTip.TooltipText = text;
                 
                 if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || !ToolTip.Image.Url.Equals(imgurl))) {
                     LazyLoadedImage img = new LazyLoadedImage();
                     img.Url = imgurl;
                     img.ImageLoaded += (s, e) => {
+                        point = calcTooltipLocation(point);
+                        if (ToolTip.Location != point)
+                        {
+                            ToolTip.Location = point;
+                        }
                         ToolTip.redraw();
                     };
                     ToolTip.Image = img;
@@ -415,27 +447,7 @@ namespace Chatterino
                     ToolTip.Show();
                 }
 
-                int x = point.X, y = point.Y;
-
-                if (point.X < screen.WorkingArea.X)
-                {
-                    x = screen.WorkingArea.X;
-                }
-                else if (point.X + ToolTip.Width > screen.WorkingArea.Right)
-                {
-                    x = screen.WorkingArea.Right - ToolTip.Width;
-                }
-
-                if (point.Y < screen.WorkingArea.Y)
-                {
-                    y = screen.WorkingArea.Y;
-                }
-                else if (point.Y + ToolTip.Height > screen.WorkingArea.Bottom)
-                {
-                    y = y - 24 - ToolTip.Height;
-                }
-
-                point = new Point(x, y);
+                point = calcTooltipLocation(point);
 
                 if (ToolTip.Location != point)
                 {
