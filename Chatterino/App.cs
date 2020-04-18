@@ -141,23 +141,25 @@ namespace Chatterino
             };
             EmoteCache.init();
             // Update gif emotes
+            int offset = 0;
             new Timer { Interval = 30, Enabled = true }.Tick += (s, e) =>
                 {
                     if (AppSettings.ChatEnableGifAnimations)
                     {
                         lock (GuiEngine.Current.GifEmotesLock)
                         {
+                            offset += 3;
                             try {
                                 if (EmoteList!=null && EmoteList.GetGifEmotes()!=null) {
                                     GuiEngine.Current.GifEmotesOnScreen.UnionWith(EmoteList.GetGifEmotes());
                                 }
                                 foreach (LazyLoadedImage emote in GuiEngine.Current.GifEmotesOnScreen) {
                                     if (emote.HandleAnimation != null) {
-                                        emote.HandleAnimation();
+                                        emote.HandleAnimation(offset);
                                     }
                                 }
                                 if (ToolTip != null && ToolTip.Image != null && ToolTip.Image.HandleAnimation != null) {
-                                    ToolTip.Image.HandleAnimation();
+                                    ToolTip.Image.HandleAnimation(offset);
                                     ToolTip.redraw();
                                 }
                             } catch (Exception err) {

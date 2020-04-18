@@ -245,41 +245,49 @@ namespace Chatterino
                         FrameDimension dimension = new FrameDimension(img.FrameDimensionsList[0]);
                         int frameCount = img.GetFrameCount(dimension);
                         int[] frameDuration = new int[frameCount];
+                        int totaldelay = 0;
                         int currentFrame = 0;
                         int currentFrameOffset = 0;
 
                         PropertyItem framedelay = img.GetPropertyItem(0x5100);
                         Byte[] times = framedelay.Value;
                         int num = 0;
-                        for (int i = 0; i < frameCount; i++)
+                        num = BitConverter.ToInt32(times, 4 * 0);
+                        if (num <= 1)
+                        {
+                            num = 10;
+                        }
+                        frameDuration[0] = num-1;
+                        totaldelay = num;
+                        for (int i = 1; i < frameCount; i++)
                         {
                             num = BitConverter.ToInt32(times, 4 * i);
 
                             if (num <= 1)
                             {
-                                frameDuration[i] = 10;
+                                num = 10;
                             }
-                            else
-                            {
-                                frameDuration[i] = num;
-                            }
+                            frameDuration[i] = frameDuration[i-1] + num;
+                            totaldelay += num;
                         }
                         emote.IsAnimated = true;
-                        emote.HandleAnimation += () =>
+                        emote.HandleAnimation += (int offset) =>
                         {
-                            currentFrameOffset += 3;
+                            currentFrameOffset = offset % totaldelay;
 
-                            var oldCurrentFrame = currentFrame;
+                            int oldCurrentFrame = currentFrame;
 
-                            while (true)
-                            {
-                                if (currentFrameOffset > frameDuration[currentFrame])
+                            currentFrame = 0;
+                            
+                            int index = Array.BinarySearch(frameDuration, currentFrameOffset);
+                            if (index>=0) {
+                                currentFrame = index;
+                            } else {
+                                currentFrame = ~index;
+                                if (currentFrame >= frameCount)
                                 {
-                                    currentFrameOffset -= frameDuration[currentFrame];
-                                    currentFrame = (currentFrame + 1) % frameCount;
+                                    currentFrame = 0;
                                 }
-                                else
-                                    break;
                             }
 
                             if (oldCurrentFrame != currentFrame)

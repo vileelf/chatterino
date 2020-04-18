@@ -26,7 +26,7 @@ namespace Chatterino.Common
         public string TooltipImageUrl { get; set; } = null;
         public string click_url {get; set; } = null;
         public bool IsDanke = false;
-        public delegate void HA();
+        public delegate void HA(int offset);
         public HA HandleAnimation = null;
         public event EventHandler ImageLoaded;
 

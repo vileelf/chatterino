@@ -64,7 +64,11 @@ namespace Chatterino.Common
             if(i>=0) {
                 return cheerlist[i];
             } else {
-                return cheerlist[~i-1];
+                if (~i > 0) {
+                    return cheerlist[~i-1];
+                } else {
+                    return cheerlist[0];
+                }
             }
         }
 
