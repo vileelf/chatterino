@@ -236,7 +236,10 @@ namespace Chatterino
             if (image != null)
             {
                 Image img = (Image)image;
-                bool animated = ImageAnimator.CanAnimate(img);
+                bool animated = false;
+                lock (img) {
+                    animated = ImageAnimator.CanAnimate(img);
+                }
 
                 if (animated)
                 {
@@ -466,11 +469,13 @@ namespace Chatterino
             {
                 try
                 {
-                    var img = (Image)image;
+                    Image img = image;
                     lock (img)
                         return new CommonSize(img.Width, img.Height);
                 }
-                catch { }
+                catch (Exception e) {
+                    log("error getting image size: " + e.ToString());
+                }
 
                 return new CommonSize(16, 16);
             }

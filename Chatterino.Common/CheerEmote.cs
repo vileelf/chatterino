@@ -61,15 +61,18 @@ namespace Chatterino.Common
         private _CheerEmote _findMaxBits(List<_CheerEmote> cheerlist, int cheer) {
             _CheerEmote emote = new _CheerEmote(cheer);
             int i = cheerlist.BinarySearch(emote, new _MinBitsCompare());
-            if(i>=0) {
-                return cheerlist[i];
-            } else {
-                if (~i > 0) {
-                    return cheerlist[~i-1];
+            if (cheerlist.Count>0) {
+                if(i>=0) {
+                    return cheerlist[i];
                 } else {
-                    return cheerlist[0];
+                    if (~i > 0 && (~i-1)<cheerlist.Count) {
+                        return cheerlist[~i-1];
+                    } else {
+                        return cheerlist[0];
+                    }
                 }
             }
+            return null;
         }
 
         public CheerEmote() {

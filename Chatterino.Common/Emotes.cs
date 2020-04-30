@@ -175,7 +175,7 @@ namespace Chatterino.Common
             }
             scale = 1.0 / _scale;
 
-            return TwitchEmoteTemplate.Replace("{id}", id.ToString()).Replace("{scale}", _scale.ToString());
+            return TwitchEmoteTemplate.Replace("{id}", id.ToString()).Replace("{scale}", (_scale == 4) ? 3 + "" : _scale.ToString());
         }
 
         public static string GetBttvEmoteLink(string link, bool getMax, out double scale)

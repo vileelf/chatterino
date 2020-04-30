@@ -26,6 +26,8 @@ namespace Chatterino.Controls
                 }
             }
         }
+        
+        private Image image;
 
         private LazyLoadedImage _image;
 
@@ -43,13 +45,19 @@ namespace Chatterino.Controls
         {
             if (tooltip != null)
             {
-                Image image = _image?.Image;
                 var size = CreateGraphics().MeasureString(tooltip, Font, 1000, format);
-                Size = new Size(Math.Max( Padding.Left + (image?.Width ?? 0) + Padding.Right, Padding.Left + (int)size.Width + Padding.Right), (image?.Height ?? -8) + 8 + Padding.Top + (int)size.Height + Padding.Bottom);
+                if (image != null) {
+                    lock (image) {
+                        Size = new Size(Math.Max( Padding.Left + image.Width + Padding.Right, Padding.Left + (int)size.Width + Padding.Right), image.Height + 8 + Padding.Top + (int)size.Height + Padding.Bottom);
+                    }
+                } else {
+                    Size = new Size(Math.Max( Padding.Left + Padding.Right, Padding.Left + (int)size.Width + Padding.Right), Padding.Top + (int)size.Height + Padding.Bottom);
+                }
             }
         }
         
         public void redraw() {
+            image = _image?.Image;
             calcSize();
             Invalidate();
             Update();
@@ -68,6 +76,8 @@ namespace Chatterino.Controls
             ShowInTaskbar = false;
 
             StartPosition = FormStartPosition.Manual;
+            
+            this.DoubleBuffered = true;
 
             //SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             //Win32.EnableWindowBlur(Handle);
@@ -102,25 +112,17 @@ namespace Chatterino.Controls
             LineAlignment = StringAlignment.Center
         };
 
-        //Color bgcolor = Color.FromArgb(127,64,64,64);
-
-        //protected override void OnPaintBackground(PaintEventArgs e)
-        //{
-        //    e.Graphics.Clear(bgcolor);
-
-        //    //base.OnPaintBackground(e);
-        //}
-
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
             e.Graphics.FillRectangle(App.ColorScheme.TooltipBackground, e.ClipRectangle);
-            Image image = _image?.Image;
 
             if (image != null)
             {
-                e.Graphics.DrawImage(image, 4, 4, image.Width, image.Height);
+                lock (image) {
+                    e.Graphics.DrawImage(image, 4, 4, image.Width, image.Height);
+                }
             }
 
             if (tooltip != null)

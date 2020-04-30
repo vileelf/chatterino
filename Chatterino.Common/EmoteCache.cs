@@ -21,6 +21,7 @@ namespace Chatterino.Common
         private struct _emotes_cache {
             public string emotePath;
             public bool usedLastTime;
+            public bool isAnimated;
             [JsonIgnore]
             public Image emote;
         }
@@ -89,8 +90,10 @@ namespace Chatterino.Common
                     ecache.usedLastTime = true;
                     if (ecache.emote == null && File.Exists(ecache.emotePath)) {
                         try {
+                            MemoryStream mem = new MemoryStream();
                             using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
-                                ecache.emote = Image.FromStream(stream);
+                                stream.CopyTo(mem);
+                                ecache.emote = Image.FromStream(mem);
                             }
                         } catch (Exception e) {
                             GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
@@ -109,35 +112,40 @@ namespace Chatterino.Common
             return ret;
         }
         
-        public static bool AddEmote(string url, Image emote) {
-            _emotes_cache ecache;
-            bool ret = false;
-            Mutex m;
-            using(m = new Mutex(false, url)) {
-                m.WaitOne();
-                if (!CachedEmotes.ContainsKey(url)) {
-                    ecache.usedLastTime = true;
-                    ecache.emotePath = Path.Combine(Util.GetUserDataPath(), "Cache", "Emotes", HttpUtility.UrlEncode(url));
-                    ecache.emote = emote;
+        //async
+        public static void AddEmote(string url, Image emote) {
+            Task.Run((() =>
+            {
+                _emotes_cache ecache;
+                Mutex m;
+                using(m = new Mutex(false, url)) {
+                    m.WaitOne();
+                    if (!CachedEmotes.ContainsKey(url)) {
+                        ecache.usedLastTime = true;
+                        ecache.isAnimated = false;
+                        ecache.emotePath = Path.Combine(Util.GetUserDataPath(), "Cache", "Emotes", HttpUtility.UrlEncode(url));
+                        ecache.emote = emote;
                         try {
                             //save emote to a file
                             if (File.Exists(ecache.emotePath)) {
                                 File.Delete(ecache.emotePath);
                             }
-                            bool animated = ImageAnimator.CanAnimate(emote);
-                            if (!animated) {
-                                emote.Save(ecache.emotePath);
+                            lock (emote) {
+                                bool animated = ImageAnimator.CanAnimate(emote);
+                                if (!animated) {
+                                    emote.Save(ecache.emotePath);
+                                } else {
+                                    ecache.isAnimated = true;
+                                }
                             }
                             CachedEmotes.TryAdd(url, ecache);
                         } catch (Exception e) {
                             GuiEngine.Current.log("emote faild to save " + ecache.emotePath + " " +e.ToString());
                         }
-                    
-                    ret = true;
+                    }
+                    m.ReleaseMutex();
                 }
-                m.ReleaseMutex();
-            }
-            return ret;
+            }));
         }
         
         public static void SaveEmoteList() {
@@ -172,8 +180,9 @@ namespace Chatterino.Common
                     cachedemote = json[url];
                     ecache = new _emotes_cache();
                     ecache.usedLastTime = cachedemote["usedLastTime"];
+                    ecache.isAnimated = cachedemote["isAnimated"];
                     ecache.emotePath = cachedemote["emotePath"];
-                    if (ecache.usedLastTime) {
+                    if (ecache.usedLastTime && !ecache.isAnimated) {
                         ecache.usedLastTime = false;
                         ecache.emote = null;
                         CachedEmotes.TryAdd(url, ecache);

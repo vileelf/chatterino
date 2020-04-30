@@ -10,6 +10,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Web.SessionState;
 using System.Windows.Forms;
 using Chatterino.Controls;
@@ -142,7 +143,7 @@ namespace Chatterino
             EmoteCache.init();
             // Update gif emotes
             int offset = 0;
-            new Timer { Interval = 30, Enabled = true }.Tick += (s, e) =>
+            new System.Windows.Forms.Timer { Interval = 30, Enabled = true }.Tick += (s, e) =>
                 {
                     if (AppSettings.ChatEnableGifAnimations)
                     {
@@ -158,9 +159,11 @@ namespace Chatterino
                                         emote.HandleAnimation(offset);
                                     }
                                 }
-                                if (ToolTip != null && ToolTip.Image != null && ToolTip.Image.HandleAnimation != null) {
+                                if (ToolTip != null && ToolTip.Visible && ToolTip.Image != null && ToolTip.Image.HandleAnimation != null) {
                                     ToolTip.Image.HandleAnimation(offset);
-                                    ToolTip.redraw();
+                                    lock (ToolTip) {
+                                        ToolTip.redraw();
+                                    }
                                 }
                             } catch (Exception err) {
                                 GuiEngine.Current.log("error updating gifs "+ err.ToString());
@@ -419,42 +422,61 @@ namespace Chatterino
             
             return ret;
         }
+    
+        private static object tooltiplock = new object();
 
         public static void ShowToolTip(Point point, string text, string imgurl, bool force = false)
         {
             //if (force || WindowFocused || (EmoteList?.ContainsFocus ?? false))
+            
+            try
             {
-                if (ToolTip == null)
-                {
-                    ToolTip = new Controls.ToolTip() { Enabled = false };
+                lock (tooltiplock) {
+                    if (ToolTip == null)
+                    {
+                        ToolTip = new Controls.ToolTip() { Enabled = false };
+                    }
                 }
 
-                ToolTip.TooltipText = text;
-                
+                lock (ToolTip) {
+                    ToolTip.TooltipText = text;
+                }
                 if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || !ToolTip.Image.Url.Equals(imgurl))) {
                     LazyLoadedImage img = new LazyLoadedImage();
                     img.Url = imgurl;
                     img.ImageLoaded += (s, e) => {
-                        point = calcTooltipLocation(point);
-                        if (ToolTip.Location != point)
-                        {
-                            ToolTip.Location = point;
+                        lock (ToolTip) {
+                            point = calcTooltipLocation(point);
+                            if (ToolTip.Location != point)
+                            {
+                                ToolTip.Location = point;
+                            }
+                            ToolTip.redraw();
                         }
-                        ToolTip.redraw();
                     };
-                    ToolTip.Image = img;
+                    lock (ToolTip) {
+                        ToolTip.Image = img;
+                    }
+                }  else if (String.IsNullOrEmpty(imgurl)) {
+                    lock (ToolTip) {
+                        ToolTip.Image = null;
+                    }
                 }
-                if (!ToolTip.Visible)
-                {
-                    ToolTip.Show();
-                }
+                lock (ToolTip) {
+                    if (!ToolTip.Visible)
+                    {
+                        ToolTip.Show();
+                    }
 
-                point = calcTooltipLocation(point);
+                    point = calcTooltipLocation(point);
 
-                if (ToolTip.Location != point)
-                {
-                    ToolTip.Location = point;
+                    if (ToolTip.Location != point)
+                    {
+                        ToolTip.Location = point;
+                    }
                 }
+            } catch (Exception e) {
+                GuiEngine.Current.log("exception loading tooltip " + e.ToString());
             }
         }
 
@@ -462,9 +484,13 @@ namespace Chatterino
         {
             if (ToolTip != null)
             {
-                ToolTip.Close();
-                ToolTip.Dispose();
-                ToolTip = null;
+                try {
+                    lock (ToolTip) {
+                        ToolTip.Hide();
+                    }
+                } catch (Exception e) {
+                    GuiEngine.Current.log("exception hiding tooltip " + e.ToString());
+                }
             }
         }
 

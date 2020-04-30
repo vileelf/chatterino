@@ -142,7 +142,9 @@ namespace Chatterino
                     {
                         try
                         {
-                            g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
+                            lock (img) {
+                                g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
+                            }
                         }
                         catch { }
                     }
@@ -380,8 +382,10 @@ namespace Chatterino
 
                             if (img != null)
                             {
-                                g.DrawImage(img, word.X + state.MessageXOffset,
-                                    word.Y + state.MessageYOffset, word.Width, word.Height);
+                                lock (img) {
+                                    g.DrawImage(img, word.X + state.MessageXOffset,
+                                        word.Y + state.MessageYOffset, word.Width, word.Height);
+                                }
                             }
                             break;
                             //    case SpanType.Image:
