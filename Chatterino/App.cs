@@ -150,6 +150,9 @@ namespace Chatterino
                         lock (GuiEngine.Current.GifEmotesLock)
                         {
                             offset += 3;
+                            if (offset<0) {
+                                offset=0;
+                            }
                             try {
                                 if (EmoteList!=null && EmoteList.GetGifEmotes()!=null) {
                                     GuiEngine.Current.GifEmotesOnScreen.UnionWith(EmoteList.GetGifEmotes());

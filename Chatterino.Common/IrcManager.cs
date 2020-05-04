@@ -767,12 +767,24 @@ namespace Chatterino.Common
             else if (msg.Command == "USERNOTICE")
             {
                 string sysMsg;
+                string displayname;
+                string login;
                 msg.Tags.TryGetValue("system-msg", out sysMsg);
+                msg.Tags.TryGetValue("display-name", out displayname);
+                msg.Tags.TryGetValue("login", out login);
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
                     try
                     {
+                        if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
+                            !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
+                            int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
+                            if (index != -1) {
+                                index += displayname.Length;
+                                sysMsg = sysMsg.Insert(index, " ("+login+")");
+                            }
+                        }
                         var sysMessage = new Message(sysMsg, HSLColor.Gray, true)
                         {
                             HighlightType = HighlightType.Resub
@@ -787,13 +799,8 @@ namespace Chatterino.Common
                             c.AddMessage(message);
                             c.Users[message.Username.ToUpper()] = message.DisplayName;
                         } else {
-                            string name;
-                            msg.Tags.TryGetValue("msg-param-recipient-display-name", out name);
-                            if (string.IsNullOrEmpty(name)) {
-                                msg.Tags.TryGetValue("display-name", out name);
-                            }
-                            if (!string.IsNullOrEmpty(name)) {
-                                c.Users[name.ToUpper()] = name;
+                            if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)) {
+                                c.Users[login.ToUpper()] = displayname;
                             }
                         }
                     }

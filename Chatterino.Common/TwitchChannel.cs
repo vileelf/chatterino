@@ -476,6 +476,8 @@ namespace Chatterino.Common
                                     
                                     IrcMessage msg;
                                     string sysMsg;
+                                    string login;
+                                    string displayname;
                                     Message message;
                                     string reason;
                                     string duration;
@@ -501,6 +503,16 @@ namespace Chatterino.Common
                                                 messages.Add(message);
                                             } else if (msg.Command == "USERNOTICE") {
                                                 msg.Tags.TryGetValue("system-msg", out sysMsg);
+                                                msg.Tags.TryGetValue("display-name", out displayname);
+                                                msg.Tags.TryGetValue("login", out login);
+                                                if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
+                                                    !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
+                                                    int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
+                                                    if (index != -1) {
+                                                        index += displayname.Length;
+                                                        sysMsg = sysMsg.Insert(index, " ("+login+")");
+                                                    }
+                                                }
                                                 message = new Message(sysMsg, HSLColor.Gray, true)
                                                 {
                                                     HighlightType = HighlightType.Resub
