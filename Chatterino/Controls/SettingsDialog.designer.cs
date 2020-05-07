@@ -146,6 +146,7 @@ namespace Chatterino.Controls
             this.btnStreamlinkPath = new System.Windows.Forms.Button();
             this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
             this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
+            this.chkCacheEmotes = new System.Windows.Forms.CheckBox();
             this.chkTabLocalizedNames = new System.Windows.Forms.CheckBox();
             this.chkMentionUserWithAt = new System.Windows.Forms.CheckBox();
             this.lblScrollSpeed = new System.Windows.Forms.Label();
@@ -262,7 +263,7 @@ namespace Chatterino.Controls
             this.tabs.Panel = this.RightPanel;
             this.tabs.SelectedIndex = 5;
             this.tabs.SelectedTab = this.spIgnoredUsers;
-            this.tabs.Size = new System.Drawing.Size(631, 491);
+            this.tabs.Size = new System.Drawing.Size(631, 520);
             this.tabs.TabIndex = 0;
             this.tabs.TabsWidth = 150;
             // 
@@ -289,7 +290,7 @@ namespace Chatterino.Controls
             this.RightPanel.Location = new System.Drawing.Point(150, 0);
             this.RightPanel.Name = "RightPanel";
             this.RightPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 42);
-            this.RightPanel.Size = new System.Drawing.Size(481, 491);
+            this.RightPanel.Size = new System.Drawing.Size(481, 520);
             this.RightPanel.TabIndex = 0;
             // 
             // panel13
@@ -299,7 +300,7 @@ namespace Chatterino.Controls
             this.panel13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel13.Location = new System.Drawing.Point(0, 0);
             this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(481, 449);
+            this.panel13.Size = new System.Drawing.Size(481, 500);
             this.panel13.TabIndex = 34;
             // 
             // groupBox3
@@ -365,7 +366,7 @@ namespace Chatterino.Controls
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(481, 449);
+            this.panel8.Size = new System.Drawing.Size(481, 500);
             this.panel8.TabIndex = 6;
             // 
             // label13
@@ -397,7 +398,7 @@ namespace Chatterino.Controls
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel10.Location = new System.Drawing.Point(0, 0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(481, 449);
+            this.panel10.Size = new System.Drawing.Size(481, 500);
             this.panel10.TabIndex = 8;
             // 
             // panel1
@@ -428,7 +429,7 @@ namespace Chatterino.Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(481, 449);
+            this.panel1.Size = new System.Drawing.Size(481, 500);
             this.panel1.TabIndex = 0;
             // 
             // groupBox1
@@ -784,7 +785,7 @@ namespace Chatterino.Controls
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(481, 449);
+            this.panel3.Size = new System.Drawing.Size(481, 500);
             this.panel3.TabIndex = 1;
             // 
             // tabControl1
@@ -988,7 +989,7 @@ namespace Chatterino.Controls
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(481, 449);
+            this.panel2.Size = new System.Drawing.Size(481, 500);
             this.panel2.TabIndex = 0;
             // 
             // comboBox1
@@ -1111,7 +1112,7 @@ namespace Chatterino.Controls
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(481, 449);
+            this.panel5.Size = new System.Drawing.Size(481, 500);
             this.panel5.TabIndex = 3;
             // 
             // chkAllowCommandAtEnd
@@ -1193,7 +1194,7 @@ namespace Chatterino.Controls
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(481, 449);
+            this.panel6.Size = new System.Drawing.Size(481, 500);
             this.panel6.TabIndex = 4;
             // 
             // comboShowIgnoredUsersMessagesIf
@@ -1301,6 +1302,7 @@ namespace Chatterino.Controls
             this.panel12.Controls.Add(this.groupBox2);
             this.panel12.Controls.Add(this.chkAllowSameMessages);
             this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
+            this.panel12.Controls.Add(this.chkCacheEmotes);
             this.panel12.Controls.Add(this.chkTabLocalizedNames);
             this.panel12.Controls.Add(this.chkMentionUserWithAt);
             this.panel12.Controls.Add(this.lblScrollSpeed);
@@ -1310,7 +1312,7 @@ namespace Chatterino.Controls
             this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(481, 449);
+            this.panel12.Size = new System.Drawing.Size(481, 500);
             this.panel12.TabIndex = 31;
             // 
             // chkPrefereEmotes
@@ -1337,7 +1339,7 @@ namespace Chatterino.Controls
             this.groupBox2.Controls.Add(this.chkStreamlinkPath);
             this.groupBox2.Controls.Add(this.btnStreamlinkPath);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(15, 174);
+            this.groupBox2.Location = new System.Drawing.Point(15, 203);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(431, 215);
             this.groupBox2.TabIndex = 54;
@@ -1481,6 +1483,17 @@ namespace Chatterino.Controls
             this.chkRecentlyUsedEmoteList.Text = "Keep a list of recently used emotes not from twitches emote list";
             this.chkRecentlyUsedEmoteList.UseVisualStyleBackColor = true;
             // 
+            // chkCacheEmotes
+            // 
+            this.chkCacheEmotes.AutoSize = true;
+            this.chkCacheEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkCacheEmotes.Location = new System.Drawing.Point(15, 182);
+            this.chkCacheEmotes.Name = "chkCacheEmotes";
+            this.chkCacheEmotes.Size = new System.Drawing.Size(306, 17);
+            this.chkCacheEmotes.TabIndex = 55;
+            this.chkCacheEmotes.Text = "Locally store copys of emotes to make loading faster";
+            this.chkCacheEmotes.UseVisualStyleBackColor = true;
+            // 
             // chkTabLocalizedNames
             // 
             this.chkTabLocalizedNames.AutoSize = true;
@@ -1560,7 +1573,7 @@ namespace Chatterino.Controls
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(481, 449);
+            this.panel7.Size = new System.Drawing.Size(481, 500);
             this.panel7.TabIndex = 5;
             // 
             // chkDoubleClickLinks
@@ -1594,7 +1607,7 @@ namespace Chatterino.Controls
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(481, 449);
+            this.panel9.Size = new System.Drawing.Size(481, 500);
             this.panel9.TabIndex = 7;
             // 
             // tabControl3
@@ -1655,7 +1668,7 @@ namespace Chatterino.Controls
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(481, 449);
+            this.panel4.Size = new System.Drawing.Size(481, 500);
             this.panel4.TabIndex = 2;
             // 
             // label16
@@ -1815,7 +1828,7 @@ namespace Chatterino.Controls
             this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel11.Location = new System.Drawing.Point(0, 0);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(481, 449);
+            this.panel11.Size = new System.Drawing.Size(481, 500);
             this.panel11.TabIndex = 9;
             // 
             // label14
@@ -2052,7 +2065,7 @@ namespace Chatterino.Controls
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(600, 449);
+            this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "SettingsDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
@@ -2245,6 +2258,7 @@ namespace Chatterino.Controls
         private SettingsTabPage settingsTabPage1;
         private System.Windows.Forms.CheckBox chkAllowSameMessages;
         private System.Windows.Forms.CheckBox chkRecentlyUsedEmoteList;
+        private System.Windows.Forms.CheckBox chkCacheEmotes;
         private System.Windows.Forms.CheckBox chkTabLocalizedNames;
         private System.Windows.Forms.CheckBox chkMentionUserWithAt;
         private System.Windows.Forms.Label lblScrollSpeed;

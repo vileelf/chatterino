@@ -32,26 +32,69 @@ namespace Chatterino.Common
             new ConcurrentDictionary<string, _emotes_cache>();
             
         public static bool CheckEmote(string url) {
-            return CachedEmotes.ContainsKey(url);
+            if (AppSettings.CacheEmotes) {
+                return CachedEmotes.ContainsKey(url);
+            }
+            return false;
         }
         
         public static bool IsEmoteLoaded(string url) {
-            _emotes_cache ecache;
-            if (CachedEmotes.TryGetValue(url, out ecache)) {
-                return (ecache.emote != null);
+            if (AppSettings.CacheEmotes) {
+                _emotes_cache ecache;
+                if (CachedEmotes.TryGetValue(url, out ecache)) {
+                    return (ecache.emote != null);
+                }
             }
             return false;
         }
 
         //async
         public static void GetEmote(string url, EmoteCallback callback) {
-            Task.Run((() =>
-            {
+            if (AppSettings.CacheEmotes) {
+                Task.Run((() =>
+                {
+                    _emotes_cache ecache;
+                    ecache.emote = null;
+                    Mutex m;
+                    
+                    using(m = new Mutex(false, url)) {
+                        m.WaitOne();
+                        if (CachedEmotes.TryGetValue(url, out ecache)) {
+                            ecache.usedLastTime = true;
+                            if (ecache.emote == null && File.Exists(ecache.emotePath)) {
+                                try {
+                                    MemoryStream mem = new MemoryStream();
+                                    using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
+                                        stream.CopyTo(mem);
+                                        ecache.emote = Image.FromStream(mem);
+                                    }
+                                } catch (Exception e) {
+                                    GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
+                                }
+                            }
+                            if (ecache.emote == null) {
+                                //assume file doesnt exist. remove from the cache.
+                                CachedEmotes.TryRemove(url, out ecache);
+                            } else {
+                                CachedEmotes[url]=ecache;
+                            }
+                        }
+                        m.ReleaseMutex();
+                        callback(ecache.emote);
+                    }
+                }));
+            } else {
+                callback(null);
+            }
+        }
+        
+        //sync
+        public static Image GetEmoteSync(string url) {
+            if (AppSettings.CacheEmotes) {
                 _emotes_cache ecache;
-                ecache.emote = null;
+                Image ret = null;
                 Mutex m;
-                
-                using(m = new Mutex(false, url)) {
+                using(m = new Mutex(false, url)){
                     m.WaitOne();
                     if (CachedEmotes.TryGetValue(url, out ecache)) {
                         ecache.usedLastTime = true;
@@ -72,95 +115,68 @@ namespace Chatterino.Common
                         } else {
                             CachedEmotes[url]=ecache;
                         }
+                        ret =  ecache.emote;
                     }
                     m.ReleaseMutex();
-                    callback(ecache.emote);
                 }
-            }));
-        }
-        
-        //sync
-        public static Image GetEmoteSync(string url) {
-            _emotes_cache ecache;
-            Image ret = null;
-            Mutex m;
-            using(m = new Mutex(false, url)){
-                m.WaitOne();
-                if (CachedEmotes.TryGetValue(url, out ecache)) {
-                    ecache.usedLastTime = true;
-                    if (ecache.emote == null && File.Exists(ecache.emotePath)) {
-                        try {
-                            MemoryStream mem = new MemoryStream();
-                            using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
-                                stream.CopyTo(mem);
-                                ecache.emote = Image.FromStream(mem);
-                            }
-                        } catch (Exception e) {
-                            GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
-                        }
-                    }
-                    if (ecache.emote == null) {
-                        //assume file doesnt exist. remove from the cache.
-                        CachedEmotes.TryRemove(url, out ecache);
-                    } else {
-                        CachedEmotes[url]=ecache;
-                    }
-                    ret =  ecache.emote;
-                }
-                m.ReleaseMutex();
+                return ret;
             }
-            return ret;
+            return null;
         }
         
         //async
         public static void AddEmote(string url, Image emote) {
-            Task.Run((() =>
-            {
-                _emotes_cache ecache;
-                Mutex m;
-                using(m = new Mutex(false, url)) {
-                    m.WaitOne();
-                    if (!CachedEmotes.ContainsKey(url)) {
-                        ecache.usedLastTime = true;
-                        ecache.isAnimated = false;
-                        ecache.emotePath = Path.Combine(Util.GetUserDataPath(), "Cache", "Emotes", HttpUtility.UrlEncode(url));
-                        ecache.emote = emote;
-                        try {
-                            //save emote to a file
-                            if (File.Exists(ecache.emotePath)) {
-                                File.Delete(ecache.emotePath);
-                            }
-                            lock (emote) {
-                                bool animated = ImageAnimator.CanAnimate(emote);
-                                if (!animated) {
-                                    emote.Save(ecache.emotePath);
-                                } else {
-                                    ecache.isAnimated = true;
+            if (AppSettings.CacheEmotes) {
+                Task.Run((() =>
+                {
+                    _emotes_cache ecache;
+                    Mutex m;
+                    using(m = new Mutex(false, url)) {
+                        m.WaitOne();
+                        if (!CachedEmotes.ContainsKey(url)) {
+                            ecache.usedLastTime = true;
+                            ecache.isAnimated = false;
+                            ecache.emotePath = Path.Combine(Util.GetUserDataPath(), "Cache", "Emotes", HttpUtility.UrlEncode(url));
+                            ecache.emote = emote;
+                            try {
+                                //save emote to a file
+                                if (File.Exists(ecache.emotePath)) {
+                                    File.Delete(ecache.emotePath);
                                 }
+                                lock (emote) {
+                                    bool animated = ImageAnimator.CanAnimate(emote);
+                                    if (!animated) {
+                                        emote.Save(ecache.emotePath);
+                                    } else {
+                                        ecache.isAnimated = true;
+                                    }
+                                }
+                                CachedEmotes.TryAdd(url, ecache);
+                            } catch (Exception e) {
+                                GuiEngine.Current.log("emote faild to save " + ecache.emotePath + " " +e.ToString());
                             }
-                            CachedEmotes.TryAdd(url, ecache);
-                        } catch (Exception e) {
-                            GuiEngine.Current.log("emote faild to save " + ecache.emotePath + " " +e.ToString());
                         }
+                        m.ReleaseMutex();
                     }
-                    m.ReleaseMutex();
-                }
-            }));
+                }));
+            }
         }
         
         public static void SaveEmoteList() {
-            try {
-                JsonSerializer serializer = new JsonSerializer();
-                string emotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", "emote_cache.json");
-                using(StreamWriter stream = new StreamWriter(emotesCache)) {
-                    using (JsonWriter writer = new JsonTextWriter(stream)) {
-                        serializer.Serialize(writer, CachedEmotes);
-                        writer.Close();
+            if (AppSettings.CacheEmotes) {
+                try {
+                    JsonSerializer serializer = new JsonSerializer();
+                    string emotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", "emote_cache.json");
+                    using(StreamWriter stream = new StreamWriter(emotesCache)) {
+                        using (JsonWriter writer = new JsonTextWriter(stream)) {
+                            serializer.Serialize(writer, CachedEmotes);
+                            writer.Close();
+                        }
+                        stream.Close();
                     }
-                    stream.Close();
+                } catch (Exception e) {
+                    GuiEngine.Current.log("error saving emote cache " + e.ToString());
                 }
-            } catch (Exception e) {
-                GuiEngine.Current.log("error saving emote cache " + e.ToString());
             }
         }
         
