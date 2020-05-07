@@ -3,10 +3,10 @@
 ## 2.0
 - now displays username on sub notifications if it is different from the display name.
 - gif emotes are now synced up with each other.
-- theres a new option that displays bigger pictures (if availible) of emotes in the tooltips you get from mousing over them.
-- added an option for a recently used emote list that keeps track of emotes you use that arnt part of your emote list.
+- there's a new option that displays bigger pictures (if available) of emotes in the tooltips you get from mousing over them.
+- added an option for a recently used emote list that keeps track of emotes you use that aren't part of your emote list.
 - added cvmask and cvhazmat to the list of hat emotes
-- added an option for emote caching that stores emotes when they are downloaded so you dont have to download them all again when you relaunch chatterino.
+- added an option for emote caching that stores emotes when they are downloaded so you don't have to download them all again when you relaunch chatterino.
 - emotes will try to load again eventually if they fail the first time
 - new right click menu that lets you right click to copy or append to the chat box
 - added an option for highlighting highlighted messages
