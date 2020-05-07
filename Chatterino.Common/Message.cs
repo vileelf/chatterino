@@ -413,17 +413,24 @@ namespace Chatterino.Common
             });
 
             var twitchEmotes = new List<Tuple<int, LazyLoadedImage>>();
+            
             if (data.Tags.TryGetValue("msg-id", out value)) {
                 if (value.Contains("highlighted-message")) {
                     if (!isPastMessage) {
                         Message message;
-                        message = new Message("Highlighted Message", HSLColor.Gray, true)
-                        {
-                            HighlightType = HighlightType.HighlightedMessage
-                        };
+                        if (AppSettings.HighlightHighlightedMessages) {
+                            message = new Message("Highlighted Message", HSLColor.Gray, true)
+                            {
+                                HighlightType = HighlightType.HighlightedMessage
+                            };
+                        } else {
+                            message = new Message("Highlighted Message", HSLColor.Gray, true);
+                        }
                         channel.AddMessage(message);
                     }
-                    HighlightType = HighlightType.HighlightedMessage;
+                    if (AppSettings.HighlightHighlightedMessages) {
+                        HighlightType = HighlightType.HighlightedMessage;
+                    }
                 }
             }
             // Twitch Emotes

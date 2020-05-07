@@ -73,6 +73,7 @@ namespace Chatterino.Controls
             this.chkTopMost = new System.Windows.Forms.CheckBox();
             this.chkRemoveX = new System.Windows.Forms.CheckBox();
             this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
+            this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
             this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -415,6 +416,7 @@ namespace Chatterino.Controls
             this.panel1.Controls.Add(this.chkTopMost);
             this.panel1.Controls.Add(this.chkRemoveX);
             this.panel1.Controls.Add(this.chkShowEmoteTooltip);
+            this.panel1.Controls.Add(this.chkHighlightHighlightedMessages);
             this.panel1.Controls.Add(this.btnSelectFont);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.trackBar1);
@@ -440,7 +442,7 @@ namespace Chatterino.Controls
             this.groupBox1.Controls.Add(this.chkMessageSeperators);
             this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(17, 265);
+            this.groupBox1.Location = new System.Drawing.Point(17, 288);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(435, 92);
             this.groupBox1.TabIndex = 37;
@@ -653,6 +655,17 @@ namespace Chatterino.Controls
             this.chkShowEmoteTooltip.TabIndex = 28;
             this.chkShowEmoteTooltip.Text = "Show large emotes in tooltip\r\n";
             this.chkShowEmoteTooltip.UseVisualStyleBackColor = true;
+            // 
+            // chkHighlightHighlightedMessages
+            // 
+            this.chkHighlightHighlightedMessages.AutoSize = true;
+            this.chkHighlightHighlightedMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkHighlightHighlightedMessages.Location = new System.Drawing.Point(17, 262);
+            this.chkHighlightHighlightedMessages.Name = "chkHighlightHighlightedMessages";
+            this.chkHighlightHighlightedMessages.Size = new System.Drawing.Size(133, 17);
+            this.chkHighlightHighlightedMessages.TabIndex = 29;
+            this.chkHighlightHighlightedMessages.Text = "Highlight highlighted messages\r\n";
+            this.chkHighlightHighlightedMessages.UseVisualStyleBackColor = true;
             // 
             // btnSelectFont
             // 
@@ -2224,6 +2237,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkTopMost;
         private System.Windows.Forms.CheckBox chkRemoveX;
         private System.Windows.Forms.CheckBox chkShowEmoteTooltip;
+        private System.Windows.Forms.CheckBox chkHighlightHighlightedMessages;
         private System.Windows.Forms.CheckBox chkIgnoreViaTwitch;
         private System.Windows.Forms.CheckBox chkEnableInlineWhispers;
         private System.Windows.Forms.CheckBox chkLastReadMessageIndicator;

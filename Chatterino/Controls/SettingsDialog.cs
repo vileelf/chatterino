@@ -265,6 +265,7 @@ namespace Chatterino.Controls
             BindCheckBox(chkTopMost, "WindowTopMost");
             BindCheckBox(chkRemoveX, "RemoveXButton");
             BindCheckBox(chkRecentlyUsedEmoteList, "RecentlyUsedEmoteList");
+            BindCheckBox(chkHighlightHighlightedMessages, "HighlightHighlightedMessages");
             BindCheckBox(chkCacheEmotes, "CacheEmotes");
             BindCheckBox(chkShowEmoteTooltip, "ShowEmoteTooltip");
             BindCheckBox(chkIgnoreViaTwitch, "IgnoreViaTwitch");
