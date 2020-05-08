@@ -769,17 +769,14 @@ namespace Chatterino.Common
                 string sysMsg;
                 string displayname;
                 string login;
+                string giftlogin;
+                string giftdisplayname;
+                
                 msg.Tags.TryGetValue("system-msg", out sysMsg);
-                
-                msg.Tags.TryGetValue("msg-param-recipient-display-name", out displayname);
-                if (string.IsNullOrEmpty(displayname)) {
-                    msg.Tags.TryGetValue("display-name", out displayname);
-                }
-                
-                msg.Tags.TryGetValue("msg-param-recipient-user-name", out login);
-                if (string.IsNullOrEmpty(login)) {
-                    msg.Tags.TryGetValue("login", out login);
-                }
+                msg.Tags.TryGetValue("msg-param-recipient-display-name", out giftdisplayname);
+                msg.Tags.TryGetValue("display-name", out displayname);
+                msg.Tags.TryGetValue("msg-param-recipient-user-name", out giftlogin);
+                msg.Tags.TryGetValue("login", out login);
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
@@ -791,6 +788,14 @@ namespace Chatterino.Common
                             if (index != -1) {
                                 index += displayname.Length;
                                 sysMsg = sysMsg.Insert(index, " ("+login+")");
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
+                            !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
+                            int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
+                            if (index != -1) {
+                                index += giftdisplayname.Length;
+                                sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
                             }
                         }
                         var sysMessage = new Message(sysMsg, HSLColor.Gray, true)
@@ -809,6 +814,9 @@ namespace Chatterino.Common
                         } else {
                             if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)) {
                                 c.Users[login.ToUpper()] = displayname;
+                            }
+                            if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)) {
+                                c.Users[giftlogin.ToUpper()] = giftdisplayname;
                             }
                         }
                     }
