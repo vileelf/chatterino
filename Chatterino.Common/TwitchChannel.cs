@@ -503,8 +503,14 @@ namespace Chatterino.Common
                                                 messages.Add(message);
                                             } else if (msg.Command == "USERNOTICE") {
                                                 msg.Tags.TryGetValue("system-msg", out sysMsg);
-                                                msg.Tags.TryGetValue("display-name", out displayname);
-                                                msg.Tags.TryGetValue("login", out login);
+                                                msg.Tags.TryGetValue("msg-param-recipient-display-name", out displayname);
+                                                if (string.IsNullOrEmpty(displayname)) {
+                                                    msg.Tags.TryGetValue("display-name", out displayname);
+                                                }
+                                                msg.Tags.TryGetValue("msg-param-recipient-user-name", out login);
+                                                if (string.IsNullOrEmpty(login)) {
+                                                    msg.Tags.TryGetValue("login", out login);
+                                                }
                                                 if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
                                                     !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
                                                     int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);

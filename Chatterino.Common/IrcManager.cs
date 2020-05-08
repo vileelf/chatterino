@@ -770,8 +770,16 @@ namespace Chatterino.Common
                 string displayname;
                 string login;
                 msg.Tags.TryGetValue("system-msg", out sysMsg);
-                msg.Tags.TryGetValue("display-name", out displayname);
-                msg.Tags.TryGetValue("login", out login);
+                
+                msg.Tags.TryGetValue("msg-param-recipient-display-name", out displayname);
+                if (string.IsNullOrEmpty(displayname)) {
+                    msg.Tags.TryGetValue("display-name", out displayname);
+                }
+                
+                msg.Tags.TryGetValue("msg-param-recipient-user-name", out login);
+                if (string.IsNullOrEmpty(login)) {
+                    msg.Tags.TryGetValue("login", out login);
+                }
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
