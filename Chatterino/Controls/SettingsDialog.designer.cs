@@ -768,23 +768,23 @@ namespace Chatterino.Controls
             // 
             // txtMsgLimit
             // 
-            this.txtMsgLimit.Location = new System.Drawing.Point(269, 330);
+            this.txtMsgLimit.Location = new System.Drawing.Point(100, 47);
             this.txtMsgLimit.Name = "txtMsgLimit";
             this.txtMsgLimit.Size = new System.Drawing.Size(167, 20);
             this.txtMsgLimit.TabIndex = 10;
-            this.txtMsgLimit.Visible = false;
+            this.txtMsgLimit.Visible = true;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label3.Location = new System.Drawing.Point(185, 334);
+            this.label3.Location = new System.Drawing.Point(14, 47);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Message Limit:";
-            this.label3.Visible = false;
+            this.label3.Visible = true;
             // 
             // panel3
             // 

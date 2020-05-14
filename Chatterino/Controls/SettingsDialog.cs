@@ -143,6 +143,7 @@ namespace Chatterino.Controls
             var originalThemeNightEnd = AppSettings.NightThemeEnd;
             var originalQuality = comboQuality.Text = AppSettings.Quality;
             var originalPath = AppSettings.StreamlinkPath;
+            int originalMsgLimit = AppSettings.ChatMessageLimit;
 
             BindCheckBox(checkBoxDifferentThemeAtNight, "EnableNightTheme");
 
@@ -191,6 +192,7 @@ namespace Chatterino.Controls
                 AppSettings.NightThemeStart = originalThemeNightStart;
                 AppSettings.NightThemeEnd = originalThemeNightEnd;
                 AppSettings.Quality = originalQuality;
+                AppSettings.ChatMessageLimit = originalMsgLimit;
                 App.MainForm.Refresh();
             };
 
@@ -250,7 +252,11 @@ namespace Chatterino.Controls
                 App.MainForm.Refresh();
             };
 
-            BindTextBox(txtMsgLimit, "ChatMessageLimit");
+            txtMsgLimit.Text = AppSettings.ChatMessageLimit.ToString();
+            txtMsgLimit.LostFocus += (s, e) =>
+            {
+                AppSettings.ChatMessageLimit = int.Parse(txtMsgLimit.Text);
+            };
 
             BindCheckBox(chkHighlight, "ChatEnableHighlight");
             BindCheckBox(chkPings, "ChatEnableHighlightSound");

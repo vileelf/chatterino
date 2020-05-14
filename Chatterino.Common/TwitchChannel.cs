@@ -19,7 +19,7 @@ namespace Chatterino.Common
 {
     public class TwitchChannel
     {
-        const int maxMessages = 1000;
+       int maxMessages = AppSettings.ChatMessageLimit;
 
         static readonly System.Timers.Timer refreshChatterListTimer = new System.Timers.Timer(30 * 1000 * 60);
 
@@ -647,6 +647,7 @@ namespace Chatterino.Common
 
             lock (MessageLock)
             {
+                maxMessages = AppSettings.ChatMessageLimit;
                 if (Messages.Length > AppSettings.ChatMessageLimit)
                 {
                     _messages = new Message[Messages.Length - AppSettings.ChatMessageLimit];
