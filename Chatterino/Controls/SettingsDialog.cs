@@ -253,7 +253,7 @@ namespace Chatterino.Controls
             };
 
             txtMsgLimit.Text = AppSettings.ChatMessageLimit.ToString();
-            txtMsgLimit.LostFocus += (s, e) =>
+            onSave += (s, e) =>
             {
                 AppSettings.ChatMessageLimit = int.Parse(txtMsgLimit.Text);
             };
@@ -774,18 +774,20 @@ namespace Chatterino.Controls
             };
         }
 
-        //event EventHandler onSave;
+        event EventHandler onSave;
         event EventHandler onCancel;
 
         void btnOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+            onSave?.Invoke(this, EventArgs.Empty);
             Close();
             foreach(TabPage tp in App.MainForm.TabControl.TabPages)
             {
                 tp.Reload();
             }
             Emotes.EmoteAdded();
+            
         }
 
         void btnCancel_Click(object sender, EventArgs e)
