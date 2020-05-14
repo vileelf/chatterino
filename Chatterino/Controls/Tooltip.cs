@@ -74,6 +74,8 @@ namespace Chatterino.Controls
 
             Padding = new Padding(8, 4, 8, 4);
             ShowInTaskbar = false;
+            
+            this.Owner = App.MainForm;
 
             StartPosition = FormStartPosition.Manual;
             
