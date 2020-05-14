@@ -13,12 +13,16 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Web.SessionState;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 using Chatterino.Controls;
+
 
 namespace Chatterino
 {
     public static class App
     {
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        static extern bool SetWindowPos(int hWnd,int hWndInsertAfter,int X,int Y,int cx,int cy,uint uFlags);
         // Updates
         public static VersionNumber CurrentVersion { get; private set; }
         private static bool installUpdatesOnExit = false;
@@ -428,6 +432,11 @@ namespace Chatterino
     
         private static object tooltiplock = new object();
 
+
+        
+        private const int HWND_TOPMOST = -1;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
         public static void ShowToolTip(Point point, string text, string imgurl, bool force = false)
         {
             //if (force || WindowFocused || (EmoteList?.ContainsFocus ?? false))
@@ -469,6 +478,9 @@ namespace Chatterino
                     if (!ToolTip.Visible)
                     {
                         ToolTip.Show();
+                        SetWindowPos(ToolTip.Handle.ToInt32(), HWND_TOPMOST,
+                            ToolTip.Left, ToolTip.Top, ToolTip.Width, ToolTip.Height,
+                            SWP_NOACTIVATE);
                     }
 
                     point = calcTooltipLocation(point);
