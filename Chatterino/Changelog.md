@@ -1,5 +1,10 @@
 ﻿# changelog
 
+## 2.1
+- showing username on both the gifter and giftee of sub gifts
+- added an option to set the message limit
+- fixed a bug where the tooltip would go behind other windows so you couldnt see it
+
 ## 2.0
 - now displays username on sub notifications if it is different from the display name.
 - gif emotes are now synced up with each other.
