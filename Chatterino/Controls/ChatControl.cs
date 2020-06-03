@@ -443,7 +443,7 @@ namespace Chatterino.Controls
                 string []items =
                         channel.GetCompletionItems(false,false, usernameoremotes)
                             .Where(x => x.Key.Contains(searchstring))
-                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:1)
+                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
                             .Select(x => x.Value)
                             .ToArray();
                 if (AutoComplete is null) {
@@ -478,7 +478,7 @@ namespace Chatterino.Controls
                     string []items =
                         channel.GetCompletionItems(false,false, usernameoremotes)
                             .Where(x => x.Key.Contains(searchstring))
-                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:1)
+                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
                             .Select(x => x.Value)
                             .ToArray();
                     AutoComplete.UpdateItems(items);
