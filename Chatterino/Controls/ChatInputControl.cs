@@ -220,8 +220,9 @@ namespace Chatterino.Controls
             g?.Dispose();
 
             chatControl.Focus();
+            chatControl.CloseAutocomplete();
 
-            base.OnMouseClick(e);
+            base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -235,6 +236,7 @@ namespace Chatterino.Controls
                 currentContext = this;
                 contextMenu.Show(this, e.Location);
             }
+            chatControl?.CloseAutocomplete();
 
             base.OnMouseUp(e);
         }
@@ -242,7 +244,7 @@ namespace Chatterino.Controls
         protected override void OnResize(EventArgs e)
         {
             calculateBounds();
-
+            chatControl?.CloseAutocomplete();
             base.OnResize(e);
         }
 

@@ -149,6 +149,9 @@
     <Compile Include="Controls\Tooltip.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Controls\AutoComplete.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Controls\UpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -76,6 +76,7 @@ namespace Chatterino
             {
                 App.WindowFocused = false;
                 App.HideToolTip();
+                (selected as ChatControl)?.CloseAutocomplete();
 
                 setTabPageLastMessageThingy(tabControl.Selected as ColumnTabPage);
 
@@ -100,6 +101,7 @@ namespace Chatterino
                         Selected = tab?.Columns.FirstOrDefault()?.Widgets.FirstOrDefault();
 
                     Selected?.Focus();
+                    (Selected as ChatControl)?.CloseAutocomplete();
                     if (lastTabPage != null) {
                          foreach (var col in lastTabPage.Columns)
                         {
@@ -149,25 +151,32 @@ namespace Chatterino
             switch (keyData)
             {
                 case Keys.Control | Keys.F:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     (selected as ChatControl)?.SearchFor(((ChatControl) selected).Input.Logic.Text);
                     break;
                 case Keys.Control | Keys.U:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     tabControl.ShowUserSwitchPopup();
                     break;
                 case Keys.Control | Keys.T:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     AddNewSplit();
                     break;
                 case Keys.Control | Keys.W:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     RemoveSelectedSplit();
                     break;
                 case Keys.Control | Keys.P:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     App.ShowSettings();
                     break;
                 case Keys.Control | Keys.L:
+                    (selected as ChatControl)?.CloseAutocomplete();
                     new LoginForm().ShowDialog();
                     break;
                 case Keys.Alt | Keys.Left:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var tab = tabControl.Selected as ColumnTabPage;
 
                         if (tab != null && selected != null)
@@ -184,6 +193,7 @@ namespace Chatterino
                     break;
                 case Keys.Alt | Keys.Right:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var tab = tabControl.Selected as ColumnTabPage;
 
                         if (tab != null && selected != null)
@@ -200,6 +210,7 @@ namespace Chatterino
                     break;
                 case Keys.Alt | Keys.Up:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var tab = tabControl.Selected as ColumnTabPage;
 
                         if (tab != null && selected != null)
@@ -217,6 +228,7 @@ namespace Chatterino
                     break;
                 case Keys.Alt | Keys.Down:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var tab = tabControl.Selected as ColumnTabPage;
 
                         if (tab != null && selected != null)
@@ -242,6 +254,7 @@ namespace Chatterino
                 case Keys.Control | Keys.D8:
                 case Keys.Control | Keys.D9:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var tab = (keyData & ~Keys.Modifiers) - Keys.D0;
 
                         var t = tabControl.TabPages.ElementAtOrDefault(tab - 1);
@@ -254,6 +267,7 @@ namespace Chatterino
                     break;
                 case Keys.Control | Keys.Tab:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var index = tabControl.TabPages.TakeWhile(x => !x.Selected).Count();
 
                         if (tabControl.TabPages.Count() > index + 1)
@@ -268,6 +282,7 @@ namespace Chatterino
                     break;
                 case Keys.Control | Keys.Shift | Keys.Tab:
                     {
+                        (selected as ChatControl)?.CloseAutocomplete();
                         var index = tabControl.TabPages.TakeWhile(x => !x.Selected).Count();
 
                         if (index > 0)

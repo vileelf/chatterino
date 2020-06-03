@@ -400,7 +400,9 @@ namespace Chatterino.Controls
             mouseDown = false;
 
             int index;
-
+            if (e.Button == MouseButtons.Right) {
+                (App.MainForm.Selected as ChatControl)?.CloseAutocomplete();
+            }
             var msg = MessageAtPoint(e.Location, out index);
             if (msg != null)
             {

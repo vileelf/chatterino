@@ -13,11 +13,17 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Message = Chatterino.Common.Message;
+using System.Runtime.InteropServices;
 
 namespace Chatterino.Controls
 {
     public class ChatControl : MessageContainerControl
     {
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        static extern bool SetWindowPos(int hWnd,int hWndInsertAfter,int X,int Y,int cx,int cy,uint uFlags);
+        private const int HWND_TOPMOST = -1;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
         const int LastMessagesLimit = 25;
 
         // Properties
@@ -161,6 +167,7 @@ namespace Chatterino.Controls
 
             Input.VisibleChanged += (s, e) =>
             {
+                CloseAutocomplete();
                 updateMessageBounds();
                 Invalidate();
             };
@@ -168,7 +175,7 @@ namespace Chatterino.Controls
             Input.SizeChanged += (s, e) =>
             {
                 Input.Location = new Point(1, Height - Input.Height - 1);
-
+                CloseAutocomplete();
                 updateMessageBounds();
                 Invalidate();
             };
@@ -184,7 +191,7 @@ namespace Chatterino.Controls
             {
                 Fonts.FontChanged -= Fonts_FontChanged;
                 Net.CurrentChannelChanged -= Net_CurrentChannelChanged;
-
+                CloseAutocomplete();
                 TwitchChannel.RemoveChannel(ActualChannelName);
             };
 
@@ -200,11 +207,13 @@ namespace Chatterino.Controls
             GotFocus += (s, e) =>
             {
                 Input.Logic.ClearSelection();
+                CloseAutocomplete();
                 Input.Invalidate();
                 header.Invalidate();
             };
             LostFocus += (s, e) =>
             {
+                CloseAutocomplete();
                 header.Invalidate();
                 Input.Invalidate();
             };
@@ -414,6 +423,114 @@ namespace Chatterino.Controls
 
             base.OnKeyUp(e);
         }
+        
+        public bool AutoCompleteOpen { get; private set; } = false;
+        public int AutoCompleteStart { get; private set; } = -1;
+        static Controls.AutoComplete AutoComplete { get; set; } = null;
+        
+        public void OpenAutocomplete() {
+            if (!AutoCompleteOpen) {
+                string text = Input.Logic.Text;
+                char []textarray = text.ToCharArray();
+                string searchstring;
+                AutoCompleteOpen = true;
+                
+                if (AutoCompleteStart == -1) {
+                    AutoCompleteStart = Input.Logic.CaretPosition;
+                }
+                searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
+                TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
+                string []items =
+                        channel.GetCompletionItems(false,false, usernameoremotes)
+                            .Where(x => x.Key.Contains(searchstring))
+                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:1)
+                            .Select(x => x.Value)
+                            .ToArray();
+                if (AutoComplete is null) {
+                    AutoComplete = new Controls.AutoComplete(this);
+                }
+                
+                AutoComplete.UpdateItems(items);
+                AutoComplete.UpdateLocation(App.MainForm.Left+9+this.Left, App.MainForm.Bottom-11-Input.Height);
+                
+                if (!AutoComplete.Visible) {
+                    AutoComplete.Show();
+                    SetWindowPos(AutoComplete.Handle.ToInt32(), HWND_TOPMOST,
+                            AutoComplete.Left, AutoComplete.Top, AutoComplete.Width, AutoComplete.Height,
+                            SWP_NOACTIVATE);
+                    
+                }
+                
+                
+            }
+        }
+       
+        public void UpdateAutocomplete() {
+            string text = Input.Logic.Text;
+            char []textarray = text.ToCharArray();
+            if (AutoCompleteOpen) {
+                if (Input.Logic.CaretPosition < AutoCompleteStart || textarray[Input.Logic.CaretPosition-1]==' ') {
+                    CloseAutocomplete();
+                } else {
+                    string searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
+                    TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
+                    
+                    string []items =
+                        channel.GetCompletionItems(false,false, usernameoremotes)
+                            .Where(x => x.Key.Contains(searchstring))
+                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:1)
+                            .Select(x => x.Value)
+                            .ToArray();
+                    AutoComplete.UpdateItems(items);
+                    AutoComplete.UpdateLocation(App.MainForm.Left+9, App.MainForm.Bottom-11-Input.Height);
+                }
+            } else {
+                
+                char c;
+                
+                for (int i = Input.Logic.CaretPosition-1; i >= 0; i--) {
+                    c = textarray[i];
+                    if (c==' ') {
+                        break;
+                    } else if (c=='@' || c==':') {
+                        AutoCompleteStart = i+1;
+                    }
+                }
+                if (AutoCompleteStart != -1) {
+                    OpenAutocomplete();
+                }
+            }
+        }
+        
+        public void MoveAutoCompleteSelection(bool up) {
+            if (AutoComplete != null) {
+                AutoComplete.MoveSelection(up);
+            }
+        }
+        
+        public void SelectAutoComplete() {
+            if (AutoComplete != null) {
+                while(Input.Logic.CaretPosition > AutoCompleteStart) {
+                    Input.Logic.Delete(false, false);
+                }
+                char []textarray = Input.Logic.Text.ToCharArray();
+                if (textarray[AutoCompleteStart-1]==':') {
+                    Input.Logic.Delete(false, false);
+                }
+                Input.Logic.InsertText(AutoComplete.GetSelection() + " ");
+                CloseAutocomplete();
+                resetCompletion();
+            }
+        }
+        
+        public void CloseAutocomplete() {
+            if (AutoComplete != null) {
+                AutoComplete.Hide();
+                AutoComplete.ClearItems();
+            }
+            AutoCompleteStart = -1;
+            AutoCompleteOpen = false;
+        }
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
@@ -423,9 +540,11 @@ namespace Chatterino.Controls
                 if (e.KeyChar == '\b')
                 {
                     resetCompletion();
+                    UpdateAutocomplete();
                 }
                 else if (e.KeyChar == '\r' || e.KeyChar == '\n')
                 {
+                    CloseAutocomplete();
                     if ((channel?.IsModOrBroadcaster ?? false) || messageSendCount == 0 || nextAutoMessageSendTime < DateTime.Now)
                     {
                         SendMessage((ModifierKeys & Keys.Control) != Keys.Control);
@@ -435,11 +554,27 @@ namespace Chatterino.Controls
 
                     messageSendCount++;
                 }
+                else if (e.KeyChar == '@' || e.KeyChar == ':')
+                {
+                    Input.Logic.InsertText(e.KeyChar.ToString());
+                    resetCompletion();
+                    if (!AutoCompleteOpen) {
+                        OpenAutocomplete();
+                    } else {
+                        UpdateAutocomplete();
+                    }
+                }
+                else if (e.KeyChar == ' ')
+                {
+                    Input.Logic.InsertText(e.KeyChar.ToString());
+                    CloseAutocomplete();
+                    resetCompletion();
+                }
                 else if (e.KeyChar >= ' ')
                 {
                     Input.Logic.InsertText(e.KeyChar.ToString());
-
                     resetCompletion();
+                    UpdateAutocomplete();
                 }
 
                 updateMessageBounds();
@@ -477,61 +612,85 @@ namespace Chatterino.Controls
                 // left
                 case Keys.Left:
                     Input.Logic.MoveCursorLeft(false, false);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Left | Keys.Control:
                     Input.Logic.MoveCursorLeft(true, false);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Left | Keys.Shift:
                     Input.Logic.MoveCursorLeft(false, true);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Left | Keys.Shift | Keys.Control:
                     Input.Logic.MoveCursorLeft(true, true);
+                    UpdateAutocomplete();
                     break;
 
                 // right
                 case Keys.Right:
                     Input.Logic.MoveCursorRight(false, false);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Right | Keys.Control:
                     Input.Logic.MoveCursorRight(true, false);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Right | Keys.Shift:
                     Input.Logic.MoveCursorRight(false, true);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Right | Keys.Shift | Keys.Control:
                     Input.Logic.MoveCursorRight(true, true);
+                    UpdateAutocomplete();
                     break;
 
                 // up + down
                 case Keys.Up:
-                    if (_lastMessages.Count != 0)
-                    {
-                        if (_currentLastMessageIndex > 0)
+                    if (AutoCompleteOpen) {
+                        MoveAutoCompleteSelection(true);
+                    } else {
+                        if (_lastMessages.Count != 0)
                         {
-                            _lastMessages[_currentLastMessageIndex] = Input.Logic.Text;
-                            _currentLastMessageIndex--;
-                            Input.Logic.SetText(_lastMessages[_currentLastMessageIndex]);
+                            if (_currentLastMessageIndex > 0)
+                            {
+                                _lastMessages[_currentLastMessageIndex] = Input.Logic.Text;
+                                _currentLastMessageIndex--;
+                                Input.Logic.SetText(_lastMessages[_currentLastMessageIndex]);
+                            }
                         }
                     }
                     break;
                 case Keys.Down:
-                    if (_lastMessages.Count != 0)
-                    {
-                        if (_currentLastMessageIndex < _lastMessages.Count - 1)
+                    if (AutoCompleteOpen) {
+                        MoveAutoCompleteSelection(false);
+                    } else {
+                        if (_lastMessages.Count != 0)
                         {
-                            _lastMessages[_currentLastMessageIndex] = Input.Logic.Text;
-                            _currentLastMessageIndex++;
-                            Input.Logic.SetText(_lastMessages[_currentLastMessageIndex]);
+                            if (_currentLastMessageIndex < _lastMessages.Count - 1)
+                            {
+                                _lastMessages[_currentLastMessageIndex] = Input.Logic.Text;
+                                _currentLastMessageIndex++;
+                                Input.Logic.SetText(_lastMessages[_currentLastMessageIndex]);
+                            }
                         }
                     }
                     break;
 
                 // tabbing
                 case Keys.Tab:
-                    HandleTabCompletion(true);
+                    if (AutoCompleteOpen) {
+                        SelectAutoComplete();
+                    } else {
+                        HandleTabCompletion(true);
+                    }
                     break;
                 case Keys.Shift | Keys.Tab:
-                    HandleTabCompletion(false);
+                    if (AutoCompleteOpen) {
+                        SelectAutoComplete();
+                    } else {
+                        HandleTabCompletion(false);
+                    }
                     break;
 
                 // select all
@@ -547,29 +706,36 @@ namespace Chatterino.Controls
                 case (Keys.Delete | Keys.Control):
                 case (Keys.Delete | Keys.Shift):
                     Input.Logic.Delete((keys & Keys.Control) == Keys.Control, (keys & ~Keys.Control) == Keys.Delete);
+                    UpdateAutocomplete();
                     break;
 
                 // paste
                 case Keys.Control | Keys.V:
                     PasteText(Clipboard.GetText());
+                    UpdateAutocomplete();
                     break;
 
                 // home / end
                 case Keys.Home:
                     Input.Logic.SetCaretPosition(0);
+                    UpdateAutocomplete();
                     break;
                 case Keys.Home | Keys.Shift:
                     Input.Logic.SetSelectionEnd(0);
+                    UpdateAutocomplete();
                     break;
                 case Keys.End:
                     Input.Logic.SetCaretPosition(Input.Logic.Text.Length);
+                    UpdateAutocomplete();
                     break;
                 case Keys.End | Keys.Shift:
                     Input.Logic.SetSelectionEnd(Input.Logic.Text.Length);
+                    UpdateAutocomplete();
                     break;
 
                 // rename split
                 case Keys.Control | Keys.R:
+                    CloseAutocomplete();
                     using (var dialog = new InputDialogForm("channel name") { Value = ChannelName })
                     {
                         if (dialog.ShowDialog() == DialogResult.OK)
@@ -636,7 +802,7 @@ namespace Chatterino.Controls
                     tabCompleteItems =
                         channel.GetCompletionItems(wordStart == 0 || (wordStart == 1 && text[0] == '@'),
                             (!text.Trim().StartsWith("!") && !text.Trim().StartsWith("/") &&
-                             !text.Trim().StartsWith(".")))
+                             !text.Trim().StartsWith(".")), TwitchChannel.UsernameOrEmotes.Both)
                             .Where(s => s.Key.StartsWith(word))
                             .Select(x => x.Value)
                             .ToArray();
@@ -1045,6 +1211,7 @@ namespace Chatterino.Controls
                         mouseDown = true;
                         chatControl.Select();
                     }
+                    chatControl.CloseAutocomplete();
                 };
                 MouseUp += (s, e) =>
                 {
@@ -1093,6 +1260,7 @@ namespace Chatterino.Controls
                 button.Click += (s, e) =>
                 {
                     _selected = chatControl;
+                    chatControl.CloseAutocomplete();
                     _contextMenu.Show(this, new Point(Location.X, Location.Y + Height));
                 };
 
@@ -1115,6 +1283,7 @@ namespace Chatterino.Controls
                 button.Click += (s, e) =>
                 {
                     _selected = chatControl;
+                    chatControl.CloseAutocomplete();
                     _roomstateContextMenu.Show(this, new Point(Location.X + Width, Location.Y + Height),
                         LeftRightAlignment.Left);
                 };

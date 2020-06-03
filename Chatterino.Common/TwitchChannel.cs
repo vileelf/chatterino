@@ -842,7 +842,12 @@ namespace Chatterino.Common
             emoteNames = new List<KeyValuePair<string, string>>(names);
         }
 
-        public IEnumerable<KeyValuePair<string, string>> GetCompletionItems(bool firstWord, bool allowAt)
+        public enum UsernameOrEmotes {
+            Usernames = 0,
+            Emotes = 1,
+            Both = 2
+        };
+        public IEnumerable<KeyValuePair<string, string>> GetCompletionItems(bool firstWord, bool allowAt, UsernameOrEmotes usernamesoremotes)
         {
             var usernames = new List<KeyValuePair<string, string>>();
 
@@ -866,27 +871,38 @@ namespace Chatterino.Common
             {
                 usernames.AddRange(Util.TwitchChatCommandNames.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             }
+            
+            if (usernamesoremotes == UsernameOrEmotes.Both) {
+                if (AppSettings.PrefereEmotesOverUsernames)
+                {
+                    usernames.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
 
-            if (AppSettings.PrefereEmotesOverUsernames)
-            {
+                    var emotes = new List<KeyValuePair<string, string>>(emoteNames);
+
+                    emotes.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
+
+                    emotes.AddRange(usernames);
+
+                    return emotes;
+                }
+                else
+                {
+                    usernames.AddRange(emoteNames);
+
+                    usernames.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
+
+                    return usernames;
+                }
+            } else if (usernamesoremotes == UsernameOrEmotes.Usernames) {
+                usernames = new List<KeyValuePair<string, string>>(Users);
                 usernames.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
-
+                return usernames;
+            } else if (usernamesoremotes == UsernameOrEmotes.Emotes) {
                 var emotes = new List<KeyValuePair<string, string>>(emoteNames);
-
                 emotes.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
-
-                emotes.AddRange(usernames);
-
                 return emotes;
             }
-            else
-            {
-                usernames.AddRange(emoteNames);
-
-                usernames.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
-
-                return usernames;
-            }
+            return null;
         }
 
         public void Join()
