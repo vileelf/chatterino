@@ -510,16 +510,19 @@ namespace Chatterino.Controls
         
         public void SelectAutoComplete() {
             if (AutoComplete != null) {
-                while(Input.Logic.CaretPosition > AutoCompleteStart) {
-                    Input.Logic.Delete(false, false);
+                string acselection = AutoComplete.GetSelection();
+                if (!String.IsNullOrEmpty(acselection)) {
+                    while(Input.Logic.CaretPosition > AutoCompleteStart) {
+                        Input.Logic.Delete(false, false);
+                    }
+                    char []textarray = Input.Logic.Text.ToCharArray();
+                    if (textarray[AutoCompleteStart-1]==':') {
+                        Input.Logic.Delete(false, false);
+                    }
+                    Input.Logic.InsertText(acselection + " ");
+                    CloseAutocomplete();
+                    resetCompletion();
                 }
-                char []textarray = Input.Logic.Text.ToCharArray();
-                if (textarray[AutoCompleteStart-1]==':') {
-                    Input.Logic.Delete(false, false);
-                }
-                Input.Logic.InsertText(AutoComplete.GetSelection() + " ");
-                CloseAutocomplete();
-                resetCompletion();
             }
         }
         

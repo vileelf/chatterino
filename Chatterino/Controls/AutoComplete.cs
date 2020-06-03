@@ -65,6 +65,10 @@ namespace Chatterino.Controls
         }
         
         public void UpdateItems(string []items) {
+            if (items.Length==0) {
+                Array.Resize(ref items, 1);
+                items[0] = "";
+            }
             this.items = items;
             AutoCompleteListBox.Items.Clear();
             AutoCompleteListBox.Items.AddRange(items);
