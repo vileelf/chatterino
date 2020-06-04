@@ -520,8 +520,9 @@ namespace Chatterino.Controls
                         Input.Logic.Delete(false, false);
                     }
                     Input.Logic.InsertText(acselection + " ");
+                    tabCompleteItems = AutoComplete.items;
+                    currentTabIndex = AutoComplete.GetSelectionIndex();
                     CloseAutocomplete();
-                    resetCompletion();
                 }
             }
         }
@@ -819,6 +820,10 @@ namespace Chatterino.Controls
 
             if (currentTabIndex != -1 && items.Length != 0)
             {
+                char []curitem = items[currentTabIndex].ToCharArray();
+                if (text[wordStart] == '@' && curitem[0]!='@') {
+                    wordStart++;
+                }
                 Input.Logic.SelectionStart = wordStart;
                 Input.Logic.SelectionLength = word.Length;
 

@@ -19,7 +19,7 @@ namespace Chatterino.Controls
         
         private ListBox AutoCompleteListBox = new ListBox();
         
-        private string []items = null;
+        public string []items {get;private set;} = null;
         private int selected = 0;
         private ChatControl _chatControl = null;
         private Brush textbrush = Brushes.Black;
@@ -101,6 +101,10 @@ namespace Chatterino.Controls
                 }
             }
             AutoCompleteListBox.SetSelected(selected, true);
+        }
+        
+        public int GetSelectionIndex() {
+            return AutoCompleteListBox.SelectedIndex;
         }
         
         public string GetSelection() {
