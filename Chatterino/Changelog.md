@@ -1,5 +1,8 @@
 ﻿# changelog
 
+## 2.2
+- Added a new feature that autocompletes users when you type @ and emotes when you type :
+
 ## 2.1
 - showing username on both the gifter and giftee of sub gifts
 - added an option to set the message limit
