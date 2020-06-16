@@ -1,5 +1,8 @@
 ﻿# changelog
 
+## 2.2 hotfix
+- Fixed an issue where the autocomplete would cause chatterino to freeze up.
+
 ## 2.2
 - Added a new feature that autocompletes users when you type @ and emotes when you type :
 

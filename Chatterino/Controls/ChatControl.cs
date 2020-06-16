@@ -427,113 +427,123 @@ namespace Chatterino.Controls
         public bool AutoCompleteOpen { get; private set; } = false;
         public int AutoCompleteStart { get; private set; } = -1;
         static Controls.AutoComplete AutoComplete { get; set; } = null;
+        private object AutoCompleteLock = new object();
         
         public void OpenAutocomplete() {
-            if (!AutoCompleteOpen) {
-                string text = Input.Logic.Text;
-                char []textarray = text.ToCharArray();
-                string searchstring;
-                AutoCompleteOpen = true;
-                
-                if (AutoCompleteStart == -1) {
-                    AutoCompleteStart = Input.Logic.CaretPosition;
-                }
-                searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
-                TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
-                string []items =
-                        channel.GetCompletionItems(false,false, usernameoremotes)
-                            .Where(x => x.Key.Contains(searchstring))
-                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
-                            .Select(x => x.Value)
-                            .ToArray();
-                if (AutoComplete is null) {
-                    AutoComplete = new Controls.AutoComplete(this);
-                }
-                
-                AutoComplete.UpdateItems(items);
-                AutoComplete.UpdateLocation(App.MainForm.Left+9+this.Left, App.MainForm.Bottom-11-Input.Height);
-                
-                if (!AutoComplete.Visible) {
-                    AutoComplete.Show();
-                    SetWindowPos(AutoComplete.Handle.ToInt32(), HWND_TOPMOST,
-                            AutoComplete.Left, AutoComplete.Top, AutoComplete.Width, AutoComplete.Height,
-                            SWP_NOACTIVATE);
+            lock(AutoCompleteLock) {
+                if (!AutoCompleteOpen) {
+                    string text = Input.Logic.Text;
+                    char []textarray = text.ToCharArray();
+                    string searchstring;
+                    AutoCompleteOpen = true;
+                    
+                    if (AutoCompleteStart == -1) {
+                        AutoCompleteStart = Input.Logic.CaretPosition;
+                    }
+                    searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
+                    TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
+                    string []items =
+                            channel.GetCompletionItems(false,false, usernameoremotes)
+                                .Where(x => x.Key.Contains(searchstring))
+                                .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
+                                .Select(x => x.Value)
+                                .ToArray();
+                    if (AutoComplete is null) {
+                        AutoComplete = new Controls.AutoComplete(this);
+                    }
+                    AutoComplete.UpdateItems(items);
+                    AutoComplete.UpdateLocation(App.MainForm.Left+9+this.Left, App.MainForm.Bottom-11-Input.Height);
+                    
+                    if (!AutoComplete.Visible) {
+                        AutoComplete.Show();
+                        SetWindowPos(AutoComplete.Handle.ToInt32(), HWND_TOPMOST,
+                                AutoComplete.Left, AutoComplete.Top, AutoComplete.Width, AutoComplete.Height,
+                                SWP_NOACTIVATE);
+                        
+                    }
+                    
                     
                 }
-                
-                
             }
         }
        
         public void UpdateAutocomplete() {
-            string text = Input.Logic.Text;
-            char []textarray = text.ToCharArray();
-            if (AutoCompleteOpen) {
-                if (Input.Logic.CaretPosition < AutoCompleteStart || textarray[Input.Logic.CaretPosition-1]==' ') {
-                    CloseAutocomplete();
-                } else {
-                    string searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
-                    TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
-                    
-                    string []items =
-                        channel.GetCompletionItems(false,false, usernameoremotes)
-                            .Where(x => x.Key.Contains(searchstring))
-                            .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
-                            .Select(x => x.Value)
-                            .ToArray();
-                    AutoComplete.UpdateItems(items);
-                    AutoComplete.UpdateLocation(App.MainForm.Left+9, App.MainForm.Bottom-11-Input.Height);
-                }
-            } else {
-                
-                char c;
-                
-                for (int i = Input.Logic.CaretPosition-1; i >= 0; i--) {
-                    c = textarray[i];
-                    if (c==' ') {
-                        break;
-                    } else if (c=='@' || c==':') {
-                        AutoCompleteStart = i+1;
+            lock (AutoCompleteLock) {
+                string text = Input.Logic.Text;
+                char []textarray = text.ToCharArray();
+                if (AutoCompleteOpen && AutoComplete != null) {
+                    if (Input.Logic.CaretPosition < AutoCompleteStart || textarray[Input.Logic.CaretPosition-1]==' ') {
+                        CloseAutocomplete();
+                    } else {
+                        string searchstring = text.Substring(AutoCompleteStart, Input.Logic.CaretPosition - AutoCompleteStart).ToUpperInvariant();
+                        TwitchChannel.UsernameOrEmotes usernameoremotes = textarray[AutoCompleteStart-1] == '@' ? TwitchChannel.UsernameOrEmotes.Usernames:TwitchChannel.UsernameOrEmotes.Emotes;
+                        
+                        string []items =
+                            channel.GetCompletionItems(false,false, usernameoremotes)
+                                .Where(x => x.Key.Contains(searchstring))
+                                .OrderBy(x => x.Key.StartsWith(searchstring)?-1:x.Key.StartsWith(":")?1:0)
+                                .Select(x => x.Value)
+                                .ToArray();
+                        AutoComplete.UpdateItems(items);
+                        AutoComplete.UpdateLocation(App.MainForm.Left+9, App.MainForm.Bottom-11-Input.Height);
                     }
-                }
-                if (AutoCompleteStart != -1) {
-                    OpenAutocomplete();
+                } else {
+                    
+                    char c;
+                    
+                    for (int i = Input.Logic.CaretPosition-1; i >= 0; i--) {
+                        c = textarray[i];
+                        if (c==' ') {
+                            break;
+                        } else if (c=='@' || c==':') {
+                            AutoCompleteStart = i+1;
+                        }
+                    }
+                    if (AutoCompleteStart != -1) {
+                        OpenAutocomplete();
+                    }
                 }
             }
         }
         
         public void MoveAutoCompleteSelection(bool up) {
-            if (AutoComplete != null) {
-                AutoComplete.MoveSelection(up);
+            lock (AutoCompleteLock) {
+                if (AutoComplete != null) {
+                    AutoComplete.MoveSelection(up);
+                }
             }
         }
         
         public void SelectAutoComplete() {
-            if (AutoComplete != null) {
-                string acselection = AutoComplete.GetSelection();
-                if (!String.IsNullOrEmpty(acselection)) {
-                    while(Input.Logic.CaretPosition > AutoCompleteStart) {
-                        Input.Logic.Delete(false, false);
+            lock (AutoCompleteLock) {
+                if (AutoComplete != null && AutoCompleteOpen && AutoCompleteStart >= 0) {
+                    string acselection = AutoComplete.GetSelection();
+                    if (!String.IsNullOrEmpty(acselection)) {
+                        while(Input.Logic.CaretPosition > AutoCompleteStart && Input.Logic.CaretPosition > 0) {
+                            Input.Logic.Delete(false, false);
+                        }
+                        char []textarray = Input.Logic.Text.ToCharArray();
+                        if (textarray[AutoCompleteStart-1]==':') {
+                            Input.Logic.Delete(false, false);
+                        }
+                        Input.Logic.InsertText(acselection + " ");
+                        tabCompleteItems = AutoComplete.items;
+                        currentTabIndex = AutoComplete.GetSelectionIndex();
+                        CloseAutocomplete();
                     }
-                    char []textarray = Input.Logic.Text.ToCharArray();
-                    if (textarray[AutoCompleteStart-1]==':') {
-                        Input.Logic.Delete(false, false);
-                    }
-                    Input.Logic.InsertText(acselection + " ");
-                    tabCompleteItems = AutoComplete.items;
-                    currentTabIndex = AutoComplete.GetSelectionIndex();
-                    CloseAutocomplete();
                 }
             }
         }
         
         public void CloseAutocomplete() {
-            if (AutoComplete != null) {
-                AutoComplete.Hide();
-                AutoComplete.ClearItems();
+            lock (AutoCompleteLock) {
+                if (AutoComplete != null) {
+                    AutoComplete.Hide();
+                    AutoComplete.ClearItems();
+                }
+                AutoCompleteStart = -1;
+                AutoCompleteOpen = false;
             }
-            AutoCompleteStart = -1;
-            AutoCompleteOpen = false;
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e)

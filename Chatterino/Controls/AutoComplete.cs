@@ -65,7 +65,9 @@ namespace Chatterino.Controls
         }
         
         public void UpdateItems(string []items) {
-            if (items.Length==0) {
+            if (items == null) {
+                items = new string[1] {""};
+            } else if (items.Length==0) {
                 Array.Resize(ref items, 1);
                 items[0] = "";
             }
@@ -84,6 +86,7 @@ namespace Chatterino.Controls
         
         public void UpdateLocation(int left, int top) {
             this.Location = new Point(left, top-this.Height);
+            this._chatControl = App.MainForm.Selected as ChatControl;
             AutoCompleteListBox.Size = new Size(_chatControl.Width<300?_chatControl.Width:300, 95);
             Size = AutoCompleteListBox.Size;
         }
@@ -170,6 +173,7 @@ namespace Chatterino.Controls
             if(index!=-1) {
                 selected = index;
                 AutoCompleteListBox.SetSelected(selected, true);
+                this._chatControl = App.MainForm.Selected as ChatControl;
                 _chatControl.SelectAutoComplete();
             }
             base.OnMouseClick(e);
