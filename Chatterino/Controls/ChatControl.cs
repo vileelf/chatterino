@@ -519,13 +519,13 @@ namespace Chatterino.Controls
                 if (AutoComplete != null && AutoCompleteOpen && AutoCompleteStart >= 0) {
                     string acselection = AutoComplete.GetSelection();
                     if (!String.IsNullOrEmpty(acselection)) {
-                        while(Input.Logic.CaretPosition > AutoCompleteStart && Input.Logic.CaretPosition > 0) {
-                            Input.Logic.Delete(false, false);
-                        }
                         char []textarray = Input.Logic.Text.ToCharArray();
                         if (textarray[AutoCompleteStart-1]==':') {
-                            Input.Logic.Delete(false, false);
+                            Input.Logic.SelectionStart = AutoCompleteStart - 1;
+                        } else {
+                            Input.Logic.SelectionStart = AutoCompleteStart;
                         }
+                        Input.Logic.SelectionLength = Input.Logic.CaretPosition - Input.Logic.SelectionStart;
                         Input.Logic.InsertText(acselection + " ");
                         tabCompleteItems = AutoComplete.items;
                         currentTabIndex = AutoComplete.GetSelectionIndex();
