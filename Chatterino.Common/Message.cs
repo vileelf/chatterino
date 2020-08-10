@@ -447,8 +447,9 @@ namespace Chatterino.Common
                             foreach (var y in x[1].Split(','))
                             {
                                 var coords = y.Split('-');
+                                Int32[] textElemIndex = StringInfo.ParseCombiningCharacters(text);
                                 var index = int.Parse(coords[0]);
-                                var name = text.Substring(index, int.Parse(coords[1]) - index + 1);
+                                var name = text.Substring(textElemIndex[index], int.Parse(coords[1]) - index + 1);
 
                                 // ignore ignored emotes
                                 if (!AppSettings.ChatIgnoredEmotes.ContainsKey(name))
