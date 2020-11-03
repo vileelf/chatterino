@@ -80,6 +80,20 @@ namespace Chatterino.Common
         }
 
         static CultureInfo enUS = new CultureInfo("en-US");
+        
+        //builds an array of indexes of the elements in string after being converted to utf32
+        private int [] ParseUtf32index (string s) {
+            List<int> ret = new List<int>(s.Length);
+            int curchar;
+            for (int i = 0; i<s.Length; i++) {
+                curchar = char.ConvertToUtf32(s, i);
+                ret.Add(i);
+                if ( curchar > 0xFFFF ) { //curchar is bigger than a utf 16 char
+                    i++; //skip the second part of curchar
+                }
+            }
+            return ret.ToArray();
+        }
 
         public Message(IrcMessage data, TwitchChannel channel, bool enableTimestamp = true, bool enablePingSound = true,
             bool isReceivedWhisper = false, bool isSentWhisper = false, bool includeChannel = false, bool isPastMessage = false)
@@ -441,15 +455,15 @@ namespace Chatterino.Common
                 {
                     if (emote != "")
                     {
-                        var x = emote.Split(':');
+                        string[] x = emote.Split(':');
                         try {
-                            var id = x[0];
-                            foreach (var y in x[1].Split(','))
+                            string id = x[0];
+                            foreach (string y in x[1].Split(','))
                             {
-                                var coords = y.Split('-');
-                                Int32[] textElemIndex = StringInfo.ParseCombiningCharacters(text);
-                                var index = int.Parse(coords[0]);
-                                var name = text.Substring(textElemIndex[index], int.Parse(coords[1]) - index + 1);
+                                string[] coords = y.Split('-');
+                                int[] textElemIndex = ParseUtf32index(text);
+                                int index = int.Parse(coords[0]);
+                                string name = text.Substring(textElemIndex[index], int.Parse(coords[1]) - index + 1);
 
                                 // ignore ignored emotes
                                 if (!AppSettings.ChatIgnoredEmotes.ContainsKey(name))
