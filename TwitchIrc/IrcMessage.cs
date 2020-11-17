@@ -231,8 +231,9 @@ namespace TwitchIrc
                 {
                     if (line[i] == ':')
                     {
-                        @params = line.Substring(i + 1);
+                        i++;
                     }
+                    @params = line.Substring(i);
                 }
             }
 

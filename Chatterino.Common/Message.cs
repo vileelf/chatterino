@@ -463,18 +463,20 @@ namespace Chatterino.Common
                                 string[] coords = y.Split('-');
                                 int[] textElemIndex = ParseUtf32index(text);
                                 int index = int.Parse(coords[0]);
-                                string name = text.Substring(textElemIndex[index], int.Parse(coords[1]) - index + 1);
+                                if (textElemIndex.Length>0) {
+                                    string name = text.Substring(textElemIndex[index], int.Parse(coords[1]) - index + 1);
 
-                                // ignore ignored emotes
-                                if (!AppSettings.ChatIgnoredEmotes.ContainsKey(name))
-                                {
-                                    var e = Emotes.GetTwitchEmoteById(id, name);
+                                    // ignore ignored emotes
+                                    if (!AppSettings.ChatIgnoredEmotes.ContainsKey(name))
+                                    {
+                                        var e = Emotes.GetTwitchEmoteById(id, name);
 
-                                    twitchEmotes.Add(Tuple.Create(index, e));
-                                    
-                                    if (AppSettings.RecentlyUsedEmoteList && Username.Equals(IrcManager.Account.Username.ToLower()) && !Emotes.TwitchEmotes.ContainsKey(name) && !Emotes.RecentlyUsedEmotes.ContainsKey(name)) {
-                                        Emotes.RecentlyUsedEmotes.TryAdd(name, e);
-                                        Emotes.EmoteAdded();
+                                        twitchEmotes.Add(Tuple.Create(index, e));
+                                        
+                                        if (AppSettings.RecentlyUsedEmoteList && Username.Equals(IrcManager.Account.Username.ToLower()) && !Emotes.TwitchEmotes.ContainsKey(name) && !Emotes.RecentlyUsedEmotes.ContainsKey(name)) {
+                                            Emotes.RecentlyUsedEmotes.TryAdd(name, e);
+                                            Emotes.EmoteAdded();
+                                        }
                                     }
                                 }
                             };
