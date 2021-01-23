@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
+using Newtonsoft.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -223,6 +225,8 @@ namespace Chatterino.Common
         public static ConcurrentDictionary<string, object> HighlightIgnoredUsers { get; private set; } = new ConcurrentDictionary<string, object>();
         public static ConcurrentDictionary<string, object> HighlightUserNames { get; private set; } = new ConcurrentDictionary<string, object>();
         public static ConcurrentDictionary<string, object> ChatIgnoredEmotes { get; private set; } = new ConcurrentDictionary<string, object>();
+        
+        public static ConcurrentDictionary<string, string> UserNotes { get; set; } = new ConcurrentDictionary<string, string>();
 
         // Custom Highlights
         private static string[] chatCustomHighlights = new string[0];
@@ -258,6 +262,16 @@ namespace Chatterino.Common
                 chatIgnoredKeywords = value;
                 UpdateIgnoredKeywordsRegex();
             }
+        }
+        
+        public static string GetNotes (string userid) {
+            string notes;
+            UserNotes.TryGetValue(userid, out notes);
+            return notes;
+        }
+        
+        public static void SetNotes (string userid, string notes) {
+            UserNotes.AddOrUpdate(userid, notes, (olduserid, oldnote) => notes);
         }
 
         public static void UpdateIgnoredKeywordsRegex()
@@ -366,6 +380,8 @@ namespace Chatterino.Common
 
             var settings = new IniSettings();
             settings.Load(path);
+            var parser = new JsonParser();
+                
 
             foreach (var prop in Properties.Values)
             {
@@ -394,6 +410,24 @@ namespace Chatterino.Common
                     {
                         foreach (var s in vals)
                             dict[s] = null;
+                    }
+                }
+                else if (prop.PropertyType == typeof(ConcurrentDictionary<string, string>))
+                {
+                    var dict = (ConcurrentDictionary<string, string>)prop.GetValue(null);
+
+                    dict.Clear();
+                    
+                    string val;
+                    val = settings.GetString(prop.Name, "");
+                    if (!String.IsNullOrEmpty(val)) {
+                        try {
+                            var newdict = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(val);
+                            if (newdict != null) {
+                                prop.SetValue(null ,newdict);
+                            }
+                        } catch {}
+                        
                     }
                 }
                 else if (prop.PropertyType == typeof(List<int>))
@@ -425,6 +459,8 @@ namespace Chatterino.Common
                     settings.Set(prop.Name, (string[])prop.GetValue(null));
                 else if (prop.PropertyType == typeof(ConcurrentDictionary<string, object>))
                     settings.Set(prop.Name, ((ConcurrentDictionary<string, object>)prop.GetValue(null)).Keys);
+                else if (prop.PropertyType == typeof(ConcurrentDictionary<string, string>)) 
+                    settings.Set(prop.Name, JsonConvert.SerializeObject(((ConcurrentDictionary<string, string>)prop.GetValue(null))));  
                 else if (prop.PropertyType == typeof(List<int>))
                     settings.Set(prop.Name, string.Join(",", (List<int>)prop.GetValue(null)));
             }

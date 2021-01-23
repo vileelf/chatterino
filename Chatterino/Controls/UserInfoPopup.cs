@@ -15,6 +15,7 @@ namespace Chatterino.Controls
     public class UserInfoPopup : Form
     {
         private string username;
+        private bool notedialog = false;
 
         public string Username
         {
@@ -57,6 +58,9 @@ namespace Chatterino.Controls
 
             lblCreatedAt.Text = "";
             lblViews.Text = "";
+            lblNotes.Text = "Notes: ";
+            
+            string notes = AppSettings.GetNotes(data.UserId);
 
             setControlFont(this);
 
@@ -84,7 +88,10 @@ namespace Chatterino.Controls
                             string viewCount = json["views"];
                             string broadCasterType = json["broadcaster_type"];
 
-                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}");
+                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}"); 
+                            if (!String.IsNullOrEmpty(notes)) {
+                                lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
+                            }
 
                             DateTime createAtTime;
 
@@ -146,6 +153,7 @@ namespace Chatterino.Controls
             btnFollow.SetTooltip("Follow User");
             btnIgnore.SetTooltip("Ignore User");
             btnMessage.SetTooltip("Send Private Message");
+            btnNotes.SetTooltip("Set User Notes");
             btnProfile.SetTooltip("Show Profile");
             btnUnban.SetTooltip("Unban User");
             btnWhisper.SetTooltip("Whisper User");
@@ -179,6 +187,7 @@ namespace Chatterino.Controls
                 btnBan.Visible = false;
                 btnUnban.Visible = false;
                 btnMessage.Visible = false;
+                btnNotes.Visible = false;
                 btnWhisper.Visible = false;
                 btnIgnore.Visible = false;
                 btnFollow.Visible = false;
@@ -284,6 +293,23 @@ namespace Chatterino.Controls
                 {
                     Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/message/compose?to=" + data.UserName));
                 };
+                
+                // notes
+                btnNotes.Click += (s, e) =>
+                {
+                    using (InputDialogForm dialog = new InputDialogForm("User Notes") { Value = notes }) {
+                        notedialog = true;
+                        DialogResult res = dialog.ShowDialog();
+                        notedialog = false;
+                        this.Focus();
+                        if (res == DialogResult.OK)
+                        {
+                            notes = dialog.Value;
+                            AppSettings.SetNotes(data.UserId, notes);
+                            lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
+                        }
+                    }
+                };
 
                 // highlight ignore
                 btnIgnoreHighlights.Click += (s, e) =>
@@ -360,8 +386,9 @@ namespace Chatterino.Controls
         protected override void OnDeactivate(EventArgs e)
         {
             base.OnDeactivate(e);
-
-            Close();
+            if (!notedialog) {
+                Close();
+            }
         }
 
         private void InitializeComponent()
@@ -371,6 +398,7 @@ namespace Chatterino.Controls
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.lblUsername = new System.Windows.Forms.Label();
             this.lblViews = new System.Windows.Forms.Label();
+            this.lblNotes = new System.Windows.Forms.Label();
             this.lblCreatedAt = new System.Windows.Forms.Label();
             this.btnMod = new Chatterino.Controls.FlatButton();
             this.btnUnmod = new Chatterino.Controls.FlatButton();
@@ -391,6 +419,7 @@ namespace Chatterino.Controls
             this.btnIgnoreHighlights = new Chatterino.Controls.FlatButton();
             this.btnWhisper = new Chatterino.Controls.FlatButton();
             this.btnMessage = new Chatterino.Controls.FlatButton();
+            this.btnNotes = new Chatterino.Controls.FlatButton();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
@@ -421,6 +450,7 @@ namespace Chatterino.Controls
             this.flowLayoutPanel1.Controls.Add(this.btnIgnoreHighlights);
             this.flowLayoutPanel1.Controls.Add(this.btnWhisper);
             this.flowLayoutPanel1.Controls.Add(this.btnMessage);
+            this.flowLayoutPanel1.Controls.Add(this.btnNotes);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -443,6 +473,7 @@ namespace Chatterino.Controls
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.Controls.Add(this.lblUsername);
             this.flowLayoutPanel2.Controls.Add(this.lblViews);
+            this.flowLayoutPanel2.Controls.Add(this.lblNotes);
             this.flowLayoutPanel2.Controls.Add(this.lblCreatedAt);
             this.flowLayoutPanel1.SetFlowBreak(this.flowLayoutPanel2, true);
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -469,10 +500,19 @@ namespace Chatterino.Controls
             this.lblViews.TabIndex = 1;
             this.lblViews.Text = "views";
             // 
+            // lblNotes
+            // 
+            this.lblNotes.AutoSize = true;
+            this.lblNotes.Location = new System.Drawing.Point(3, 26);
+            this.lblNotes.Name = "lblNotes";
+            this.lblNotes.Size = new System.Drawing.Size(34, 13);
+            this.lblNotes.TabIndex = 1;
+            this.lblNotes.Text = "notes";
+            // 
             // lblCreatedAt
             // 
             this.lblCreatedAt.AutoSize = true;
-            this.lblCreatedAt.Location = new System.Drawing.Point(3, 26);
+            this.lblCreatedAt.Location = new System.Drawing.Point(3, 39);
             this.lblCreatedAt.Name = "lblCreatedAt";
             this.lblCreatedAt.Size = new System.Drawing.Size(55, 13);
             this.lblCreatedAt.TabIndex = 2;
@@ -651,6 +691,15 @@ namespace Chatterino.Controls
             this.btnMessage.TabIndex = 7;
             this.btnMessage.Text = "Message";
             // 
+            // btnNotes
+            // 
+            this.btnNotes.Image = null;
+            this.btnNotes.Location = new System.Drawing.Point(174, 182);
+            this.btnNotes.Name = "btnNotes";
+            this.btnNotes.Size = new System.Drawing.Size(57, 18);
+            this.btnNotes.TabIndex = 7;
+            this.btnNotes.Text = "Notes";
+            // 
             // UserInfoPopup
             // 
             this.AutoSize = true;
@@ -690,12 +739,14 @@ namespace Chatterino.Controls
         private FlatButton btnUnban;
         private FlatButton btnWhisper;
         private FlatButton btnMessage;
+        private FlatButton btnNotes;
         private FlatButton btnProfile;
         private FlatButton btnFollow;
         private FlatButton btnPurge;
         private PictureBox picAvatar;
         private FlowLayoutPanel flowLayoutPanel2;
         private Label lblViews;
+        private Label lblNotes;
         private Label lblCreatedAt;
         private FlatButton btnMod;
         private FlatButton btnUnmod;
