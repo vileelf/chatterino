@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -549,6 +550,7 @@ namespace Chatterino
         {
             try
             {
+                string channelNames = "";
                 if (File.Exists(path))
                 {
                     var doc = XDocument.Load(path);
@@ -578,11 +580,13 @@ namespace Chatterino
                                         Console.WriteLine("added chat");
 
                                         var channel = chat.Attribute("channel")?.Value;
-
-                                        var widget = new ChatControl();
-                                        widget.ChannelName = channel;
-
-                                        column.AddWidget(widget);
+                                        try {
+                                            var widget = new ChatControl();
+                                            widget.ChannelName = channel;
+                                            column.AddWidget(widget);
+                                        }  catch (Exception e) {
+                                             GuiEngine.Current.log("error loading tab " + e.Message);
+                                        }
                                     }
                                 }
 
@@ -593,6 +597,7 @@ namespace Chatterino
 
                                 page.AddColumn(column);
                             }
+                            
 
                             tabControl.AddTab(page);
                         }
@@ -601,7 +606,7 @@ namespace Chatterino
             }
             catch (Exception exc)
             {
-                Console.WriteLine(exc.Message);
+                GuiEngine.Current.log("error loading layout " + exc.Message);
             }
 
             //columnLayoutControl1.ClearGrid();

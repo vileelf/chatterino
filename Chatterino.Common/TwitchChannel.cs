@@ -22,6 +22,8 @@ namespace Chatterino.Common
        int maxMessages = AppSettings.ChatMessageLimit;
 
         static readonly System.Timers.Timer refreshChatterListTimer = new System.Timers.Timer(30 * 1000 * 60);
+        
+        private System.Timers.Timer reconnectTryAgainTimer;
 
         // properties
         public string Name { get; private set; }
@@ -40,6 +42,7 @@ namespace Chatterino.Common
         public string StreamStatus { get; private set; }
         public string StreamGame { get; private set; }
         public DateTime StreamStart { get; set; }
+        public static Random rand = new Random();
 
         public event EventHandler<LiveStatusEventArgs> LiveStatusUpdated;
 
@@ -53,6 +56,7 @@ namespace Chatterino.Common
         public ConcurrentDictionary<int, LazyLoadedImage> SubscriberBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
         public ConcurrentDictionary<int, LazyLoadedImage> CheerBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
         private ConcurrentDictionary<string, CheerEmote> ChannelCheerEmotes = new ConcurrentDictionary<string, CheerEmote>();
+        private bool connected = false;
 
         public LazyLoadedImage GetSubscriberBadge(int months)
         {
@@ -313,14 +317,16 @@ namespace Chatterino.Common
                                 string description = value["description"];
                                 string clickUrl = value["click_url"];
                                 string tooltipurl = value["image_url_4x"];
-
-                                SubscriberBadges.TryAdd(months, new LazyLoadedImage
+                                
+                                LazyLoadedImage subBadge = new LazyLoadedImage
                                 {
                                     Name = title,
                                     Url = imageUrl,
                                     TooltipImageUrl = tooltipurl,
                                     Tooltip = title
-                                });
+                                };
+
+                                SubscriberBadges.AddOrUpdate(months, subBadge, (key, oldvalue) => subBadge);
                             }
                         }
                         if (badgeSets.ContainsKey("bits")) {
@@ -334,15 +340,16 @@ namespace Chatterino.Common
                                 string description = value["description"];
                                 string clickUrl = value["click_url"];
                                 string tooltipurl = value["image_url_4x"];
-                                
-                                CheerBadges.TryAdd(cheer, new LazyLoadedImage
+                                LazyLoadedImage cheerbadge = new LazyLoadedImage
                                 {
                                     Name = title,
                                     Url = imageUrl,
                                     Tooltip = title,
                                     TooltipImageUrl = tooltipurl,
                                     click_url = clickUrl
-                                });
+                                };
+                                
+                                CheerBadges.AddOrUpdate(cheer, cheerbadge, (key, oldvalue) => cheerbadge);
                             }
                         }
                         stream.Close();
@@ -430,7 +437,18 @@ namespace Chatterino.Common
 
             return false;
         }
-
+        private void OnRefreshTimerElapsed(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            System.Timers.Timer sourcetmr = (System.Timers.Timer)source;
+            try {
+                Join();
+                connected = true;
+                sourcetmr.Elapsed -= this.OnRefreshTimerElapsed;
+                sourcetmr.Close();
+            } catch (Exception ex) {
+                sourcetmr.Interval = sourcetmr.Interval*2;
+            }
+        }
 
         // ctor
         private TwitchChannel(string channelName)
@@ -441,8 +459,15 @@ namespace Chatterino.Common
                 SubLink = $"https://www.twitch.tv/{Name}/subscribe?ref=in_chat_subscriber_link";
                 ChannelLink = $"https://twitch.tv/{Name}";
                 PopoutPlayerLink = $"https://player.twitch.tv/?channel={Name}";
-
-                Join();
+                
+                try {
+                    Join();
+                    connected = true;           
+                } catch (Exception e) {
+                    GuiEngine.Current.log("error connecting to twitch " + channelName + " " + e.Message);
+                    reconnectTryAgainTimer = new System.Timers.Timer(1000);
+                    reconnectTryAgainTimer.Elapsed += this.OnRefreshTimerElapsed;
+                }
                 
                 loadData();
                 // recent chat
@@ -452,10 +477,14 @@ namespace Chatterino.Common
 
                     if (RoomID != -1)
                     {
-                        ReloadEmotes();
+                        Task.Run(() =>
+                        {
+                            ReloadEmotes();
+                        });
                         //commented out till twitch adds support for the recent messages feature again.
                         try
                         {
+                            LoadSubBadges(RoomID);
                             var messages = new List<Message>();
 
                             var request =
@@ -487,6 +516,7 @@ namespace Chatterino.Common
                                     
                                     foreach (string s in _messages)
                                     {
+                                        
                                         if (IrcMessage.TryParse(s, out msg))
                                         {
                                             if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
@@ -1174,8 +1204,10 @@ namespace Chatterino.Common
 
                 var bttvChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"bttv_channel_{RoomID}");
                 var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{RoomID}");
-
-                LoadSubBadges(RoomID);
+                Task.Run(() =>
+                {
+                    LoadSubBadges(RoomID);
+                });
                 Task.Run(() =>
                 {
                     LoadChannelBits(RoomID);
