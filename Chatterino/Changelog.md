@@ -1,8 +1,7 @@
 ﻿# changelog
 
 ## 2.3
-- added a new feature that lets you make notes about a user. Simply click their name, click notes, and type whatever you please. 
-- Notes arnt dependent on username so they should stay there when they change names.
+- added a new feature that lets you make notes about a user. Simply click their name, click notes, and type whatever you please. Notes arnt dependent on username so they should stay there when they change names.
 - fixed an issue that caused tabs to disappear sometimes when you launched chatterino. 
 - fixed an issue causeing emotes to display the wrong name sometimes
 - fixed an issue with the recent messages api that caused some messages to show up blank
