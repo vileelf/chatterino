@@ -153,7 +153,15 @@ namespace Chatterino
             {
                 case Keys.Control | Keys.F:
                     (selected as ChatControl)?.CloseAutocomplete();
-                    (selected as ChatControl)?.SearchFor(((ChatControl) selected).Input.Logic.Text);
+                     using (InputDialogForm dialog = new InputDialogForm("Search (results highlighted green)") { Value = "" }) {
+                        DialogResult res = dialog.ShowDialog();
+                        if (res == DialogResult.OK)
+                        {
+                            (selected as ChatControl)?.SearchFor(dialog.Value);
+                        } else {
+                            (selected as ChatControl)?.SearchFor("");
+                        }
+                    }
                     break;
                 case Keys.Control | Keys.U:
                     (selected as ChatControl)?.CloseAutocomplete();
