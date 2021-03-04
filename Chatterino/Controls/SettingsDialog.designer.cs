@@ -76,6 +76,7 @@ namespace Chatterino.Controls
             this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
             this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
+            this.btnDefaultFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.chkInputShowMessageLength = new System.Windows.Forms.CheckBox();
@@ -418,6 +419,7 @@ namespace Chatterino.Controls
             this.panel1.Controls.Add(this.chkShowEmoteTooltip);
             this.panel1.Controls.Add(this.chkHighlightHighlightedMessages);
             this.panel1.Controls.Add(this.btnSelectFont);
+            this.panel1.Controls.Add(this.btnDefaultFont);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.trackBar1);
             this.panel1.Controls.Add(this.chkInputShowMessageLength);
@@ -675,6 +677,16 @@ namespace Chatterino.Controls
             this.btnSelectFont.TabIndex = 14;
             this.btnSelectFont.Text = "Select";
             this.btnSelectFont.UseVisualStyleBackColor = true;
+             // 
+            // btnDefaultFont
+            // 
+            this.btnDefaultFont.Location = new System.Drawing.Point(320, 109);
+            this.btnDefaultFont.Name = "btnDefaultFont";
+            this.btnDefaultFont.Size = new System.Drawing.Size(75, 23);
+            this.btnDefaultFont.TabIndex = 15;
+            this.btnDefaultFont.Text = "Default Font";
+            this.btnDefaultFont.UseVisualStyleBackColor = true;
+            // 
             // 
             // label10
             // 
@@ -2173,6 +2185,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.TextBox txtMsgLimit;
         private System.Windows.Forms.CheckBox chkHideInput;
         private System.Windows.Forms.Button btnSelectFont;
+        private System.Windows.Forms.Button btnDefaultFont;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.CheckBox chkCustomPingSound;

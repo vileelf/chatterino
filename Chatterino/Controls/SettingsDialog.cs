@@ -235,6 +235,24 @@ namespace Chatterino.Controls
 
                 updateFontName();
             };
+            
+            btnDefaultFont.Click += (s, e) =>
+            {
+                int fontsize = 10;
+                using (InputDialogForm dialog = new InputDialogForm("Select Font size") { Value = "" }) {
+                    DialogResult res = dialog.ShowDialog();
+                    if (res == DialogResult.OK)
+                    {
+                        try {
+                            fontsize = Int32.Parse(dialog.Value);
+                        } catch {
+                            fontsize = 10;
+                        }
+                        AppSettings.SetFont("Helvetica Neue", fontsize);
+                        updateFontName();
+                    }
+                }
+            };
 
             BindCheckBox(chkTimestamps, "ChatShowTimestamps");
             BindCheckBox(chkTimestampSeconds, "ChatShowTimestampSeconds");
