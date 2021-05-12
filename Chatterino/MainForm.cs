@@ -63,6 +63,8 @@ namespace Chatterino
 
             IrcManager.LoggedIn += (s, e) => SetTitle();
 
+            ChatCommands.addChatCommands();
+
             // winforms specific
             BackColor = Color.Black;
 

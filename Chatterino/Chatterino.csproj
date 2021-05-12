@@ -193,6 +193,7 @@
     <Compile Include="GifEmoteState.cs" />
     <Compile Include="HotkeyMapper.cs" />
     <Compile Include="Net.cs" />
+    <Compile Include="ChatCommands.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
