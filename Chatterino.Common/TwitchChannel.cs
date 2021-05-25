@@ -1335,24 +1335,35 @@ namespace Chatterino.Common
 
                             try
                             {
-                                
-                                object moderator;
-                                
                                 if (room.ContainsKey("vip_badge")) {
                                     dynamic vip_badge = room["vip_badge"];
-                                    string url = "https:" + vip_badge["1"];
-                                    string tooltipurl = "https:" + vip_badge["4"];
-                                    if (!string.IsNullOrWhiteSpace(url)) {
-                                        if (string.IsNullOrWhiteSpace(tooltipurl)) {
-                                            tooltipurl = url;
+                                    if (vip_badge != null) {
+                                        string url = vip_badge["1"];
+                                        string tooltipurl = vip_badge["4"];
+                                        if (!string.IsNullOrWhiteSpace(url)) {
+                                            url = "https:" + url;
+                                            if (string.IsNullOrWhiteSpace(tooltipurl)) {
+                                                tooltipurl = url;
+                                            } else {
+                                                tooltipurl = "https:" + tooltipurl;
+                                            }
+                                            VipBadge = new LazyLoadedImage {
+                                                Url = url,
+                                                TooltipImageUrl = tooltipurl,
+                                                Tooltip = "custom vip badge\nFFZ"
+                                            };
                                         }
-                                        VipBadge = new LazyLoadedImage {
-                                            Url = url,
-                                            TooltipImageUrl = tooltipurl,
-                                            Tooltip = "custom vip badge\nFFZ"
-                                        };
                                     }
                                 }
+                            }
+                            catch (Exception e)
+                            {
+                                e.Message.Log("emotes");
+                                GuiEngine.Current.log(e.ToString());
+                            }
+                            try
+                            {
+                                object moderator;
                                 
                                 if (room.TryGetValue("moderator_badge", out moderator))
                                 {
@@ -1363,9 +1374,11 @@ namespace Chatterino.Common
                                         LazyLoadedImage tooltipImage = null;
                                         if (room.ContainsKey("mod_urls")) {
                                             dynamic mod_urls = room["mod_urls"];
-                                            tooltipurl = mod_urls["4"];
-                                            if (tooltipurl != null) {
-                                                tooltipurl = "https:" + tooltipurl;
+                                            if (mod_urls != null) {
+                                                tooltipurl = mod_urls["4"];
+                                                if (tooltipurl != null) {
+                                                    tooltipurl = "https:" + tooltipurl;
+                                                }
                                             }
                                         }
                                         if (string.IsNullOrWhiteSpace(tooltipurl)){
