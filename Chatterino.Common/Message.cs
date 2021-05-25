@@ -374,6 +374,8 @@ namespace Chatterino.Common
                         catch { }
                     } else if (badge.Equals("moderator/1") && channel.ModeratorBadge != null) {
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip, TooltipImageUrl = channel.ModeratorBadge.TooltipImageUrl, TooltipImage =  channel.ModeratorBadge.TooltipImage});
+                    } else if (badge.Equals("vip/1") && channel.VipBadge != null) {
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.VipBadge, Tooltip = channel.VipBadge.Tooltip, TooltipImageUrl = channel.VipBadge.TooltipImageUrl, TooltipImage =  channel.VipBadge.TooltipImage});
                     } else if (badge.StartsWith("bits/")) {
                         try {
                             int n = int.Parse(badge.Substring("bits/".Length));

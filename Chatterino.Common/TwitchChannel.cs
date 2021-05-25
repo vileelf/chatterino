@@ -102,6 +102,7 @@ namespace Chatterino.Common
 
         // Moderator Badge
         public LazyLoadedImage ModeratorBadge { get; private set; } = null;
+        public LazyLoadedImage VipBadge { get; private set; } = null;
 
 
         // Roomstate
@@ -1334,9 +1335,25 @@ namespace Chatterino.Common
 
                             try
                             {
+                                
                                 object moderator;
                                 
-
+                                if (room.ContainsKey("vip_badge")) {
+                                    dynamic vip_badge = room["vip_badge"];
+                                    string url = "https:" + vip_badge["1"];
+                                    string tooltipurl = "https:" + vip_badge["4"];
+                                    if (!string.IsNullOrWhiteSpace(url)) {
+                                        if (string.IsNullOrWhiteSpace(tooltipurl)) {
+                                            tooltipurl = url;
+                                        }
+                                        VipBadge = new LazyLoadedImage {
+                                            Url = url,
+                                            TooltipImageUrl = tooltipurl,
+                                            Tooltip = "custom vip badge\nFFZ"
+                                        };
+                                    }
+                                }
+                                
                                 if (room.TryGetValue("moderator_badge", out moderator))
                                 {
                                     if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
