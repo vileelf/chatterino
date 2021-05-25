@@ -1335,17 +1335,68 @@ namespace Chatterino.Common
                             try
                             {
                                 object moderator;
+                                
 
                                 if (room.TryGetValue("moderator_badge", out moderator))
                                 {
                                     if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
                                     {
                                         var url = "https:" + (moderator as string);
+                                        string tooltipurl = "";
+                                        LazyLoadedImage tooltipImage = null;
+                                        if (room.ContainsKey("mod_urls")) {
+                                            dynamic mod_urls = room["mod_urls"];
+                                            tooltipurl = mod_urls["4"];
+                                            if (tooltipurl != null) {
+                                                tooltipurl = "https:" + tooltipurl;
+                                            }
+                                        }
+                                        if (string.IsNullOrWhiteSpace(tooltipurl)){
+                                            tooltipurl = url;
+                                        }
+                                        
+                                        if (!tooltipurl.Equals(url)) {
+                                            tooltipImage = new LazyLoadedImage {
+                                                Url = tooltipurl,
+                                                LoadAction = () =>
+                                                {
+                                                    try
+                                                    {
+                                                        Image img;
+
+                                                        var request = WebRequest.Create(tooltipurl);
+                                                        if (AppSettings.IgnoreSystemProxy)
+                                                        {
+                                                            request.Proxy = null;
+                                                        }
+                                                        using (var response = request.GetResponse()){
+                                                            using (var s = response.GetResponseStream())
+                                                            {
+                                                                MemoryStream mem = new MemoryStream();
+                                                                s.CopyTo(mem);
+                                                                img = GuiEngine.Current.ReadImageFromStream(mem);
+                                                            }
+                                                            response.Close();
+                                                        }
+
+                                                        GuiEngine.Current.FreezeImage(img);
+
+                                                        return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        e.Message.Log("emotes");
+                                                        return null;
+                                                    }
+                                                }
+                                            };
+                                        }
                                         ModeratorBadge = new LazyLoadedImage
                                         {
                                             Url = url,
                                             Tooltip = "custom moderator badge\nFFZ",
-                                            TooltipImageUrl = url,
+                                            TooltipImageUrl = tooltipurl,
+                                            TooltipImage = tooltipImage,
                                             LoadAction = () =>
                                             {
                                                 try
@@ -1384,6 +1435,7 @@ namespace Chatterino.Common
                             catch (Exception e)
                             {
                                 e.Message.Log("emotes");
+                                GuiEngine.Current.log(e.ToString());
                             }
 
                             dynamic sets = json["sets"];

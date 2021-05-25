@@ -363,35 +363,35 @@ namespace Chatterino.Common
                             Badges |= MessageBadges.Sub;
                             image = channel.GetSubscriberBadge(n);
                             if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl });
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                             } else {
                                 image = GuiEngine.Current.GetBadge(badge);
                                 if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl });
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                                 }
                             }
                         }
                         catch { }
                     } else if (badge.Equals("moderator/1") && channel.ModeratorBadge != null) {
-                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip, TooltipImageUrl = channel.ModeratorBadge.TooltipImageUrl });
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip, TooltipImageUrl = channel.ModeratorBadge.TooltipImageUrl, TooltipImage =  channel.ModeratorBadge.TooltipImage});
                     } else if (badge.StartsWith("bits/")) {
                         try {
                             int n = int.Parse(badge.Substring("bits/".Length));
 
                             image = channel.GetCheerBadge(n);
                             if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl });
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                             } else {
                                 image = GuiEngine.Current.GetBadge(badge);
                                 if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl });
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                                 }
                             }
                         } catch {}
                     } else {
                         image = GuiEngine.Current.GetBadge(badge);
                         if (image != null) {
-                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl });
+                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                         }
                     }
                 }
@@ -505,6 +505,7 @@ namespace Chatterino.Common
                             Link = new Link(LinkType.Url, currentTwitchEmote.Item2.Url),
                             Tooltip = currentTwitchEmote.Item2.Tooltip,
                             TooltipImageUrl = currentTwitchEmote.Item2.TooltipImageUrl,
+                            TooltipImage = currentTwitchEmote.Item2.TooltipImage,
                             CopyText = currentTwitchEmote.Item2.Name
                         });
                         i += split.Length + 1;
@@ -541,7 +542,7 @@ namespace Chatterino.Common
                                         bitsColor = HSLColor.FromRGBHex(color);
                                         bitsLink = emote.Url;
 
-                                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = "Twitch Bits Donation", TooltipImageUrl = emote.TooltipImageUrl, CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
+                                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = "Twitch Bits Donation", TooltipImageUrl = emote.TooltipImageUrl, TooltipImage = emote.TooltipImage, CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
                                         words.Add(new Word { Type = SpanType.Text, Value = getcheer, Font = FontType.Small, Color = bitsColor });
                                     }
                                     continue;
@@ -562,6 +563,7 @@ namespace Chatterino.Common
                                 Color = slashMe ? UsernameColor : new HSLColor?(),
                                 Tooltip = bttvEmote.Tooltip,
                                 TooltipImageUrl = bttvEmote.TooltipImageUrl,
+                                TooltipImage = bttvEmote.TooltipImage,
                                 Link = new Link(LinkType.Url, bttvEmote.Url),
                                 CopyText = bttvEmote.Name
                             });
@@ -593,6 +595,7 @@ namespace Chatterino.Common
                                 Link = new Link(LinkType.Url, e.Url),
                                 Tooltip = e.Tooltip,
                                 TooltipImageUrl = e.TooltipImageUrl,
+                                TooltipImage = e.TooltipImage,
                                 CopyText = e.Name,
                                 HasTrailingSpace = e.HasTrailingSpace
                             });

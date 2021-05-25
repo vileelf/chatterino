@@ -15,6 +15,7 @@ namespace Chatterino.Common
         public Link Link { get; set; }
         public string Tooltip { get; set; }
         public string TooltipImageUrl { get; set; }
+        public LazyLoadedImage TooltipImage { get; set; }
         public string CopyText { get; set; } = null;
         public bool Highlighted { get; set; } = false;
 

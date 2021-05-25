@@ -437,7 +437,7 @@ namespace Chatterino
         private const int HWND_TOPMOST = -1;
         private const uint SWP_NOACTIVATE = 0x0010;
 
-        public static void ShowToolTip(Point point, string text, string imgurl, bool force = false)
+        public static void ShowToolTip(Point point, string text, string imgurl, LazyLoadedImage tooltipimage, bool force = false)
         {
             //if (force || WindowFocused || (EmoteList?.ContainsFocus ?? false))
             
@@ -454,8 +454,13 @@ namespace Chatterino
                     ToolTip.TooltipText = text;
                 }
                 if (AppSettings.ShowEmoteTooltip && !String.IsNullOrEmpty(imgurl) && (ToolTip.Image == null || !ToolTip.Image.Url.Equals(imgurl))) {
-                    LazyLoadedImage img = new LazyLoadedImage();
-                    img.Url = imgurl;
+                    LazyLoadedImage img;
+                    if (tooltipimage != null) {
+                        img = tooltipimage;
+                    } else {
+                        img = new LazyLoadedImage();
+                        img.Url = imgurl;
+                    }
                     img.ImageLoaded += (s, e) => {
                         lock (ToolTip) {
                             point = calcTooltipLocation(point);

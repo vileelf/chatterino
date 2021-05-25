@@ -24,6 +24,7 @@ namespace Chatterino.Common
 
         public string Tooltip { get; set; } = null;
         public string TooltipImageUrl { get; set; } = null;
+        public LazyLoadedImage TooltipImage = null;
         public string click_url {get; set; } = null;
         public bool IsDanke = false;
         public delegate void HA(int offset);
