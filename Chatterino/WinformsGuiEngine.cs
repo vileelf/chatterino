@@ -596,11 +596,10 @@ namespace Chatterino
             var img = (Image)image;
 
             var bitmap = new Bitmap(img.Width, img.Height);
-
             using (var g = Graphics.FromImage(bitmap))
             {
                 g.Clear(color.ToColor());
-                g.DrawImage(img, 0, 0);
+                g.DrawImage(img, 0, 0, img.Width, img.Height);
             }
 
             return bitmap;

@@ -1357,12 +1357,14 @@ namespace Chatterino.Common
                                                     {
                                                         request.Proxy = null;
                                                     }
-                                                    using (var response = request.GetResponse())
-                                                    using (var s = response.GetResponseStream())
-                                                    {
-                                                        MemoryStream mem = new MemoryStream();
-                                                        s.CopyTo(mem);
-                                                        img = GuiEngine.Current.ReadImageFromStream(mem);
+                                                    using (var response = request.GetResponse()){
+                                                        using (var s = response.GetResponseStream())
+                                                        {
+                                                            MemoryStream mem = new MemoryStream();
+                                                            s.CopyTo(mem);
+                                                            img = GuiEngine.Current.ReadImageFromStream(mem);
+                                                        }
+                                                        response.Close();
                                                     }
 
                                                     GuiEngine.Current.FreezeImage(img);
