@@ -193,30 +193,28 @@ namespace Chatterino.Common
                 int min_bits = int.Parse(tiers[j]["min_bits"]);
                 bool can_use = tiers[j]["can_cheer"];
                 string bitcolor = tiers[j]["color"];
-                if(can_use){
-                    dynamic images = tiers[j]["images"];
-                    string dark = images["dark"]["animated"]["1"];
-                    string light = images["light"]["animated"]["1"];
-                    string darkbig = images["dark"]["animated"]["3"];
-                    string lightbig = images["light"]["animated"]["3"];
-                    LazyLoadedImage lightemote = new LazyLoadedImage
-                    {
-                        Name = "cheer",
-                        Url = light,
-                        Tooltip = "Twitch Bits Donation",
-                        TooltipImageUrl = lightbig,
-                        click_url = lightbig
-                    };
-                    LazyLoadedImage darkemote = new LazyLoadedImage
-                    {
-                        Name = "cheer",
-                        Url = dark,
-                        Tooltip = "Twitch Bits Donation",
-                        TooltipImageUrl = darkbig,
-                        click_url = darkbig
-                    };
-                    customCheer.Add(lightemote, darkemote, min_bits, bitcolor);
-                }
+                dynamic images = tiers[j]["images"];
+                string dark = images["dark"]["animated"]["1"];
+                string light = images["light"]["animated"]["1"];
+                string darkbig = images["dark"]["animated"]["3"];
+                string lightbig = images["light"]["animated"]["3"];
+                LazyLoadedImage lightemote = new LazyLoadedImage
+                {
+                    Name = "cheer",
+                    Url = light,
+                    Tooltip = "Twitch Bits Donation",
+                    TooltipImageUrl = lightbig,
+                    click_url = lightbig
+                };
+                LazyLoadedImage darkemote = new LazyLoadedImage
+                {
+                    Name = "cheer",
+                    Url = dark,
+                    Tooltip = "Twitch Bits Donation",
+                    TooltipImageUrl = darkbig,
+                    click_url = darkbig
+                };
+                customCheer.Add(lightemote, darkemote, min_bits, bitcolor);
             }
             return customCheer;
         }
