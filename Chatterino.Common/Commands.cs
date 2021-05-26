@@ -27,15 +27,20 @@ namespace Chatterino.Common
             {
                 if (execute)
                 {
-                    foreach (var x in new[] { "1", "100", "1000", "5000", "10000" })
+                    var S = s.SplitWords();
+                    if (S.Length > 0 && S[0].Length > 0)
                     {
-                        IrcMessage msg;
-                        IrcMessage.TryParse($"@badges=subscriber/1;bits={x};color=;display-name=FOURTF;emotes=;mod=0;subscriber=1;turbo=0;user-type= :fourtf!fourtf@fourtf.tmi.twitch.tv PRIVMSG #fourtf :cheer{x} xD donation", out msg);
-
-                        foreach (var c in TwitchChannel.Channels)
+                        string cheer = S[0];
+                        foreach (var x in new[] { "1", "100", "1000", "5000", "10000" })
                         {
-                            var message = new Message(msg, c);
-                            c.AddMessage(message);
+                            IrcMessage msg;
+                            IrcMessage.TryParse($"@badges=subscriber/1;bits={x};color=;display-name=FOURTF;emotes=;mod=0;subscriber=1;turbo=0;user-type= :fourtf!fourtf@fourtf.tmi.twitch.tv PRIVMSG #fourtf :{cheer}{x} xD donation", out msg);
+
+                            foreach (var c in TwitchChannel.Channels)
+                            {
+                                var message = new Message(msg, c);
+                                c.AddMessage(message);
+                            }
                         }
                     }
                 }
