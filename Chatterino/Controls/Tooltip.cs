@@ -121,7 +121,11 @@ namespace Chatterino.Controls
             if (image != null)
             {
                 lock (image) {
-                    e.Graphics.DrawImage(image, 4, 4, image.Width, image.Height);
+                    int x = 4;
+                    if (image.Width < Width) {
+                        x = (Width - image.Width) / 2;
+                    }
+                    e.Graphics.DrawImage(image, x, 4, image.Width, image.Height);
                 }
             }
 
