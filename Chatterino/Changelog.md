@@ -1,5 +1,15 @@
 ﻿# changelog
 
+## 2.4
+- added a default font button to the settings next to select font
+- pressing control+f now displays a dialog for the search function rather than just using the chat input box
+- added a new command /user {username}. It will display the user popup for that user
+- fixed a bug causing custom mod badges to be overscaled
+- Made it so custom mod badge tooltips can show the larger version if it exists
+- added support for custom ffz vip badges
+- fixed a bug preventing the anon bit emote from showing
+- renaming from chatterino to chatterino classic
+
 ## 2.3
 - added a new feature that lets you make notes about a user. Simply click their name, click notes, and type whatever you please. Notes arnt dependent on username so they should stay there when they change names.
 - fixed an issue that caused tabs to disappear sometimes when you launched chatterino. 

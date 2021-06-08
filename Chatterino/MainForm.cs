@@ -333,7 +333,7 @@ namespace Chatterino
 
         public void SetTitle()
         {
-            this.Invoke(() => Text = $"{(IrcManager.Account.IsAnon ? "<not logged in>" : IrcManager.Account.Username)} - Chatterino for Twitch (v" + App.CurrentVersion.ToString()
+            this.Invoke(() => Text = $"{(IrcManager.Account.IsAnon ? "<not logged in>" : IrcManager.Account.Username)} - Chatterino Classic for Twitch (v" + App.CurrentVersion.ToString()
 #if DEBUG
             + " dev"
 #endif
