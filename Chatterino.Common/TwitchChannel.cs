@@ -457,7 +457,7 @@ namespace Chatterino.Common
                 Name = channelName.Trim('#');
                 SubLink = $"https://www.twitch.tv/{Name}/subscribe?ref=in_chat_subscriber_link";
                 ChannelLink = $"https://twitch.tv/{Name}";
-                PopoutPlayerLink = $"https://player.twitch.tv/?channel={Name}";
+                PopoutPlayerLink = $"https://player.twitch.tv/?channel={Name}&parent=chatterinoclassic";
                 
                 try {
                     Join();
