@@ -104,6 +104,25 @@ namespace Chatterino.Common
                 ThemeChanged?.Invoke(null, null);
             }
         }
+        
+        public static bool IsLightTheme() {
+            switch (CurrentTheme)
+            {
+                case "White":
+                    return true;
+                    break;
+                case "Light":
+                    return true;
+                    break;
+                case "Dark":
+                    return false;
+                    break;
+                case "Black":
+                    return false;
+                    break;
+            }
+            return true;
+        }
 
         public static void UpdateCurrentTheme()
         {

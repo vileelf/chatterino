@@ -42,7 +42,7 @@ namespace Chatterino.Common
         private static ConcurrentDictionary<string, string> twitchEmotesCodeReplacements =
             new ConcurrentDictionary<string, string>();
 
-        public const string TwitchEmoteTemplate = "https://static-cdn.jtvnw.net/emoticons/v1/{id}/{scale}.0";
+        public const string TwitchEmoteTemplate = "https://static-cdn.jtvnw.net/emoticons/v2/{id}/{animated}/{darkmode}/{scale}.0";
 
         private static string twitchemotesGlobalCache = Path.Combine(Util.GetUserDataPath(), "Cache",
             "twitchemotes_global.json");
@@ -175,7 +175,9 @@ namespace Chatterino.Common
             }
             scale = 1.0 / _scale;
 
-            return TwitchEmoteTemplate.Replace("{id}", id.ToString()).Replace("{scale}", (_scale == 4) ? 3 + "" : _scale.ToString());
+            return TwitchEmoteTemplate.Replace("{id}", id.ToString()).Replace("{scale}", (_scale == 4) ? 3 + "" : _scale.ToString())
+                                        .Replace("{darkmode}", (AppSettings.IsLightTheme())?"light":"dark")
+                                        .Replace("{animated}", (AppSettings.ChatEnableGifAnimations)?"default":"static");
         }
 
         public static string GetBttvEmoteLink(string link, bool getMax, out double scale)
