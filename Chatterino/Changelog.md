@@ -1,5 +1,10 @@
 ﻿# changelog
 
+## 2.5
+- fixed an issue with the open pop out player button
+- images on tooltips are now centered
+- Added support for twitches new animated emotes
+
 ## 2.4
 - added a default font button to the settings next to select font
 - pressing control+f now displays a dialog for the search function rather than just using the chat input box
