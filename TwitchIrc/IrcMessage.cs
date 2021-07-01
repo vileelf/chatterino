@@ -8,7 +8,7 @@ namespace TwitchIrc
 {
     public class IrcMessage
     {
-        private string _tags = null;
+        public string _tags = null;
         private Dictionary<string, string> tags = null;
 
         public Dictionary<string, string> Tags

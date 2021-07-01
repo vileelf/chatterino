@@ -65,7 +65,7 @@ namespace Chatterino.Controls
 
                 // twitch emotes
                 {
-                    foreach (var emotes in Emotes.TwitchEmotes.GroupBy(x => x.Value.Set))
+                    foreach (var emotes in Emotes.TwitchEmotes.GroupBy(x => x.Value.OwnerID))
                     {
                         var words = new List<Word>();
 
@@ -86,7 +86,7 @@ namespace Chatterino.Controls
 
                         if (words.Count != 0)
                         {
-                            if (emotes.Key == 0)
+                            if (emotes.Key == "0")
                             {
                                 messages.Add(new Message("Twitch Emotes"));
                             }

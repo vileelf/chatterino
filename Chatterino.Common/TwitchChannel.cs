@@ -1191,6 +1191,7 @@ namespace Chatterino.Common
 
         public void ReloadSubEmotes()
         {
+            Emotes.TwitchEmotes.Clear();
             IrcManager.LoadUsersEmotes();
             updateEmoteNameList();
         }
