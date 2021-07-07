@@ -494,15 +494,16 @@ namespace Chatterino.Common
         public static LazyLoadedImage GetTwitchEmoteById(string id, string name)
         {
             LazyLoadedImage e;
-
-            if (!TwitchEmotesByIDCache.TryGetValue(id, out e))
+            double scale;
+            double fake;
+            string url = GetTwitchEmoteLink(id, false, out scale);
+            
+            if (!TwitchEmotesByIDCache.TryGetValue(id, out e) || Math.Abs(scale - e.Scale) > .01)
             {
-                double scale;
-                double fake;
                 e = new LazyLoadedImage
                 {
                     Name = name,
-                    Url = GetTwitchEmoteLink(id, false, out scale),
+                    Url = url,
                     TooltipImageUrl = GetTwitchEmoteLink(id, true, out fake),
                     Scale = scale,
                     Tooltip = name + "\nTwitch Emote",
