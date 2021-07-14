@@ -37,6 +37,7 @@ namespace Chatterino.Common
         protected int Uses { get; set; } = 0;
 
         public bool IsLive { get; private set; }
+        public bool IsFollowing { get; private set; }
 
         public int StreamViewerCount { get; private set; }
         public string StreamStatus { get; private set; }
@@ -51,6 +52,12 @@ namespace Chatterino.Common
         = new ConcurrentDictionary<string, LazyLoadedImage>();
 
         public ConcurrentDictionary<string, LazyLoadedImage> FfzChannelEmotes { get; private set; }
+        = new ConcurrentDictionary<string, LazyLoadedImage>();
+        
+        public ConcurrentDictionary<string, LazyLoadedImage> ChannelEmotes { get; private set; }
+        = new ConcurrentDictionary<string, LazyLoadedImage>();
+        
+        public ConcurrentDictionary<string, LazyLoadedImage> FollowerEmotes { get; private set; }
         = new ConcurrentDictionary<string, LazyLoadedImage>();
 
         public ConcurrentDictionary<int, LazyLoadedImage> SubscriberBadges = new ConcurrentDictionary<int, LazyLoadedImage>();
@@ -218,7 +225,82 @@ namespace Chatterino.Common
             }
             return customCheer;
         }
+        
+        public void LoadChannelEmotes(int RoomID)
+        {
+            try {
+                ChannelEmotes.Clear();
+                FollowerEmotes.Clear();
+                var request =
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/helix/chat/emotes?broadcaster_id={RoomID}");
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                request.Method = "GET";
+                request.Headers.Add("Client-ID", IrcManager.Account.ClientId);
+                request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
+                using (var response = request.GetResponse()) {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        JsonParser parser = new JsonParser();
 
+                        dynamic json = parser.Parse(stream);
+                        dynamic data = json["data"];
+                        string id;
+                        string name;
+                        string type;
+                        string tier;
+                        string set_id;
+                        string url;
+                        double scale;
+                        double fake;
+                        LazyLoadedImage emote;
+                        foreach (var emotedata in data){
+                            id = emotedata["id"];
+                            name = emotedata["name"];
+                            type = emotedata["emote_type"];
+                            tier = emotedata["tier"];
+                            set_id = emotedata["emote_set_id"];
+                            
+                            url = Emotes.GetTwitchEmoteLink(id, false, out scale);
+                            emote = new LazyLoadedImage{
+                                Name = name,
+                                Scale = scale,
+                                Url = url,
+                                TooltipImageUrl = Emotes.GetTwitchEmoteLink(id, true, out fake),
+                                Tooltip = name + "\nTwitch Emote",
+                                IsEmote = true
+                            };
+                            
+                            if (type.Equals("follower")) {
+                                FollowerEmotes[id] = emote;
+                            } else {
+                                ChannelEmotes[id] = emote;
+                            }
+                        }
+                    }
+                    response.Close();
+                }
+            } catch(Exception e){
+                GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
+            }
+        }
+        
+        public bool CheckIfFollowing(int RoomID)
+        {
+            bool result;
+            string message;
+            
+            
+
+            Common.IrcManager.TryCheckIfFollowing(null, RoomID.ToString(), out result, out message);
+            
+            IsFollowing = result;
+            return result;
+        }
+        
         public void LoadChannelBits(int RoomID)
         {
             try {
@@ -867,6 +949,9 @@ namespace Chatterino.Common
             names.UnionWith(BttvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             names.UnionWith(FfzChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             names.UnionWith(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
+            if (IsFollowing) {
+               names.UnionWith(FollowerEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x))); 
+            }
 
             emoteNames = new List<KeyValuePair<string, string>>(names);
         }
@@ -1212,7 +1297,17 @@ namespace Chatterino.Common
                 {
                     LoadChannelBits(RoomID);
                 });
-
+                
+                Task.Run(() =>
+                {
+                    LoadChannelEmotes(RoomID);
+                });
+                
+                Task.Run(() =>
+                {
+                    CheckIfFollowing(RoomID);
+                });
+                
                 //Emotes.ClearTwitchEmoteCache();
                 // bttv channel emotes
                 Task.Run(() =>

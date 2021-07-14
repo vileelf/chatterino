@@ -167,7 +167,7 @@ namespace Chatterino.Common
             //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
 
-        private static string GetTwitchEmoteLink(string id, bool getMax, out double scale)
+        public static string GetTwitchEmoteLink(string id, bool getMax, out double scale)
         {
             var _scale = AppSettings.EmoteScale > 2 ? 4 : (AppSettings.EmoteScale > 1 ? 2 : 1);
             if (getMax) {

@@ -100,6 +100,56 @@ namespace Chatterino.Controls
                     }
                 }
 
+                // Follower emotes
+                if (channel != null && channel.IsFollowing) {
+                    var words = new List<Word>();
+
+                    foreach (var emote in channel.FollowerEmotes.Values)
+                    {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
+                    }
+
+                    if (words.Count != 0)
+                    {
+                        messages.Add(new Message("Follower Emotes"));
+                        messages.Add(new Message(words));
+                    }
+                }
+                
+                // Channel emotes
+                /*if (channel != null) {
+                    var words = new List<Word>();
+
+                    foreach (var emote in channel.ChannelEmotes.Values)
+                    {
+                        if (emote.IsAnimated) {
+                            GifEmotes.Add(emote);
+                        } else if (emote.Image==null) {
+                            emote.ImageLoaded += (s, e) => {
+                                if (emote.IsAnimated) {
+                                    GifEmotes.Add(emote);
+                                }
+                            };
+                        }
+                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = emote, Tooltip = emote.Tooltip, TooltipImageUrl = emote.TooltipImageUrl, CopyText = emote.Name, Link = new Link(LinkType.InsertText, emote.Name + " ") });
+                    }
+
+                    if (words.Count != 0)
+                    {
+                        messages.Add(new Message("Channel Emotes"));
+                        messages.Add(new Message(words));
+                    }
+                }*/
+                
                 // bttv channel emotes
                 if (channel != null)
                 {
