@@ -1499,22 +1499,25 @@ namespace Chatterino.Common
         {
             string id = e["id"];
             string code = e["code"];
-
+            double scale;
+            bool getemote;
+            string url = template.Replace("{{id}}", id);     
+            
+            url = Emotes.GetBttvEmoteLink(url, false, out scale);
             LazyLoadedImage emote;
-            if (Emotes.BttvChannelEmotesCache.TryGetValue(id, out emote))
+            
+            getemote = Emotes.BttvChannelEmotesCache.TryGetValue(id, out emote);
+            if (getemote && Math.Abs(emote.Scale - scale) < .01)
             {
                 BttvChannelEmotes[code] = emote;
             }
             else
             {
                 string imageType = e["imageType"];
-                string url = template.Replace("{{id}}", id);
-
-                double scale;
                 double fake;
                 string tooltipurl;
                 tooltipurl = Emotes.GetBttvEmoteLink(url, true, out fake);
-                url = Emotes.GetBttvEmoteLink(url, false, out scale);
+                
                 
 
                 Emotes.BttvChannelEmotesCache[id] =
