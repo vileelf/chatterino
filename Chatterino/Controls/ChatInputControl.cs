@@ -142,7 +142,7 @@ namespace Chatterino.Controls
             emoteListButton.Click += (s, e) =>
             {
                 chatControl.Focus();
-                App.ShowEmoteList(chatControl.Channel);
+                App.ShowEmoteList(chatControl.Channel, false);
                 App.EmoteList.BringToFront();
             };
 

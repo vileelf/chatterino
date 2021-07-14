@@ -88,7 +88,11 @@ namespace Chatterino.Controls
                             string viewCount = json["views"];
                             string broadCasterType = json["broadcaster_type"];
 
-                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}"); 
+                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}" 
+                            #if DEBUG
+                            + $"\nid: {data.UserId}"
+                            #endif
+                            ); 
                             if (!String.IsNullOrEmpty(notes)) {
                                 lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
                             }

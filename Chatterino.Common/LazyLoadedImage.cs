@@ -27,6 +27,15 @@ namespace Chatterino.Common
         public LazyLoadedImage TooltipImage = null;
         public string click_url {get; set; } = null;
         public bool IsDanke = false;
+        
+        public struct EmoteInfoStruct {
+            public string type;
+            public string tier;
+            public string ownerid;
+            public string id;
+            public string setid;
+        }
+        public EmoteInfoStruct EmoteInfo = new EmoteInfoStruct();
         public delegate void HA(int offset);
         public HA HandleAnimation = null;
         public event EventHandler ImageLoaded;

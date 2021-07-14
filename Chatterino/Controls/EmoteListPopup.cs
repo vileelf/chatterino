@@ -43,6 +43,12 @@ namespace Chatterino.Controls
             return null;
         }
         
+        public void setShowOnlyChannelEmotes(bool show_only_channel_emotes) {
+            if (container!=null) {
+                container.show_only_channel_emotes = show_only_channel_emotes;
+            }
+        }
+        
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             container.ClearBuffer();

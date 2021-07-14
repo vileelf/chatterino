@@ -514,12 +514,14 @@ namespace Chatterino
             }
         }
 
-        public static void ShowEmoteList(TwitchChannel channel)
+        public static void ShowEmoteList(TwitchChannel channel, bool show_only_channel_emotes)
         {
             if (EmoteList == null)
             {
                 EmoteList = new Controls.EmoteListPopup();
             }
+            
+            EmoteList.setShowOnlyChannelEmotes(show_only_channel_emotes);
 
             EmoteList.SetChannel(channel);
 

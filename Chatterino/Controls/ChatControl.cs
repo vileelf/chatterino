@@ -1127,6 +1127,12 @@ namespace Chatterino.Controls
                     Emotes.RecentlyUsedEmotes.Clear();
                     Emotes.EmoteAdded();
                 }));
+                _contextMenu.MenuItems.Add(new MenuItem("Show Channel emotes", (s, e) =>
+                {
+                    _selected.Focus();
+                    App.ShowEmoteList(_selected.Channel, true);
+                    App.EmoteList.BringToFront();
+                }));
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
                     IrcManager.Client.Reconnect();

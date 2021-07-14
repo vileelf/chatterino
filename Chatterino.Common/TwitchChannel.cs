@@ -270,9 +270,17 @@ namespace Chatterino.Common
                                 Scale = scale,
                                 Url = url,
                                 TooltipImageUrl = Emotes.GetTwitchEmoteLink(id, true, out fake),
-                                Tooltip = name + "\nTwitch Emote",
+                                Tooltip = name + "\n " + 
+                                ((type.Equals("bitstier"))?"Bit":(type.Equals("follower"))?"Follower":(tier.Equals("1000"))?"Tier 1 Sub":(tier.Equals("2000"))?"Tier 2 Sub":"Tier 3 Sub")
+                                + " Emote",
                                 IsEmote = true
                             };
+                            
+                            emote.EmoteInfo.id = id;
+                            emote.EmoteInfo.type = type;
+                            emote.EmoteInfo.tier = tier;
+                            emote.EmoteInfo.setid = set_id;
+                            emote.EmoteInfo.ownerid = RoomID.ToString();
                             
                             if (type.Equals("follower")) {
                                 Emotes.RecentlyUsedEmotes.TryRemove(name, out LazyLoadedImage image);
