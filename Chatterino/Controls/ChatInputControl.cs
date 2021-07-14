@@ -258,7 +258,8 @@ namespace Chatterino.Controls
                 msg.CalculateBounds(g, Width - messagePadding.Left - messagePadding.Right - 20, true);
 
                 g?.Dispose();
-
+                
+                minHeight = GuiEngine.Current.MeasureStringSize(g, FontType.Medium, "X").Height + 8 + messagePadding.Top + messagePadding.Bottom;
                 Height = Math.Max(msg.Height + messagePadding.Top + messagePadding.Bottom, minHeight);
             }
         }
