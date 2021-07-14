@@ -23,7 +23,7 @@ namespace Chatterino.Common
         public static Account Account { get; set; } = Account.AnonAccount;
         //public static string Username { get; private set; } = null;
 
-        public static string DefaultClientID { get; set; } = "7ue61iz46fz11y3cugd0l3tawb4taal";
+        public static string DefaultClientID { get; set; } = "gkp8i0oxk7xua6pcxmg4w6u8vt8n4qw";
         //public static string ClientID { get; set; } = null;
 
         public static IrcClient Client { get; set; }
