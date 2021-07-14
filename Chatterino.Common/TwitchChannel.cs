@@ -275,6 +275,7 @@ namespace Chatterino.Common
                             };
                             
                             if (type.Equals("follower")) {
+                                Emotes.RecentlyUsedEmotes.TryRemove(name, out LazyLoadedImage image);
                                 FollowerEmotes[id] = emote;
                             } else {
                                 ChannelEmotes[id] = emote;
