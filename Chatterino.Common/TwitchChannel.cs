@@ -1605,8 +1605,10 @@ namespace Chatterino.Common
             string code = e["code"];
             double scale;
             bool getemote;
+            double fake;
+            string tooltipurl;
             string url = template.Replace("{{id}}", id);     
-            
+            tooltipurl = Emotes.GetBttvEmoteLink(url, true, out fake);
             url = Emotes.GetBttvEmoteLink(url, false, out scale);
             LazyLoadedImage emote;
             
@@ -1618,12 +1620,7 @@ namespace Chatterino.Common
             else
             {
                 string imageType = e["imageType"];
-                double fake;
-                string tooltipurl;
-                tooltipurl = Emotes.GetBttvEmoteLink(url, true, out fake);
                 
-                
-
                 Emotes.BttvChannelEmotesCache[id] =
                     BttvChannelEmotes[code] =
                         new LazyLoadedImage
