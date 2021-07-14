@@ -258,7 +258,7 @@ namespace Chatterino.Controls
                     // Channel emotes
                     if (channel != null) {
                         LazyLoadedImage emote;
-                        foreach (var emotes in channel.ChannelEmotes.GroupBy(x => new {x.Value.EmoteInfo.type, x.Value.EmoteInfo.tier}))
+                        foreach (var emotes in channel.ChannelEmotes.OrderBy(x => x.Value.EmoteInfo.type).ThenBy(x => x.Value.EmoteInfo.tier).GroupBy(x => new {x.Value.EmoteInfo.type, x.Value.EmoteInfo.tier}))
                         {
                             var words = new List<Word>();
 
