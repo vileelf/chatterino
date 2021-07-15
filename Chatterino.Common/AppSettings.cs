@@ -195,6 +195,7 @@ namespace Chatterino.Common
 
         public static double EmoteScale { get; set; } = 1;
         public static bool EmoteScaleByLineHeight { get; set; } = false;
+        public static bool EmoteScaleChanged {get; set;} = false;
 
         public static bool EnableBanButton { get; set; } = false;
         public static bool EnableTimeoutButton { get; set; } = false;

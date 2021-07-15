@@ -440,6 +440,9 @@ namespace Chatterino.Controls
 
             onCancel += (s, e) =>
             {
+                if (AppSettings.EmoteScale != originialEmoteScale) {
+                    AppSettings.EmoteScaleChanged = true;
+                }
                 AppSettings.EmoteScale = originialEmoteScale;
                 App.TriggerEmoteLoaded();
             };
@@ -447,7 +450,9 @@ namespace Chatterino.Controls
             checkBoxEmoteSizeBasedOnTextHeight.CheckedChanged += (s, e) =>
             {
                 labelEmoteScale.Text = $"Emote scale: {AppSettings.EmoteScale:0.##}x";
-
+                if (AppSettings.EmoteScale != originialEmoteScale) {
+                    AppSettings.EmoteScaleChanged = true;
+                }
                 App.TriggerEmoteLoaded();
             };
 
@@ -458,7 +463,9 @@ namespace Chatterino.Controls
             {
                 AppSettings.EmoteScale = trackBarEmoteScale.Value / 10.0 + 0.5;
                 labelEmoteScale.Text = $"Emote scale: {AppSettings.EmoteScale:0.##}x";
-
+                if (AppSettings.EmoteScale != originialEmoteScale) {
+                    AppSettings.EmoteScaleChanged = true;
+                }
                 App.TriggerEmoteLoaded();
             };
 

@@ -1703,7 +1703,7 @@ namespace Chatterino.Controls
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(227, 37);
             this.label16.TabIndex = 27;
-            this.label16.Text = "(you might have to restart chatterino for it to load the properly scaled images)";
+            this.label16.Text = "(you will have to reload emotes for it to load the properly scaled images for that chat)";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelEmoteScale
