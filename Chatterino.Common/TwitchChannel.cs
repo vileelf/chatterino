@@ -539,6 +539,210 @@ namespace Chatterino.Common
                 sourcetmr.Interval = sourcetmr.Interval*2;
             }
         }
+        
+        private void loadFFZEmotesFromFile() {
+            try {
+                var ffzChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"ffz_channel_{RoomID}");
+                var parser = new JsonParser();
+                using (var stream = File.OpenRead(ffzChannelEmotesCache))
+                {
+                    dynamic json = parser.Parse(stream);
+
+                    dynamic room = json["room"];
+
+                    try
+                    {
+                        if (room.ContainsKey("vip_badge")) {
+                            dynamic vip_badge = room["vip_badge"];
+                            if (vip_badge != null) {
+                                string url = vip_badge["1"];
+                                string tooltipurl = vip_badge["4"];
+                                if (!string.IsNullOrWhiteSpace(url)) {
+                                    url = "https:" + url;
+                                    if (string.IsNullOrWhiteSpace(tooltipurl)) {
+                                        tooltipurl = url;
+                                    } else {
+                                        tooltipurl = "https:" + tooltipurl;
+                                    }
+                                    VipBadge = new LazyLoadedImage {
+                                        Url = url,
+                                        TooltipImageUrl = tooltipurl,
+                                        Tooltip = "custom vip badge\nFFZ"
+                                    };
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.Message.Log("emotes");
+                        GuiEngine.Current.log(e.ToString());
+                    }
+                    try
+                    {
+                        object moderator;
+                        
+                        if (room.TryGetValue("moderator_badge", out moderator))
+                        {
+                            if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
+                            {
+                                var url = "https:" + (moderator as string);
+                                string tooltipurl = "";
+                                LazyLoadedImage tooltipImage = null;
+                                if (room.ContainsKey("mod_urls")) {
+                                    dynamic mod_urls = room["mod_urls"];
+                                    if (mod_urls != null) {
+                                        tooltipurl = mod_urls["4"];
+                                        if (tooltipurl != null) {
+                                            tooltipurl = "https:" + tooltipurl;
+                                        }
+                                    }
+                                }
+                                if (string.IsNullOrWhiteSpace(tooltipurl)){
+                                    tooltipurl = url;
+                                }
+                                
+                                if (!tooltipurl.Equals(url)) {
+                                    tooltipImage = new LazyLoadedImage {
+                                        Url = tooltipurl,
+                                        LoadAction = () =>
+                                        {
+                                            try
+                                            {
+                                                Image img;
+
+                                                var request = WebRequest.Create(tooltipurl);
+                                                if (AppSettings.IgnoreSystemProxy)
+                                                {
+                                                    request.Proxy = null;
+                                                }
+                                                using (var response = request.GetResponse()){
+                                                    using (var s = response.GetResponseStream())
+                                                    {
+                                                        MemoryStream mem = new MemoryStream();
+                                                        s.CopyTo(mem);
+                                                        img = GuiEngine.Current.ReadImageFromStream(mem);
+                                                    }
+                                                    response.Close();
+                                                }
+
+                                                GuiEngine.Current.FreezeImage(img);
+
+                                                return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                e.Message.Log("emotes");
+                                                return null;
+                                            }
+                                        }
+                                    };
+                                }
+                                ModeratorBadge = new LazyLoadedImage
+                                {
+                                    Url = url,
+                                    Tooltip = "custom moderator badge\nFFZ",
+                                    TooltipImageUrl = tooltipurl,
+                                    TooltipImage = tooltipImage,
+                                    LoadAction = () =>
+                                    {
+                                        try
+                                        {
+                                            Image img;
+
+                                            var request = WebRequest.Create(url);
+                                            if (AppSettings.IgnoreSystemProxy)
+                                            {
+                                                request.Proxy = null;
+                                            }
+                                            using (var response = request.GetResponse()){
+                                                using (var s = response.GetResponseStream())
+                                                {
+                                                    MemoryStream mem = new MemoryStream();
+                                                    s.CopyTo(mem);
+                                                    img = GuiEngine.Current.ReadImageFromStream(mem);
+                                                }
+                                                response.Close();
+                                            }
+
+                                            GuiEngine.Current.FreezeImage(img);
+
+                                            return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            e.Message.Log("emotes");
+                                            return null;
+                                        }
+                                    }
+                                };
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.Message.Log("emotes");
+                        GuiEngine.Current.log(e.ToString());
+                    }
+
+                    dynamic sets = json["sets"];
+
+                    FfzChannelEmotes.Clear();
+
+                    foreach (var set in sets.Values)
+                    {
+                        string title = set["title"];
+
+                        dynamic emoticons = set["emoticons"];
+
+                        foreach (LazyLoadedImage emote in Emotes.GetFfzEmoteFromDynamic(emoticons, false))
+                        {
+                            FfzChannelEmotes[emote.Name] = emote;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                
+            }
+        }
+        
+        private void loadBTTVEmotesFromFile() {
+            try {
+                var bttvChannelEmotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", $"bttv_channel_{RoomID}");
+                var parser = new JsonParser();
+                using (var stream = File.OpenRead(bttvChannelEmotesCache))
+                {
+                    dynamic json = parser.Parse(stream);
+                    //var template = "https:" + json["urlTemplate"]; // urlTemplate is outdated, came from bttv v2 api, returned: //cdn.betterttv.net/emote/{{id}}/{{image}}
+                    string template = "https://cdn.betterttv.net/emote/{{id}}/{{image}}";
+
+                    BttvChannelEmotes.Clear();
+
+                    foreach (var e in json["channelEmotes"])
+                    {
+                        string channel = Name;
+
+                        AddBttvEmotes(template, e, channel);
+                    }
+
+                    foreach (var e in json["sharedEmotes"])
+                    {
+                        string channel = e["user"]["displayName"];
+
+                        AddBttvEmotes(template, e, channel);
+                    }
+                } 
+            } catch (Exception e) {
+                
+            }
+        }
+        
+        //loads bttv and ffz emotes from cached file
+        private void loadEmotesFromFile() {
+            loadFFZEmotesFromFile();
+            loadBTTVEmotesFromFile();
+            updateEmoteNameList();
+        }
 
         // ctor
         private TwitchChannel(string channelName)
@@ -567,6 +771,7 @@ namespace Chatterino.Common
 
                     if (RoomID != -1)
                     {
+                        loadEmotesFromFile();
                         Task.Run(() =>
                         {
                             ReloadEmotes();
@@ -1367,28 +1572,7 @@ namespace Chatterino.Common
                             }
                         }
 
-                        using (var stream = File.OpenRead(bttvChannelEmotesCache))
-                        {
-                            dynamic json = parser.Parse(stream);
-                            //var template = "https:" + json["urlTemplate"]; // urlTemplate is outdated, came from bttv v2 api, returned: //cdn.betterttv.net/emote/{{id}}/{{image}}
-                            string template = "https://cdn.betterttv.net/emote/{{id}}/{{image}}";
-
-                            BttvChannelEmotes.Clear();
-
-                            foreach (var e in json["channelEmotes"])
-                            {
-                                string channel = channelName;
-
-                                AddBttvEmotes(template, e, channel);
-                            }
-
-                            foreach (var e in json["sharedEmotes"])
-                            {
-                                string channel = e["user"]["displayName"];
-
-                                AddBttvEmotes(template, e, channel);
-                            }
-                        }
+                        loadBTTVEmotesFromFile();
                         updateEmoteNameList();
                     }
                     catch (Exception e)
@@ -1437,164 +1621,7 @@ namespace Chatterino.Common
                                 e.Message.Log("emotes");
                             }
                         }
-
-                        using (var stream = File.OpenRead(ffzChannelEmotesCache))
-                        {
-                            dynamic json = parser.Parse(stream);
-
-                            dynamic room = json["room"];
-
-                            try
-                            {
-                                if (room.ContainsKey("vip_badge")) {
-                                    dynamic vip_badge = room["vip_badge"];
-                                    if (vip_badge != null) {
-                                        string url = vip_badge["1"];
-                                        string tooltipurl = vip_badge["4"];
-                                        if (!string.IsNullOrWhiteSpace(url)) {
-                                            url = "https:" + url;
-                                            if (string.IsNullOrWhiteSpace(tooltipurl)) {
-                                                tooltipurl = url;
-                                            } else {
-                                                tooltipurl = "https:" + tooltipurl;
-                                            }
-                                            VipBadge = new LazyLoadedImage {
-                                                Url = url,
-                                                TooltipImageUrl = tooltipurl,
-                                                Tooltip = "custom vip badge\nFFZ"
-                                            };
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.Log("emotes");
-                                GuiEngine.Current.log(e.ToString());
-                            }
-                            try
-                            {
-                                object moderator;
-                                
-                                if (room.TryGetValue("moderator_badge", out moderator))
-                                {
-                                    if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
-                                    {
-                                        var url = "https:" + (moderator as string);
-                                        string tooltipurl = "";
-                                        LazyLoadedImage tooltipImage = null;
-                                        if (room.ContainsKey("mod_urls")) {
-                                            dynamic mod_urls = room["mod_urls"];
-                                            if (mod_urls != null) {
-                                                tooltipurl = mod_urls["4"];
-                                                if (tooltipurl != null) {
-                                                    tooltipurl = "https:" + tooltipurl;
-                                                }
-                                            }
-                                        }
-                                        if (string.IsNullOrWhiteSpace(tooltipurl)){
-                                            tooltipurl = url;
-                                        }
-                                        
-                                        if (!tooltipurl.Equals(url)) {
-                                            tooltipImage = new LazyLoadedImage {
-                                                Url = tooltipurl,
-                                                LoadAction = () =>
-                                                {
-                                                    try
-                                                    {
-                                                        Image img;
-
-                                                        var request = WebRequest.Create(tooltipurl);
-                                                        if (AppSettings.IgnoreSystemProxy)
-                                                        {
-                                                            request.Proxy = null;
-                                                        }
-                                                        using (var response = request.GetResponse()){
-                                                            using (var s = response.GetResponseStream())
-                                                            {
-                                                                MemoryStream mem = new MemoryStream();
-                                                                s.CopyTo(mem);
-                                                                img = GuiEngine.Current.ReadImageFromStream(mem);
-                                                            }
-                                                            response.Close();
-                                                        }
-
-                                                        GuiEngine.Current.FreezeImage(img);
-
-                                                        return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
-                                                    }
-                                                    catch (Exception e)
-                                                    {
-                                                        e.Message.Log("emotes");
-                                                        return null;
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        ModeratorBadge = new LazyLoadedImage
-                                        {
-                                            Url = url,
-                                            Tooltip = "custom moderator badge\nFFZ",
-                                            TooltipImageUrl = tooltipurl,
-                                            TooltipImage = tooltipImage,
-                                            LoadAction = () =>
-                                            {
-                                                try
-                                                {
-                                                    Image img;
-
-                                                    var request = WebRequest.Create(url);
-                                                    if (AppSettings.IgnoreSystemProxy)
-                                                    {
-                                                        request.Proxy = null;
-                                                    }
-                                                    using (var response = request.GetResponse()){
-                                                        using (var s = response.GetResponseStream())
-                                                        {
-                                                            MemoryStream mem = new MemoryStream();
-                                                            s.CopyTo(mem);
-                                                            img = GuiEngine.Current.ReadImageFromStream(mem);
-                                                        }
-                                                        response.Close();
-                                                    }
-
-                                                    GuiEngine.Current.FreezeImage(img);
-
-                                                    return GuiEngine.Current.DrawImageBackground(img, HSLColor.FromRGB(0x45A41E));
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    e.Message.Log("emotes");
-                                                    return null;
-                                                }
-                                            }
-                                        };
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.Log("emotes");
-                                GuiEngine.Current.log(e.ToString());
-                            }
-
-                            dynamic sets = json["sets"];
-
-                            FfzChannelEmotes.Clear();
-
-                            foreach (var set in sets.Values)
-                            {
-                                string title = set["title"];
-
-                                dynamic emoticons = set["emoticons"];
-
-                                foreach (LazyLoadedImage emote in Emotes.GetFfzEmoteFromDynamic(emoticons, false))
-                                {
-                                    FfzChannelEmotes[emote.Name] = emote;
-                                }
-                            }
-                        }
+                        loadFFZEmotesFromFile();
                         updateEmoteNameList();
                     }
                     catch (Exception e)
