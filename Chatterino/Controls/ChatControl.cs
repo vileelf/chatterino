@@ -526,8 +526,8 @@ namespace Chatterino.Controls
                             Input.Logic.SelectionStart = AutoCompleteStart;
                         }
                         Input.Logic.SelectionLength = Input.Logic.CaretPosition - Input.Logic.SelectionStart;
-                        Input.Logic.InsertText(acselection + " ");
                         tabCompleteItems = AutoComplete.items;
+                        Input.Logic.InsertText(acselection + " ");
                         currentTabIndex = AutoComplete.GetSelectionIndex();
                         CloseAutocomplete();
                     }
