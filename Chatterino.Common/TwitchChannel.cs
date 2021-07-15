@@ -1321,6 +1321,7 @@ namespace Chatterino.Common
                     Task.Run(() =>
                     {
                         Emotes.LoadGlobalEmotes();
+                        AppSettings.EmoteScaleChanged = false;
                     });
                 }
                 
