@@ -1,5 +1,16 @@
 ﻿# changelog
 
+## 2.6
+- using newer api for getting user emotes. It should include bit emotes and animated emotes now
+- added support for follower emotes
+- added a new dropdown option show channel emotes. It shows all available twitch emotes for the current channel
+- when you change the scale of emotes you can now use reload emotes to update the resolution of the emotes for the current channel
+- Bug Fixes
+- fixed a bug where the input wouldn't shrink down after decreasing the font to a size below what was used when chatterino was launched
+- bttv and ffz emotes are now loaded from the cache before recent messages are retrieved so they will now show up when chatterino is first launched.
+- fixed a bug with autocomplete where if you did an autocomplete that went to a new line it wouldn't let you tab through the options like normal
+- fixed a bug where messages would get stuck when you change tabs when using the hide input if empty option
+
 ## 2.5
 - fixed an issue with the open pop out player button
 - images on tooltips are now centered
@@ -18,7 +29,7 @@
 ## 2.3
 - added a new feature that lets you make notes about a user. Simply click their name, click notes, and type whatever you please. Notes arnt dependent on username so they should stay there when they change names.
 - fixed an issue that caused tabs to disappear sometimes when you launched chatterino. 
-- fixed an issue causeing emotes to display the wrong name sometimes
+- fixed an issue causing emotes to display the wrong name sometimes
 - fixed an issue with the recent messages api that caused some messages to show up blank
 - reload emotes now will also update the sub badges and cheer badges
 
@@ -31,7 +42,7 @@
 ## 2.1
 - showing username on both the gifter and giftee of sub gifts
 - added an option to set the message limit
-- fixed a bug where the tooltip would go behind other windows so you couldnt see it
+- fixed a bug where the tooltip would go behind other windows so you couldn't see it
 
 ## 2.0
 - now displays username on sub notifications if it is different from the display name.
@@ -70,7 +81,7 @@
 - fixed an issue preventing chatterino from finding the twitch channel id
 
 ## 1.7
-- fully converted chatterino over to the twith api v5
+- fully converted chatterino over to the twitch api v5
 - readded in the recent chat feature using third party api used by chatterino 2
 - fixed the follow button to actually follow when clicked
 - fixed the add a space for duplicate message feature
@@ -91,7 +102,7 @@
 
 ## 1.5
 - added a new setting for username based highlighting
-- now recognizes vip for fast messageing
+- now recognizes vip for fast messaging
 - now properly respecting the setting for sending duplicate messages
 - overloaded the reload channel emotes button to also reload your other emotes.
 
