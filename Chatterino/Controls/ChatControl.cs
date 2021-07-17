@@ -208,6 +208,7 @@ namespace Chatterino.Controls
             {
                 Input.Logic.ClearSelection();
                 CloseAutocomplete();
+                updateMessageBounds();
                 Input.Invalidate();
                 header.Invalidate();
             };
