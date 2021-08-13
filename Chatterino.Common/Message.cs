@@ -36,6 +36,7 @@ namespace Chatterino.Common
         public string Username { get; set; }
         public string UserId { get; set; }
         public string Params { get; set; }
+        public string MessageId { get; set; } = null;
         public Word UsernameWord { get; set; } = null;
 
         public string DisplayName { get; set; }
@@ -123,6 +124,11 @@ namespace Chatterino.Common
             if (data.Tags.TryGetValue("user-id", out value))
             {
                 UserId = value;
+            }
+            
+            if (data.Tags.TryGetValue("id", out value))
+            {
+                MessageId = value;
             }
             
             var slashMe = false;

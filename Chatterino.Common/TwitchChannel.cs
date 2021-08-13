@@ -776,125 +776,9 @@ namespace Chatterino.Common
                         {
                             ReloadEmotes();
                         });
-                        //commented out till twitch adds support for the recent messages feature again.
-                        try
-                        {
-                            LoadSubBadges(RoomID);
-                            var messages = new List<Message>();
-
-                            var request =
-                                WebRequest.Create(
-                                    $"https://recent-messages.robotty.de/api/v2/recent-messages/{channelName}");
-                            if (AppSettings.IgnoreSystemProxy)
-                            {
-                                request.Proxy = null;
-                            }
-                            using (var response = request.GetResponse()) {
-                                using (var stream = response.GetResponseStream())
-                                {
-                                    var parser = new JsonParser();
-
-                                    dynamic json = parser.Parse(stream);
-
-                                    dynamic _messages = json["messages"];
-                                    
-                                    IrcMessage msg;
-                                    string sysMsg;
-                                    string login;
-                                    string displayname;
-                                    string giftlogin;
-                                    string giftdisplayname;
-                                    Message message;
-                                    string reason;
-                                    string duration;
-                                    int iduration;
-                                    
-                                    foreach (string s in _messages)
-                                    {
-                                        
-                                        if (IrcMessage.TryParse(s, out msg))
-                                        {
-                                            if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
-                                                continue; //skip these messages
-                                            } else if (msg.Command == "CLEARCHAT" && !string.IsNullOrWhiteSpace(msg.Params)) {
-                                                msg.Tags.TryGetValue("ban-reason", out reason);
-
-                                                iduration = 0;
-                                                if (msg.Tags.TryGetValue("ban-duration", out duration))
-                                                {
-                                                    int.TryParse(duration, out iduration);
-                                                }
-                                                message = new Message(
-                                                    $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
-                                                    HSLColor.Gray, true);
-                                                messages.Add(message);
-                                            } else if (msg.Command == "USERNOTICE") {
-                                                msg.Tags.TryGetValue("system-msg", out sysMsg);
-                                                msg.Tags.TryGetValue("msg-param-recipient-display-name", out giftdisplayname);
-                                                msg.Tags.TryGetValue("display-name", out displayname);
-                                                msg.Tags.TryGetValue("msg-param-recipient-user-name", out giftlogin);
-                                                msg.Tags.TryGetValue("login", out login);
-                                                if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
-                                                    !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
-                                                    int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
-                                                    if (index != -1) {
-                                                        index += displayname.Length;
-                                                        sysMsg = sysMsg.Insert(index, " ("+login+")");
-                                                    }
-                                                }
-                                                if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
-                                                    !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
-                                                    int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
-                                                    if (index != -1) {
-                                                        index += giftdisplayname.Length;
-                                                        sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
-                                                    }
-                                                }
-                                                message = new Message(sysMsg, HSLColor.Gray, true)
-                                                {
-                                                    HighlightType = HighlightType.Resub
-                                                };
-                                                messages.Add(message);
-                                                if (!string.IsNullOrEmpty(msg.Params))
-                                                {
-                                                    message = new Message(msg, this)
-                                                    {
-                                                        HighlightType = HighlightType.Resub
-                                                    };
-                                                    messages.Add(message);
-                                                }
-                                            } else {
-                                                message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
-                                                if (IrcManager.IsMessageIgnored(message, this) != true ) {
-                                                    messages.Add(message);
-                                                }
-                                            }
-                                            
-                                            
-                                        }
-                                    }
-
-                                    //StreamReader reader = new StreamReader(stream);
-                                    //string line;
-                                    //while ((line = reader.ReadLine()) != null)
-                                    //{
-                                    //    IrcMessage msg;
-
-                                    //    if (IrcMessage.TryParse(line, out msg))
-                                    //    {
-                                    //        if (msg.Params != null)
-                                    //            messages.Add(new Message(msg, this, false, false));
-                                    //    }
-                                    //}
-                                }
-                                response.Close();
-                            }
-
-                            AddMessagesAtStart(messages.ToArray());
-                        }
-                        catch (Exception e)
-                        {
-                            GuiEngine.Current.log(e.ToString());
+                        List<Message> message = LoadRecentMessages();
+                        if (message != null) {
+                            AddMessagesAtStart(message.ToArray());
                         }
                     }
                 });
@@ -914,6 +798,118 @@ namespace Chatterino.Common
             AppSettings.MessageLimitChanged += AppSettings_MessageLimitChanged;
             AppSettings.FontChanged += AppSettings_FontChanged;
         }
+        
+        private List<Message> LoadRecentMessages() {
+            if (RoomID != -1)
+            {
+                try
+                {
+                    LoadSubBadges(RoomID);
+                    var messages = new List<Message>();
+
+                    var request =
+                        WebRequest.Create(
+                            $"https://recent-messages.robotty.de/api/v2/recent-messages/{Name}");
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var parser = new JsonParser();
+
+                            dynamic json = parser.Parse(stream);
+
+                            dynamic _messages = json["messages"];
+                            
+                            IrcMessage msg;
+                            string sysMsg;
+                            string login;
+                            string displayname;
+                            string giftlogin;
+                            string giftdisplayname;
+                            Message message;
+                            string reason;
+                            string duration;
+                            int iduration;
+                            
+                            foreach (string s in _messages)
+                            {
+                                
+                                if (IrcMessage.TryParse(s, out msg))
+                                {
+                                    if (msg.Command == "ROOMSTATE" || msg.Command == "USERSTATE") {
+                                        continue; //skip these messages
+                                    } else if (msg.Command == "CLEARCHAT" && !string.IsNullOrWhiteSpace(msg.Params)) {
+                                        msg.Tags.TryGetValue("ban-reason", out reason);
+
+                                        iduration = 0;
+                                        if (msg.Tags.TryGetValue("ban-duration", out duration))
+                                        {
+                                            int.TryParse(duration, out iduration);
+                                        }
+                                        message = new Message(
+                                            $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
+                                            HSLColor.Gray, true);
+                                        messages.Add(message);
+                                    } else if (msg.Command == "USERNOTICE") {
+                                        msg.Tags.TryGetValue("system-msg", out sysMsg);
+                                        msg.Tags.TryGetValue("msg-param-recipient-display-name", out giftdisplayname);
+                                        msg.Tags.TryGetValue("display-name", out displayname);
+                                        msg.Tags.TryGetValue("msg-param-recipient-user-name", out giftlogin);
+                                        msg.Tags.TryGetValue("login", out login);
+                                        if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
+                                            !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
+                                            int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
+                                            if (index != -1) {
+                                                index += displayname.Length;
+                                                sysMsg = sysMsg.Insert(index, " ("+login+")");
+                                            }
+                                        }
+                                        if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
+                                            !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
+                                            int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
+                                            if (index != -1) {
+                                                index += giftdisplayname.Length;
+                                                sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
+                                            }
+                                        }
+                                        message = new Message(sysMsg, HSLColor.Gray, true)
+                                        {
+                                            HighlightType = HighlightType.Resub
+                                        };
+                                        messages.Add(message);
+                                        if (!string.IsNullOrEmpty(msg.Params))
+                                        {
+                                            message = new Message(msg, this)
+                                            {
+                                                HighlightType = HighlightType.Resub
+                                            };
+                                            messages.Add(message);
+                                        }
+                                    } else {
+                                        message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
+                                        if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                            messages.Add(message);
+                                        }
+                                    }
+                                    
+                                    
+                                }
+                            }
+                        }
+                        response.Close();
+                    }
+                    return messages;
+                }
+                catch (Exception e)
+                {
+                    GuiEngine.Current.log(e.ToString());
+                }
+            }
+            return null;
+        }
 
         private void AppSettings_FontChanged(object sender, EventArgs e)
         {
@@ -930,9 +926,9 @@ namespace Chatterino.Common
         {
             lock (MessageLock)
             {
-                if (Messages.Length != 0 && Messages[Messages.Length - 1].HighlightType.HasFlag(HighlightType.Disconnected))
+                if (Messages.Count != 0 && Messages.Last.Value.HighlightType.HasFlag(HighlightType.Disconnected))
                 {
-                    Messages[Messages.Length - 1] = new Message("reconnected to chat",
+                    Messages.Last.Value = new Message("reconnected to chat",
                         HSLColor.Gray, true)
                     {
                         HighlightTab = false,
@@ -968,26 +964,20 @@ namespace Chatterino.Common
 
         private void AppSettings_MessageLimitChanged(object sender, EventArgs e)
         {
-            Message[] _messages = null;
+            List<Message> _messages = new List<Message>();
 
             lock (MessageLock)
             {
                 maxMessages = AppSettings.ChatMessageLimit;
-                if (Messages.Length > AppSettings.ChatMessageLimit)
+                while(Messages.Count > AppSettings.ChatMessageLimit)
                 {
-                    _messages = new Message[Messages.Length - AppSettings.ChatMessageLimit];
-                    Array.Copy(Messages, _messages, _messages.Length);
-
-                    var M = new Message[AppSettings.ChatMessageLimit];
-                    Array.Copy(Messages, Messages.Length - AppSettings.ChatMessageLimit, M, 0,
-                        AppSettings.ChatMessageLimit);
-
-                    Messages = M;
+                    _messages.Add(Messages.First.Value);
+                    Messages.RemoveFirst();
                 }
             }
 
-            if (_messages != null)
-                MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(_messages));
+            if (_messages != null && _messages.Count > 0)
+                MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(_messages.ToArray()));
         }
 
         private void Emotes_EmotesLoaded(object sender, EventArgs e)
@@ -1126,7 +1116,7 @@ namespace Chatterino.Common
                 data.Uses--;
                 if (data.Uses <= 0)
                 {
-                    data.Disconnect();
+                    data.Part();
                     data.Dispose();
                     channels.TryRemove(channelName ?? "", out data);
                 }
@@ -1232,13 +1222,28 @@ namespace Chatterino.Common
             }
             return null;
         }
+        
+        public void Rejoin()
+        {
+            try
+            {
+                Part();
+                List<Message> messages = LoadRecentMessages();
+                if (messages != null) {
+                    JoinMessagesAtEnd(messages.ToArray());
+                }
+                Join();
+            } catch (Exception e) {
+                GuiEngine.Current.log(e.ToString());
+            }
+        }
 
         public void Join()
         {
             IrcManager.Client?.Join("#" + Name);
         }
 
-        public void Disconnect()
+        public void Part()
         {
             IrcManager.Client?.Part("#" + Name);
         }
@@ -1313,12 +1318,15 @@ namespace Chatterino.Common
         public event EventHandler<MessageAddedEventArgs> MessageAdded;
         public event EventHandler<ValueEventArgs<Message[]>> MessagesAddedAtStart;
         public event EventHandler<ValueEventArgs<Message[]>> MessagesRemovedAtStart;
+        public event EventHandler<ValueEventArgs<Message[]>> MessagesAddedAtEnd;
 
         public int MessageCount { get; private set; } = 0;
 
-        private Message[] _messages = new Message[0];
+        //private Message[] _messages = new Message[0];
+        
+        private LinkedList<Message> _messages = new LinkedList<Message>();
 
-        public Message[] Messages
+        public LinkedList<Message> Messages
         {
             get { return _messages; }
             set { _messages = value; }
@@ -1329,8 +1337,7 @@ namespace Chatterino.Common
             Message[] M;
             lock (MessageLock)
             {
-                M = new Message[_messages.Length];
-                Array.Copy(_messages, M, M.Length);
+                M = _messages.ToArray();
             }
             return M;
         }
@@ -1347,16 +1354,16 @@ namespace Chatterino.Common
 
                 lock (MessageLock)
                 {
-                    Messages = new Message[0];
+                    Messages = new LinkedList<Message>();
                 }
 
-                MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(_messages));
+                MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(_messages.ToArray()));
             }
             else
             {
                 lock (MessageLock)
                 {
-                    foreach (var message in Messages)
+                    foreach (Message message in Messages)
                     {
                         message.Disabled = true;
                     }
@@ -1383,27 +1390,28 @@ namespace Chatterino.Common
                     msg.Disabled = true;
                 }
             }
-
-            for (var i = Messages.Length - 1; i >= 0; i--)
-            {
-                var m = Messages[i];
-
-                if (m.ParseTime > DateTime.Now - TimeSpan.FromSeconds(30))
+            if (Messages.Count > 0) {
+                for (var i = Messages.Last; i != null; i = i.Previous)
                 {
-                    if (m.TimeoutUser != user) continue;
+                    var m = i.Value;
 
-                    Messages[i] =
-                        new Message(
-                            $"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")}: \"{reason}\" (multiple times)",
-                            HSLColor.Gray, true)
-                        { TimeoutUser = user, Id = Messages[i].Id };
-                    Monitor.Exit(MessageLock);
+                    if (m.ParseTime > DateTime.Now - TimeSpan.FromSeconds(30))
+                    {
+                        if (m.TimeoutUser != user) continue;
 
-                    ChatCleared?.Invoke(this, new ChatClearedEventArgs(user, reason, duration));
-                    return;
+                        i.Value =
+                            new Message(
+                                $"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")}: \"{reason}\" (multiple times)",
+                                HSLColor.Gray, true)
+                            { TimeoutUser = user, Id = m.Id };
+                        Monitor.Exit(MessageLock);
+
+                        ChatCleared?.Invoke(this, new ChatClearedEventArgs(user, reason, duration));
+                        return;
+                    }
+
+                    break;
                 }
-
-                break;
             }
 
             Monitor.Exit(MessageLock);
@@ -1418,26 +1426,18 @@ namespace Chatterino.Common
 
         public void AddMessage(Message message)
         {
-            Message[] M;
             Message removedMessage = null;
 
             lock (MessageLock)
             {
-                if (Messages.Length == maxMessages)
+                if (Messages.Count == maxMessages)
                 {
-                    removedMessage = Messages[0];
-                    M = new Message[maxMessages];
-                    Array.Copy(Messages, 1, M, 0, Messages.Length - 1);
+                    removedMessage = Messages.First.Value;
+                    Messages.RemoveFirst();
                 }
-                else
-                {
-                    M = new Message[Messages.Length + 1];
-                    Array.Copy(Messages, M, Messages.Length);
-                }
-
-                M[M.Length - 1] = message;
-                Messages = M;
-                MessageCount = M.Length;
+                
+                Messages.AddLast(message);
+                MessageCount = Messages.Count;
             }
 
             MessageAdded?.Invoke(this, new MessageAddedEventArgs(message, removedMessage));
@@ -1445,38 +1445,68 @@ namespace Chatterino.Common
 
         public void AddMessagesAtStart(Message[] messages)
         {
-            Message[] M;
 
             lock (MessageLock)
             {
-                if (Messages.Length == maxMessages)
+                if (Messages.Count == maxMessages)
                     return;
 
-                if (messages.Length + Messages.Length <= maxMessages)
+                if (messages.Length + Messages.Count > maxMessages)
                 {
-                    M = new Message[messages.Length + Messages.Length];
-
-                    Array.Copy(Messages, 0, M, messages.Length, Messages.Length);
-                    Array.Copy(messages, 0, M, 0, messages.Length);
-                }
-                else
-                {
-                    M = new Message[maxMessages];
-
-                    Array.Copy(Messages, 0, M, maxMessages - Messages.Length, Messages.Length);
-
-                    var _messages = new Message[maxMessages - Messages.Length];
-
-                    Array.Copy(messages, messages.Length - maxMessages + Messages.Length, M, 0, maxMessages - Messages.Length);
-                    Array.Copy(messages, messages.Length - maxMessages + Messages.Length, _messages, 0, maxMessages - Messages.Length);
-
+                    var _messages = new Message[maxMessages - Messages.Count];
+                    Array.Copy(messages, messages.Length - maxMessages + Messages.Count, _messages, 0, maxMessages - Messages.Count);
                     messages = _messages;
                 }
-                Messages = M;
-                MessageCount = M.Length;
+                
+                for (var i = messages.Length-1; i >=0 ; i--) {
+                    Messages.AddFirst(messages[i]);
+                }
+                
+                MessageCount = Messages.Count;
             }
 
             MessagesAddedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(messages));
+        }
+        
+        //joins new messages to the end of the list. it will move past the duplicates in the array to the new messages.
+        public void JoinMessagesAtEnd(Message[] newmessages)
+        {
+            List<Message> messages_added = new List<Message>(newmessages.Length);
+            List<Message> messages_removed = new List<Message>(newmessages.Length);
+            lock (MessageLock)
+            {
+                Message m;
+                bool messages_are_added = false;
+                for (var i = Messages.Last; i != null; i = i.Previous) {
+                    m = i.Value;
+                    if (m.MessageId != null) {
+                        for (int j = newmessages.Length - 1; j >= 0; j--) {
+                            if (newmessages[j].MessageId != null && newmessages[j].MessageId.Equals(m.MessageId)) {
+                                messages_are_added = true;
+                                for (int k = j+1; k < newmessages.Length; k++) {
+                                    Messages.AddLast(newmessages[k]);
+                                    messages_added.Add(newmessages[k]);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (!messages_are_added) {
+                    for (int i = 0; i < newmessages.Length; i++) {
+                        Messages.AddLast(newmessages[i]);
+                        messages_added.Add(newmessages[i]);
+                    }
+                }
+                while (Messages.Count > maxMessages) {
+                    messages_removed.Add(Messages.First.Value);
+                    Messages.RemoveFirst();
+                }
+                MessageCount = Messages.Count;
+            }
+            MessagesAddedAtEnd?.Invoke(this, new ValueEventArgs<Message[]>(messages_added.ToArray()));
+            MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(messages_removed.ToArray()));
         }
 
         public void Dispose()

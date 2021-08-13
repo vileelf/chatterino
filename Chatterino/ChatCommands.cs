@@ -115,6 +115,17 @@ namespace Chatterino
                 }
                 return null;
             });
+            Commands.ChatCommands.TryAdd("rejoin", (s, channel, execute) =>
+            {
+                if (execute)
+                {
+                    Task.Run(() =>
+                    {
+                        channel.Rejoin();
+                    });
+                }
+                return null;
+            });
             Commands.ChatCommands.TryAdd("unignore", (s, channel, execute) =>
             {
                 if (execute)

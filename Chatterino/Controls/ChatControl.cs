@@ -42,7 +42,7 @@ namespace Chatterino.Controls
 
         protected override Message[] Messages
         {
-            get { return channel?.Messages; }
+            get { return channel?.Messages.ToArray(); }
         }
 
         // used to break out of a search loop
@@ -97,6 +97,7 @@ namespace Chatterino.Controls
                     channel.MessageAdded -= Channel_MessageAdded;
                     channel.MessagesAddedAtStart -= Channel_MessagesAddedAtStart;
                     channel.MessagesRemovedAtStart -= Channel_MessagesRemovedAtStart;
+                    channel.MessagesAddedAtEnd += Channel_MessagesAddedAtEnd;
                     channel.ChatCleared -= Channel_ChatCleared;
                     channel.RoomStateChanged -= Channel_RoomStateChanged;
                     channel.LiveStatusUpdated -= Channel_LiveStatusUpdated;
@@ -113,6 +114,7 @@ namespace Chatterino.Controls
                     channel.MessageAdded += Channel_MessageAdded;
                     channel.MessagesAddedAtStart += Channel_MessagesAddedAtStart;
                     channel.MessagesRemovedAtStart += Channel_MessagesRemovedAtStart;
+                    channel.MessagesAddedAtEnd += Channel_MessagesAddedAtEnd;
                     channel.ChatCleared += Channel_ChatCleared;
                     channel.RoomStateChanged += Channel_RoomStateChanged;
                     channel.LiveStatusUpdated += Channel_LiveStatusUpdated;
@@ -298,6 +300,25 @@ namespace Chatterino.Controls
                 if (e.Value[i].HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Resub | HighlightType.UsernameHighlighted))
                 {
                     _scroll.AddHighlight(i,
+                        e.Value[i].HasAnyHighlightType(HighlightType.Highlighted)
+                            ? Color.Red
+                            : e.Value[i].HasAnyHighlightType(HighlightType.UsernameHighlighted)
+                            ? Color.Orange
+                            : Color.FromArgb(-16777216 | 0x3F6ABF));
+                }
+            }
+
+            updateMessageBounds();
+            ProposeInvalidation();
+        }
+        
+        private void Channel_MessagesAddedAtEnd(object sender, ValueEventArgs<Message[]> e)
+        {
+            for (var i = 0; i < e.Value.Length; i++)
+            {
+                if (e.Value[i].HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Resub | HighlightType.UsernameHighlighted) && channel?.MessageCount > e.Value.Length)
+                {
+                    _scroll.AddHighlight((channel.MessageCount - (e.Value.Length - i)),
                         e.Value[i].HasAnyHighlightType(HighlightType.Highlighted)
                             ? Color.Red
                             : e.Value[i].HasAnyHighlightType(HighlightType.UsernameHighlighted)
@@ -976,24 +997,25 @@ namespace Chatterino.Controls
 
             lock (Channel.MessageLock)
             {
-                messages = Channel.Messages;
 
                 if (results.Count != 0)
                 {
-                    for (var i = messages.Length - 1; i >= 0; i--)
+                    int count = Channel.Messages.Count;
+                    for (var i = Channel.Messages.Last; i != null; i = i.Previous)
                     {
-                        var message = messages[i];
+                        var message = i.Value;
                         var peek = results.Peek();
 
                         if (message.Id == peek.Id)
                         {
                             message.HighlightType |= HighlightType.SearchResult;
-                            _scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
+                            _scroll.AddHighlight(count, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
                             SearchResults[results.Dequeue().Id] = null;
 
                             if (results.Count == 0)
                                 break;
                         }
+                        count--;
                     }
                 }
             }
@@ -1007,9 +1029,9 @@ namespace Chatterino.Controls
             {
                 var messages = Channel.Messages;
 
-                for (var i = messages.Length - 1; i >= 0; i--)
+                for (var i = messages.Last;i != null; i = i.Previous)
                 {
-                    var message = messages[i];
+                    var message = i.Value;
                     message.HighlightType &= ~HighlightType.SearchResult;
                 }
             }
@@ -1137,6 +1159,13 @@ namespace Chatterino.Controls
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
                     IrcManager.Client.Reconnect();
+                }));
+                _contextMenu.MenuItems.Add(new MenuItem("Rejoin Channel", (s, e) =>
+                {
+                    Task.Run(() =>
+                    {
+                        _selected.Channel.Rejoin();
+                    });
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Show Changelog", (s, e) => App.MainForm.ShowChangelog()));
                 //contextMenu.MenuItems.Add(LoginMenuItem = new MenuItem("Login", (s, e) => new LoginForm().ShowDialog(), Shortcut.CtrlL));
