@@ -74,6 +74,7 @@ namespace Chatterino.Controls
             this.chkRemoveX = new System.Windows.Forms.CheckBox();
             this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
             this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
+            this.chkChangeTabTitle = new System.Windows.Forms.CheckBox();
             this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.btnDefaultFont = new System.Windows.Forms.Button();
@@ -418,6 +419,7 @@ namespace Chatterino.Controls
             this.panel1.Controls.Add(this.chkRemoveX);
             this.panel1.Controls.Add(this.chkShowEmoteTooltip);
             this.panel1.Controls.Add(this.chkHighlightHighlightedMessages);
+            this.panel1.Controls.Add(this.chkChangeTabTitle);
             this.panel1.Controls.Add(this.btnSelectFont);
             this.panel1.Controls.Add(this.btnDefaultFont);
             this.panel1.Controls.Add(this.label10);
@@ -444,7 +446,7 @@ namespace Chatterino.Controls
             this.groupBox1.Controls.Add(this.chkMessageSeperators);
             this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(17, 288);
+            this.groupBox1.Location = new System.Drawing.Point(17, 310);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(435, 92);
             this.groupBox1.TabIndex = 37;
@@ -668,6 +670,17 @@ namespace Chatterino.Controls
             this.chkHighlightHighlightedMessages.TabIndex = 29;
             this.chkHighlightHighlightedMessages.Text = "Highlight highlighted messages\r\n";
             this.chkHighlightHighlightedMessages.UseVisualStyleBackColor = true;
+            // 
+            // chkChangeTabTitle
+            // 
+            this.chkChangeTabTitle.AutoSize = true;
+            this.chkChangeTabTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkChangeTabTitle.Location = new System.Drawing.Point(17, 285);
+            this.chkChangeTabTitle.Name = "chkChangeTabTitle";
+            this.chkChangeTabTitle.Size = new System.Drawing.Size(133, 17);
+            this.chkChangeTabTitle.TabIndex = 29;
+            this.chkChangeTabTitle.Text = "Double click tab to change tab title\r\n";
+            this.chkChangeTabTitle.UseVisualStyleBackColor = true;
             // 
             // btnSelectFont
             // 
@@ -2251,6 +2264,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkRemoveX;
         private System.Windows.Forms.CheckBox chkShowEmoteTooltip;
         private System.Windows.Forms.CheckBox chkHighlightHighlightedMessages;
+        private System.Windows.Forms.CheckBox chkChangeTabTitle;
         private System.Windows.Forms.CheckBox chkIgnoreViaTwitch;
         private System.Windows.Forms.CheckBox chkEnableInlineWhispers;
         private System.Windows.Forms.CheckBox chkLastReadMessageIndicator;

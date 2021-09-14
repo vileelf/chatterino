@@ -237,8 +237,9 @@ namespace Chatterino.Controls
             protected override void OnDoubleClick(EventArgs e)
             {
                 base.OnDoubleClick(e);
-
-                Rename();
+                if (AppSettings.ChangeTabTitle) {
+                    Rename();
+                }
             }
 
             private void CalcSize()

@@ -180,6 +180,8 @@ namespace Chatterino.Common
 
         public static bool RemoveXButton { get; set; }
         
+        public static bool ChangeTabTitle { get; set; } = true;
+        
         public static bool ShowEmoteTooltip { get; set; } = true;
         
         public static bool HighlightHighlightedMessages { get; set; } = true;
