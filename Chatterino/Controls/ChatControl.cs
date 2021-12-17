@@ -1158,7 +1158,7 @@ namespace Chatterino.Controls
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
-                    IrcManager.Client.Reconnect();
+                    IrcManager.Reconnect();
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Rejoin Channel", (s, e) =>
                 {

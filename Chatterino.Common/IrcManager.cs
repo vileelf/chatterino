@@ -169,7 +169,8 @@ namespace Chatterino.Common
 
             // Login
             string username = Account.Username, oauth = Account.OauthToken, userid = Account.UserId;
-
+            readconnected = false;
+            writeconnected = false;
             try
             {
                 if (Account.IsAnon)
@@ -254,31 +255,16 @@ namespace Chatterino.Common
             Task.Run(() =>
             {
                 Client = new IrcClient(Account.IsAnon);
+                
+                readconnected = false;
+                writeconnected = false;
+                Client.ReadConnection.Connected += ReadConnection_Connected;
 
-                Client.ReadConnection.Connected += (s, e) =>
-                {
-                    foreach (var channel in TwitchChannel.Channels)
-                    {
-                        Client.ReadConnection.WriteLine("JOIN #" + channel.Name);
-                    }
-
-                    Connected?.Invoke(null, EventArgs.Empty);
-                };
-
-                Client.ReadConnection.Disconnected += (s, e) =>
-                {
-                    Disconnected?.Invoke(null, EventArgs.Empty);
-                };
-
+                Client.ReadConnection.Disconnected += ReadConnection_Disconnected;
+                Client.WriteConnection.Disconnected += WriteConnection_Disconnected;
                 if (!Account.IsAnon)
                 {
-                    Client.WriteConnection.Connected += (s, e) =>
-                    {
-                        foreach (var channel in TwitchChannel.Channels)
-                        {
-                            Client.WriteConnection.WriteLine("JOIN #" + channel.Name);
-                        }
-                    };
+                    Client.WriteConnection.Connected += WriteConnection_Connected;
                 }
 
                 Client.Connect(username, (oauth.StartsWith("oauth:") ? oauth : "oauth:" + oauth));
@@ -288,13 +274,46 @@ namespace Chatterino.Common
             });
 
         }
+        
+        public static void Reconnect()
+        {
+            readconnected = false;
+            writeconnected = false;
+            Client.Reconnect();
+        }
+        
+        private static bool writeconnected = false;
+        
+        private static void WriteConnection_Connected(object sender, EventArgs e) {
+            writeconnected = true;
+            if (readconnected) {
+                TwitchChannelJoiner.clearQueue();
+                Connected?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        private static void WriteConnection_Disconnected(object sender, EventArgs e) {
+            writeconnected = false;
+        }
+        
+        private static bool readconnected = false;
+        
+        private static void ReadConnection_Connected(object sender, EventArgs e) {
+            readconnected = true;
+            if (writeconnected||Account.IsAnon) {
+                TwitchChannelJoiner.clearQueue();
+                Connected?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        private static void ReadConnection_Disconnected(object sender, EventArgs e) {
+            readconnected = false;
+            Disconnected?.Invoke(null, EventArgs.Empty);
+        }
 
         public static void Disconnect()
         {
             var disconnected = false;
 
             twitchBlockedUsers.Clear();
-
             if (Client != null)
             {
                 disconnected = true;
@@ -302,7 +321,15 @@ namespace Chatterino.Common
                 Client.Disconnect();
                 Client.ReadConnection.MessageReceived -= ReadConnection_MessageReceived;
                 Client.WriteConnection.MessageReceived -= WriteConnection_MessageReceived;
-
+                
+                readconnected = false;
+                writeconnected = false;
+                
+                Client.ReadConnection.Connected -= ReadConnection_Connected;
+                Client.ReadConnection.Disconnected -= ReadConnection_Disconnected;
+                Client.WriteConnection.Disconnected -= WriteConnection_Disconnected;
+                Client.WriteConnection.Connected -= WriteConnection_Connected;
+                
                 Client = null;
             }
 

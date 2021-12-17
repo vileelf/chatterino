@@ -43,6 +43,8 @@ namespace Chatterino
             // icon
             Icon = App.Icon;
 
+            TwitchChannelJoiner.runChannelLoop();
+
             // load layout
             LoadLayout(Path.Combine(Util.GetUserDataPath(), "Layout.xml"));
 
@@ -547,6 +549,8 @@ namespace Chatterino
         protected override void OnClosing(CancelEventArgs e)
         {
             SaveLayout(Path.Combine(Util.GetUserDataPath(), "Layout.xml"));
+            
+            TwitchChannelJoiner.stopChannelLoop();
 
             AppSettings.WindowX = Location.X;
             AppSettings.WindowY = Location.Y;

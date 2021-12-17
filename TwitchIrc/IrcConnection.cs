@@ -70,11 +70,12 @@ namespace TwitchIrc
         private void connect()
         {
             IsConnected = false;
-
+            
             if (connecting) return;
 
             if (client != null)
             {
+                Disconnected?.Invoke(this, EventArgs.Empty);
                 client.Close();
                 client = null;
             }
@@ -93,11 +94,11 @@ namespace TwitchIrc
                 stream = client.GetStream();
 
                 var reader = new StreamReader(stream);
-
                 var messageQueue = new ConcurrentQueue<IrcMessage>();
                 var messageQueueAddedEvent = new AutoResetEvent(false);
-
-                new Thread(() =>
+                
+                
+                Thread pingpong = new Thread(() =>
                 {
                     try
                     {
@@ -127,7 +128,9 @@ namespace TwitchIrc
                         }
                     }
                     catch { }
-                }).Start();
+                });
+                pingpong.Priority = ThreadPriority.AboveNormal;
+                pingpong.Start();
 
                 new Thread(() =>
                 {
@@ -172,10 +175,9 @@ namespace TwitchIrc
 
                 writeLine(stream, "CAP REQ :twitch.tv/commands");
                 writeLine(stream, "CAP REQ :twitch.tv/tags");
-
+                
                 receivedPong = true;
                 IsConnected = true;
-
                 Connected?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception exc)
@@ -209,8 +211,6 @@ namespace TwitchIrc
                 }
                 else
                 {
-                    Disconnected?.Invoke(this, EventArgs.Empty);
-
                     connect();
                 }
             }

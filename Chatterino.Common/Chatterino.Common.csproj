@@ -84,6 +84,7 @@
     <Compile Include="RoomState.cs" />
     <Compile Include="Selection.cs" />
     <Compile Include="TwitchChannel.cs" />
+    <Compile Include="TwitchChannelJoiner.cs" />
     <Compile Include="Updates.cs" />
     <Compile Include="UserInfoData.cs" />
     <Compile Include="Util.cs" />

@@ -749,46 +749,50 @@ namespace Chatterino.Common
         {
             if (!channelName.StartsWith("/"))
             {
+                
                 Name = channelName.Trim('#');
                 SubLink = $"https://www.twitch.tv/{Name}/subscribe?ref=in_chat_subscriber_link";
                 ChannelLink = $"https://twitch.tv/{Name}";
                 PopoutPlayerLink = $"https://player.twitch.tv/?channel={Name}&parent=chatterinoclassic";
                 
-                try {
-                    Join();
-                    connected = true;           
-                } catch (Exception e) {
-                    GuiEngine.Current.log("error connecting to twitch " + channelName + " " + e.Message);
-                    reconnectTryAgainTimer = new System.Timers.Timer(1000);
-                    reconnectTryAgainTimer.Elapsed += this.OnRefreshTimerElapsed;
-                }
-                
-                loadData();
-                // recent chat
                 Task.Run(() =>
                 {
-                    
-
-                    if (RoomID != -1)
+                    loadData();
+                    // recent chat
+                    Task.Run(() =>
                     {
-                        loadEmotesFromFile();
-                        Task.Run(() =>
+                        
+
+                        if (RoomID != -1)
                         {
-                            ReloadEmotes();
-                        });
-                        List<Message> message = LoadRecentMessages();
-                        if (message != null) {
-                            AddMessagesAtStart(message.ToArray());
+                            loadEmotesFromFile();
+                            Task.Run(() =>
+                            {
+                                ReloadEmotes();
+                            });
+                            List<Message> message = LoadRecentMessages();
+                            if (message != null) {
+                                AddMessagesAtStart(message.ToArray());
+                            }
                         }
+                    });
+
+                    // get chatters
+                    Task.Run(() =>
+                    {
+                        fetchUsernames();
+                    });
+                    checkIfIsLive();
+                    
+                    try {
+                        Join();
+                        connected = true;           
+                    } catch (Exception e) {
+                        GuiEngine.Current.log("error connecting to twitch " + channelName + " " + e.Message);
+                        reconnectTryAgainTimer = new System.Timers.Timer(1000);
+                        reconnectTryAgainTimer.Elapsed += this.OnRefreshTimerElapsed;
                     }
                 });
-
-                // get chatters
-                Task.Run(() =>
-                {
-                    fetchUsernames();
-                });
-                checkIfIsLive();
             }
 
             Emotes.EmotesLoaded += Emotes_EmotesLoaded;
@@ -928,19 +932,26 @@ namespace Chatterino.Common
             {
                 if (Messages.Count != 0 && Messages.Last.Value.HighlightType.HasFlag(HighlightType.Disconnected))
                 {
+                    
                     Messages.Last.Value = new Message("reconnected to chat",
                         HSLColor.Gray, true)
                     {
                         HighlightTab = false,
                         HighlightType = HighlightType.Connected,
                     };
-
+                    Task.Run(() =>
+                    {
+                        Rejoin();
+                    });
                     Task.Run(() => ChatCleared?.Invoke(this, new ChatClearedEventArgs("", "", 0)));
 
                     return;
                 }
             }
-
+            Task.Run(() =>
+            {
+                Rejoin();
+            });
             AddMessage(new Message("connected to chat", HSLColor.Gray, true)
             {
                 HighlightTab = false,
@@ -1223,24 +1234,44 @@ namespace Chatterino.Common
             return null;
         }
         
+        private bool isrejoining = false;
         public void Rejoin()
         {
             try
             {
-                Part();
-                List<Message> messages = LoadRecentMessages();
-                if (messages != null) {
-                    JoinMessagesAtEnd(messages.ToArray());
+                if (!isrejoining) {
+                    isrejoining = true;
+                    Part();
+                    List<Message> messages = LoadRecentMessages();
+                    if (messages != null) {
+                        JoinMessagesAtEnd(messages.ToArray());
+                    }
+                    Join();
+                    isrejoining = false;
                 }
-                Join();
             } catch (Exception e) {
                 GuiEngine.Current.log(e.ToString());
+                isrejoining = false;
             }
         }
-
         public void Join()
         {
-            IrcManager.Client?.Join("#" + Name);
+            AddMessage(new Message("Joining Channel", HSLColor.Gray, true) {
+                HighlightTab = false,
+            });
+            TwitchChannelJoiner.queueJoinChannel(Name, channelJoinCallback, null); 
+        }
+        
+        private void channelJoinCallback(bool success, object callbackData) {
+            if (success) {
+                AddMessage(new Message("Channel Joined", HSLColor.Gray, true){
+                    HighlightTab = false,
+                });
+            } else {
+                AddMessage(new Message("Channel Failed To Join", HSLColor.Gray, true){
+                    HighlightTab = false,
+                });
+            }
         }
 
         public void Part()

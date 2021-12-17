@@ -47,6 +47,7 @@ namespace TwitchIrc
             }
         }
 
+        //please use IrcManager.Reconnect
         public void Reconnect()
         {
             ReadConnection.Reconnect();
