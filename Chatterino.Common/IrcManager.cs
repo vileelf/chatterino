@@ -156,6 +156,7 @@ namespace Chatterino.Common
 
             var username = Account.Username;
             var oauth = Account.OauthToken;
+            var userId = Account.UserId;
 
             if (Account.IsAnon)
             {
@@ -164,7 +165,7 @@ namespace Chatterino.Common
             else
             {
                 SaveAppSettings(username);
-                Task.Run(() => RetrieveTwitchBlockedUsers(oauth));
+                Task.Run(() => RetrieveTwitchBlockedUsers(oauth, userId));
                 Task.Run(() => LoadUsersEmotes());
             }
 
@@ -216,7 +217,7 @@ namespace Chatterino.Common
 
             }
         }
-        private static void RetrieveTwitchBlockedUsers(string oauth)
+        private static void RetrieveTwitchBlockedUsers(string oauth, string userid)
         {
             try
             {
