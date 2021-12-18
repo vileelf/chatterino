@@ -30,7 +30,7 @@ namespace Chatterino
                         Common.UserInfoData data = new Common.UserInfoData();
                         data.UserName = S[0];
                         data.Channel = channel;
-                        if ((data.UserId = IrcManager.loadUserIDFromTwitch(data.UserName)) != null) {
+                        if ((data.UserId = IrcManager.LoadUserIDFromTwitch(data.UserName)) != null) {
                             var popup = new UserInfoPopup(data)
                             {
                                 StartPosition = FormStartPosition.Manual,

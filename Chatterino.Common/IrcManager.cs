@@ -48,7 +48,7 @@ namespace Chatterino.Common
             public string ChannelName { get; set; }
         }
 
-        public static string loadUserIDFromTwitch(string username)
+        public static string LoadUserIDFromTwitch(string username)
         {
             // call twitch kraken api
             if (username != string.Empty && DefaultClientID != string.Empty) {
@@ -401,7 +401,7 @@ namespace Chatterino.Common
                 var success = false;
                 HttpStatusCode statusCode;
                 if (userid == null) {
-                    userid = loadUserIDFromTwitch(_username);
+                    userid = LoadUserIDFromTwitch(_username);
                 }
                 try
                 {
@@ -468,7 +468,7 @@ namespace Chatterino.Common
                 var success = false;
                 HttpStatusCode statusCode;
                 if (userid == null) {
-                    userid = loadUserIDFromTwitch(username);
+                    userid = LoadUserIDFromTwitch(username);
                 }
                 try
                 {
@@ -517,7 +517,7 @@ namespace Chatterino.Common
             try
             {
                 if (userid == null) {
-                    userid = loadUserIDFromTwitch(username);
+                    userid = LoadUserIDFromTwitch(username);
                 }
                 var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 if (AppSettings.IgnoreSystemProxy)
@@ -562,7 +562,7 @@ namespace Chatterino.Common
             try
             {
                 if (userid == null) {
-                    userid = loadUserIDFromTwitch(username);
+                    userid = LoadUserIDFromTwitch(username);
                 }
                 var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "PUT";
@@ -595,7 +595,7 @@ namespace Chatterino.Common
             try
             {
                 if (userid == null) {
-                    userid = loadUserIDFromTwitch(username);
+                    userid = LoadUserIDFromTwitch(username);
                 }
                 var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "DELETE";
