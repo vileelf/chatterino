@@ -17,7 +17,7 @@ namespace TwitchIrc
 
         // ratelimiting
         private static readonly ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
-        private static readonly Queue<DateTime> lastMessagesMod = new Queue<DateTime>();
+        private static readonly Queue<DateTime> lastMessages = new Queue<DateTime>();
 
         private static object lastMessagesLock = new object();
 
@@ -62,27 +62,21 @@ namespace TwitchIrc
         {
             var messageQueueLimit = GetMessageQueueLimit(isMod);
 
-            if (lastMessagesMod.Count < messageQueueLimit)
-            {
-                if (message.StartsWith(".color"))
-                {
-                    WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
-                    return true;
-                }
-            }
-
             lock (lastMessagesLock)
             {
-                while (lastMessagesMod.Count > 0 && lastMessagesMod.Peek() < DateTime.Now)
+                while (lastMessages.Count > 0 && lastMessages.Peek() < DateTime.Now)
                 {
-                    lastMessagesMod.Dequeue();
+                    lastMessages.Dequeue();
                 }
 
-                if (lastMessagesMod.Count < messageQueueLimit)
+                if (lastMessages.Count < messageQueueLimit)
                 {
                     WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
 
-                    lastMessagesMod.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
+                    if (message.StartsWith(".color") == false)
+                    {
+                        lastMessages.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
+                    }
                 }
                 else
                 {
@@ -102,7 +96,7 @@ namespace TwitchIrc
         {
             lock (lastMessagesLock)
             {
-                return lastMessagesMod.Count >= GetMessageQueueLimit(isMod) ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
+                return lastMessages.Count >= GetMessageQueueLimit(isMod) ? lastMessages.Peek() - DateTime.Now : TimeSpan.Zero;
             }
         }
 
