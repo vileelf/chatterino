@@ -20,17 +20,8 @@ namespace TwitchIrc
         public IrcClient(bool singleConnection = false)
         {
             SingleConnection = singleConnection;
-
             ReadConnection = new IrcConnection();
-
-            if (singleConnection)
-            {
-                WriteConnection = ReadConnection;
-            }
-            else
-            {
-                WriteConnection = new IrcConnection();
-            }
+            WriteConnection = SingleConnection ? ReadConnection : new IrcConnection();
         }
 
         public void Connect(string username, string password)
