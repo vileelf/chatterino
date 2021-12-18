@@ -20,9 +20,6 @@ namespace TwitchIrc
 
         public bool IsConnected { get; private set; }
 
-        // private variables
-        private bool connecting = false;
-
         private bool receivedPong = true;
 
         private TcpClient client;
@@ -70,8 +67,6 @@ namespace TwitchIrc
         private void connect()
         {
             IsConnected = false;
-            
-            if (connecting) return;
 
             if (client != null)
             {
