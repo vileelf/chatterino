@@ -2,21 +2,17 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TwitchIrc
 {
     public class IrcClient
     {
-
         public bool SingleConnection { get; private set; }
         public IrcConnection ReadConnection { get; private set; }
         public IrcConnection WriteConnection { get; private set; }
 
         // ratelimiting
         private static readonly ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
-        private static readonly Queue<DateTime> lastMessagesPleb = new Queue<DateTime>();
         private static readonly Queue<DateTime> lastMessagesMod = new Queue<DateTime>();
 
         private static object lastMessagesLock = new object();
@@ -76,17 +72,11 @@ namespace TwitchIrc
                     lastMessagesMod.Dequeue();
                 }
 
-                while (lastMessagesPleb.Count > 0 && lastMessagesPleb.Peek() < DateTime.Now)
-                {
-                    lastMessagesPleb.Dequeue();
-                }
-
                 if (lastMessagesMod.Count < (isMod ? 99 : 19))
                 {
                     WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
 
                     lastMessagesMod.Enqueue(DateTime.Now + TimeSpan.FromSeconds(32));
-                    lastMessagesPleb.Enqueue(DateTime.Now + TimeSpan.FromSeconds(32));
                 }
                 else
                 {
@@ -101,14 +91,7 @@ namespace TwitchIrc
         {
             lock (lastMessagesLock)
             {
-                if (isMod)
-                {
-                    return lastMessagesMod.Count >= 99 ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
-                }
-                else
-                {
-                    return lastMessagesPleb.Count >= 19 ? lastMessagesPleb.Peek() - DateTime.Now : TimeSpan.Zero;
-                }
+                return lastMessagesMod.Count >= (isMod ? 99 : 19) ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
             }
         }
 
