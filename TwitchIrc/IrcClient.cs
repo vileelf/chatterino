@@ -11,13 +11,11 @@ namespace TwitchIrc
         private const int UserMessageQueueLimit = 19;
         private const int MessageQueueDurationInSeconds = 32;
 
+        private static readonly Queue<DateTime> lastMessages = new Queue<DateTime>();
+
         public bool SingleConnection { get; private set; }
         public IrcConnection ReadConnection { get; private set; }
         public IrcConnection WriteConnection { get; private set; }
-
-        // ratelimiting
-        private static readonly ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
-        private static readonly Queue<DateTime> lastMessages = new Queue<DateTime>();
 
         private static object lastMessagesLock = new object();
 
