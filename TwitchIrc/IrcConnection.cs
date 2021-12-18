@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace TwitchIrc
 {
     public class IrcConnection : IDisposable
     {
+        private static System.Timers.Timer pingTimer = new System.Timers.Timer { Enabled = true, Interval = 12000 };
+
         // public properties
         public event EventHandler<MessageEventArgs> MessageReceived;
         public event EventHandler Connected;
@@ -20,12 +19,12 @@ namespace TwitchIrc
 
         public bool IsConnected { get; private set; }
 
-        private bool receivedPong = true;
+        private bool hasReceivedPong { get; set; } = true;
+        private TcpClient client { get; set; }
+        private NetworkStream stream { get; set; }
 
-        private TcpClient client;
-        private NetworkStream stream;
-
-        private string username, password;
+        private string username { get; set; }
+        private string password { get; set; }
 
         // constructor
         public IrcConnection()
@@ -114,7 +113,7 @@ namespace TwitchIrc
                                 }
                                 else if (msg.Command == "PONG")
                                 {
-                                    receivedPong = true;
+                                    hasReceivedPong = true;
                                 }
 
                                 messageQueue.Enqueue(msg);
@@ -171,7 +170,7 @@ namespace TwitchIrc
                 writeLine(stream, "CAP REQ :twitch.tv/commands");
                 writeLine(stream, "CAP REQ :twitch.tv/tags");
                 
-                receivedPong = true;
+                hasReceivedPong = true;
                 IsConnected = true;
                 Connected?.Invoke(this, EventArgs.Empty);
             }
@@ -198,9 +197,9 @@ namespace TwitchIrc
         {
             if (IsConnected)
             {
-                if (receivedPong)
+                if (hasReceivedPong)
                 {
-                    receivedPong = false;
+                    hasReceivedPong = false;
 
                     writeLine(stream, "PING");
                 }
@@ -210,8 +209,5 @@ namespace TwitchIrc
                 }
             }
         }
-
-        // static
-        private static System.Timers.Timer pingTimer = new System.Timers.Timer { Enabled = true, Interval = 12000 };
     }
 }
