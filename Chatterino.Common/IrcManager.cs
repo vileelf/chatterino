@@ -16,29 +16,28 @@ namespace Chatterino.Common
 {
     public static class IrcManager
     {
-        // Constants
         public const int MaxMessageLength = 500;
 
-        // Properties
         public static Account Account { get; set; } = Account.AnonAccount;
-        //public static string Username { get; private set; } = null;
-
         public static string DefaultClientID { get; set; } = "gkp8i0oxk7xua6pcxmg4w6u8vt8n4qw";
-        //public static string ClientID { get; set; } = null;
-
         public static IrcClient Client { get; set; }
-        
-
-        static ConcurrentDictionary<string, object> twitchBlockedUsers = new ConcurrentDictionary<string, object>();
-
-        public static IEnumerable<string> IgnoredUsers
-        {
-            get { return AppSettings.IgnoreViaTwitch==true?twitchBlockedUsers.Keys:AppSettings.IgnoredUsers.Keys; }
-        }
-
         public static string LastReceivedWhisperUser { get; set; }
+        public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
 
-        // Static Ctor
+
+        private static readonly ConcurrentDictionary<string, object> twitchBlockedUsers = new ConcurrentDictionary<string, object>();
+        private static DateTime nextMessageSendTime = DateTime.MinValue;
+        private static DateTime nextProtectMessageSendTime = DateTime.MinValue;
+        private static bool loadEmotes = true;
+        private static bool readconnected = false;
+        private static bool writeconnected = false;
+
+        public static event EventHandler LoggedIn;
+        public static event EventHandler Disconnected;
+        public static event EventHandler Connected;
+
+        public static event EventHandler<ValueEventArgs<string>> NoticeAdded;
+
         public struct TwitchEmoteValue
         {
             public int Set { get; set; }
@@ -84,7 +83,6 @@ namespace Chatterino.Common
             return null;
         }
         
-        private static bool loadEmotes = true;
         public static void LoadUsersEmotes() {
             
             try
@@ -161,8 +159,6 @@ namespace Chatterino.Common
             }
             Emotes.TriggerEmotesLoaded();
         }
-
-        // Connection
         public static void Connect()
         {
             Disconnect();
@@ -277,39 +273,12 @@ namespace Chatterino.Common
             });
 
         }
-        
+
         public static void Reconnect()
         {
             readconnected = false;
             writeconnected = false;
             Client.Reconnect();
-        }
-        
-        private static bool writeconnected = false;
-        
-        private static void WriteConnection_Connected(object sender, EventArgs e) {
-            writeconnected = true;
-            if (readconnected) {
-                TwitchChannelJoiner.clearQueue();
-                Connected?.Invoke(null, EventArgs.Empty);
-            }
-        }
-        private static void WriteConnection_Disconnected(object sender, EventArgs e) {
-            writeconnected = false;
-        }
-        
-        private static bool readconnected = false;
-        
-        private static void ReadConnection_Connected(object sender, EventArgs e) {
-            readconnected = true;
-            if (writeconnected||Account.IsAnon) {
-                TwitchChannelJoiner.clearQueue();
-                Connected?.Invoke(null, EventArgs.Empty);
-            }
-        }
-        private static void ReadConnection_Disconnected(object sender, EventArgs e) {
-            readconnected = false;
-            Disconnected?.Invoke(null, EventArgs.Empty);
         }
 
         public static void Disconnect()
@@ -324,15 +293,15 @@ namespace Chatterino.Common
                 Client.Disconnect();
                 Client.ReadConnection.MessageReceived -= ReadConnection_MessageReceived;
                 Client.WriteConnection.MessageReceived -= WriteConnection_MessageReceived;
-                
+
                 readconnected = false;
                 writeconnected = false;
-                
+
                 Client.ReadConnection.Connected -= ReadConnection_Connected;
                 Client.ReadConnection.Disconnected -= ReadConnection_Disconnected;
                 Client.WriteConnection.Disconnected -= WriteConnection_Disconnected;
                 Client.WriteConnection.Connected -= WriteConnection_Connected;
-                
+
                 Client = null;
             }
 
@@ -340,10 +309,30 @@ namespace Chatterino.Common
                 Disconnected?.Invoke(null, EventArgs.Empty);
         }
 
-        private static DateTime nextMessageSendTime = DateTime.MinValue;
-        private static DateTime nextProtectMessageSendTime = DateTime.MinValue;
+        private static void WriteConnection_Connected(object sender, EventArgs e) {
+            writeconnected = true;
+            if (readconnected) {
+                TwitchChannelJoiner.clearQueue();
+                Connected?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        private static void WriteConnection_Disconnected(object sender, EventArgs e) {
+            writeconnected = false;
+        }
+        
+        private static void ReadConnection_Connected(object sender, EventArgs e) {
+            readconnected = true;
+            if (writeconnected||Account.IsAnon) {
+                TwitchChannelJoiner.clearQueue();
+                Connected?.Invoke(null, EventArgs.Empty);
+            }
+        }
+        private static void ReadConnection_Disconnected(object sender, EventArgs e) {
+            readconnected = false;
+            Disconnected?.Invoke(null, EventArgs.Empty);
+        }
 
-        // Send Messages
+
         public static void SendMessage(TwitchChannel channel, string _message, bool isMod)
         {
             if (channel != null)
@@ -523,7 +512,6 @@ namespace Chatterino.Common
             }
         }
 
-        // Check followed users
         public static bool TryCheckIfFollowing(string username, string userid, out bool result, out string message)
         {
             try
@@ -633,13 +621,6 @@ namespace Chatterino.Common
                 return false;
             }
         }
-
-        // Messages
-        public static event EventHandler LoggedIn;
-        public static event EventHandler Disconnected;
-        public static event EventHandler Connected;
-
-        public static event EventHandler<ValueEventArgs<string>> NoticeAdded;
 
         public static bool IsMessageIgnored(Message msg, TwitchChannel c) {
             // check if message has an ignored keyword
