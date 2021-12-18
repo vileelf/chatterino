@@ -9,17 +9,17 @@ namespace TwitchIrc
 {
     public class IrcClient
     {
+
+        public bool SingleConnection { get; private set; }
         public IrcConnection ReadConnection { get; private set; }
         public IrcConnection WriteConnection { get; private set; }
 
-        public bool SingleConnection { get; private set; }
-
         // ratelimiting
-        static ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
-        static Queue<DateTime> lastMessagesPleb = new Queue<DateTime>();
-        static Queue<DateTime> lastMessagesMod = new Queue<DateTime>();
+        private static readonly ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
+        private static readonly Queue<DateTime> lastMessagesPleb = new Queue<DateTime>();
+        private static readonly Queue<DateTime> lastMessagesMod = new Queue<DateTime>();
 
-        static object lastMessagesLock = new object();
+        private static object lastMessagesLock = new object();
 
         public IrcClient(bool singleConnection = false)
         {
