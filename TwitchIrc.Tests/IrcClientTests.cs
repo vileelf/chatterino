@@ -42,8 +42,7 @@ namespace TwitchIrc.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void IrcClient_StandardUser_Say_ThrowsNullReferenceException_WhenNullMessage()
+        public void IrcClient_StandardUser_Say_ThrowsNoException_WhenNullMessage()
         {
             var client = new IrcClient();
             client.Say(null, "TestChannel", false);
@@ -57,8 +56,7 @@ namespace TwitchIrc.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void IrcClient_Mod_Say_ThrowsNullReferenceException_WhenNullMessage()
+        public void IrcClient_Mod_Say_ThrowsNoException_WhenNullMessage()
         {
             var client = new IrcClient();
             client.Say(null, "TestChannel", true);
