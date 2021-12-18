@@ -20,7 +20,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_Constructor_SingleConnection_False()
         {
-            var client = new IrcClient(false);
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             Assert.IsNotNull(client.ReadConnection);
             Assert.IsNotNull(client.WriteConnection);
             Assert.AreNotEqual(client.ReadConnection, client.WriteConnection);
@@ -35,7 +37,8 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_Constructor_SingleConnection_True()
         {
-            var client = new IrcClient(true);
+            var readConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, readConnection);
             Assert.IsNotNull(client.ReadConnection);
             Assert.IsNotNull(client.WriteConnection);
             Assert.AreEqual(client.ReadConnection, client.WriteConnection);
@@ -44,35 +47,45 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_StandardUser_Say_ThrowsNoException_WhenNullMessage()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             client.Say(null, "TestChannel", false);
         }
 
         [TestMethod]
         public void IrcClient_StandardUser_Say_ThrowsNoException_WhenNullChannel()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             client.Say("Test Message", null, false);
         }
 
         [TestMethod]
         public void IrcClient_Mod_Say_ThrowsNoException_WhenNullMessage()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             client.Say(null, "TestChannel", true);
         }
 
         [TestMethod]
         public void IrcClient_Mod_Say_ThrowsNoException_WhenNullChannel()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             client.Say("Test Message", null, true);
         }
 
         [TestMethod]
         public void IrcClient_StandardUser_Say_ReturnsTrue_WhenMessageStartsWithDotColor()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             var result = client.Say(".color Test Message", null, false);
             Assert.AreEqual<bool>(true, result);
         }
@@ -80,7 +93,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_Mod_Say_ReturnsTrue_WhenMessageStartsWithDotColor()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             var result = client.Say(".color Test Message", null, true);
             Assert.AreEqual<bool>(true, result);
         }
@@ -88,7 +103,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_StandardUser_Say_ReturnsTrue_WhenMessageQueueNotFull()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             var result = client.Say("Test Message", null, false);
             Assert.AreEqual<bool>(true, result);
         }
@@ -96,7 +113,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_Mod_Say_ReturnsTrue_WhenMessageQueueNotFull()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             var result = client.Say("Test Message", null, true);
             Assert.AreEqual<bool>(true, result);
         }
@@ -104,7 +123,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_StandardUser_Say_ReturnsFalse_OnceMessageQueueFull()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             Thread.Sleep(QueueIntervalInSeconds * 1000); // Stupid private static variables forced my hand. I hate this for the record, but it is required for the moment.
             for (var i = 0; i < StandardUserMessageQueueLimit + 1; i++)
             {
@@ -117,7 +138,9 @@ namespace TwitchIrc.Tests
         [TestMethod]
         public void IrcClient_Mod_Say_ReturnsFalse_OnceMessageQueueFull()
         {
-            var client = new IrcClient();
+            var readConnection = new IrcConnection();
+            var writeConnection = new IrcConnection();
+            var client = new IrcClient(readConnection, writeConnection);
             Thread.Sleep(QueueIntervalInSeconds * 1000); // Stupid private static variables forced my hand. I hate this for the record, but it is required for the moment.
             for (var i = 0; i < ModMessageQueueLimit + 1; i++)
             {

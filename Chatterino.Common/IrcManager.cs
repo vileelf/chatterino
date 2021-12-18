@@ -254,7 +254,10 @@ namespace Chatterino.Common
             // connect read
             Task.Run(() =>
             {
-                Client = new IrcClient(Account.IsAnon);
+                var readConnection = new IrcConnection();
+                var writeConnection = Account.IsAnon ? readConnection : new IrcConnection();
+
+                Client = new IrcClient(readConnection, writeConnection);
                 
                 readconnected = false;
                 writeconnected = false;

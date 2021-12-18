@@ -17,11 +17,11 @@ namespace TwitchIrc
 
         private static object lastMessagesLock = new object();
 
-        public IrcClient(bool singleConnection = false)
+        public IrcClient(IrcConnection readConnection, IrcConnection writeConnection)
         {
-            SingleConnection = singleConnection;
-            ReadConnection = new IrcConnection();
-            WriteConnection = SingleConnection ? ReadConnection : new IrcConnection();
+            SingleConnection = readConnection == writeConnection;
+            ReadConnection = readConnection;
+            WriteConnection = writeConnection;
         }
 
         public void Connect(string username, string password)
