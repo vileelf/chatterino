@@ -72,11 +72,7 @@ namespace TwitchIrc
                 if (lastMessages.Count < messageQueueLimit)
                 {
                     WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
-
-                    if (message.StartsWith(".color") == false)
-                    {
-                        lastMessages.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
-                    }
+                    lastMessages.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
                 }
                 else
                 {
