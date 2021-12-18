@@ -7,6 +7,10 @@ namespace TwitchIrc
 {
     public class IrcClient
     {
+        private const int ModeratorMessageQueueLimit = 99;
+        private const int UserMessageQueueLimit = 19;
+        private const int MessageQueueDurationInSeconds = 32;
+
         public bool SingleConnection { get; private set; }
         public IrcConnection ReadConnection { get; private set; }
         public IrcConnection WriteConnection { get; private set; }
@@ -56,7 +60,9 @@ namespace TwitchIrc
 
         public bool Say(string message, string channel, bool isMod)
         {
-            if (lastMessagesMod.Count < (isMod ? 99 : 19))
+            var messageQueueLimit = GetMessageQueueLimit(isMod);
+
+            if (lastMessagesMod.Count < messageQueueLimit)
             {
                 if (message.StartsWith(".color"))
                 {
@@ -72,11 +78,11 @@ namespace TwitchIrc
                     lastMessagesMod.Dequeue();
                 }
 
-                if (lastMessagesMod.Count < (isMod ? 99 : 19))
+                if (lastMessagesMod.Count < messageQueueLimit)
                 {
                     WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
 
-                    lastMessagesMod.Enqueue(DateTime.Now + TimeSpan.FromSeconds(32));
+                    lastMessagesMod.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
                 }
                 else
                 {
@@ -87,11 +93,16 @@ namespace TwitchIrc
             return true;
         }
 
+        private int GetMessageQueueLimit(bool isMod)
+        {
+            return isMod ? ModeratorMessageQueueLimit : UserMessageQueueLimit;
+        }
+
         public TimeSpan GetTimeUntilNextMessage(bool isMod)
         {
             lock (lastMessagesLock)
             {
-                return lastMessagesMod.Count >= (isMod ? 99 : 19) ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
+                return lastMessagesMod.Count >= GetMessageQueueLimit(isMod) ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
             }
         }
 
