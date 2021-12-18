@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Reflection;
-using Newtonsoft.Json;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -23,7 +17,6 @@ namespace Chatterino.Common
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
-
 
         private static readonly ConcurrentDictionary<string, object> twitchBlockedUsers = new ConcurrentDictionary<string, object>();
         private static DateTime nextMessageSendTime = DateTime.MinValue;
