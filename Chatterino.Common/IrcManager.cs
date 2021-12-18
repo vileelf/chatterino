@@ -28,7 +28,6 @@ namespace Chatterino.Common
         public static event EventHandler LoggedIn;
         public static event EventHandler Disconnected;
         public static event EventHandler Connected;
-
         public static event EventHandler<ValueEventArgs<string>> NoticeAdded;
 
         public struct TwitchEmoteValue
@@ -44,73 +43,64 @@ namespace Chatterino.Common
         public static string LoadUserIDFromTwitch(string username)
         {
             // call twitch kraken api
-            if (username != string.Empty && DefaultClientID != string.Empty) {
+            if (username != string.Empty && DefaultClientID != string.Empty)
+            {
                 try
                 {
-                    var request =
-                        WebRequest.Create(
-                            $"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={DefaultClientID}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={DefaultClientID}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-                    //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                   // request.Headers["Client-ID"]=$"{DefaultClientID}";
-                    //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
-                    using (var response = request.GetResponse()) {
+
+                    using (var response = request.GetResponse())
+                    {
                         using (var stream = response.GetResponseStream())
                         {
-                            var parser = new JsonParser();
-                            dynamic json = parser.Parse(stream);
-                            
+                            dynamic json = new JsonParser().Parse(stream);
                             return json["users"][0]["_id"];
                         }
-                        response.Close();
                     }
                 }
                 catch (Exception e)
                 {
                     GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
-                } 
+                }
             }
             return null;
         }
-        
-        public static void LoadUsersEmotes() {
-            
+
+        public static void LoadUsersEmotes()
+        {
             try
             {
                 string userid = Account.UserId, oauth = Account.OauthToken;
-                var request =
-                    WebRequest.Create(
-                        $"https://api.twitch.tv/kraken/users/{userid}/emotes");
+                var request =  WebRequest.Create($"https://api.twitch.tv/kraken/users/{userid}/emotes");
+
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                request.Headers["Client-ID"]=$"{DefaultClientID}";
-                request.Headers["Authorization"]=$"OAuth {oauth}";
-                using (var response = request.GetResponse()) {
+                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"] = $"{DefaultClientID}";
+                request.Headers["Authorization"] = $"OAuth {oauth}";
+                using (var response = request.GetResponse())
+                {
                     using (var stream = response.GetResponseStream())
                     {
                         dynamic json = new JsonParser().Parse(stream);
-                        //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
 
                         foreach (var set in json["emoticon_sets"])
                         {
-                            int setID;
-
-                            int.TryParse(set.Key, out setID);
+                            int.TryParse(set.Key, out int setID);
 
                             foreach (var emote in set.Value)
                             {
-                                string id;
-
-                                id = emote["id"];
+                                string id = emote["id"];
                                 string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
                                 Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
-                                if (!Emotes.TwitchEmotes.ContainsKey(code)) {
+                                if (!Emotes.TwitchEmotes.ContainsKey(code))
+                                {
                                     Emotes.TwitchEmotes[code] = new TwitchEmoteValue
                                     {
                                         ID = id,
@@ -122,526 +112,185 @@ namespace Chatterino.Common
                             }
                         }
                     }
-                    response.Close();
                 }
             }
             catch (Exception e)
             {
-                 GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
+                GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
             }
-            
-            if (loadEmotes == false) {
+
+            if (loadEmotes == false)
+            {
                 loadEmotes = true;
                 bool isalreadyjoined = false;
-                foreach (var channel in TwitchChannel.Channels) {
-                    if (channel.Name.Equals(Account.Username)) {
+                foreach (var channel in TwitchChannel.Channels)
+                {
+                    if (channel.Name.Equals(Account.Username))
+                    {
                         isalreadyjoined = true;
                         break;
                     }
                 }
                 //part and join the users channel
-                if (isalreadyjoined) {
+                if (isalreadyjoined)
+                {
                     Client.WriteConnection.WriteLine("PART #" + Account.Username);
                 }
-                
+
                 Client.WriteConnection.WriteLine("JOIN #" + Account.Username);
-                
-                if (!isalreadyjoined) {
+
+                if (!isalreadyjoined)
+                {
                     Client.WriteConnection.WriteLine("PART #" + Account.Username);
                 }
             }
             Emotes.TriggerEmotesLoaded();
         }
+
         public static void Connect()
         {
             Disconnect();
 
-            // Login
-            string username = Account.Username, oauth = Account.OauthToken, userid = Account.UserId;
             readconnected = false;
             writeconnected = false;
-            try
+
+            var username = Account.Username;
+            var oauth = Account.OauthToken;
+
+            if (Account.IsAnon)
             {
-                if (Account.IsAnon)
-                {
-                    if (AppSettings.SelectedUser != "")
-                    {
-                        AppSettings.SelectedUser = "";
-                        AppSettings.Save();
-                    }
-                }
-                else
-                {
-                    if (!string.Equals(username, AppSettings.SelectedUser))
-                    {
-                        AppSettings.SelectedUser = username;
-                        AppSettings.Save();
-                    }
-                }
+                SaveAppSettings("");
             }
-            catch
+            else
             {
+                SaveAppSettings(username);
+                Task.Run(() => RetrieveTwitchBlockedUsers(oauth));
+                Task.Run(() => LoadUsersEmotes());
             }
 
             LoggedIn?.Invoke(null, EventArgs.Empty);
-
             AppSettings.UpdateCustomHighlightRegex();
-
-            //fetch ignored users
-            if (!Account.IsAnon)
-            {
-               Task.Run(() =>
-               {
-                   try
-                   {
-                       var limit = 100;
-                       var count = 0;
-                       string nextLink =
-                           $"https://api.twitch.tv/kraken/users/{userid}/blocks?limit={limit}";
-
-                       var request = WebRequest.Create(nextLink);
-                       if (AppSettings.IgnoreSystemProxy)
-                       {
-                           request.Proxy = null;
-                       }
-                       ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                        request.Headers["Client-ID"]=$"{Account.ClientId}";
-                        request.Headers["Authorization"]=$"OAuth {oauth}";
-                       using (var response = request.GetResponse()) {
-                           using (var stream = response.GetResponseStream())
-                           {
-                               dynamic json = new JsonParser().Parse(stream);
-                               dynamic blocks = json["blocks"];
-                               count = blocks.Count;
-                               foreach (var block in blocks)
-                               {
-                                   dynamic user = block["user"];
-                                   string name = user["name"];
-                                   //string display_name = user["display_name"];
-                                   twitchBlockedUsers[name] = null;
-                               }
-                               
-                           }
-                           response.Close();
-                       }
-                   }
-                   catch
-                   {
-                   }
-               });
-            }
-
-            // fetch available twitch emotes
-            if (!Account.IsAnon)
-            {
-                Task.Run(() =>
-                {
-                    LoadUsersEmotes();
-                });
-            }
-
-            // connect read
-            Task.Run(() =>
-            {
-                var readConnection = new IrcConnection();
-                var writeConnection = Account.IsAnon ? readConnection : new IrcConnection();
-
-                Client = new IrcClient(readConnection, writeConnection);
-                
-                readconnected = false;
-                writeconnected = false;
-                Client.ReadConnection.Connected += ReadConnection_Connected;
-
-                Client.ReadConnection.Disconnected += ReadConnection_Disconnected;
-                Client.WriteConnection.Disconnected += WriteConnection_Disconnected;
-                if (!Account.IsAnon)
-                {
-                    Client.WriteConnection.Connected += WriteConnection_Connected;
-                }
-
-                Client.Connect(username, (oauth.StartsWith("oauth:") ? oauth : "oauth:" + oauth));
-
-                Client.ReadConnection.MessageReceived += ReadConnection_MessageReceived;
-                Client.WriteConnection.MessageReceived += WriteConnection_MessageReceived;
-            });
-
+            Task.Run(() => SetupConnection(username, oauth));
         }
-
         public static void Reconnect()
         {
             readconnected = false;
             writeconnected = false;
             Client.Reconnect();
         }
-
         public static void Disconnect()
         {
-            var disconnected = false;
-
             twitchBlockedUsers.Clear();
+
             if (Client != null)
             {
-                disconnected = true;
-
                 Client.Disconnect();
-                Client.ReadConnection.MessageReceived -= ReadConnection_MessageReceived;
-                Client.WriteConnection.MessageReceived -= WriteConnection_MessageReceived;
 
                 readconnected = false;
-                writeconnected = false;
-
                 Client.ReadConnection.Connected -= ReadConnection_Connected;
                 Client.ReadConnection.Disconnected -= ReadConnection_Disconnected;
+                Client.ReadConnection.MessageReceived -= ReadConnection_MessageReceived;
+
+                writeconnected = false;
                 Client.WriteConnection.Disconnected -= WriteConnection_Disconnected;
                 Client.WriteConnection.Connected -= WriteConnection_Connected;
+                Client.WriteConnection.MessageReceived -= WriteConnection_MessageReceived;
 
                 Client = null;
-            }
-
-            if (disconnected)
                 Disconnected?.Invoke(null, EventArgs.Empty);
+            }
         }
 
-        private static void WriteConnection_Connected(object sender, EventArgs e) {
-            writeconnected = true;
-            if (readconnected) {
-                TwitchChannelJoiner.clearQueue();
-                Connected?.Invoke(null, EventArgs.Empty);
+        private static void SaveAppSettings(string username)
+        {
+            try
+            {
+                if (AppSettings.SelectedUser != username)
+                {
+                    AppSettings.SelectedUser = username;
+                    AppSettings.Save();
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
-        private static void WriteConnection_Disconnected(object sender, EventArgs e) {
+        private static void RetrieveTwitchBlockedUsers(string oauth)
+        {
+            try
+            {
+                var limit = 100;
+                var count = 0;
+                string nextLink = $"https://api.twitch.tv/kraken/users/{userid}/blocks?limit={limit}";
+
+                var request = WebRequest.Create(nextLink);
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"] = $"{Account.ClientId}";
+                request.Headers["Authorization"] = $"OAuth {oauth}";
+                using (var response = request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        dynamic json = new JsonParser().Parse(stream);
+                        dynamic blocks = json["blocks"];
+                        count = blocks.Count;
+                        foreach (var block in blocks)
+                        {
+                            dynamic user = block["user"];
+                            string name = user["name"];
+                            //string display_name = user["display_name"];
+                            twitchBlockedUsers[name] = null;
+                        }
+
+                    }
+                    response.Close();
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        private static void SetupConnection(string username, string oauth)
+        {
+            readconnected = false;
             writeconnected = false;
+
+            var readConnection = new IrcConnection();
+            var writeConnection = Account.IsAnon ? readConnection : new IrcConnection();
+
+            Client = new IrcClient(readConnection, writeConnection);
+
+            Client.ReadConnection.Connected += ReadConnection_Connected;
+            Client.ReadConnection.Disconnected += ReadConnection_Disconnected;
+            Client.ReadConnection.MessageReceived += ReadConnection_MessageReceived;
+
+            Client.WriteConnection.Connected += WriteConnection_Connected;
+            Client.WriteConnection.Disconnected += WriteConnection_Disconnected;
+            Client.WriteConnection.MessageReceived += WriteConnection_MessageReceived;
+
+            Client.Connect(username, (oauth.StartsWith("oauth:") ? oauth : "oauth:" + oauth));
         }
-        
-        private static void ReadConnection_Connected(object sender, EventArgs e) {
+
+        private static void ReadConnection_Connected(object sender, EventArgs e)
+        {
             readconnected = true;
-            if (writeconnected||Account.IsAnon) {
+            if (writeconnected || Account.IsAnon)
+            {
                 TwitchChannelJoiner.clearQueue();
                 Connected?.Invoke(null, EventArgs.Empty);
             }
         }
-        private static void ReadConnection_Disconnected(object sender, EventArgs e) {
+        private static void ReadConnection_Disconnected(object sender, EventArgs e)
+        {
             readconnected = false;
             Disconnected?.Invoke(null, EventArgs.Empty);
         }
-
-
-        public static void SendMessage(TwitchChannel channel, string _message, bool isMod)
-        {
-            if (channel != null)
-            {
-                if (!_message.StartsWith(".color "))
-                {
-                    if (!isMod && nextMessageSendTime > DateTime.Now) // do we really need this?
-                    {
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(300);
-                            channel.AddMessage(new Message("Sending messages too fast, message not sent.",
-                                HSLColor.Gray, false));
-                        });
-
-                        return;
-                    }
-
-                    nextMessageSendTime = DateTime.Now.AddSeconds(1.1);
-                }
-
-                var message = Commands.ProcessMessage(_message, channel, true);
-                if (message == null)
-                    return;
-                message = Commands.AddSpace(message, isMod);
-
-                if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
-                {
-                    if (nextProtectMessageSendTime < DateTime.Now)
-                    {
-                        channel.AddMessage(new Message($"Message not sent to protect you from a global ban. (try again in {Client.GetTimeUntilNextMessage(isMod).Seconds} seconds)", HSLColor.Gray, false));
-                        nextProtectMessageSendTime = DateTime.Now.AddSeconds(1);
-                    }
-                }
-            }
-        }
-
-        public static bool IsIgnoredUser(string username)
-        {
-            if (AppSettings.IgnoreViaTwitch == true)
-                return twitchBlockedUsers.ContainsKey(username.ToLower());
-            return AppSettings.IgnoredUsers.ContainsKey(username.ToLower());
-        }
-
-        public static void AddIgnoredUser(string username, string userid)
-        {
-            string message;
-
-            TryAddIgnoredUser(username, userid, out message);
-
-            NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
-        }
-
-        public static bool TryAddIgnoredUser(string username, string userid, out string message)
-        {
-            if (AppSettings.IgnoreViaTwitch != true) {
-                AppSettings.IgnoredUsers[username.ToLower()] = null;
-
-                message = $"Ignored user \"{username}\".";
-
-                return true;
-            }
-            else {
-                var _username = username.ToLower();
-
-                var success = false;
-                HttpStatusCode statusCode;
-                if (userid == null) {
-                    userid = LoadUserIDFromTwitch(_username);
-                }
-                try
-                {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
-                    if (AppSettings.IgnoreSystemProxy)
-                    {
-                        request.Proxy = null;
-                    }
-                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                    request.Headers["Client-ID"]=$"{Account.ClientId}";
-                    request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                    request.Method = "PUT";
-                    using (var response = (HttpWebResponse)request.GetResponse()) {
-                        using (var stream = response.GetResponseStream())
-                        {
-                            statusCode = response.StatusCode;
-                            success = true;
-                        }
-                        response.Close();
-                    }
-                }
-                catch (WebException exc)
-                {
-                   statusCode = ((HttpWebResponse)exc.Response).StatusCode;
-                }
-                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
-
-                if (success)
-                {
-                   twitchBlockedUsers[_username] = null;
-                   message = $"Successfully ignored user \"{username}\".";
-                   return true;
-                }
-                else
-                {
-                   message = $"Error \"{(int)statusCode}\" while trying to ignore user \"{username}\".";
-                   return false;
-                }
-            }
-        }
-
-        public static void RemoveIgnoredUser(string username, string userid)
-        {
-            string message;
-
-            TryRemoveIgnoredUser(username, userid, out message);
-
-            NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
-        }
-
-        public static bool TryRemoveIgnoredUser(string username, string userid, out string message)
-        {
-            if (AppSettings.IgnoreViaTwitch != true) {
-                AppSettings.IgnoredUsers.TryRemove(username.ToLower(), out object _);
-
-                message = $"Unignored user \"{username}\".";
-                return true;
-            } else {
-
-            
-                object value;
-                username = username.ToLower();
-
-                var success = false;
-                HttpStatusCode statusCode;
-                if (userid == null) {
-                    userid = LoadUserIDFromTwitch(username);
-                }
-                try
-                {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
-                    request.Method = "DELETE";
-                    if (AppSettings.IgnoreSystemProxy)
-                    {
-                        request.Proxy = null;
-                    }
-                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                    request.Headers["Client-ID"]=$"{Account.ClientId}";
-                    request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                    using (var response = (HttpWebResponse)request.GetResponse()) {
-                        using (var stream = response.GetResponseStream())
-                        {
-                            statusCode = response.StatusCode;
-                            success = statusCode == HttpStatusCode.NoContent;
-                        }
-                        response.Close();
-                    }
-                }
-                catch (WebException exc)
-                {
-                    statusCode = ((HttpWebResponse)exc.Response).StatusCode;
-                    success = statusCode == HttpStatusCode.NoContent;
-                }
-                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
-
-                if (success)
-                {
-                    twitchBlockedUsers.TryRemove(username.ToLower(), out value);
-
-                    message = $"Successfully unignored user \"{username}\".";
-                    return true;
-                }
-                else
-                {
-                    message = $"Error \"{(int)statusCode}\" while trying to unignore user \"{username}\".";
-                    return false;
-                }
-            }
-        }
-
-        public static bool TryCheckIfFollowing(string username, string userid, out bool result, out string message)
-        {
-            try
-            {
-                if (userid == null) {
-                    userid = LoadUserIDFromTwitch(username);
-                }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
-                if (AppSettings.IgnoreSystemProxy)
-                {
-                    request.Proxy = null;
-                }
-                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                request.Headers["Client-ID"]=$"{Account.ClientId}";
-                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                using (var response = request.GetResponse()) {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        result = true;
-                        message = null;
-                        return true;
-                    }
-                    response.Close();
-                }
-            }
-            catch (Exception exc)
-            {
-                var webExc = exc as HttpListenerException;
-
-                if (webExc != null)
-                {
-                    if (webExc.ErrorCode == 404)
-                    {
-                        result = false;
-                        message = null;
-                        return true;
-                    }
-                }
-
-                result = false;
-                message = exc.Message;
-                return false;
-            }
-        }
-
-        public static bool TryFollowUser(string username, string userid, out string message)
-        {
-            try
-            {
-                if (userid == null) {
-                    userid = LoadUserIDFromTwitch(username);
-                }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
-                request.Method = "PUT";
-                if (AppSettings.IgnoreSystemProxy)
-                {
-                    request.Proxy = null;
-                }
-                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                request.Headers["Client-ID"]=$"{Account.ClientId}";
-                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                
-                using (var response = request.GetResponse()) {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        message = null;
-                        return true;
-                    }
-                    response.Close();
-                }
-            }
-            catch (Exception exc)
-            {
-                message = exc.Message;
-                return false;
-            }
-        }
-
-        public static bool TryUnfollowUser(string username, string userid, out string message)
-        {
-            try
-            {
-                if (userid == null) {
-                    userid = LoadUserIDFromTwitch(username);
-                }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
-                request.Method = "DELETE";
-                if (AppSettings.IgnoreSystemProxy)
-                {
-                    request.Proxy = null;
-                }
-                ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                request.Headers["Client-ID"]=$"{Account.ClientId}";
-                request.Headers["Authorization"]=$"OAuth {Account.OauthToken}";
-                using (var response = request.GetResponse()) {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        message = null;
-                        return true;
-                    }
-                    response.Close();
-                }
-            }
-            catch (Exception exc)
-            {
-                message = exc.Message;
-                return false;
-            }
-        }
-
-        public static bool IsMessageIgnored(Message msg, TwitchChannel c) {
-            // check if message has an ignored keyword
-            if (AppSettings.IgnoredKeywordsRegex != null && AppSettings.IgnoredKeywordsRegex.IsMatch(msg.Params))
-            {
-                return true;
-            }
-            // check if message user is on the ignore list
-            if (IsIgnoredUser(msg.Username) == true)
-            {
-                //check if message is somewhere that the user has mod or broadcaster
-                switch (AppSettings.ChatShowIgnoredUsersMessages)
-                {
-                    case 1:
-                        if (!c.IsModOrBroadcaster)
-                            return true;
-                        break;
-                    case 2:
-                        if (!c.IsBroadcaster)
-                            return true;
-                        break;
-                    default:
-                        return true;
-                }
-            }
-            return false;
-        }
-
         private static void ReadConnection_MessageReceived(object sender, MessageEventArgs e)
         {
             var msg = e.Message;
@@ -703,18 +352,15 @@ namespace Chatterino.Common
                 var channel = msg.Middle;
                 var user = msg.Params;
 
-                string reason;
-                msg.Tags.TryGetValue("ban-reason", out reason);
-                string _duration;
+                msg.Tags.TryGetValue("ban-reason", out string reason);
                 var duration = 0;
 
-                if (msg.Tags.TryGetValue("ban-duration", out _duration))
+                if (msg.Tags.TryGetValue("ban-duration", out string _duration))
                 {
                     int.TryParse(_duration, out duration);
                 }
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.ClearChat(user, reason, duration));
-                //}
             }
             else if (msg.Command == "ROOMSTATE")
             {
@@ -743,8 +389,7 @@ namespace Chatterino.Common
                             state &= ~RoomState.SlowMode;
                         else
                         {
-                            int time;
-                            if (!int.TryParse(value, out time))
+                            if (!int.TryParse(value, out int time))
                                 time = -1;
                             c.SlowModeTime = time;
                             state |= RoomState.SlowMode;
@@ -757,25 +402,24 @@ namespace Chatterino.Common
                         else
                             state &= ~RoomState.R9k;
                     }
-                    //if (e.Data.Tags.TryGetValue("broadcaster-lang", out value))
 
                     c.RoomState = state;
                 });
             }
             else if (msg.Command == "USERSTATE")
             {
-                string value;
-                if (msg.Tags.TryGetValue("mod", out value))
+                if (msg.Tags.TryGetValue("mod", out string value))
                 {
                     TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.IsMod = value == "1");
                 }
                 if (msg.Tags.TryGetValue("badges", out value))
                 {
-                    if (value.Contains("vip")) {
+                    if (value.Contains("vip"))
+                    {
                         TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.IsVip = true);
                     }
                 }
-                updateEmotes(msg);
+                UpdateEmotes(msg);
             }
             else if (msg.Command == "WHISPER")
             {
@@ -798,36 +442,34 @@ namespace Chatterino.Common
             }
             else if (msg.Command == "USERNOTICE")
             {
-                string sysMsg;
-                string displayname;
-                string login;
-                string giftlogin;
-                string giftdisplayname;
-                
-                msg.Tags.TryGetValue("system-msg", out sysMsg);
-                msg.Tags.TryGetValue("msg-param-recipient-display-name", out giftdisplayname);
-                msg.Tags.TryGetValue("display-name", out displayname);
-                msg.Tags.TryGetValue("msg-param-recipient-user-name", out giftlogin);
-                msg.Tags.TryGetValue("login", out login);
+                msg.Tags.TryGetValue("system-msg", out string sysMsg);
+                msg.Tags.TryGetValue("msg-param-recipient-display-name", out string giftdisplayname);
+                msg.Tags.TryGetValue("display-name", out string displayname);
+                msg.Tags.TryGetValue("msg-param-recipient-user-name", out string giftlogin);
+                msg.Tags.TryGetValue("login", out string login);
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
-                            !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
+                        if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
+                            !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase))
+                        {
                             int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
-                            if (index != -1) {
+                            if (index != -1)
+                            {
                                 index += displayname.Length;
-                                sysMsg = sysMsg.Insert(index, " ("+login+")");
+                                sysMsg = sysMsg.Insert(index, " (" + login + ")");
                             }
                         }
-                        if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
-                            !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
+                        if (!string.IsNullOrEmpty(giftdisplayname) && !string.IsNullOrEmpty(giftlogin) &&
+                            !string.Equals(giftdisplayname, giftlogin, StringComparison.OrdinalIgnoreCase))
+                        {
                             int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
-                            if (index != -1) {
+                            if (index != -1)
+                            {
                                 index += giftdisplayname.Length;
-                                sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
+                                sysMsg = sysMsg.Insert(index, " (" + giftlogin + ")");
                             }
                         }
                         var sysMessage = new Message(sysMsg, HSLColor.Gray, true)
@@ -843,11 +485,15 @@ namespace Chatterino.Common
                             };
                             c.AddMessage(message);
                             c.Users[message.Username.ToUpper()] = message.DisplayName;
-                        } else {
-                            if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)) {
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login))
+                            {
                                 c.Users[login.ToUpper()] = displayname;
                             }
-                            if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)) {
+                            if (!string.IsNullOrEmpty(giftdisplayname) && !string.IsNullOrEmpty(giftlogin))
+                            {
                                 c.Users[giftlogin.ToUpper()] = giftdisplayname;
                             }
                         }
@@ -857,87 +503,20 @@ namespace Chatterino.Common
             }
         }
 
-        private static void updateEmotes(IrcMessage msg) {
-            string value;
-            if (loadEmotes && msg.Tags.TryGetValue("emote-sets", out value)) {
-                //GuiEngine.Current.log("sets: " + value);
-                string []emote_sets = value.Split(',');
-                string temp = "";
-                int count = 1;
-                string emote_set;
-                //split into groups of 10 since thats the limit you can request at once from the api https://api.twitch.tv/helix/chat/emotes/set?emote_set_id=
-                for(int i = 0; i<emote_sets.Length; i++) {
-                    emote_set = emote_sets[i];
-                    if (count != 1) {
-                        temp = temp + "&emote_set_id=";
-                    }
-                    temp = temp + emote_set;
-                    if (count == 10 || i == (emote_sets.Length - 1)) {
-                        //api request
-                        try
-                        {
-                            var request = WebRequest.Create($"https://api.twitch.tv/helix/chat/emotes/set?emote_set_id={temp}");
-                            request.Method = "GET";
-                            //GuiEngine.Current.log("url : " + $"https://api.twitch.tv/helix/chat/emotes/set?emote_set_id={temp}");
-                            if (AppSettings.IgnoreSystemProxy)
-                            {
-                                request.Proxy = null;
-                            }
-                            ((HttpWebRequest)request).Accept="application/json";
-                            request.Headers["Client-ID"]=$"{Account.ClientId}";
-                            request.Headers["Authorization"]=$"Bearer {Account.OauthToken}";
-                            //GuiEngine.Current.log("body: Client-ID: " +  Account.ClientId + " Authorization: Bearer " + Account.OauthToken);
-                            using (var response = request.GetResponse()) {
-                                using (var stream = response.GetResponseStream())
-                                {
-                                     dynamic json = new JsonParser().Parse(stream);
-                                     if (json != null) {
-                                         dynamic data = json["data"];
-                                         foreach (var emote in data) {
-                                             string id = emote["id"];
-                                             string owner_id = emote["owner_id"];
-                                             if (owner_id == "twitch") {
-                                                 owner_id = "0";
-                                             }
-                                             string emote_type = emote["emote_type"];
-                                             string name = emote["name"];
-                                             int emote_set_id = Int32.Parse(emote["emote_set_id"]);
-                                             //GuiEngine.Current.log("name : " + name + " set_id " + emote_set_id + " owner_id " + owner_id + " emotetype " + emote_type );
-                                             string code = Emotes.GetTwitchEmoteCodeReplacement(name);
-                                             Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
-                                             if (!emote_type.Equals("limitedtime") && !emote_type.Equals("owl2019")) {
-                                                 Emotes.TwitchEmotes[code] = new TwitchEmoteValue
-                                                 {
-                                                     OwnerID = owner_id,
-                                                     Type = emote_type,
-                                                     Name = name,
-                                                     ID = id,
-                                                     Set = emote_set_id,
-                                                     ChannelName = ""
-                                                 };
-                                             }
-                                         }
-                                         
-                                     }
-                                }
-                                response.Close();
-                            }
-                        }
-                        catch (Exception exc)
-                        {
-                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString());
-                        }
-                        temp = "";
-                        count = 1;
-                    } else {
-                        count++;
-                    }
-                }
+        private static void WriteConnection_Connected(object sender, EventArgs e)
+        {
+            if (Account.IsAnon) { return; }
+            writeconnected = true;
+            if (readconnected)
+            {
+                TwitchChannelJoiner.clearQueue();
+                Connected?.Invoke(null, EventArgs.Empty);
             }
-            loadEmotes = false;
-            Emotes.TriggerEmotesLoaded();
         }
-
+        private static void WriteConnection_Disconnected(object sender, EventArgs e)
+        {
+            writeconnected = false;
+        }
         private static void WriteConnection_MessageReceived(object sender, MessageEventArgs e)
         {
             var msg = e.Message;
@@ -946,9 +525,8 @@ namespace Chatterino.Common
             {
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
-                    string tmp;
 
-                    if (msg.Tags.TryGetValue("msg-id", out tmp) && tmp == "timeout_success")
+                    if (msg.Tags.TryGetValue("msg-id", out string tmp) && tmp == "timeout_success")
                         return;
 
                     if (AppSettings.Rainbow && tmp == "color_changed")
@@ -961,9 +539,8 @@ namespace Chatterino.Common
             }
             else if (msg.Command == "USERSTATE")
             {
-                string value;
 
-                if (msg.Tags.TryGetValue("mod", out value))
+                if (msg.Tags.TryGetValue("mod", out string value))
                 {
                     TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#'))
                         .Process(c =>
@@ -973,7 +550,8 @@ namespace Chatterino.Common
                 }
                 if (msg.Tags.TryGetValue("badges", out value))
                 {
-                    if (value.Contains("vip")) {
+                    if (value.Contains("vip"))
+                    {
                         TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#'))
                             .Process(c =>
                             {
@@ -981,8 +559,420 @@ namespace Chatterino.Common
                             });
                     }
                 }
-                updateEmotes(msg);
+                UpdateEmotes(msg);
             }
         }
+
+        public static void SendMessage(TwitchChannel channel, string _message, bool isMod)
+        {
+            if (channel != null)
+            {
+                if (!_message.StartsWith(".color "))
+                {
+                    if (!isMod && nextMessageSendTime > DateTime.Now) // do we really need this?
+                    {
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(300);
+                            channel.AddMessage(new Message("Sending messages too fast, message not sent.", HSLColor.Gray, false));
+                        });
+
+                        return;
+                    }
+
+                    nextMessageSendTime = DateTime.Now.AddSeconds(1.1);
+                }
+
+                var message = Commands.ProcessMessage(_message, channel, true);
+                if (message == null)
+                    return;
+                message = Commands.AddSpace(message, isMod);
+
+                if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
+                {
+                    if (nextProtectMessageSendTime < DateTime.Now)
+                    {
+                        channel.AddMessage(new Message($"Message not sent to protect you from a global ban. (try again in {Client.GetTimeUntilNextMessage(isMod).Seconds} seconds)", HSLColor.Gray, false));
+                        nextProtectMessageSendTime = DateTime.Now.AddSeconds(1);
+                    }
+                }
+            }
+        }
+
+        public static bool IsIgnoredUser(string username)
+        {
+            if (AppSettings.IgnoreViaTwitch)
+                return twitchBlockedUsers.ContainsKey(username.ToLower());
+            else
+                return AppSettings.IgnoredUsers.ContainsKey(username.ToLower());
+        }
+
+        public static void AddIgnoredUser(string username, string userid)
+        {
+            TryAddIgnoredUser(username, userid, out string message);
+            NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
+        }
+
+        public static bool TryAddIgnoredUser(string username, string userid, out string message)
+        {
+            if (AppSettings.IgnoreViaTwitch != true)
+            {
+                AppSettings.IgnoredUsers[username.ToLower()] = null;
+                message = $"Ignored user \"{username}\".";
+                return true;
+            }
+            else
+            {
+                var _username = username.ToLower();
+
+                var success = false;
+                HttpStatusCode statusCode;
+                if (userid == null)
+                {
+                    userid = LoadUserIDFromTwitch(_username);
+                }
+                try
+                {
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                    request.Headers["Client-ID"] = $"{Account.ClientId}";
+                    request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                    request.Method = "PUT";
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            statusCode = response.StatusCode;
+                            success = true;
+                        }
+                    }
+                }
+                catch (WebException exc)
+                {
+                    statusCode = ((HttpWebResponse)exc.Response).StatusCode;
+                }
+                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
+
+                if (success)
+                {
+                    twitchBlockedUsers[_username] = null;
+                    message = $"Successfully ignored user \"{username}\".";
+                    return true;
+                }
+                else
+                {
+                    message = $"Error \"{(int)statusCode}\" while trying to ignore user \"{username}\".";
+                    return false;
+                }
+            }
+        }
+
+        public static void RemoveIgnoredUser(string username, string userid)
+        {
+            TryRemoveIgnoredUser(username, userid, out string message);
+            NoticeAdded?.Invoke(null, new ValueEventArgs<string>(message));
+        }
+
+        public static bool TryRemoveIgnoredUser(string username, string userid, out string message)
+        {
+            if (AppSettings.IgnoreViaTwitch != true)
+            {
+                AppSettings.IgnoredUsers.TryRemove(username.ToLower(), out object _);
+
+                message = $"Unignored user \"{username}\".";
+                return true;
+            }
+            else
+            {
+
+
+                object value;
+                username = username.ToLower();
+
+                var success = false;
+                HttpStatusCode statusCode;
+                if (userid == null)
+                {
+                    userid = LoadUserIDFromTwitch(username);
+                }
+                try
+                {
+                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
+                    request.Method = "DELETE";
+                    if (AppSettings.IgnoreSystemProxy)
+                    {
+                        request.Proxy = null;
+                    }
+                    ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                    request.Headers["Client-ID"] = $"{Account.ClientId}";
+                    request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            statusCode = response.StatusCode;
+                            success = statusCode == HttpStatusCode.NoContent;
+                        }
+                    }
+                }
+                catch (WebException exc)
+                {
+                    statusCode = ((HttpWebResponse)exc.Response).StatusCode;
+                    success = statusCode == HttpStatusCode.NoContent;
+                }
+                catch (Exception) { statusCode = HttpStatusCode.BadRequest; }
+
+                if (success)
+                {
+                    twitchBlockedUsers.TryRemove(username.ToLower(), out value);
+
+                    message = $"Successfully unignored user \"{username}\".";
+                    return true;
+                }
+                else
+                {
+                    message = $"Error \"{(int)statusCode}\" while trying to unignore user \"{username}\".";
+                    return false;
+                }
+            }
+        }
+
+        public static bool TryCheckIfFollowing(string username, string userid, out bool result, out string message)
+        {
+            try
+            {
+                if (userid == null)
+                {
+                    userid = LoadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"] = $"{Account.ClientId}";
+                request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                using (var response = request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        result = true;
+                        message = null;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                var webExc = exc as HttpListenerException;
+
+                if (webExc != null)
+                {
+                    if (webExc.ErrorCode == 404)
+                    {
+                        result = false;
+                        message = null;
+                        return true;
+                    }
+                }
+
+                result = false;
+                message = exc.Message;
+                return false;
+            }
+        }
+
+        public static bool TryFollowUser(string username, string userid, out string message)
+        {
+            try
+            {
+                if (userid == null)
+                {
+                    userid = LoadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                request.Method = "PUT";
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"] = $"{Account.ClientId}";
+                request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+
+                using (var response = request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        message = null;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                message = exc.Message;
+                return false;
+            }
+        }
+
+        public static bool TryUnfollowUser(string username, string userid, out string message)
+        {
+            try
+            {
+                if (userid == null)
+                {
+                    userid = LoadUserIDFromTwitch(username);
+                }
+                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                request.Method = "DELETE";
+                if (AppSettings.IgnoreSystemProxy)
+                {
+                    request.Proxy = null;
+                }
+                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
+                request.Headers["Client-ID"] = $"{Account.ClientId}";
+                request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                using (var response = request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        message = null;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
+        public static bool IsMessageIgnored(Message msg, TwitchChannel c)
+        {
+            // check if message has an ignored keyword
+            if (AppSettings.IgnoredKeywordsRegex != null && AppSettings.IgnoredKeywordsRegex.IsMatch(msg.Params))
+            {
+                return true;
+            }
+
+            // check if message user is on the ignore list
+            if (IsIgnoredUser(msg.Username))
+            {
+                //check if message is somewhere that the user has mod or broadcaster
+                switch (AppSettings.ChatShowIgnoredUsersMessages)
+                {
+                    case 1:
+                        if (!c.IsModOrBroadcaster)
+                            return true;
+                        break;
+                    case 2:
+                        if (!c.IsBroadcaster)
+                            return true;
+                        break;
+                    default:
+                        return true;
+                }
+            }
+            return false;
+        }
+        private static void UpdateEmotes(IrcMessage msg)
+        {
+            if (loadEmotes && msg.Tags.TryGetValue("emote-sets", out string value))
+            {
+                //GuiEngine.Current.log("sets: " + value);
+                string[] emote_sets = value.Split(',');
+                string temp = "";
+                int count = 1;
+                string emote_set;
+                //split into groups of 10 since thats the limit you can request at once from the api https://api.twitch.tv/helix/chat/emotes/set?emote_set_id=
+                for (int i = 0; i < emote_sets.Length; i++)
+                {
+                    emote_set = emote_sets[i];
+                    if (count != 1)
+                    {
+                        temp += "&emote_set_id=";
+                    }
+                    temp += emote_set;
+                    if (count == 10 || i == (emote_sets.Length - 1))
+                    {
+                        //api request
+                        try
+                        {
+                            var request = WebRequest.Create($"https://api.twitch.tv/helix/chat/emotes/set?emote_set_id={temp}");
+                            request.Method = "GET";
+                            //GuiEngine.Current.log("url : " + $"https://api.twitch.tv/helix/chat/emotes/set?emote_set_id={temp}");
+                            if (AppSettings.IgnoreSystemProxy)
+                            {
+                                request.Proxy = null;
+                            }
+                            ((HttpWebRequest)request).Accept = "application/json";
+                            request.Headers["Client-ID"] = $"{Account.ClientId}";
+                            request.Headers["Authorization"] = $"Bearer {Account.OauthToken}";
+                            //GuiEngine.Current.log("body: Client-ID: " +  Account.ClientId + " Authorization: Bearer " + Account.OauthToken);
+                            using (var response = request.GetResponse())
+                            {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    dynamic json = new JsonParser().Parse(stream);
+                                    if (json != null)
+                                    {
+                                        dynamic data = json["data"];
+                                        foreach (var emote in data)
+                                        {
+                                            string id = emote["id"];
+                                            string owner_id = emote["owner_id"];
+                                            if (owner_id == "twitch")
+                                            {
+                                                owner_id = "0";
+                                            }
+                                            string emote_type = emote["emote_type"];
+                                            string name = emote["name"];
+                                            int emote_set_id = Int32.Parse(emote["emote_set_id"]);
+                                            //GuiEngine.Current.log("name : " + name + " set_id " + emote_set_id + " owner_id " + owner_id + " emotetype " + emote_type );
+                                            string code = Emotes.GetTwitchEmoteCodeReplacement(name);
+                                            Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
+                                            if (!emote_type.Equals("limitedtime") && !emote_type.Equals("owl2019"))
+                                            {
+                                                Emotes.TwitchEmotes[code] = new TwitchEmoteValue
+                                                {
+                                                    OwnerID = owner_id,
+                                                    Type = emote_type,
+                                                    Name = name,
+                                                    ID = id,
+                                                    Set = emote_set_id,
+                                                    ChannelName = ""
+                                                };
+                                            }
+                                        }
+
+                                    }
+                                }
+                                response.Close();
+                            }
+                        }
+                        catch (Exception exc)
+                        {
+                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString());
+                        }
+                        temp = "";
+                        count = 1;
+                    }
+                    else
+                    {
+                        count++;
+                    }
+                }
+            }
+            loadEmotes = false;
+            Emotes.TriggerEmotesLoaded();
+        }
+
     }
 }
