@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.ComponentModel;
+using Chatterino.Common;
 
 namespace Chatterino.Controls
 {
@@ -23,9 +24,9 @@ namespace Chatterino.Controls
             set { panel = value; if (PanelChanged != null && selected) PanelChanged(this, EventArgs.Empty); }
         }
 
-        private Image image = null;
+        private ChatterinoImage image = null;
 
-        public Image Image
+        public ChatterinoImage Image
         {
             get { return image; }
             set { image = value; Invalidate(); }
@@ -56,7 +57,7 @@ namespace Chatterino.Controls
             Invalidate();
         }
 
-        public SettingsTabPage(string text, Image image, bool selected)
+        public SettingsTabPage(string text, ChatterinoImage image, bool selected)
         {
             Text = text;
             this.image = image;
@@ -120,7 +121,7 @@ namespace Chatterino.Controls
             //e.Graphics.FillRectangle(Brushes.Gray, Width-1, Height - 1, 1, 1);
             //e.Graphics.FillRectangle(Brushes.Gray, 0,       Height - 1, 1, 1);
             if (Image != null)
-                e.Graphics.DrawImage(image, (Height - (Math.Min(image.Width, Height - 4))) / 2, (Height - (Math.Min(image.Height, Height - 4))) / 2, Math.Min(image.Width, Height - 4), Math.Min(image.Height, Height - 4));
+                image.DrawImage(e.Graphics, (Height - (Math.Min(image.Width, Height - 4))) / 2, (Height - (Math.Min(image.Height, Height - 4))) / 2, Math.Min(image.Width, Height - 4), Math.Min(image.Height, Height - 4));
             e.Graphics.DrawString(Text, Font, Brushes.White, Height, Height / 2 - 7);
         }
 

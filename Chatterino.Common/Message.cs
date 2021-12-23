@@ -331,7 +331,7 @@ namespace Chatterino.Common
                             tooltip += tmpAmount + " secs ";
                         }
 
-                        Image image;
+                        ChatterinoImage image;
                         if (AppSettings.TimeoutButtons.Count > 1)
                         {
                             image = ((dynamic)GuiEngine.Current).GetImageForTimeout(amount);
@@ -562,7 +562,8 @@ namespace Chatterino.Common
 
                         LazyLoadedImage bttvEmote;
                         if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (Emotes.BttvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.BttvChannelEmotes.TryGetValue(s, out bttvEmote))
-                            || (AppSettings.ChatEnableFfzEmotes && (Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote)))))
+                            || (AppSettings.ChatEnableFfzEmotes && (Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote)))
+                            || (/*AppSettings.ChatEnableFfzEmotes && */(Emotes.SeventvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.SeventvChannelEmotes.TryGetValue(s, out bttvEmote)))))
                         {
                             words.Add(new Word
                             {
@@ -572,7 +573,7 @@ namespace Chatterino.Common
                                 Tooltip = bttvEmote.Tooltip,
                                 TooltipImageUrl = bttvEmote.TooltipImageUrl,
                                 TooltipImage = bttvEmote.TooltipImage,
-                                Link = new Link(LinkType.Url, bttvEmote.Url),
+                                Link = new Link(LinkType.Url, bttvEmote.TooltipImageUrl),
                                 CopyText = bttvEmote.Name
                             });
                         }

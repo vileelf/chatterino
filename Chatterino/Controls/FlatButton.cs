@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chatterino.Common;
 
 namespace Chatterino.Controls
 {
@@ -13,9 +14,9 @@ namespace Chatterino.Controls
         bool mouseOver = false;
         bool mouseDown = false;
 
-        private Image image;
+        private ChatterinoImage image;
 
-        public Image Image
+        public ChatterinoImage Image
         {
             get { return image; }
             set { image = value; Invalidate(); }
@@ -102,7 +103,7 @@ namespace Chatterino.Controls
 
                 if (image != null)
                 {
-                    g.DrawImage(image, Width / 2 - image.Width / 2, Height / 2 - image.Height / 2);
+                    image.DrawImage(g, Width / 2 - image.Width / 2, Height / 2 - image.Height / 2);
                 }
 
                 if (Text != null)

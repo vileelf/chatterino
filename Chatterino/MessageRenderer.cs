@@ -137,28 +137,18 @@ namespace Chatterino
                 else if (word.Type == SpanType.LazyLoadedImage)
                 {
                     var emote = (LazyLoadedImage)word.Value;
-                    var img = (Image)emote.Image;
+                    var img = (ChatterinoImage)emote.Image;
                     if (img != null)
                     {
                         try
                         {
                             lock (img) {
-                                g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
+                                img.DrawImage(g, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
                             }
                         }
                         catch { }
                     }
-                    else
-                    {
-                        //g.DrawRectangle(Pens.Red, xOffset + word.X, word.Y + yOffset, word.Width, word.Height);
-                    }
                 }
-                //else if (word.Type == SpanType.Image)
-                //{
-                //    var img = (Image)word.Value;
-                //    if (img != null)
-                //        g.DrawImage(img, word.X + xOffset, word.Y + yOffset, word.Width, word.Height);
-                //}
             }
 
             Action<int, bool, LazyLoadedImage> addWordToGifList = (i, selected, emote) =>
@@ -378,12 +368,12 @@ namespace Chatterino
                         case SpanType.Text:
                             break;
                         case SpanType.LazyLoadedImage:
-                            Image img = (word.Value as LazyLoadedImage)?.Image as Image;
+                            ChatterinoImage img = (word.Value as LazyLoadedImage)?.Image as ChatterinoImage;
 
                             if (img != null)
                             {
                                 lock (img) {
-                                    g.DrawImage(img, word.X + state.MessageXOffset,
+                                    img.DrawImage(g, word.X + state.MessageXOffset,
                                         word.Y + state.MessageYOffset, word.Width, word.Height);
                                 }
                             }

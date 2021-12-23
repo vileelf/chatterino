@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Chatterino.Common;
 
 namespace Chatterino.Controls
 {
@@ -1938,7 +1939,7 @@ namespace Chatterino.Controls
             // spAccounts
             // 
             this.spAccounts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spAccounts.Image = global::Chatterino.Properties.Resources.UserProfile_22x;
+            this.spAccounts.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.UserProfile_22x);
             this.spAccounts.Location = new System.Drawing.Point(0, 0);
             this.spAccounts.Name = "spAccounts";
             this.spAccounts.Panel = this.panel11;
@@ -1950,7 +1951,7 @@ namespace Chatterino.Controls
             // spAppearance
             // 
             this.spAppearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spAppearance.Image = global::Chatterino.Properties.Resources.AppearanceEditorPart_16x;
+            this.spAppearance.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.AppearanceEditorPart_16x);
             this.spAppearance.Location = new System.Drawing.Point(0, 30);
             this.spAppearance.Name = "spAppearance";
             this.spAppearance.Panel = this.panel1;
@@ -1962,7 +1963,7 @@ namespace Chatterino.Controls
             // settingsTabPage1
             // 
             this.settingsTabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.settingsTabPage1.Image = global::Chatterino.Properties.Resources.processes_5760;
+            this.settingsTabPage1.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.processes_5760);
             this.settingsTabPage1.Location = new System.Drawing.Point(0, 60);
             this.settingsTabPage1.Name = "settingsTabPage1";
             this.settingsTabPage1.Panel = this.panel12;
@@ -1974,7 +1975,7 @@ namespace Chatterino.Controls
             // spCommands
             // 
             this.spCommands.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spCommands.Image = global::Chatterino.Properties.Resources.CustomActionEditor_16x;
+            this.spCommands.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.CustomActionEditor_16x);
             this.spCommands.Location = new System.Drawing.Point(0, 90);
             this.spCommands.Name = "spCommands";
             this.spCommands.Panel = this.panel5;
@@ -1986,7 +1987,7 @@ namespace Chatterino.Controls
             // spEmotes
             // 
             this.spEmotes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spEmotes.Image = global::Chatterino.Properties.Resources.Emoji_Color_1F60A_19;
+            this.spEmotes.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Emoji_Color_1F60A_19);
             this.spEmotes.Location = new System.Drawing.Point(0, 120);
             this.spEmotes.Name = "spEmotes";
             this.spEmotes.Panel = this.panel4;
@@ -1998,7 +1999,7 @@ namespace Chatterino.Controls
             // spIgnoredUsers
             // 
             this.spIgnoredUsers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spIgnoredUsers.Image = global::Chatterino.Properties.Resources.StatusAnnotations_Blocked_16xLG_color;
+            this.spIgnoredUsers.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.StatusAnnotations_Blocked_16xLG_color);
             this.spIgnoredUsers.Location = new System.Drawing.Point(0, 150);
             this.spIgnoredUsers.Name = "spIgnoredUsers";
             this.spIgnoredUsers.Panel = this.panel6;
@@ -2009,7 +2010,7 @@ namespace Chatterino.Controls
             // spIgnoredMessages
             // 
             this.spIgnoredMessages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spIgnoredMessages.Image = global::Chatterino.Properties.Resources.Filter_16x;
+            this.spIgnoredMessages.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Filter_16x);
             this.spIgnoredMessages.Location = new System.Drawing.Point(0, 180);
             this.spIgnoredMessages.Name = "spIgnoredMessages";
             this.spIgnoredMessages.Panel = this.panel9;
@@ -2021,7 +2022,7 @@ namespace Chatterino.Controls
             // spLinks
             // 
             this.spLinks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spLinks.Image = global::Chatterino.Properties.Resources.VSO_Link_blue_16x;
+            this.spLinks.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.VSO_Link_blue_16x);
             this.spLinks.Location = new System.Drawing.Point(0, 210);
             this.spLinks.Name = "spLinks";
             this.spLinks.Panel = this.panel7;
@@ -2033,7 +2034,7 @@ namespace Chatterino.Controls
             // spHighlighted
             // 
             this.spHighlighted.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spHighlighted.Image = global::Chatterino.Properties.Resources.format_Bold_16xLG;
+            this.spHighlighted.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.format_Bold_16xLG);
             this.spHighlighted.Location = new System.Drawing.Point(0, 240);
             this.spHighlighted.Name = "spHighlighted";
             this.spHighlighted.Panel = this.panel3;
@@ -2045,7 +2046,7 @@ namespace Chatterino.Controls
             // spModeration
             // 
             this.spModeration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spModeration.Image = global::Chatterino.Properties.Resources.ban;
+            this.spModeration.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.ban);
             this.spModeration.Location = new System.Drawing.Point(0, 270);
             this.spModeration.Name = "spModeration";
             this.spModeration.Panel = this.panel13;
@@ -2057,7 +2058,7 @@ namespace Chatterino.Controls
             // spWhispers
             // 
             this.spWhispers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spWhispers.Image = global::Chatterino.Properties.Resources.Message_16xLG;
+            this.spWhispers.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Message_16xLG);
             this.spWhispers.Location = new System.Drawing.Point(0, 300);
             this.spWhispers.Name = "spWhispers";
             this.spWhispers.Panel = this.panel8;
@@ -2069,7 +2070,7 @@ namespace Chatterino.Controls
             // spBrowserExtension
             // 
             this.spBrowserExtension.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spBrowserExtension.Image = global::Chatterino.Properties.Resources.BrowserLink_16x;
+            this.spBrowserExtension.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.BrowserLink_16x);
             this.spBrowserExtension.Location = new System.Drawing.Point(0, 330);
             this.spBrowserExtension.Name = "spBrowserExtension";
             this.spBrowserExtension.Panel = this.panel10;

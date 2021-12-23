@@ -634,7 +634,7 @@ namespace Chatterino.Controls
             // 
             // btnCopyUsername
             // 
-            this.btnCopyUsername.Image = global::Chatterino.Properties.Resources.CopyLongTextToClipboard_16x;
+            this.btnCopyUsername.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.CopyLongTextToClipboard_16x);
             this.btnCopyUsername.Location = new System.Drawing.Point(11, 153);
             this.btnCopyUsername.Name = "btnCopyUsername";
             this.btnCopyUsername.Size = new System.Drawing.Size(24, 23);

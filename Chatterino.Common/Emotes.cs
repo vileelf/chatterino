@@ -23,11 +23,18 @@ namespace Chatterino.Common
 
         public static ConcurrentDictionary<string, LazyLoadedImage> BttvGlobalEmotes =
             new ConcurrentDictionary<string, LazyLoadedImage>();
+            
+        public static ConcurrentDictionary<string, LazyLoadedImage> SeventvGlobalEmotes =
+            new ConcurrentDictionary<string, LazyLoadedImage>();
+
 
         public static ConcurrentDictionary<string, LazyLoadedImage> FfzGlobalEmotes =
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
         public static ConcurrentDictionary<string, LazyLoadedImage> BttvChannelEmotesCache =
+            new ConcurrentDictionary<string, LazyLoadedImage>();
+            
+        public static ConcurrentDictionary<string, LazyLoadedImage> SeventvChannelEmotesCache =
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
         public static ConcurrentDictionary<string, LazyLoadedImage> FfzChannelEmotesCache =
@@ -49,6 +56,7 @@ namespace Chatterino.Common
 
         private static string bttvEmotesGlobalCache = Path.Combine(Util.GetUserDataPath(), "Cache", "bttv_global.json");
         private static string ffzEmotesGlobalCache = Path.Combine(Util.GetUserDataPath(), "Cache", "ffz_global.json");
+        private static string seventvEmotesGlobalCache = Path.Combine(Util.GetUserDataPath(), "Cache", "7tv_global.json");
 
         static Emotes()
         {
@@ -63,7 +71,7 @@ namespace Chatterino.Common
                 };
                 emote.LoadAction = () =>
                 {
-                    Image img;
+                    ChatterinoImage img;
 
                     try
                     {
@@ -470,6 +478,106 @@ namespace Chatterino.Common
                 catch (Exception e)
                 {
                     e.Message.Log("emotes");
+                }
+            });
+            
+            //7tv global emotes 
+            Task.Run(() =>
+            {
+                try
+                {
+                    var parser = new System.Text.Json.JsonParser();
+
+                    //if (!File.Exists(ffzEmotesGlobalCache))
+                    {
+                        try
+                        {
+
+                            if (Util.IsLinux)
+                            {
+                                Util.LinuxDownloadFile("https://api.7tv.app/v2/emotes/global", seventvEmotesGlobalCache);
+                            }
+                            else
+                            {
+                                using (var webClient = new WebClient()) {
+                                    using (var readStream = webClient.OpenRead("https://api.7tv.app/v2/emotes/global")) {
+                                        if (File.Exists(seventvEmotesGlobalCache)) {
+                                            File.Delete(seventvEmotesGlobalCache);
+                                        }
+                                        using (var writeStream = File.OpenWrite(seventvEmotesGlobalCache))
+                                        {
+                                            readStream.CopyTo(writeStream);
+                                        }
+                                        readStream.Close();
+                                    }
+                                    webClient.Dispose();
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.Message.Log("emotes");
+                        }
+                    }
+
+                    using (var stream = File.OpenRead(seventvEmotesGlobalCache))
+                    {
+                        dynamic json = parser.Parse(stream);
+                        string emotename;
+                        string emoteid;
+                        dynamic owner;
+                        string ownername;
+                        string template = "https://cdn.7tv.app/emote/{{id}}/{{image}}";
+                        bool getemote;
+                        double fake;
+                        double scale;
+                        string tooltipurl;
+                        string url;
+                        int visibilityFlags;
+                        string visibility;
+                        const int zeroWidthFlag = 0x80;
+                        bool zeroWidth = false;
+                        
+                        LazyLoadedImage emote;
+                        foreach (var e in json)
+                        {
+                            emotename = e["name"];
+                            emoteid = e["id"];
+                            url = template.Replace("{{id}}", emoteid);     
+                            tooltipurl = GetBttvEmoteLink(url, true, out fake);
+                            url = GetBttvEmoteLink(url, false, out scale);
+                            owner = e["owner"];
+                            visibility = e["visibility"];
+                            if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
+                                zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;
+                            }
+                            ownername = "";
+                            if (owner != null) {
+                                ownername = owner["display_name"];
+                                if (!string.IsNullOrEmpty(ownername)) {
+                                    ownername = owner["login"];
+                                } else if (string.Compare(ownername.ToUpper(), owner["login"].ToUpper())) {
+                                    ownername = ownername + "(" + owner["login"] + ")";
+                                }
+                            }
+                            emote = new LazyLoadedImage
+                                {
+                                    Name = emotename,
+                                    Url = url,
+                                    Tooltip = emotename + "\n7TV Channel Emote\nChannel: " + ownername,
+                                    TooltipImageUrl = tooltipurl,
+                                    Scale = scale,
+                                    IsHat = zeroWidth,
+                                    IsEmote = true
+                                };
+                            SeventvGlobalEmotes[emote.Name] = emote;
+                        }
+                    }
+                    EmotesLoaded?.Invoke(null, EventArgs.Empty);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine("error loading emotes: " + exc.Message);
                 }
             });
         }

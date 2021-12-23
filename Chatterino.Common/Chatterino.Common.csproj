@@ -67,6 +67,8 @@
     <Compile Include="EmoteCache.cs" />
     <Compile Include="FontType.cs" />
     <Compile Include="GuiEngine.cs" />
+    <Compile Include="WebPWrapper.cs" />
+    <Compile Include="ChatterinoImage.cs" />
     <Compile Include="ImageType.cs" />
     <Compile Include="IniSettings.cs" />
     <Compile Include="IrcManager.cs" />
@@ -91,6 +93,20 @@
     <Compile Include="ValueEventArgs.cs" />
     <Compile Include="VersionNumber.cs" />
     <Compile Include="Word.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libwebp_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+	<Content Include="libwebp_x86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libwebpdemux_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libwebpdemux_x86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

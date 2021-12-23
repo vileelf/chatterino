@@ -27,7 +27,7 @@ namespace Chatterino.Controls
             }
         }
         
-        private Image image;
+        private ChatterinoImage image;
 
         private LazyLoadedImage _image;
 
@@ -125,7 +125,7 @@ namespace Chatterino.Controls
                     if (image.Width < Width) {
                         x = (Width - image.Width) / 2;
                     }
-                    e.Graphics.DrawImage(image, x, 4, image.Width, image.Height);
+                    image.DrawImage(e.Graphics, x, 4, image.Width, image.Height);
                 }
             }
 

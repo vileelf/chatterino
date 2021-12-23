@@ -24,13 +24,13 @@ namespace Chatterino.Common
     public interface IGuiEngine
     {
         bool IsDarkTheme { get; }
-        void FreezeImage(Image img);
+        void FreezeImage(ChatterinoImage img);
 
         void HandleLink(Link link);
         void PlaySound(NotificationSound sound, bool forceCustom = false);
-        Image GetImage(ImageType type);
+        ChatterinoImage GetImage(ImageType type);
         LazyLoadedImage GetBadge(String badge);
-        void HandleAnimatedTwitchEmote(LazyLoadedImage emote, Image image);
+        void HandleAnimatedTwitchEmote(LazyLoadedImage emote, ChatterinoImage image);
         bool GetCheerEmote(string name,int cheer, bool light, out LazyLoadedImage outemote, out string outcolor);
         void FlashTaskbar();
         void LoadBadges();
@@ -38,9 +38,10 @@ namespace Chatterino.Common
         bool globalEmotesLoaded{ get; set;}
         void AddCheerEmote(string prefix, CheerEmote emote);
         void ClearCheerEmotes();
-        Image ReadImageFromStream(Stream stream);
-        Image ScaleImage(Image image, double scale);
-        Image DrawImageBackground(Image image, HSLColor color);
+        ChatterinoImage ReadImageFromStream(Stream stream);
+        ChatterinoImage ReadImageFromStream(MemoryStream stream);
+        ChatterinoImage ScaleImage(ChatterinoImage image, double scale);
+        ChatterinoImage DrawImageBackground(ChatterinoImage image, HSLColor color);
         HashSet<LazyLoadedImage> GifEmotesOnScreen{get;}
         object GifEmotesLock{get;}
 
@@ -50,7 +51,7 @@ namespace Chatterino.Common
 
         void DisposeMessageGraphicsBuffer(Message message);
 
-        CommonSize GetImageSize(Image image);
+        CommonSize GetImageSize(ChatterinoImage image);
 
         void ExecuteHotkeyAction(HotkeyAction action);
         void TriggerEmoteLoaded();

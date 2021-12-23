@@ -1303,7 +1303,7 @@ namespace Chatterino.Controls
                     Height = Height - 2,
                     Width = Height - 2,
                     Location = new Point(1, 1),
-                    Image = Properties.Resources.tool_moreCollapser_off16
+                    Image = new ChatterinoImage(Properties.Resources.tool_moreCollapser_off16)
                 };
                 button.MouseDown += (s, e) =>
                 {

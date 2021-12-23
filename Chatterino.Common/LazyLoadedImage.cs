@@ -14,7 +14,7 @@ namespace Chatterino.Common
         public string Url { get; set; } = null;
         public string Name { get; set; } = null;
         public bool IsAnimated { get; set; } = false;
-        public Func<Image> LoadAction { get; set; } = null;
+        public Func<ChatterinoImage> LoadAction { get; set; } = null;
         public bool IsHat { get; set; } = false;
         public bool HasTrailingSpace { get; set; } = true;
         public bool IsEmote { get; set; }
@@ -41,9 +41,9 @@ namespace Chatterino.Common
         public event EventHandler ImageLoaded;
 
         bool loading = false;
-        private Image image = null;
+        private ChatterinoImage image = null;
 
-        public Image Image
+        public ChatterinoImage Image
         {
             get
             {
@@ -53,78 +53,70 @@ namespace Chatterino.Common
 
                 loading = true;
                 
-                if (EmoteCache.CheckEmote(Url)) {
-                    EmoteCache.GetEmote(Url, (emote) => {
-                        if (emote != null) {
-                            GuiEngine.Current.HandleAnimatedTwitchEmote(this, emote);
-                            image = emote;
-                            GuiEngine.Current.TriggerEmoteLoaded();
-                            ImageLoaded?.Invoke(null, null);
-                            loading = false;
-                        } else {
-                            getEmote();
-                        }
-                    });
-                } else {
-                    getEmote();
-                }
+                Task.Run(() =>
+                {
+                    if (EmoteCache.CheckEmote(Url)) {
+                        EmoteCache.GetEmote(Url, (emote) => {
+                            if (emote != null) {
+                                GuiEngine.Current.HandleAnimatedTwitchEmote(this, emote);
+                                image = emote;
+                                GuiEngine.Current.TriggerEmoteLoaded();
+                                ImageLoaded?.Invoke(null, null);
+                                loading = false;
+                            } else {
+                                getEmote();
+                            }
+                        });
+                    } else {
+                        getEmote();
+                    }
+                });
                 return null;
             }
         }
         
         private void getEmote() {
-            Task.Run((() =>
+            ChatterinoImage img;
+            if (LoadAction != null)
             {
-                Image img;
-                if (LoadAction != null)
+                img = LoadAction();
+            }
+            else
+            {
+                try
                 {
-                    img = LoadAction();
-                }
-                else
-                {
-                    try
+                    var request = WebRequest.Create(Url);
+                    if (AppSettings.IgnoreSystemProxy)
                     {
-                        //Stopwatch stopWatch = new Stopwatch();
-                        //stopWatch.Start();
-                        var request = WebRequest.Create(Url);
-                        if (AppSettings.IgnoreSystemProxy)
+                        request.Proxy = null;
+                    }
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream())
                         {
-                            request.Proxy = null;
+                            MemoryStream mem = new MemoryStream();
+                            stream.CopyTo(mem);
+                            img = GuiEngine.Current.ReadImageFromStream(mem);
                         }
-                        using (var response = request.GetResponse()) {
-                            using (var stream = response.GetResponseStream())
-                            {
-                                /*stopWatch.Stop();
-                                TimeSpan ts = stopWatch.Elapsed;
-                                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                                    ts.Hours, ts.Minutes, ts.Seconds,
-                                    ts.Milliseconds / 10);
-                                GuiEngine.Current.log(Url + " "+ Name + " emote load time " + elapsedTime + "\n");*/
-                                MemoryStream mem = new MemoryStream();
-                                stream.CopyTo(mem);
-                                img = GuiEngine.Current.ReadImageFromStream(mem);
-                            }
-                            response.Close();
-                        }
+                        response.Close();
+                    }
 
-                        GuiEngine.Current.FreezeImage(img);
-                    }
-                    catch (Exception e)
-                    {
-                        GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
-                        img = null;
-                    }
+                    GuiEngine.Current.FreezeImage(img);
                 }
-                if (img != null)
+                catch (Exception e)
                 {
-                    GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
-                    EmoteCache.AddEmote(Url, img);
-                    image = img;
-                    GuiEngine.Current.TriggerEmoteLoaded();
-                    ImageLoaded?.Invoke(null, null);
+                    GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
+                    img = null;
                 }
-                loading = false;
-            }));
+            }
+            if (img != null)
+            {
+                GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
+                EmoteCache.AddEmote(Url, img);
+                image = img;
+                GuiEngine.Current.TriggerEmoteLoaded();
+                ImageLoaded?.Invoke(null, null);
+            }
+            loading = false;
         }
 
         public LazyLoadedImage()
@@ -132,7 +124,7 @@ namespace Chatterino.Common
             
         }
 
-        public LazyLoadedImage(Image image)
+        public LazyLoadedImage(ChatterinoImage image)
         {
             this.image = image;
             loading = false;

@@ -23,10 +23,10 @@ namespace Chatterino.Common
             public bool usedLastTime;
             public bool isAnimated;
             [JsonIgnore]
-            public Image emote;
+            public ChatterinoImage emote;
         }
         
-        public delegate void EmoteCallback(Image emote);
+        public delegate void EmoteCallback(ChatterinoImage emote);
         
         private static ConcurrentDictionary<string, _emotes_cache> CachedEmotes =
             new ConcurrentDictionary<string, _emotes_cache>();
@@ -66,10 +66,11 @@ namespace Chatterino.Common
                                     MemoryStream mem = new MemoryStream();
                                     using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
                                         stream.CopyTo(mem);
-                                        ecache.emote = Image.FromStream(mem);
+                                        ecache.emote = ChatterinoImage.FromStream(mem);
                                     }
                                 } catch (Exception e) {
                                     GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
+                                    ecache.emote = null;
                                 }
                             }
                             if (ecache.emote == null) {
@@ -89,10 +90,10 @@ namespace Chatterino.Common
         }
         
         //sync
-        public static Image GetEmoteSync(string url) {
+        public static ChatterinoImage GetEmoteSync(string url) {
             if (AppSettings.CacheEmotes) {
                 _emotes_cache ecache;
-                Image ret = null;
+                ChatterinoImage ret = null;
                 Mutex m;
                 using(m = new Mutex(false, url)){
                     m.WaitOne();
@@ -103,10 +104,11 @@ namespace Chatterino.Common
                                 MemoryStream mem = new MemoryStream();
                                 using (FileStream stream = new FileStream(ecache.emotePath, FileMode.Open, FileAccess.Read)) {
                                     stream.CopyTo(mem);
-                                    ecache.emote = Image.FromStream(mem);
+                                    ecache.emote = ChatterinoImage.FromStream(mem);
                                 }
                             } catch (Exception e) {
                                 GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
+                                ecache.emote = null;
                             }
                         }
                         if (ecache.emote == null) {
@@ -125,7 +127,7 @@ namespace Chatterino.Common
         }
         
         //async
-        public static void AddEmote(string url, Image emote) {
+        public static void AddEmote(string url, ChatterinoImage emote) {
             if (AppSettings.CacheEmotes) {
                 Task.Run((() =>
                 {
@@ -144,7 +146,7 @@ namespace Chatterino.Common
                                     File.Delete(ecache.emotePath);
                                 }
                                 lock (emote) {
-                                    bool animated = ImageAnimator.CanAnimate(emote);
+                                    bool animated = emote.IsAnimated;
                                     if (!animated) {
                                         emote.Save(ecache.emotePath);
                                     } else {

@@ -132,7 +132,7 @@ namespace Chatterino.Controls
             // emote button
             emoteListButton = new FlatButton
             {
-                Image = (Image) GuiEngine.Current.ScaleImage(Properties.Resources.Emoji_Color_1F607_19, 0.85),
+                Image = GuiEngine.Current.ScaleImage(new ChatterinoImage(Properties.Resources.Emoji_Color_1F607_19), 0.85),
                 Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
                 Size = new Size(16, 16),
                 Cursor = Cursors.Default

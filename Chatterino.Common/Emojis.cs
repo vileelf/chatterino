@@ -80,7 +80,7 @@ namespace Chatterino.Common
                                         Name = emoji,
                                         LoadAction = () =>
                                         {
-                                            Image img;
+                                            ChatterinoImage img;
                                             try
                                             {
                                                 var request = WebRequest.Create(url);

@@ -220,42 +220,53 @@ namespace Chatterino
 
 
         // IMAGES
-        public Image ReadImageFromStream(Stream stream)
+        public ChatterinoImage ReadImageFromStream(Stream stream)
         {
             try
             {
-                return Image.FromStream(stream);
+                return ChatterinoImage.FromStream(stream);
             }
-            catch { }
+            catch (Exception e){ 
+                log(e.ToString());
+            }
+
+            return null;
+        }
+        
+        public ChatterinoImage ReadImageFromStream(MemoryStream stream)
+        {
+            try
+            {
+                return ChatterinoImage.FromStream(stream);
+            }
+            catch (Exception e){ 
+                log(e.ToString());
+            }
 
             return null;
         }
 
-        public void HandleAnimatedTwitchEmote(LazyLoadedImage emote, Image image)
+        public void HandleAnimatedTwitchEmote(LazyLoadedImage emote, ChatterinoImage image)
         {
             if (image != null)
             {
-                Image img = (Image)image;
+                ChatterinoImage img = image;
                 bool animated = false;
                 lock (img) {
-                    animated = ImageAnimator.CanAnimate(img);
+                    animated = img.IsAnimated;
                 }
 
                 if (animated)
                 {
                     try
                     {
-                        FrameDimension dimension = new FrameDimension(img.FrameDimensionsList[0]);
-                        int frameCount = img.GetFrameCount(dimension);
+                        int frameCount = img.GetFrameCount();
                         int[] frameDuration = new int[frameCount];
                         int totaldelay = 0;
                         int currentFrame = 0;
                         int currentFrameOffset = 0;
-
-                        PropertyItem framedelay = img.GetPropertyItem(0x5100);
-                        Byte[] times = framedelay.Value;
                         int num = 0;
-                        num = BitConverter.ToInt32(times, 4 * 0);
+                        num = img.GetFrameDuration(0);
                         if (num <= 1)
                         {
                             num = 10;
@@ -264,7 +275,7 @@ namespace Chatterino
                         totaldelay = num;
                         for (int i = 1; i < frameCount; i++)
                         {
-                            num = BitConverter.ToInt32(times, 4 * i);
+                            num = img.GetFrameDuration(i);
 
                             if (num <= 1)
                             {
@@ -297,7 +308,7 @@ namespace Chatterino
                             {
                                 lock (img)
                                 {
-                                    img.SelectActiveFrame(dimension, currentFrame);
+                                    img.SelectActiveFrame(currentFrame);
                                 }
                             }
                         };
@@ -413,13 +424,13 @@ namespace Chatterino
             {
             }
         }
-
-        public Image GetImage(ImageType type)
+        
+        public ChatterinoImage GetImage(ImageType type)
         {
             lock (images)
             {
                 Image img;
-                return images.TryGetValue(type, out img) ? img : null;
+                return images.TryGetValue(type, out img) ? new ChatterinoImage(img) : null;
             }
         }
 
@@ -459,7 +470,7 @@ namespace Chatterino
             CheerEmotes.Clear();
         }
 
-        public CommonSize GetImageSize(Image image)
+        public CommonSize GetImageSize(ChatterinoImage image)
         {
             if (image == null)
             {
@@ -469,9 +480,7 @@ namespace Chatterino
             {
                 try
                 {
-                    Image img = image;
-                    lock (img)
-                        return new CommonSize(img.Width, img.Height);
+                    return new CommonSize(image.Width, image.Height);
                 }
                 catch (Exception e) {
                     log("error getting image size: " + e.ToString());
@@ -569,9 +578,9 @@ namespace Chatterino
             }
         }
 
-        public Image ScaleImage(Image image, double scale)
+        public ChatterinoImage ScaleImage(ChatterinoImage image, double scale)
         {
-            var img = (Image)image;
+            var img = image;
 
             int w = (int)(img.Width * scale), h = (int)(img.Height * scale);
 
@@ -580,29 +589,29 @@ namespace Chatterino
             using (var graphics = Graphics.FromImage(newImage))
             {
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
-                graphics.DrawImage(img, 0, 0, w, h);
+                img.DrawImage(graphics, 0, 0, w, h);
             }
 
-            return newImage;
+            return new ChatterinoImage(newImage);
         }
 
-        public void FreezeImage(Image img)
+        public void FreezeImage(ChatterinoImage img)
         {
 
         }
 
-        public Image DrawImageBackground(Image image, HSLColor color)
+        public ChatterinoImage DrawImageBackground(ChatterinoImage image, HSLColor color)
         {
-            var img = (Image)image;
+            var img = image;
 
             var bitmap = new Bitmap(img.Width, img.Height);
             using (var g = Graphics.FromImage(bitmap))
             {
                 g.Clear(color.ToColor());
-                g.DrawImage(img, 0, 0, img.Width, img.Height);
+                img.DrawImage(g, 0, 0, img.Width, img.Height);
             }
 
-            return bitmap;
+            return new ChatterinoImage(bitmap);
         }
 
         public void ExecuteHotkeyAction(HotkeyAction action)
@@ -621,14 +630,14 @@ namespace Chatterino
 
         static Font timeoutFont = new Font("Arial", 7f);
 
-        public Image GetImageForTimeout(int value)
+        public ChatterinoImage GetImageForTimeout(int value)
         {
             string text1 = "";
             string text2 = "";
 
             if (value > 60 * 60 * 24 * 99 || value <= 0)
             {
-                return Properties.Resources.timeout;
+                return new ChatterinoImage(Properties.Resources.timeout);
             }
 
             foreach (var v in values)
@@ -646,7 +655,7 @@ namespace Chatterino
                 }
             }
 
-            return timeoutImages.GetOrAdd(text1 + text2, x =>
+            return new ChatterinoImage (timeoutImages.GetOrAdd(text1 + text2, x =>
             {
                 Bitmap bitmap = new Bitmap(16, 16);
 
@@ -665,7 +674,7 @@ namespace Chatterino
                 }
 
                 return bitmap;
-            });
+            }));
         }
 
         public void TriggerEmoteLoaded()
