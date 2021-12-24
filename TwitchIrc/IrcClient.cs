@@ -1,40 +1,27 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TwitchIrc
 {
     public class IrcClient
     {
+        private const int ModeratorMessageQueueLimit = 99;
+        private const int UserMessageQueueLimit = 19;
+        private const int MessageQueueDurationInSeconds = 32;
+
+        private static readonly Queue<DateTime> lastMessages = new Queue<DateTime>();
+
+        public bool SingleConnection { get; private set; }
         public IrcConnection ReadConnection { get; private set; }
         public IrcConnection WriteConnection { get; private set; }
 
-        public bool SingleConnection { get; private set; }
+        private static object lastMessagesLock = new object();
 
-        // ratelimiting
-        static ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
-        static Queue<DateTime> lastMessagesPleb = new Queue<DateTime>();
-        static Queue<DateTime> lastMessagesMod = new Queue<DateTime>();
-
-        static object lastMessagesLock = new object();
-
-        public IrcClient(bool singleConnection = false)
+        public IrcClient(IrcConnection readConnection, IrcConnection writeConnection)
         {
-            SingleConnection = singleConnection;
-
-            ReadConnection = new IrcConnection();
-
-            if (singleConnection)
-            {
-                WriteConnection = ReadConnection;
-            }
-            else
-            {
-                WriteConnection = new IrcConnection();
-            }
+            SingleConnection = readConnection == writeConnection;
+            ReadConnection = readConnection;
+            WriteConnection = writeConnection;
         }
 
         public void Connect(string username, string password)
@@ -60,33 +47,19 @@ namespace TwitchIrc
 
         public bool Say(string message, string channel, bool isMod)
         {
-            if (lastMessagesMod.Count < (isMod ? 99 : 19))
-            {
-                if (message.StartsWith(".color"))
-                {
-                    WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
-                    return true;
-                }
-            }
+            var messageQueueLimit = GetMessageQueueLimit(isMod);
 
             lock (lastMessagesLock)
             {
-                while (lastMessagesMod.Count > 0 && lastMessagesMod.Peek() < DateTime.Now)
+                while (lastMessages.Count > 0 && lastMessages.Peek() < DateTime.Now)
                 {
-                    lastMessagesMod.Dequeue();
+                    lastMessages.Dequeue();
                 }
 
-                while (lastMessagesPleb.Count > 0 && lastMessagesPleb.Peek() < DateTime.Now)
-                {
-                    lastMessagesPleb.Dequeue();
-                }
-
-                if (lastMessagesMod.Count < (isMod ? 99 : 19))
+                if (lastMessages.Count < messageQueueLimit)
                 {
                     WriteConnection.WriteLine("PRIVMSG #" + channel + " :" + message);
-
-                    lastMessagesMod.Enqueue(DateTime.Now + TimeSpan.FromSeconds(32));
-                    lastMessagesPleb.Enqueue(DateTime.Now + TimeSpan.FromSeconds(32));
+                    lastMessages.Enqueue(DateTime.Now + TimeSpan.FromSeconds(MessageQueueDurationInSeconds));
                 }
                 else
                 {
@@ -97,18 +70,16 @@ namespace TwitchIrc
             return true;
         }
 
+        private int GetMessageQueueLimit(bool isMod)
+        {
+            return isMod ? ModeratorMessageQueueLimit : UserMessageQueueLimit;
+        }
+
         public TimeSpan GetTimeUntilNextMessage(bool isMod)
         {
             lock (lastMessagesLock)
             {
-                if (isMod)
-                {
-                    return lastMessagesMod.Count >= 99 ? lastMessagesMod.Peek() - DateTime.Now : TimeSpan.Zero;
-                }
-                else
-                {
-                    return lastMessagesPleb.Count >= 19 ? lastMessagesPleb.Peek() - DateTime.Now : TimeSpan.Zero;
-                }
+                return lastMessages.Count >= GetMessageQueueLimit(isMod) ? lastMessages.Peek() - DateTime.Now : TimeSpan.Zero;
             }
         }
 
