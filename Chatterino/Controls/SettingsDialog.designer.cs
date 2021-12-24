@@ -179,6 +179,7 @@ namespace Chatterino.Controls
             this.chkGifEmotes = new System.Windows.Forms.CheckBox();
             this.chkBttvEmotes = new System.Windows.Forms.CheckBox();
             this.chkFFzEmotes = new System.Windows.Forms.CheckBox();
+            this.chk7tvEmotes = new System.Windows.Forms.CheckBox();
             this.panel11 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.buttonAccountRemove = new System.Windows.Forms.Button();
@@ -1704,10 +1705,11 @@ namespace Chatterino.Controls
             this.panel4.Controls.Add(this.chkGifEmotes);
             this.panel4.Controls.Add(this.chkBttvEmotes);
             this.panel4.Controls.Add(this.chkFFzEmotes);
+            this.panel4.Controls.Add(this.chk7tvEmotes);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(481, 500);
+            this.panel4.Size = new System.Drawing.Size(481, 528);
             this.panel4.TabIndex = 2;
             // 
             // label16
@@ -1766,7 +1768,7 @@ namespace Chatterino.Controls
             // tabControl2
             // 
             this.tabControl2.Controls.Add(this.tabPage3);
-            this.tabControl2.Location = new System.Drawing.Point(17, 131);
+            this.tabControl2.Location = new System.Drawing.Point(17, 154);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
             this.tabControl2.Size = new System.Drawing.Size(415, 268);
@@ -1812,7 +1814,7 @@ namespace Chatterino.Controls
             this.chkEmojis.Checked = true;
             this.chkEmojis.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkEmojis.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkEmojis.Location = new System.Drawing.Point(16, 105);
+            this.chkEmojis.Location = new System.Drawing.Point(16, 128);
             this.chkEmojis.Name = "chkEmojis";
             this.chkEmojis.Size = new System.Drawing.Size(92, 17);
             this.chkEmojis.TabIndex = 13;
@@ -1825,7 +1827,7 @@ namespace Chatterino.Controls
             this.chkGifEmotes.Checked = true;
             this.chkGifEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGifEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkGifEmotes.Location = new System.Drawing.Point(16, 82);
+            this.chkGifEmotes.Location = new System.Drawing.Point(16, 105);
             this.chkGifEmotes.Name = "chkGifEmotes";
             this.chkGifEmotes.Size = new System.Drawing.Size(133, 17);
             this.chkGifEmotes.TabIndex = 12;
@@ -1857,6 +1859,19 @@ namespace Chatterino.Controls
             this.chkFFzEmotes.TabIndex = 10;
             this.chkFFzEmotes.Text = "Enable FrankerFaceZ Emotes";
             this.chkFFzEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chk7tvEmotes
+            // 
+            this.chk7tvEmotes.AutoSize = true;
+            this.chk7tvEmotes.Checked = true;
+            this.chk7tvEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chk7tvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chk7tvEmotes.Location = new System.Drawing.Point(16, 82);
+            this.chk7tvEmotes.Name = "chk7tvEmotes";
+            this.chk7tvEmotes.Size = new System.Drawing.Size(167, 17);
+            this.chk7tvEmotes.TabIndex = 24;
+            this.chk7tvEmotes.Text = "Enable 7tv Emotes";
+            this.chk7tvEmotes.UseVisualStyleBackColor = true;
             // 
             // panel11
             // 
@@ -2223,6 +2238,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkGifEmotes;
         private System.Windows.Forms.CheckBox chkBttvEmotes;
         private System.Windows.Forms.CheckBox chkFFzEmotes;
+        private System.Windows.Forms.CheckBox chk7tvEmotes;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label8;

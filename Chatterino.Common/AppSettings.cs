@@ -314,6 +314,7 @@ namespace Chatterino.Common
         public static bool ChatEnableTwitchEmotes { get; set; } = true;
         public static bool ChatEnableBttvEmotes { get; set; } = true;
         public static bool ChatEnableFfzEmotes { get; set; } = true;
+        public static bool ChatEnable7tvEmotes { get; set; } = true;
         public static bool ChatEnableEmojis { get; set; } = true;
         public static bool ChatEnableGifAnimations { get; set; } = true;
 

@@ -563,7 +563,7 @@ namespace Chatterino.Common
                         LazyLoadedImage bttvEmote;
                         if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (Emotes.BttvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.BttvChannelEmotes.TryGetValue(s, out bttvEmote))
                             || (AppSettings.ChatEnableFfzEmotes && (Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote)))
-                            || (/*AppSettings.ChatEnableFfzEmotes && */(Emotes.SeventvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.SeventvChannelEmotes.TryGetValue(s, out bttvEmote)))))
+                            || (AppSettings.ChatEnable7tvEmotes && (Emotes.SeventvGlobalEmotes.TryGetValue(s, out bttvEmote) || channel.SeventvChannelEmotes.TryGetValue(s, out bttvEmote)))))
                         {
                             words.Add(new Word
                             {

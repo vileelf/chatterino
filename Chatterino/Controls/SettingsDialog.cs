@@ -408,6 +408,7 @@ namespace Chatterino.Controls
             BindCheckBox(chkTwitchEmotes, "ChatEnableTwitchEmotes");
             BindCheckBox(chkBttvEmotes, "ChatEnableBttvEmotes");
             BindCheckBox(chkFFzEmotes, "ChatEnableFfzEmotes");
+            BindCheckBox(chk7tvEmotes, "ChatEnable7tvEmotes");
             BindCheckBox(chkEmojis, "ChatEnableEmojis");
             BindCheckBox(chkGifEmotes, "ChatEnableGifAnimations");
 

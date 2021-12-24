@@ -1241,18 +1241,27 @@ namespace Chatterino.Common
         void updateEmoteNameList()
         {
             var names = new HashSet<KeyValuePair<string, string>>();
-
-            names.UnionWith(Emotes.TwitchEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            if (AppSettings.ChatEnableTwitchEmotes) {
+                names.UnionWith(Emotes.TwitchEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            }
             if (AppSettings.RecentlyUsedEmoteList) {
                 names.UnionWith(Emotes.RecentlyUsedEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             }
-            names.UnionWith(Emotes.BttvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(Emotes.FfzGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(Emotes.SeventvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(BttvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(FfzChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(SeventvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            names.UnionWith(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
+            if (AppSettings.ChatEnableBttvEmotes) {
+                names.UnionWith(Emotes.BttvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+                names.UnionWith(BttvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            }
+            if (AppSettings.ChatEnableFfzEmotes) {
+                names.UnionWith(Emotes.FfzGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+                names.UnionWith(FfzChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            }
+            if (AppSettings.ChatEnable7tvEmotes) {
+                names.UnionWith(Emotes.SeventvGlobalEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+                names.UnionWith(SeventvChannelEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
+            }
+            if (AppSettings.ChatEnableEmojis) {
+                names.UnionWith(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
+            }
             if (IsFollowing) {
                names.UnionWith(FollowerEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x))); 
             }
