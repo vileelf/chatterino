@@ -33,6 +33,7 @@ namespace Chatterino.Common
         public string SubLink { get; private set; }
         public string ChannelLink { get; private set; }
         public string PopoutPlayerLink { get; private set; }
+        public static TwitchChannel SelectedChannel;
 
         protected int Uses { get; set; } = 0;
 
@@ -1357,7 +1358,11 @@ namespace Chatterino.Common
             AddMessage(new Message("Joining Channel", HSLColor.Gray, true) {
                 HighlightTab = false,
             });
-            TwitchChannelJoiner.queueJoinChannel(Name, channelJoinCallback, null); 
+            if (SelectedChannel != this) {
+                TwitchChannelJoiner.queueJoinChannel(Name, channelJoinCallback, null); 
+            } else {
+                TwitchChannelJoiner.queueJoinChannelFront(Name, channelJoinCallback, null); 
+            }
         }
         
         private void channelJoinCallback(bool success, object callbackData) {
@@ -1634,8 +1639,8 @@ namespace Chatterino.Common
                 }
                 MessageCount = Messages.Count;
             }
-            MessagesAddedAtEnd?.Invoke(this, new ValueEventArgs<Message[]>(messages_added.ToArray()));
             MessagesRemovedAtStart?.Invoke(this, new ValueEventArgs<Message[]>(messages_removed.ToArray()));
+            MessagesAddedAtEnd?.Invoke(this, new ValueEventArgs<Message[]>(messages_added.ToArray()));
         }
 
         public void Dispose()

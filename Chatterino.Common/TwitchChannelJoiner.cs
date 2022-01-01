@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Timers;
+using System.Net.Sockets;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -31,7 +32,7 @@ namespace Chatterino.Common
            public ChannelJoinCallback callback;
            public object callbackData;
        }
-       static Queue<queueStruct> joinChannelQueue = new Queue<queueStruct>();
+       static LinkedList<queueStruct> joinChannelQueue = new LinkedList<queueStruct>();
        static AutoResetEvent queueWaitingEvent = new AutoResetEvent(false);
        
        
@@ -39,7 +40,16 @@ namespace Chatterino.Common
        public static void queueJoinChannel(string channel, ChannelJoinCallback cb, object callbackData) {
            channelQueueMutex.WaitOne();
            queueStruct qs = new queueStruct(channel, cb, callbackData);
-           joinChannelQueue.Enqueue(qs);
+           joinChannelQueue.AddLast(qs);
+           channelQueueMutex.ReleaseMutex();
+           queueWaitingEvent.Set();
+       }
+       
+       //queues your channel up to join at the front of the queue
+       public static void queueJoinChannelFront(string channel, ChannelJoinCallback cb, object callbackData) {
+           channelQueueMutex.WaitOne();
+           queueStruct qs = new queueStruct(channel, cb, callbackData);
+           joinChannelQueue.AddFirst(qs);
            channelQueueMutex.ReleaseMutex();
            queueWaitingEvent.Set();
        }
@@ -77,7 +87,8 @@ namespace Chatterino.Common
                        channelQueueMutex.WaitOne();
                        channelCount = joinChannelQueue.Count;
                        if (channelCount > 0) {
-                           channel = joinChannelQueue.Dequeue();
+                           channel = joinChannelQueue.First.Value;
+                           joinChannelQueue.RemoveFirst();
                            channelCount = joinChannelQueue.Count;
                        }
                        channelQueueMutex.ReleaseMutex();
@@ -123,6 +134,8 @@ namespace Chatterino.Common
                         try {
                             IrcManager.Client?.Join("#" + channel);
                             success = true;
+                        } catch (SocketException e) {
+                            GuiEngine.Current.log(e.ToString() + e.ErrorCode);
                         } catch (Exception e) {
                             GuiEngine.Current.log(e.ToString());
                         }

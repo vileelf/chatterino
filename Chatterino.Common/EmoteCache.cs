@@ -58,7 +58,11 @@ namespace Chatterino.Common
                     Mutex m;
                     
                     using(m = new Mutex(false, url)) {
-                        m.WaitOne();
+                        try {
+                            m.WaitOne();
+                        } catch (AbandonedMutexException e) {
+                           //no problem keep going
+                        }
                         if (CachedEmotes.TryGetValue(url, out ecache)) {
                             ecache.usedLastTime = true;
                             if (ecache.emote == null && File.Exists(ecache.emotePath)) {
@@ -96,7 +100,11 @@ namespace Chatterino.Common
                 ChatterinoImage ret = null;
                 Mutex m;
                 using(m = new Mutex(false, url)){
-                    m.WaitOne();
+                    try {
+                        m.WaitOne();
+                    } catch (AbandonedMutexException e) {
+                       //no problem keep going
+                    }
                     if (CachedEmotes.TryGetValue(url, out ecache)) {
                         ecache.usedLastTime = true;
                         if (ecache.emote == null && File.Exists(ecache.emotePath)) {
@@ -134,7 +142,11 @@ namespace Chatterino.Common
                     _emotes_cache ecache;
                     Mutex m;
                     using(m = new Mutex(false, url)) {
-                        m.WaitOne();
+                        try {
+                            m.WaitOne();
+                        } catch (AbandonedMutexException e) {
+                           //no problem keep going
+                        }
                         if (!CachedEmotes.ContainsKey(url)) {
                             ecache.usedLastTime = true;
                             ecache.isAnimated = false;

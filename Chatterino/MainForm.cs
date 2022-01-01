@@ -107,6 +107,9 @@ namespace Chatterino
 
                     Selected?.Focus();
                     (Selected as ChatControl)?.CloseAutocomplete();
+                    if(Selected != null && (Selected as ChatControl).Channel != null) {
+                        TwitchChannel.SelectedChannel = (Selected as ChatControl).Channel;
+                    }
                     if (lastTabPage != null) {
                          foreach (var col in lastTabPage.Columns)
                         {
