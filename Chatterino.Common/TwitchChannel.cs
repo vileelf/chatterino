@@ -764,6 +764,10 @@ namespace Chatterino.Common
                             if (getemote && Math.Abs(emote.Scale - scale) < .01)
                             {
                                 SeventvChannelEmotes[emotename] = emote;
+                                if (emote.Name != emotename) {
+                                    emote.Name = emotename;
+                                    emote.Tooltip =  emotename + "\n7TV Channel Emote\nChannel: " + ownername;
+                                }
                             }
                             else
                             {
@@ -1864,6 +1868,10 @@ namespace Chatterino.Common
             if (getemote && Math.Abs(emote.Scale - scale) < .01)
             {
                 BttvChannelEmotes[code] = emote;
+                if (emote.Name != code) {
+                    emote.Name = code;
+                    emote.Tooltip =  code + "\nBetterTTV Channel Emote\nChannel: " + channel;
+                }
             }
             else
             {

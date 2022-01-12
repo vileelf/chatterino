@@ -136,19 +136,6 @@ namespace Chatterino.Common
                 };
                 return emote;
             };
-
-            /*TwitchEmotesByIDCache.TryAdd(17,
-                getEmoteReplacement(17, "StoneLightning",
-                    "https://fourtf.com/chatterino/emotes/replacements/StoneLightning.png"));
-            TwitchEmotesByIDCache.TryAdd(18,
-                getEmoteReplacement(18, "TheRinger", "https://fourtf.com/chatterino/emotes/replacements/TheRinger.png"));
-            TwitchEmotesByIDCache.TryAdd(20,
-                getEmoteReplacement(20, "EagleEye", "https://fourtf.com/chatterino/emotes/replacements/EagleEye.png"));
-            TwitchEmotesByIDCache.TryAdd(22,
-                getEmoteReplacement(22, "RedCoat", "https://fourtf.com/chatterino/emotes/replacements/RedCoat.png"));
-            TwitchEmotesByIDCache.TryAdd(33,
-                getEmoteReplacement(33, "DansGame", "https://fourtf.com/chatterino/emotes/replacements/DansGame.png"));
-            */
             twitchEmotesCodeReplacements[@"[oO](_|\.)[oO]"] = "o_O";
             twitchEmotesCodeReplacements[@"\&gt\;\("] = ">(";
             twitchEmotesCodeReplacements[@"\&lt\;3"] = "<3";
@@ -171,8 +158,6 @@ namespace Chatterino.Common
             _bttvHatEmotes["CandyCane"] = null;
             _bttvHatEmotes["cvHazmat"] = null;
             _bttvHatEmotes["cvMask"] = null;
-
-            //ChatterinoEmotes["WithAHat"] = new LazyLoadedImage { Name = "WithAHat", Tooltip = "WithAHat\nChatterino Emote", Url = "https://fourtf.com/chatterino/emotes/img/WithAHat_x1.png", IsHat = true };
         }
 
         public static string GetTwitchEmoteLink(string id, bool getMax, out double scale)
