@@ -37,8 +37,10 @@ namespace Chatterino.Common
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             ActiveImage = image;
-            Width = image.Width;
-            Height = image.Height;
+            lock(ActiveImage) {
+                Width = image.Width;
+                Height = image.Height;
+            }
             LoadImageFrameInfo();
         }
         
@@ -66,8 +68,10 @@ namespace Chatterino.Common
             IsAnimated = false;
             if (!IsWebp(stream)) {
                 ActiveImage = Image.FromStream(stream);
-                Width = ActiveImage.Width;
-                Height = ActiveImage.Height;
+                lock(ActiveImage) {
+                    Width = ActiveImage.Width;
+                    Height = ActiveImage.Height;
+                }
                 LoadImageFrameInfo();
             } else {
                 decodeWebP(stream);
@@ -78,8 +82,11 @@ namespace Chatterino.Common
             if (ImageAnimator.CanAnimate(ActiveImage)) {
                 //extract the frames
                 FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
-                TotalFrames = ActiveImage.GetFrameCount(dimension);
-                PropertyItem framedelayprop = ActiveImage.GetPropertyItem(0x5100);
+                PropertyItem framedelayprop;
+                lock(ActiveImage) {
+                    TotalFrames = ActiveImage.GetFrameCount(dimension);
+                    framedelayprop = ActiveImage.GetPropertyItem(0x5100);
+                }
                 Byte[] times = framedelayprop.Value;
                 int framedelay = 0;
                 for (int i = 0; i < TotalFrames; i++)
@@ -94,10 +101,12 @@ namespace Chatterino.Common
         
         private void LoadImageFrames() {
             FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
-            for (int i = 0; i < TotalFrames; i++)
-            {
-                ActiveImage.SelectActiveFrame(dimension, i);
-                onlyAddFrame(ActiveImage);
+            lock(ActiveImage) {
+                for (int i = 0; i < TotalFrames; i++)
+                {
+                    ActiveImage.SelectActiveFrame(dimension, i);
+                    onlyAddFrame(ActiveImage);
+                }
             }
             ActiveImage = Frames[CurrentFrame];
             framesLoaded = true;
@@ -153,10 +162,14 @@ namespace Chatterino.Common
                 ActiveImage = Frames[frameIndex];
             } else {
                 FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
-                ActiveImage.SelectActiveFrame(dimension, frameIndex);
+                lock(ActiveImage) {
+                    ActiveImage.SelectActiveFrame(dimension, frameIndex);
+                }
             }
-            this.Height = ActiveImage.Height;
-            this.Width = ActiveImage.Width;
+            lock(ActiveImage) {
+                this.Height = ActiveImage.Height;
+                this.Width = ActiveImage.Width;
+            }
             this.CurrentFrame = frameIndex;
         } 
         
@@ -206,7 +219,9 @@ namespace Chatterino.Common
                 OriginalImageStream.CopyTo(stream);
                 stream.Flush();
             } else if (!IsAnimated) {
-                ActiveImage.Save(stream, GetEncoder(ImageFormat.Png), null);
+                lock(ActiveImage) {
+                    ActiveImage.Save(stream, GetEncoder(ImageFormat.Png), null);
+                }
             }
         }
         
@@ -225,12 +240,16 @@ namespace Chatterino.Common
         
         //Draws the current active frame
         public void DrawImage(Graphics g, int x, int y) {
-            g.DrawImage(ActiveImage, x, y);
+            lock(ActiveImage) {
+                g.DrawImage(ActiveImage, x, y);
+            }
         }
         
         //Draws the current active frame
         public void DrawImage(Graphics g, int x, int y, int width, int height) {
-            g.DrawImage(ActiveImage, x, y, width, height);
+            lock(ActiveImage) {
+                g.DrawImage(ActiveImage, x, y, width, height);
+            }
         }
         
         private void decodeWebP(MemoryStream stream)
@@ -286,8 +305,9 @@ namespace Chatterino.Common
                         bmpData = null;
                         if (first) {
                             ActiveImage = bmp;
-                            Height = ActiveImage.Height;
-                            Width = ActiveImage.Width;
+                            Height = imgHeight;
+                            Width = imgWidth;
+                            first = false;
                         }
                     }   
                     WebPWrapper.WebPAnimDecoderReset(dec);
