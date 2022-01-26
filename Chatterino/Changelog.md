@@ -1,5 +1,11 @@
 ﻿# changelog
 
+## 2.7
+- added a rejoin channel option to the drop down menu and a /rejoin command that rejoins the current channel without reconnecting the whole program.
+- added a new setting to disable/enable double clicking a tab to change the tab title.
+- Now joining channels at a slower rate to match twitches new join speed limits.
+- added support for 7tv emotes
+
 ## 2.6
 - using newer api for getting user emotes. It should include bit emotes and animated emotes now
 - added support for follower emotes
