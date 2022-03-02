@@ -37,7 +37,7 @@ namespace Chatterino.Controls
             {
                 try
                 {
-                    listener.Prefixes.Add("http://127.0.0.1:5215/");
+                    listener.Prefixes.Add("http://localhost:5215/");
                     listener.Start();
 
                     while (listener.IsListening)
@@ -64,9 +64,9 @@ namespace Chatterino.Controls
     <h1>Redirecting</h1>
     <p>If your webbrowser does not redirect you automatically, click <a id='link'>here</a>.</p>
     <script type='text/javascript'>
-        var link = 'http://127.0.0.1:5215/token?' + location.hash.substring(1);
+        var link = 'http://localhost:5215/token?' + location.hash.substring(1);
         window.location = link;
-        document.getElementById('link').href = link; 
+        document.getElementById('link').href = link;
     </script>
 </body>
 </html>";
@@ -83,18 +83,23 @@ namespace Chatterino.Controls
                             var access_token = context.Request.QueryString["access_token"];
                             var scope = context.Request.QueryString["scope"];
 
-                            var request = WebRequest.Create("https://api.twitch.tv/kraken?oauth_token=" + access_token + "&client_id=" + IrcManager.DefaultClientID);
+                            var request = WebRequest.Create("https://api.twitch.tv/helix/users");
                             if (AppSettings.IgnoreSystemProxy)
                             {
                                 request.Proxy = null;
                             }
+                            request.Headers["Client-ID"] = $"{IrcManager.DefaultClientID}";
+                            request.Headers["Authorization"] = $"Bearer {access_token}";
                             using (var response = request.GetResponse())
                             using (var stream = response.GetResponseStream())
                             {
                                 var parser = new JsonParser();
                                 dynamic json = parser.Parse(stream);
-                                dynamic token = json["token"];
-                                string username = token["user_name"];
+                                dynamic token = json["data"];
+                                string username = "";
+                                if (token != null && token.Count!=0) {
+                                    username = token[0]["login"];
+                                }
 
                                 Account = new Account(username, access_token, IrcManager.DefaultClientID);
                             }
@@ -130,8 +135,9 @@ namespace Chatterino.Controls
                         }
                     }
                 }
-                catch
+                catch(Exception e)
                 {
+                    GuiEngine.Current.log(e.ToString());
                     buttonLogin.Invoke(() =>
                     {
                         buttonLogin.Enabled = false;
@@ -150,12 +156,12 @@ namespace Chatterino.Controls
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            Process.Start($"https://api.twitch.tv/kraken/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://127.0.0.1:5215/code&force_verify=true&scope=chat_login+user_subscriptions+user_blocks_edit+user_blocks_read+user_follows_edit");
+            Process.Start($"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://localhost:5215/code&force_verify=true&scope=chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+user:read:blocked_users");
         }
 
         private void btnManualLogin_Click(object sender, EventArgs e)
         {
-            Process.Start($"https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id=gkp8i0oxk7xua6pcxmg4w6u8vt8n4qw&redirect_uri=https%3A%2F%2Ffourtf.com%2Fchatterino%2Fauth&force_verify=true&scope=chat_login+user_subscriptions+user_blocks_edit+user_blocks_read+user_follows_edit");
+            //Process.Start($"https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id={IrcManager.DefaultClientID}&redirect_uri=https%3A%2F%2Ffourtf.com%2Fchatterino%2Fauth&force_verify=true&scope=chat_login+user_subscriptions+user_blocks_edit+user_blocks_read+user_follows_edit");
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
