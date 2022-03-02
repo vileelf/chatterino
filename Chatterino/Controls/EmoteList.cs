@@ -347,13 +347,11 @@ namespace Chatterino.Controls
                             }
                             
                         }
-
-                        scrollAtBottom = false;
-                        _scroll.Value = 0;
-                        updateMessageBounds();
-                        Invalidate();
-                    
                     }
+                    scrollAtBottom = false;
+                    _scroll.Value = 0;
+                    updateMessageBounds();
+                    Invalidate();
                 } catch (Exception e) {
                     GuiEngine.Current.log("Error loading emotelist " +e.ToString());
                 }

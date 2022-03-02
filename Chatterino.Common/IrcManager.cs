@@ -13,7 +13,7 @@ namespace Chatterino.Common
         public const int MaxMessageLength = 500;
 
         public static Account Account { get; set; } = Account.AnonAccount;
-        public static string DefaultClientID { get; set; } = "gkp8i0oxk7xua6pcxmg4w6u8vt8n4qw";
+        public static string DefaultClientID { get; set; } = "eo3lkitgi8ctbrm4dlsxc8yarrohvq";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
