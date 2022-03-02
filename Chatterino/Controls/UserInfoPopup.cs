@@ -110,7 +110,7 @@ namespace Chatterino.Controls
                                 {
                                     try
                                     {
-                                        var req = WebRequest.Create($"https://api.twitch.tv/helix/users/follows?to_id={data.UserId}");
+                                        var req = WebRequest.Create(logo);
                                         if (AppSettings.IgnoreSystemProxy)
                                         {
                                             request.Proxy = null;
