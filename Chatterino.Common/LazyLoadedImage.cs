@@ -53,70 +53,86 @@ namespace Chatterino.Common
 
                 loading = true;
                 
-                Task.Run(() =>
+                try
                 {
                     if (EmoteCache.CheckEmote(Url)) {
-                        EmoteCache.GetEmote(Url, (emote) => {
-                            if (emote != null) {
-                                GuiEngine.Current.HandleAnimatedTwitchEmote(this, emote);
-                                image = emote;
-                                GuiEngine.Current.TriggerEmoteLoaded();
-                                ImageLoaded?.Invoke(null, null);
-                                loading = false;
-                            } else {
-                                getEmote();
-                            }
-                        });
+                        try
+                        {
+                            EmoteCache.GetEmote(Url, (emote) => {
+                                if (emote != null) {
+                                    GuiEngine.Current.HandleAnimatedTwitchEmote(this, emote);
+                                    image = emote;
+                                    GuiEngine.Current.TriggerEmoteLoaded();
+                                    ImageLoaded?.Invoke(null, null);
+                                    loading = false;
+                                } else {
+                                    getEmote();
+                                }
+                            });
+                        } catch (Exception e) {
+                            GuiEngine.Current.log("Error loading emote from cache" + Name + " " + Url+ " " +e.ToString());
+                        }
                     } else {
                         getEmote();
                     }
-                });
+                } catch (Exception e) {
+                    GuiEngine.Current.log("Error loading emote" + Name + " " + Url+ " " +e.ToString());
+                }
+                
                 return null;
             }
         }
         
         private void getEmote() {
-            ChatterinoImage img;
-            if (LoadAction != null)
-            {
-                img = LoadAction();
-            }
-            else
+            Task.Run(() =>
             {
                 try
                 {
-                    var request = WebRequest.Create(Url);
-                    if (AppSettings.IgnoreSystemProxy)
+                    ChatterinoImage img;
+                    if (LoadAction != null)
                     {
-                        request.Proxy = null;
+                        img = LoadAction();
                     }
-                    using (var response = request.GetResponse()) {
-                        using (var stream = response.GetResponseStream())
+                    else
+                    {
+                        try
                         {
-                            MemoryStream mem = new MemoryStream();
-                            stream.CopyTo(mem);
-                            img = GuiEngine.Current.ReadImageFromStream(mem);
-                        }
-                        response.Close();
-                    }
+                            var request = WebRequest.Create(Url);
+                            if (AppSettings.IgnoreSystemProxy)
+                            {
+                                request.Proxy = null;
+                            }
+                            using (var response = request.GetResponse()) {
+                                using (var stream = response.GetResponseStream())
+                                {
+                                    MemoryStream mem = new MemoryStream();
+                                    stream.CopyTo(mem);
+                                    img = GuiEngine.Current.ReadImageFromStream(mem);
+                                }
+                                response.Close();
+                            }
 
-                    GuiEngine.Current.FreezeImage(img);
+                            GuiEngine.Current.FreezeImage(img);
+                        }
+                        catch (Exception e)
+                        {
+                            GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
+                            img = null;
+                        }
+                    }
+                    if (img != null)
+                    {
+                        GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
+                        EmoteCache.AddEmote(Url, img);
+                        image = img;
+                        GuiEngine.Current.TriggerEmoteLoaded();
+                        ImageLoaded?.Invoke(null, null);
+                    }
+                    loading = false;
+                } catch (Exception e) {
+                    GuiEngine.Current.log("Error loading emote " + Name + " " + Url+ " " +e.ToString());
                 }
-                catch (Exception e)
-                {
-                    GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
-                    img = null;
-                }
-            }
-            if (img != null)
-            {
-                GuiEngine.Current.HandleAnimatedTwitchEmote(this, img);
-                EmoteCache.AddEmote(Url, img);
-                image = img;
-                GuiEngine.Current.TriggerEmoteLoaded();
-                ImageLoaded?.Invoke(null, null);
-            }
-            loading = false;
+            });
         }
 
         public LazyLoadedImage()

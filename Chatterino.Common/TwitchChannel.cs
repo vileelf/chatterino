@@ -319,12 +319,13 @@ namespace Chatterino.Common
             try {
                 var request =
                     WebRequest.Create(
-                        $"https://api.twitch.tv/v5/bits/actions/?channel_id={RoomID}");
+                        $"https://api.twitch.tv/helix/bits/cheermotes?broadcaster_id={RoomID}");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
                 request.Headers.Add("Client-ID", IrcManager.DefaultClientID);
+                request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
                 using (var response = request.GetResponse()) {
                     using (var stream = response.GetResponseStream())
                     {
@@ -332,7 +333,7 @@ namespace Chatterino.Common
 
                         dynamic json = parser.Parse(stream);
 
-                        dynamic actions = json["actions"];
+                        dynamic actions = json["data"];
                         bool addGlobalEmotes = true;
                         bool cheerexists = false;
                         string type;
