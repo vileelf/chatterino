@@ -74,7 +74,7 @@
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(287, 41);
             this.lblError.TabIndex = 2;
-            this.lblError.Text = "Could not open tcp port 5215!\r\nTry the Login via fourtf.com instead!";
+            this.lblError.Text = "Could not open tcp port 5215!\r\nSomething else might be running on that port";
             this.lblError.Visible = false;
             // 
             // btnManualLogin
