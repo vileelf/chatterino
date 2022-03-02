@@ -156,7 +156,7 @@ namespace Chatterino.Controls
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            Process.Start($"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://localhost:5215/code&force_verify=true&scope=chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+user:read:blocked_users");
+            Process.Start($"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://localhost:5215/code&force_verify=true&scope=chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+user:read:blocked_users+user:read:follows");
         }
 
         private void btnManualLogin_Click(object sender, EventArgs e)
