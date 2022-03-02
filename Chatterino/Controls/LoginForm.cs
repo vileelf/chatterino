@@ -101,7 +101,7 @@ namespace Chatterino.Controls
                                     username = token[0]["login"];
                                 }
 
-                                Account = new Account(username, access_token, IrcManager.DefaultClientID);
+                                Account = new Account(username, access_token, IrcManager.DefaultClientID, IrcManager.DefaultScope);
                             }
 
                             string answer = $@"<html>
@@ -156,7 +156,7 @@ namespace Chatterino.Controls
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            Process.Start($"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://localhost:5215/code&force_verify=true&scope=chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+user:read:blocked_users+user:read:follows");
+            Process.Start($"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={IrcManager.DefaultClientID}&redirect_uri=http://localhost:5215/code&force_verify=true&scope={IrcManager.DefaultScope}");
         }
 
         private void btnManualLogin_Click(object sender, EventArgs e)
@@ -261,7 +261,7 @@ namespace Chatterino.Controls
 
             if (username != null)
             {
-                Account = new Account(username, oauthToken, clientid);
+                Account = new Account(username, oauthToken, clientid, IrcManager.DefaultScope);
                 Close();
             }
             else

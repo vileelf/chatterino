@@ -15,6 +15,7 @@ namespace Chatterino.Common
         public string Username { get; set; }
         public string OauthToken { get; set; }
         public string ClientId { get; set; }
+        public string Scope { get; set; }
         private string userid;
         public string UserId {
             get {
@@ -32,11 +33,12 @@ namespace Chatterino.Common
         [JsonIgnore]
         public bool IsAnon { get; private set; }
 
-        public Account(string username, string oauthToken, string clientId)
+        public Account(string username, string oauthToken, string clientId, string scope)
         {
             Username = username;
             OauthToken = oauthToken;
             ClientId = clientId;
+            Scope = scope;
             loadUserIDFromTwitch(this, username, clientId);
         }
         protected bool loadUserIDFromTwitch(Account account, string username, string clientId)
@@ -77,6 +79,6 @@ namespace Chatterino.Common
             
         }
 
-        public static Account AnonAccount { get; } = new Account("justinfan123", string.Empty, string.Empty) { IsAnon = true};
+        public static Account AnonAccount { get; } = new Account("justinfan123", string.Empty, string.Empty, string.Empty) { IsAnon = true};
     }
 }

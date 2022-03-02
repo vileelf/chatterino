@@ -1409,7 +1409,7 @@ namespace Chatterino.Common
             }
 
             IrcManager.SendMessage(this, text, IsModOrBroadcaster || IsVip);
-
+            
             if (AppSettings.Rainbow)
             {
                 usernameHue += 0.1f;

@@ -58,7 +58,7 @@ namespace Chatterino.Common
 
         public static void AddAccount(Account account)
         {
-            if (!string.IsNullOrWhiteSpace(account.Username) && account.ClientId.Equals(IrcManager.DefaultClientID))
+            if (!string.IsNullOrWhiteSpace(account.Username) && account.ClientId.Equals(IrcManager.DefaultClientID) && account.Scope.Equals(IrcManager.DefaultScope))
             {
                 _accounts[account.Username.ToLowerInvariant()] = account;
             }
