@@ -882,7 +882,7 @@ namespace Chatterino.Controls
             {
                 if (Input != null)
                 {
-                    this.Invoke(() =>
+                    this?.Invoke(() =>
                     {
                         MessagePadding = new Padding(MessagePadding.Left, MessagePadding.Top, MessagePadding.Right,
                             10 + (Input.Visible ? Input.Height : 0));

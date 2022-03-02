@@ -145,38 +145,45 @@ namespace Chatterino
                 {
                     try
                     {
-                        var request = WebRequest.Create($"https://api.twitch.tv/kraken/streams/{channel.Name}?client_id={IrcManager.DefaultClientID}");
+                       var request =
+                            WebRequest.Create(
+                                $"https://api.twitch.tv/helix/streams?user_login={channel.Name}");
                         if (AppSettings.IgnoreSystemProxy)
                         {
                             request.Proxy = null;
                         }
+                        request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
+                        request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
                         using (var resp = request.GetResponse())
                         using (var stream = resp.GetResponseStream())
                         {
                             var parser = new JsonParser();
 
                             dynamic json = parser.Parse(stream);
-
-                            dynamic root = json["stream"];
-
-                            string createdAt = root["created_at"];
-
-                            var streamStart = DateTime.Parse(createdAt);
-
-                            var uptime = DateTime.Now - streamStart;
-
-                            var text = "Stream uptime: ";
-
-                            if (uptime.TotalDays > 1)
+                            dynamic data = json["data"];
+                            if (data != null && data.Count > 0 && data[0]["type"]!="")
                             {
-                                text += (int)uptime.TotalDays + " days, " + uptime.ToString("hh\\h\\ mm\\m\\ ss\\s");
-                            }
-                            else
-                            {
-                                text += uptime.ToString("hh\\h\\ mm\\m\\ ss\\s");
-                            }
+                                dynamic root = data[0];
 
-                            channel.AddMessage(new Chatterino.Common.Message(text));
+                                string createdAt = root["started_at"];
+
+                                var streamStart = DateTime.Parse(createdAt);
+
+                                var uptime = DateTime.Now - streamStart;
+
+                                var text = "Stream uptime: ";
+
+                                if (uptime.TotalDays > 1)
+                                {
+                                    text += (int)uptime.TotalDays + " days, " + uptime.ToString("hh\\h\\ mm\\m\\ ss\\s");
+                                }
+                                else
+                                {
+                                    text += uptime.ToString("hh\\h\\ mm\\m\\ ss\\s");
+                                }
+
+                                channel.AddMessage(new Chatterino.Common.Message(text));
+                            }
                         }
                     }
                     catch { }

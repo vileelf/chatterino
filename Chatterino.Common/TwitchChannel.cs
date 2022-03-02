@@ -497,26 +497,28 @@ namespace Chatterino.Common
 
         protected bool loadRoomIDFromTwitch()
         {
-            // call twitch kraken api
+            // call twitch api
             try
             {
                 var request =
                     WebRequest.Create(
-                        $"https://api.twitch.tv/kraken/users/?client_id={IrcManager.DefaultClientID}&login={Name}&api_version=5");
+                        $"https://api.twitch.tv/helix/users?&login={Name}");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
+                request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
+                request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
                 using (var response = request.GetResponse()) {
                     using (var stream = response.GetResponseStream())
                     {
                         var parser = new JsonParser();
 
                         dynamic json = parser.Parse(stream);
-                        dynamic users = json["users"];
+                        dynamic users = json["data"];
                         int roomID = -1;
 
-                        if (users.Count>0 && int.TryParse(users[0]["_id"], out roomID))
+                        if (users.Count>0 && int.TryParse(users[0]["id"], out roomID))
                         {
                             RoomID = roomID;
                             return true;
@@ -1122,12 +1124,12 @@ namespace Chatterino.Common
                     {
                         var req =
                             WebRequest.Create(
-                                $"https://api.twitch.tv/kraken/streams/{RoomID}");
+                                $"https://api.twitch.tv/helix/streams?user_id={RoomID}");
                         if (AppSettings.IgnoreSystemProxy)
                         {
                             req.Proxy = null;
                         }
-                        ((HttpWebRequest)req).Accept="application/vnd.twitchtv.v5+json";
+                        req.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
                         req.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
                         using (var res = req.GetResponse()) {
                             using (var resStream = res.GetResponseStream())
@@ -1135,9 +1137,9 @@ namespace Chatterino.Common
                                 
                                 var parser = new JsonParser();
                                 dynamic json = parser.Parse(resStream);
-                                //GuiEngine.Current.log(JsonConvert.SerializeObject(json));
+                                dynamic data = json["data"];
                                 var tmpIsLive = IsLive;
-                                IsLive = json["stream"] != null;
+                                IsLive = data != null && data.Count > 0 && data[0]["type"]!="";
                                 if (!IsLive)
                                 {
                                     StreamViewerCount = 0;
@@ -1151,13 +1153,12 @@ namespace Chatterino.Common
                                 }
                                 else
                                 {
-                                    dynamic stream = json["stream"];
-                                    dynamic channel = stream["channel"];
+                                    dynamic stream = data[0];
 
-                                    StreamViewerCount = int.Parse(stream["viewers"]);
-                                    StreamStatus = channel["status"];
-                                    StreamGame = channel["game"];
-                                    StreamStart = DateTime.Parse(stream["created_at"]);
+                                    StreamViewerCount = int.Parse(stream["viewer_count"]);
+                                    StreamStatus = stream["title"];
+                                    StreamGame = stream["game_name"];
+                                    StreamStart = DateTime.Parse(stream["started_at"]);
                                     LiveStatusUpdated?.Invoke(this, new LiveStatusEventArgs(tmpIsLive!=IsLive));
                                 }
                             }

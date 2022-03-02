@@ -41,20 +41,19 @@ namespace Chatterino.Common
         }
         protected bool loadUserIDFromTwitch(Account account, string username, string clientId)
         {
-            // call twitch kraken api
+            // call twitch api
             if (username != string.Empty && clientId != string.Empty) {
                 try
                 {
                     var request =
-                        WebRequest.Create(
-                            $"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={clientId}");
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/helix/users?&login={username}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-                    //((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
-                   // request.Headers["Client-ID"]=$"{clientId}";
-                    //request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
+                    request.Headers["Authorization"]=$"Bearer {account.OauthToken}";
+                    request.Headers["Client-ID"]=$"{clientId}";
                     using (var response = request.GetResponse()) {
                         using (var stream = response.GetResponseStream())
                         {

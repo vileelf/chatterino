@@ -68,12 +68,12 @@ namespace Chatterino.Controls
             {
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/channels/{data.UserId}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/helix/users?id={data.UserId}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-                    ((HttpWebRequest)request).Accept="application/vnd.twitchtv.v5+json";
+                    request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
                     request.Headers["Client-ID"]=$"{Common.IrcManager.DefaultClientID}";
                     using (var response = request.GetResponse()) {
                         using (var stream = response.GetResponseStream())
@@ -81,51 +81,81 @@ namespace Chatterino.Controls
                             var parser = new JsonParser();
 
                             dynamic json = parser.Parse(stream);
+                            dynamic jsondata = json["data"];
+                            if (jsondata != null && jsondata.Count>0) {
+                                dynamic channel = jsondata[0];
+                                string logo = channel["profile_image_url"];
+                                string createdAt = channel["created_at"];
+                                string viewCount = channel["view_count"];
+                                string broadCasterType = channel["broadcaster_type"];
 
-                            string logo = json["logo"];
-                            string createdAt = json["created_at"];
-                            string followerCount = json["followers"];
-                            string viewCount = json["views"];
-                            string broadCasterType = json["broadcaster_type"];
-
-                            lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Followers: {followerCount}\n" + $"Streamer type: {broadCasterType}" 
-                            #if DEBUG
-                            + $"\nid: {data.UserId}"
-                            #endif
-                            ); 
-                            if (!String.IsNullOrEmpty(notes)) {
-                                lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
-                            }
-
-                            DateTime createAtTime;
-
-                            if (DateTime.TryParse(createdAt, out createAtTime))
-                            {
-                                lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime.ToString()}");
-                            }
-
-                            Task.Run(() =>
-                            {
-                                try
-                                {
-                                    var req = WebRequest.Create(logo);
-                                    if (AppSettings.IgnoreSystemProxy)
-                                    {
-                                        request.Proxy = null;
-                                    }
-
-                                    using (var res = req.GetResponse()) {
-                                        using (var s = res.GetResponseStream())
-                                        {
-                                            var image = Image.FromStream(s);
-
-                                            picAvatar.Invoke(() => picAvatar.Image = image);
-                                        }
-                                        res.Close();
-                                    }
+                                lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Streamer type: {broadCasterType}" 
+                                #if DEBUG
+                                + $"\nid: {data.UserId}"
+                                #endif
+                                ); 
+                                
+                                if (!String.IsNullOrEmpty(notes)) {
+                                    lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
                                 }
-                                catch { }
-                            });
+
+                                DateTime createAtTime;
+
+                                if (DateTime.TryParse(createdAt, out createAtTime))
+                                {
+                                    lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime.ToString()}");
+                                }
+
+                                Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        var req = WebRequest.Create($"https://api.twitch.tv/helix/users/follows?to_id={data.UserId}");
+                                        if (AppSettings.IgnoreSystemProxy)
+                                        {
+                                            request.Proxy = null;
+                                        }
+
+                                        using (var res = req.GetResponse()) {
+                                            using (var s = res.GetResponseStream())
+                                            {
+                                                var image = Image.FromStream(s);
+
+                                                picAvatar.Invoke(() => picAvatar.Image = image);
+                                            }
+                                            res.Close();
+                                        }
+                                    }
+                                    catch { }
+                                });
+                                
+                                //query follow count
+                                Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        var req = WebRequest.Create($"https://api.twitch.tv/helix/users/follows?to_id={data.UserId}");
+                                        if (AppSettings.IgnoreSystemProxy)
+                                        {
+                                            request.Proxy = null;
+                                        }
+                                        req.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
+                                        req.Headers["Client-ID"]=$"{Common.IrcManager.DefaultClientID}";
+                                        using (var res = req.GetResponse()) {
+                                            using (var s = res.GetResponseStream())
+                                            {
+                                                dynamic followjson = parser.Parse(s);
+                                                string followercount = followjson["total"];
+                                                if (!String.IsNullOrEmpty(followercount)) {
+                                                    lblViews.Invoke(() => lblViews.Text = lblViews.Text + $"\nFollowers: {followercount}");
+                                                }
+                                            }
+                                            res.Close();
+                                        }
+                                    }
+                                    catch { }
+                                });
+                            }
                         }
                         response.Close();
                     }
@@ -295,7 +325,7 @@ namespace Chatterino.Controls
                 // message user
                 btnMessage.Click += (s, e) =>
                 {
-                    Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/message/compose?to=" + data.UserName));
+                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText($"/w " + data.UserName + " ");
                 };
                 
                 // notes
@@ -353,36 +383,7 @@ namespace Chatterino.Controls
 
                 btnFollow.Click += (s, e) =>
                 {
-                    if (isFollowing)
-                    {
-                        string message;
-
-                        if (Common.IrcManager.TryUnfollowUser(data.UserName, data.UserId, out message))
-                        {
-                            isFollowing = false;
-
-                            btnFollow.Text = "Follow";
-                        }
-                        else
-                        {
-                            MessageBox.Show(message, "Error while unfollowing user.");
-                        }
-                    }
-                    else
-                    {
-                        string message;
-
-                        if (Common.IrcManager.TryFollowUser(data.UserName, data.UserId, out message))
-                        {
-                            isFollowing = true;
-
-                            btnFollow.Text = "Unfollow";
-                        }
-                        else
-                        {
-                            MessageBox.Show(message, "Error while following user.");
-                        }
-                    }
+                    Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
                 };
             }
         }

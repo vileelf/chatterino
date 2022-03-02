@@ -42,23 +42,27 @@ namespace Chatterino.Common
 
         public static string LoadUserIDFromTwitch(string username)
         {
-            // call twitch kraken api
+            // call twitch api
             if (username != string.Empty && DefaultClientID != string.Empty)
             {
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/?login={username}&api_version=5&client_id={DefaultClientID}");
+                    var request =
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/helix/users?&login={username}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
+                    request.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
+                    request.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
 
                     using (var response = request.GetResponse())
                     {
                         using (var stream = response.GetResponseStream())
                         {
                             dynamic json = new JsonParser().Parse(stream);
-                            return json["users"][0]["_id"];
+                            return json["data"][0]["id"];
                         }
                     }
                 }
@@ -70,12 +74,12 @@ namespace Chatterino.Common
             return null;
         }
 
-        public static void LoadUsersEmotes()
-        {
+        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likley use UpdateEmotes instead", true)]
+        public static void LoadEmotesFromApi(){
             try
             {
                 string userid = Account.UserId, oauth = Account.OauthToken;
-                var request =  WebRequest.Create($"https://api.twitch.tv/kraken/users/{userid}/emotes");
+                var request =  WebRequest.Create($"https://api.twitch.tv/helix/users/{userid}/emotes");
 
                 if (AppSettings.IgnoreSystemProxy)
                 {
@@ -118,7 +122,12 @@ namespace Chatterino.Common
             {
                 GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
             }
-
+        }
+        
+        public static void LoadUsersEmotes()
+        {
+            
+            //LoadEmotesFromApi();
             if (loadEmotes == false)
             {
                 loadEmotes = true;
@@ -223,28 +232,25 @@ namespace Chatterino.Common
             {
                 var limit = 100;
                 var count = 0;
-                string nextLink = $"https://api.twitch.tv/kraken/users/{userid}/blocks?limit={limit}";
+                string nextLink = $"https://api.twitch.tv/helix/users/blocks?broadcaster_id={userid}&first={limit}";
 
                 var request = WebRequest.Create(nextLink);
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"] = $"{Account.ClientId}";
-                request.Headers["Authorization"] = $"OAuth {oauth}";
+                request.Headers["Authorization"] = $"Bearer {oauth}";
                 using (var response = request.GetResponse())
                 {
                     using (var stream = response.GetResponseStream())
                     {
                         dynamic json = new JsonParser().Parse(stream);
-                        dynamic blocks = json["blocks"];
+                        dynamic blocks = json["data"];
                         count = blocks.Count;
                         foreach (var block in blocks)
                         {
-                            dynamic user = block["user"];
-                            string name = user["name"];
-                            //string display_name = user["display_name"];
+                            string name = block["user_login"];
                             twitchBlockedUsers[name] = null;
                         }
 
@@ -634,14 +640,13 @@ namespace Chatterino.Common
                 }
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/helix/users/blocks?target_user_id={userid}");
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-                    ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
                     request.Headers["Client-ID"] = $"{Account.ClientId}";
-                    request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                    request.Headers["Authorization"] = $"Bearer {Account.OauthToken}";
                     request.Method = "PUT";
                     using (var response = (HttpWebResponse)request.GetResponse())
                     {
@@ -702,15 +707,14 @@ namespace Chatterino.Common
                 }
                 try
                 {
-                    var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/blocks/{userid}");
+                    var request = WebRequest.Create($"https://api.twitch.tv/helix/users/blocks?target_user_id={userid}");
                     request.Method = "DELETE";
                     if (AppSettings.IgnoreSystemProxy)
                     {
                         request.Proxy = null;
                     }
-                    ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
                     request.Headers["Client-ID"] = $"{Account.ClientId}";
-                    request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                    request.Headers["Authorization"] = $"Bearer {Account.OauthToken}";
                     using (var response = (HttpWebResponse)request.GetResponse())
                     {
                         using (var stream = response.GetResponseStream())
@@ -750,14 +754,13 @@ namespace Chatterino.Common
                 {
                     userid = LoadUserIDFromTwitch(username);
                 }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                var request = WebRequest.Create($"https://api.twitch.tv/helix/users/follows?to_id={userid}&from_id={Account.UserId}");
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"] = $"{Account.ClientId}";
-                request.Headers["Authorization"] = $"OAuth {Account.OauthToken}";
+                request.Headers["Authorization"] = $"Bearer {Account.OauthToken}";
                 using (var response = request.GetResponse())
                 {
                     using (var stream = response.GetResponseStream())
@@ -788,6 +791,7 @@ namespace Chatterino.Common
             }
         }
 
+        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likley", true)]
         public static bool TryFollowUser(string username, string userid, out string message)
         {
             try
@@ -796,7 +800,7 @@ namespace Chatterino.Common
                 {
                     userid = LoadUserIDFromTwitch(username);
                 }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                var request = WebRequest.Create($"https://api.twitch.tv/helix/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "PUT";
                 if (AppSettings.IgnoreSystemProxy)
                 {
@@ -822,6 +826,7 @@ namespace Chatterino.Common
             }
         }
 
+        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likley", true)]
         public static bool TryUnfollowUser(string username, string userid, out string message)
         {
             try
@@ -830,7 +835,7 @@ namespace Chatterino.Common
                 {
                     userid = LoadUserIDFromTwitch(username);
                 }
-                var request = WebRequest.Create($"https://api.twitch.tv/kraken/users/{Account.UserId}/follows/channels/{userid}");
+                var request = WebRequest.Create($"https://api.twitch.tv/helix/users/{Account.UserId}/follows/channels/{userid}");
                 request.Method = "DELETE";
                 if (AppSettings.IgnoreSystemProxy)
                 {
