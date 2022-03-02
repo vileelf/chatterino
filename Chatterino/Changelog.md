@@ -1,5 +1,11 @@
 ﻿# changelog
 
+## 2.8
+- switched everything over to using the new helix api.
+- switched over to using the automatic login. this change will require you to relogin sorry.
+- fixed instances where the user info popup would go off screen.
+- the search box will now autofill with the current selected text.
+
 ## 2.7
 - added a rejoin channel option to the drop down menu and a /rejoin command that rejoins the current channel without reconnecting the whole program.
 - added a new setting to disable/enable double clicking a tab to change the tab title.
