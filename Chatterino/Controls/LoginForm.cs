@@ -47,29 +47,29 @@ namespace Chatterino.Controls
                         if (context.Request.Url.AbsolutePath == "/code")
                         {
                             string answer = $@"<html>
-<head>
-    <title>chatterino login</title>
-    <style>
-    body {{
-        font-family: ""Helvetica Neue"",Helvetica,Arial,sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.5em;
-        background-color: #FbFbFb;
-        color: #555;
-    }}
-    </style>
-</head>
-<body>
-    <h1>Redirecting</h1>
-    <p>If your webbrowser does not redirect you automatically, click <a id='link'>here</a>.</p>
-    <script type='text/javascript'>
-        var link = 'http://localhost:5215/token?' + location.hash.substring(1);
-        window.location = link;
-        document.getElementById('link').href = link;
-    </script>
-</body>
-</html>";
+                                                    <head>
+                                                        <title>chatterino login</title>
+                                                        <style>
+                                                        body {{
+                                                            font-family: ""Helvetica Neue"",Helvetica,Arial,sans-serif;
+                                                            font-size: 16px;
+                                                            font-weight: 400;
+                                                            line-height: 1.5em;
+                                                            background-color: #FbFbFb;
+                                                            color: #555;
+                                                        }}
+                                                        </style>
+                                                    </head>
+                                                    <body>
+                                                        <h1>Redirecting</h1>
+                                                        <p>If your webbrowser does not redirect you automatically, click <a id='link'>here</a>.</p>
+                                                        <script type='text/javascript'>
+                                                            var link = 'http://localhost:5215/token?' + location.hash.substring(1);
+                                                            window.location = link;
+                                                            document.getElementById('link').href = link;
+                                                        </script>
+                                                    </body>
+                                                </html>";
 
                             var bytes = Encoding.UTF8.GetBytes(answer);
 
@@ -105,24 +105,24 @@ namespace Chatterino.Controls
                             }
 
                             string answer = $@"<html>
-<head>
-    <title>chatterino login</title>
-    <style>
-    body {{
-        font-family: ""Helvetica Neue"",Helvetica,Arial,sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.5em;
-        background-color: #FbFbFb;
-        color: #555;
-    }}
-    </style>
-</head>
-<body>
-    <h1>Login Successful</h1>
-    <p>You can now close this page and continue using chatterino.</p>
-</body>
-</html>";
+                                                    <head>
+                                                        <title>chatterino login</title>
+                                                        <style>
+                                                        body {{
+                                                            font-family: ""Helvetica Neue"",Helvetica,Arial,sans-serif;
+                                                            font-size: 16px;
+                                                            font-weight: 400;
+                                                            line-height: 1.5em;
+                                                            background-color: #FbFbFb;
+                                                            color: #555;
+                                                        }}
+                                                        </style>
+                                                    </head>
+                                                    <body>
+                                                        <h1>Login Successful</h1>
+                                                        <p>You can now close this page and continue using chatterino.</p>
+                                                    </body>
+                                                </html>";
 
                             var bytes = Encoding.UTF8.GetBytes(answer);
 
@@ -161,7 +161,6 @@ namespace Chatterino.Controls
 
         private void btnManualLogin_Click(object sender, EventArgs e)
         {
-            //Process.Start($"https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id={IrcManager.DefaultClientID}&redirect_uri=https%3A%2F%2Ffourtf.com%2Fchatterino%2Fauth&force_verify=true&scope=chat_login+user_subscriptions+user_blocks_edit+user_blocks_read+user_follows_edit");
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

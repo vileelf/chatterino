@@ -122,6 +122,7 @@ namespace Chatterino.Controls
                                                 var image = Image.FromStream(s);
 
                                                 picAvatar.Invoke(() => picAvatar.Image = image);
+                                                updateLocation();
                                             }
                                             res.Close();
                                         }
@@ -148,19 +149,19 @@ namespace Chatterino.Controls
                                                 string followercount = followjson["total"];
                                                 if (!String.IsNullOrEmpty(followercount)) {
                                                     lblViews.Invoke(() => lblViews.Text = lblViews.Text + $"\nFollowers: {followercount}");
+                                                    updateLocation();
                                                 }
                                             }
-                                            res.Close();
                                         }
                                     }
                                     catch { }
                                 });
                             }
                         }
-                        response.Close();
                     }
                 }
                 catch { }
+                updateLocation();
             });
 
             string displayName;
@@ -386,6 +387,32 @@ namespace Chatterino.Controls
                     Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
                 };
             }
+        }
+
+        private void updateLocation() {
+            var screen = Screen.FromPoint(Cursor.Position);
+
+            int x = this.Location.X, y = this.Location.Y;
+
+            if (this.Location.X < screen.WorkingArea.X)
+            {
+                x = screen.WorkingArea.X;
+            }
+            else if (this.Location.X + this.Width > screen.WorkingArea.Right)
+            {
+                x = screen.WorkingArea.Right - this.Width;
+            }
+
+            if (this.Location.Y < screen.WorkingArea.Y)
+            {
+                y = screen.WorkingArea.Y;
+            }
+            else if (this.Location.Y + this.Height > screen.WorkingArea.Bottom)
+            {
+                y = screen.WorkingArea.Bottom - this.Height;
+            }
+
+            this.Location = new Point(x, y);
         }
 
         protected override void OnDeactivate(EventArgs e)
