@@ -765,9 +765,18 @@ namespace Chatterino.Common
                 {
                     using (var stream = response.GetResponseStream())
                     {
-                        result = true;
-                        message = null;
-                        return true;
+                        dynamic json = new JsonParser().Parse(stream);
+                        string total = json["total"];
+                        if (!total.Equals("0")) {
+                            result = true;
+                            message = null;
+                            return true;
+                        } else {
+                            result = false;
+                            message = null;
+                            return true;
+                        }
+                        
                     }
                 }
             }
