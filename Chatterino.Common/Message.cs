@@ -361,6 +361,10 @@ namespace Chatterino.Common
                 foreach(var badgeinfo in badgeinfos) {
                     if (badgeinfo.StartsWith("subscriber/")) {
                         numberOfMonthsSubbed = int.Parse(badgeinfo.Substring("subscriber/".Length));
+                        break;
+                    } else if (badgeinfo.StartsWith("founder/")) {
+                        numberOfMonthsSubbed = int.Parse(badgeinfo.Substring("founder/".Length));
+                        break;
                     }
                 }
             }
@@ -389,6 +393,11 @@ namespace Chatterino.Common
                             }
                         }
                         catch { }
+                    } else if (badge.StartsWith("founder/")) {
+                        image = GuiEngine.Current.GetBadge(badge);
+                        if (image != null) {
+                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
+                        }
                     } else if (badge.Equals("moderator/1") && channel.ModeratorBadge != null) {
                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip, TooltipImageUrl = channel.ModeratorBadge.TooltipImageUrl, TooltipImage =  channel.ModeratorBadge.TooltipImage});
                     } else if (badge.Equals("vip/1") && channel.VipBadge != null) {
