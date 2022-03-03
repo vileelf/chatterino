@@ -353,6 +353,17 @@ namespace Chatterino.Common
             }
             aftermod:
 
+            //get number of months subed
+            int numberOfMonthsSubbed = 0;
+            if (data.Tags.TryGetValue("badge-info", out value))
+            {
+                var badgeinfos = value.Split(',');
+                foreach(var badgeinfo in badgeinfos) {
+                    if (badgeinfo.StartsWith("subscriber/")) {
+                        numberOfMonthsSubbed = int.Parse(badgeinfo.Substring("subscriber/".Length));
+                    }
+                }
+            }
             // get badges from tags
             if (data.Tags.TryGetValue("badges", out value))
             {
@@ -369,11 +380,11 @@ namespace Chatterino.Common
                             Badges |= MessageBadges.Sub;
                             image = channel.GetSubscriberBadge(n);
                             if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                             } else {
                                 image = GuiEngine.Current.GetBadge(badge);
                                 if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                                 }
                             }
                         }
