@@ -37,17 +37,14 @@ namespace Chatterino.Controls
             lock (MessageLock)
             {
                 var messages = _messages;
-                LazyLoadedImage twitchemote;
                 messages.Clear();
                 GifEmotes.Clear();
-                
                 msgfunc(messages, GifEmotes);
-
-                scrollAtBottom = false;
-                _scroll.Value = 0;
-                updateMessageBounds();
-                Invalidate();
             }
+            scrollAtBottom = false;
+            _scroll.Value = 0;
+            updateMessageBounds();
+            Invalidate();
         }
     }
 }

@@ -6,7 +6,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Net;
 using System.Linq;
+using System.Text.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1139,6 +1141,10 @@ namespace Chatterino.Controls
                             MessageBox.Show(exception.Message, "Error while starting streamlink");
                         }
                     }));
+                _contextMenu.MenuItems.Add(new MenuItem("Live Followed Channels", (s, e) =>
+                {
+                    ShowFollowingList(); 
+                }));
                 _contextMenu.MenuItems.Add("-");
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Emotes", (s, e) =>
                 {
@@ -1156,6 +1162,7 @@ namespace Chatterino.Controls
                     App.ShowEmoteList(_selected.Channel, true);
                     App.EmoteList.BringToFront();
                 }));
+                _contextMenu.MenuItems.Add("-");
                 _contextMenu.MenuItems.Add(new MenuItem("Manual Reconnect", (s, e) =>
                 {
                     IrcManager.Reconnect();
@@ -1167,6 +1174,7 @@ namespace Chatterino.Controls
                         _selected.Channel.Rejoin();
                     });
                 }));
+                _contextMenu.MenuItems.Add("-");
                 _contextMenu.MenuItems.Add(new MenuItem("Show Changelog", (s, e) => App.MainForm.ShowChangelog()));
                 //contextMenu.MenuItems.Add(LoginMenuItem = new MenuItem("Login", (s, e) => new LoginForm().ShowDialog(), Shortcut.CtrlL));
                 //contextMenu.MenuItems.Add(new MenuItem("Preferences", (s, e) => App.ShowSettings(), Shortcut.CtrlP));
@@ -1233,6 +1241,72 @@ namespace Chatterino.Controls
                 //    LoginMenuItem.Text = "Change User";
                 //else
                 //    IrcManager.LoggedIn += (s, e) => LoginMenuItem.Text = "Change User";
+            }
+            private static void ShowFollowingList() {
+                MessageDisplayPopup followDisplay = new MessageDisplayPopup();
+                try {
+                    followDisplay.Show();
+                    followDisplay.LoadMessages("Following", (msgs, gifemotes) => {
+                        var request = WebRequest.Create($"https://api.twitch.tv/helix/streams/followed?user_id={IrcManager.Account.UserId}");
+                        if (AppSettings.IgnoreSystemProxy)
+                        {
+                            request.Proxy = null;
+                        }
+                        request.Headers["Client-ID"] = $"{IrcManager.DefaultClientID}";
+                        request.Headers["Authorization"] = $"Bearer {IrcManager.Account.OauthToken}";
+                        using (var response = request.GetResponse())
+                        {
+                            using (var stream = response.GetResponseStream())
+                            {
+                                dynamic json = new JsonParser().Parse(stream);
+                                dynamic data = json["data"];
+                                if (data != null && data.Count > 0) {
+                                    msgs.Add(new Message("Live Channels:"));
+                                    msgs.Add(new Message(""));
+                                    foreach (var channel in data) {
+                                        string channelMessage = channel["user_name"];
+                                        if (!String.IsNullOrEmpty(channelMessage)) {
+                                            if (channel["user_name"].ToUpper() != channel["user_login"].ToUpper()) {
+                                                channelMessage = channelMessage + " (" + channel["user_login"] +")";
+                                            }
+                                        } else {
+                                            channelMessage = channel["user_login"];
+                                        }
+                                        var uptime = DateTime.Now - DateTime.Parse(channel["started_at"]);
+                                        string text = "";
+                                        if (uptime.TotalDays > 1)
+                                        {
+                                            text += (int)uptime.TotalDays + " days, " + uptime.ToString("h\\h\\ m\\m");
+                                        }
+                                        else
+                                        {
+                                            text += uptime.ToString("h\\h\\ m\\m");
+                                        }
+                                        channelMessage += " Playing: " + channel["game_name"];
+                                        channelMessage += " Live for: " + text + 
+                                        " with " + channel["viewer_count"] + " viewers";
+                                        msgs.Add(new Message(channelMessage));
+                                    }
+                                } else if (data != null && data.Count == 0) {
+                                     msgs.Add(new Message("No channels Live"));
+                                } else {
+                                    msgs.Add(new Message("Api Error"));
+                                }
+                            }
+                        }
+                        return;
+                    });
+                    
+                    followDisplay.BringToFront();
+                    
+                    followDisplay.FormClosed += (s, e) =>
+                    {
+                        followDisplay = null;
+                    };
+                } catch (Exception e) {
+                    GuiEngine.Current.log("Error Loading Follows: " + e.ToString());
+                    followDisplay = null;
+                }
             }
 
             // local controls
