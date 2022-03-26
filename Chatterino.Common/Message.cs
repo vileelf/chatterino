@@ -384,11 +384,11 @@ namespace Chatterino.Common
                             Badges |= MessageBadges.Sub;
                             image = channel.GetSubscriberBadge(n);
                             if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
+                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                             } else {
                                 image = GuiEngine.Current.GetBadge(badge);
                                 if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
+                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
                                 }
                             }
                         }
