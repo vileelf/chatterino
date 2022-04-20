@@ -15,7 +15,7 @@ namespace Chatterino.Common
         public static Account Account { get; set; } = Account.AnonAccount;
         public static string DefaultClientID { get; } = "eo3lkitgi8ctbrm4dlsxc8yarrohvq";
         public static string DefaultScope { get; } = "chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+"+
-        "user:read:blocked_users+user:read:follows+channel:moderate+whispers:edit+channel_editor+channel_commercial";
+        "user:read:blocked_users+user:read:follows+channel:moderate+whispers:edit+whispers:read+channel_editor+channel_commercial";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
@@ -302,6 +302,7 @@ namespace Chatterino.Common
             readconnected = false;
             Disconnected?.Invoke(null, EventArgs.Empty);
         }
+        
         private static void ReadConnection_MessageReceived(object sender, MessageEventArgs e)
         {
             var msg = e.Message;
@@ -458,29 +459,35 @@ namespace Chatterino.Common
                 msg.Tags.TryGetValue("display-name", out string displayname);
                 msg.Tags.TryGetValue("msg-param-recipient-user-name", out string giftlogin);
                 msg.Tags.TryGetValue("login", out string login);
+                msg.Tags.TryGetValue("msg-id", out string msgid);
+                msg.Tags.TryGetValue("msg-param-color", out string msgcolor);
 
                 TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c =>
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
-                            !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase))
-                        {
-                            int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
-                            if (index != -1)
+                        if (!string.IsNullOrEmpty(msgid) && msgid.Equals("announcement")) {
+                            sysMsg = "Announcement";
+                        } else { 
+                            if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
+                                !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase))
                             {
-                                index += displayname.Length;
-                                sysMsg = sysMsg.Insert(index, " (" + login + ")");
+                                int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
+                                if (index != -1)
+                                {
+                                    index += displayname.Length;
+                                    sysMsg = sysMsg.Insert(index, " (" + login + ")");
+                                }
                             }
-                        }
-                        if (!string.IsNullOrEmpty(giftdisplayname) && !string.IsNullOrEmpty(giftlogin) &&
-                            !string.Equals(giftdisplayname, giftlogin, StringComparison.OrdinalIgnoreCase))
-                        {
-                            int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
-                            if (index != -1)
+                            if (!string.IsNullOrEmpty(giftdisplayname) && !string.IsNullOrEmpty(giftlogin) &&
+                                !string.Equals(giftdisplayname, giftlogin, StringComparison.OrdinalIgnoreCase))
                             {
-                                index += giftdisplayname.Length;
-                                sysMsg = sysMsg.Insert(index, " (" + giftlogin + ")");
+                                int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
+                                if (index != -1)
+                                {
+                                    index += giftdisplayname.Length;
+                                    sysMsg = sysMsg.Insert(index, " (" + giftlogin + ")");
+                                }
                             }
                         }
                         var sysMessage = new Message(sysMsg, HSLColor.Gray, true)
