@@ -958,20 +958,27 @@ namespace Chatterino.Common
                                         msg.Tags.TryGetValue("display-name", out displayname);
                                         msg.Tags.TryGetValue("msg-param-recipient-user-name", out giftlogin);
                                         msg.Tags.TryGetValue("login", out login);
-                                        if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
-                                            !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
-                                            int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
-                                            if (index != -1) {
-                                                index += displayname.Length;
-                                                sysMsg = sysMsg.Insert(index, " ("+login+")");
+                                        msg.Tags.TryGetValue("msg-id", out string msgid);
+                                        msg.Tags.TryGetValue("msg-param-color", out string msgcolor);
+                
+                                        if (!string.IsNullOrEmpty(msgid) && msgid.Equals("announcement")) {
+                                            sysMsg = "Announcement";
+                                        } else {
+                                            if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
+                                                !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
+                                                int index = sysMsg.IndexOf(displayname, StringComparison.OrdinalIgnoreCase);
+                                                if (index != -1) {
+                                                    index += displayname.Length;
+                                                    sysMsg = sysMsg.Insert(index, " ("+login+")");
+                                                }
                                             }
-                                        }
-                                        if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
-                                            !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
-                                            int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
-                                            if (index != -1) {
-                                                index += giftdisplayname.Length;
-                                                sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
+                                            if (!string.IsNullOrEmpty(giftdisplayname)&&!string.IsNullOrEmpty(giftlogin)&&
+                                                !string.Equals(giftdisplayname,giftlogin,StringComparison.OrdinalIgnoreCase)) {
+                                                int index = sysMsg.IndexOf(giftdisplayname, StringComparison.OrdinalIgnoreCase);
+                                                if (index != -1) {
+                                                    index += giftdisplayname.Length;
+                                                    sysMsg = sysMsg.Insert(index, " ("+giftlogin+")");
+                                                }
                                             }
                                         }
                                         message = new Message(sysMsg, HSLColor.Gray, true)
