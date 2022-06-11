@@ -764,30 +764,29 @@ namespace Chatterino.Common
                                 }
                             }
                             getemote = Emotes.SeventvChannelEmotesCache.TryGetValue(emoteid, out emote);
-                            if (getemote && Math.Abs(emote.Scale - scale) < .01)
+                            if (getemote && Math.Abs(emote.Scale - scale) < .01 && emote.Name == emotename)
                             {
                                 SeventvChannelEmotes[emotename] = emote;
-                                if (emote.Name != emotename) {
-                                    emote.Name = emotename;
-                                    emote.Tooltip =  emotename + "\n7TV Channel Emote\nChannel: " + ownername;
-                                }
                             }
                             else
                             {
                                 
-                                emote = Emotes.SeventvChannelEmotesCache[emoteid] =
-                                    SeventvChannelEmotes[emotename] =
-                                        new LazyLoadedImage
-                                        {
-                                            Name = emotename,
-                                            Url = url,
-                                            Tooltip = emotename + "\n7TV Channel Emote\nChannel: " + ownername,
-                                            TooltipImageUrl = tooltipurl,
-                                            Scale = scale,
-                                            IsHat = zeroWidth,
-                                            IsEmote = true
-                                            
-                                        };
+                                SeventvChannelEmotes[emotename] =
+                                    new LazyLoadedImage
+                                    {
+                                        Name = emotename,
+                                        Url = url,
+                                        Tooltip = emotename + "\n7TV Channel Emote\nChannel: " + ownername,
+                                        TooltipImageUrl = tooltipurl,
+                                        Scale = scale,
+                                        IsHat = zeroWidth,
+                                        IsEmote = true
+                                        
+                                    };
+                                if (!getemote || emote.Name == emotename) {
+                                    Emotes.SeventvChannelEmotesCache[emoteid] = SeventvChannelEmotes[emotename];
+                                }
+                                emote = SeventvChannelEmotes[emotename];
                             }
                         }
                     } 
