@@ -101,10 +101,15 @@ namespace Chatterino.Controls
             this.rtbUsernamelist = new System.Windows.Forms.RichTextBox();
             this.usernamelabel = new System.Windows.Forms.Label();
             this.btnTextCustomPing = new System.Windows.Forms.Button();
+            this.btnTestGoLiveCustomPing = new System.Windows.Forms.Button();
             this.btnCustomHighlightOpenFile = new System.Windows.Forms.Button();
+            this.btnCustomGoLiveOpenFile = new System.Windows.Forms.Button();
             this.chkCustomPingSound = new System.Windows.Forms.CheckBox();
             this.chkFlashTaskbar = new System.Windows.Forms.CheckBox();
             this.chkHighlight = new System.Windows.Forms.CheckBox();
+            this.chkCustomGoLiveSound = new System.Windows.Forms.CheckBox();
+            this.chkGoLiveTaskbar = new System.Windows.Forms.CheckBox();
+            this.chkGoLiveSound = new System.Windows.Forms.CheckBox();
             this.chkPings = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -817,9 +822,14 @@ namespace Chatterino.Controls
             // 
             this.panel3.Controls.Add(this.tabControl1);
             this.panel3.Controls.Add(this.btnTextCustomPing);
+            this.panel3.Controls.Add(this.btnTestGoLiveCustomPing);
             this.panel3.Controls.Add(this.btnCustomHighlightOpenFile);
+            this.panel3.Controls.Add(this.btnCustomGoLiveOpenFile);
             this.panel3.Controls.Add(this.chkCustomPingSound);
+            this.panel3.Controls.Add(this.chkGoLiveSound);
+            this.panel3.Controls.Add(this.chkCustomGoLiveSound);
             this.panel3.Controls.Add(this.chkFlashTaskbar);
+            this.panel3.Controls.Add(this.chkGoLiveTaskbar);
             this.panel3.Controls.Add(this.chkHighlight);
             this.panel3.Controls.Add(this.chkPings);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -837,10 +847,10 @@ namespace Chatterino.Controls
             } catch (Exception e) {
                 log(e.ToString());
             }
-            this.tabControl1.Location = new System.Drawing.Point(17, 110);
+            this.tabControl1.Location = new System.Drawing.Point(17, 179);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(415, 289);
+            this.tabControl1.Size = new System.Drawing.Size(415, 220);
             this.tabControl1.TabIndex = 21;
             // 
             // tabPage1
@@ -957,7 +967,6 @@ namespace Chatterino.Controls
             this.btnTextCustomPing.TabIndex = 20;
             this.btnTextCustomPing.Text = "Test";
             this.btnTextCustomPing.UseVisualStyleBackColor = true;
-            this.btnTextCustomPing.Click += new System.EventHandler(this.btnTextCustomPing_Click);
             // 
             // btnCustomHighlightOpenFile
             // 
@@ -978,6 +987,57 @@ namespace Chatterino.Controls
             this.chkCustomPingSound.TabIndex = 18;
             this.chkCustomPingSound.Text = "Custom highlight sound";
             this.chkCustomPingSound.UseVisualStyleBackColor = true;
+            // 
+            // chkGoLiveTaskbar
+            // 
+            this.chkGoLiveTaskbar.AutoSize = true;
+            this.chkGoLiveTaskbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkGoLiveTaskbar.Location = new System.Drawing.Point(16, 105);
+            this.chkGoLiveTaskbar.Name = "chkGoLiveTaskbar";
+            this.chkGoLiveTaskbar.Size = new System.Drawing.Size(135, 17);
+            this.chkGoLiveTaskbar.TabIndex = 18;
+            this.chkGoLiveTaskbar.Text = "Flash taskbar when a tab goes live";
+            this.chkGoLiveTaskbar.UseVisualStyleBackColor = true;
+            // 
+            // chkGoLiveSound
+            // 
+            this.chkGoLiveSound.AutoSize = true;
+            this.chkGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkGoLiveSound.Location = new System.Drawing.Point(16, 128);
+            this.chkGoLiveSound.Name = "chkGoLiveSound";
+            this.chkGoLiveSound.Size = new System.Drawing.Size(135, 17);
+            this.chkGoLiveSound.TabIndex = 18;
+            this.chkGoLiveSound.Text = "Play sound when a tab goes live";
+            this.chkGoLiveSound.UseVisualStyleBackColor = true;
+            // 
+            // chkCustomGoLiveSound
+            // 
+            this.chkCustomGoLiveSound.AutoSize = true;
+            this.chkCustomGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkCustomGoLiveSound.Location = new System.Drawing.Point(16, 151);
+            this.chkCustomGoLiveSound.Name = "chkCustomGoLiveSound";
+            this.chkCustomGoLiveSound.Size = new System.Drawing.Size(135, 17);
+            this.chkCustomGoLiveSound.TabIndex = 18;
+            this.chkCustomGoLiveSound.Text = "Custom go live sound";
+            this.chkCustomGoLiveSound.UseVisualStyleBackColor = true;
+            // 
+            // btnTestGoLiveCustomPing
+            // 
+            this.btnTestGoLiveCustomPing.Location = new System.Drawing.Point(188, 151);
+            this.btnTestGoLiveCustomPing.Name = "btnTestGoLiveCustomPing";
+            this.btnTestGoLiveCustomPing.Size = new System.Drawing.Size(75, 23);
+            this.btnTestGoLiveCustomPing.TabIndex = 20;
+            this.btnTestGoLiveCustomPing.Text = "Test";
+            this.btnTestGoLiveCustomPing.UseVisualStyleBackColor = true;
+            // 
+            // btnCustomGoLiveOpenFile
+            // 
+            this.btnCustomGoLiveOpenFile.Image = global::Chatterino.Properties.Resources.OpenFolder_16x;
+            this.btnCustomGoLiveOpenFile.Location = new System.Drawing.Point(156, 151);
+            this.btnCustomGoLiveOpenFile.Name = "btnCustomGoLiveOpenFile";
+            this.btnCustomGoLiveOpenFile.Size = new System.Drawing.Size(24, 23);
+            this.btnCustomGoLiveOpenFile.TabIndex = 19;
+            this.btnCustomGoLiveOpenFile.UseVisualStyleBackColor = true;
             // 
             // chkFlashTaskbar
             // 
@@ -2209,6 +2269,9 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkFlashTaskbar;
         private System.Windows.Forms.CheckBox chkHighlight;
         private System.Windows.Forms.CheckBox chkPings;
+        private System.Windows.Forms.CheckBox chkGoLiveTaskbar;
+        private System.Windows.Forms.CheckBox chkGoLiveSound;
+        private System.Windows.Forms.CheckBox chkCustomGoLiveSound;
         private System.Windows.Forms.RichTextBox rtbHighlights;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtMsgLimit;
@@ -2219,7 +2282,9 @@ namespace Chatterino.Controls
         private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.CheckBox chkCustomPingSound;
         private System.Windows.Forms.Button btnCustomHighlightOpenFile;
+        private System.Windows.Forms.Button btnCustomGoLiveOpenFile;
         private System.Windows.Forms.Button btnTextCustomPing;
+        private System.Windows.Forms.Button btnTestGoLiveCustomPing;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;

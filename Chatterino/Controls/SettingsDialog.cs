@@ -276,11 +276,6 @@ namespace Chatterino.Controls
                 AppSettings.ChatMessageLimit = int.Parse(txtMsgLimit.Text);
             };
 
-            BindCheckBox(chkHighlight, "ChatEnableHighlight");
-            BindCheckBox(chkPings, "ChatEnableHighlightSound");
-            BindCheckBox(chkFlashTaskbar, "ChatEnableHighlightTaskbar");
-            BindCheckBox(chkCustomPingSound, "ChatCustomHighlightSound");
-
             BindCheckBox(chkInputShowMessageLength, "ChatInputShowMessageLength");
 
             BindCheckBox(chkMentionUserWithAt, "ChatMentionUsersWithAt");
@@ -693,7 +688,7 @@ namespace Chatterino.Controls
                     {
                         try
                         {
-                            (GuiEngine.Current as WinformsGuiEngine).HighlightSound?.Dispose();
+                            (GuiEngine.Current as WinformsGuiEngine).HighlightSound?.Reload();
 
                             if (!Directory.Exists(Path.Combine(Util.GetUserDataPath(), "Custom")))
                                 Directory.CreateDirectory(Path.Combine(Util.GetUserDataPath(), "Custom"));
@@ -707,6 +702,48 @@ namespace Chatterino.Controls
                     }
                 }
             };
+            
+            btnTextCustomPing.Click += (s, e) =>
+            {
+                GuiEngine.Current.PlaySound(NotificationSound.Ping, true);
+            };
+            
+            BindCheckBox(chkHighlight, "ChatEnableHighlight");
+            BindCheckBox(chkPings, "ChatEnableHighlightSound");
+            BindCheckBox(chkFlashTaskbar, "ChatEnableHighlightTaskbar");
+            BindCheckBox(chkCustomPingSound, "ChatCustomHighlightSound");
+            
+            BindCheckBox(chkGoLiveSound, "ChatEnableGoLiveSound");
+            BindCheckBox(chkGoLiveTaskbar, "ChatEnableGoLiveTaskbar");
+            BindCheckBox(chkCustomGoLiveSound, "ChatCustomGoLiveSound");
+            
+            btnCustomGoLiveOpenFile.Click += (s, e) =>
+            {
+                using (var dialog = new OpenFileDialog())
+                {
+                    dialog.Filter = "wave sound file|*.wav";
+
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        try
+                        {
+                            (GuiEngine.Current as WinformsGuiEngine).GoLiveSound.SetPath(dialog.FileName);
+                            (GuiEngine.Current as WinformsGuiEngine).GoLiveSound.Reload();
+                            AppSettings.ChatCustomGoLiveSoundPath = dialog.FileName;
+                        }
+                        catch (Exception exc)
+                        {
+                            MessageBox.Show(exc.Message, "Error copying the Go Live sound");
+                        }
+                    }
+                }
+            };
+            
+            btnTestGoLiveCustomPing.Click += (s, e) =>
+            {
+                GuiEngine.Current.PlaySound(NotificationSound.GoLive, true);
+            };
+            
             #endregion
 
             // Moderation
@@ -925,11 +962,6 @@ namespace Chatterino.Controls
         private void updateFontName()
         {
             lblFont.Text = $"{Fonts.GetFont(FontType.Medium).Name}, {Fonts.GetFont(FontType.Medium).Size}";
-        }
-
-        private void btnTextCustomPing_Click(object sender, EventArgs e)
-        {
-            GuiEngine.Current.PlaySound(NotificationSound.Ping, true);
         }
 
         private void btnStreamlinkPath_Click(object sender, EventArgs e)

@@ -38,6 +38,7 @@ namespace Chatterino.Common
         bool globalEmotesLoaded{ get; set;}
         void AddCheerEmote(string prefix, CheerEmote emote);
         void ClearCheerEmotes();
+        void UpdateSoundPaths();
         ChatterinoImage ReadImageFromStream(Stream stream);
         ChatterinoImage ReadImageFromStream(MemoryStream stream);
         ChatterinoImage ScaleImage(ChatterinoImage image, double scale);

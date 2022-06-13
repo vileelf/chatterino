@@ -39,6 +39,7 @@ namespace Chatterino.Controls
             private ContextMenu _menu = new ContextMenu();
             private MenuItem _allowNewMessageHighlightsMenuItem;
             private MenuItem _allowGoLiveHighlightsMenuItem;
+            private MenuItem _allowGoLiveNotificationsMenuItem;
             private Point _lastP = Point.Empty;
 
             private Rectangle _xRectangle;
@@ -192,11 +193,13 @@ namespace Chatterino.Controls
                 _menu.MenuItems.Add(new MenuItem("Close", (s, e) => (Parent as TabControl)?.RemoveTab(tabPage)));
                 _menu.MenuItems.Add(_allowNewMessageHighlightsMenuItem = new MenuItem("Enable highlights on new message", (s, e) => _tabPage.EnableNewMessageHighlights = !_tabPage.EnableNewMessageHighlights));
                 _menu.MenuItems.Add(_allowGoLiveHighlightsMenuItem = new MenuItem("Enable highlights on going live", (s, e) => _tabPage.EnableGoLiveHighlights = !_tabPage.EnableGoLiveHighlights));
+                _menu.MenuItems.Add(_allowGoLiveNotificationsMenuItem = new MenuItem("Enable notifications on going live", (s, e) => _tabPage.EnableGoLiveNotifications = !_tabPage.EnableGoLiveNotifications));
 
                 _menu.Popup += (s, e) =>
                 {
                     _allowNewMessageHighlightsMenuItem.Checked = _tabPage.EnableNewMessageHighlights;
                     _allowGoLiveHighlightsMenuItem.Checked = _tabPage.EnableGoLiveHighlights;
+                    _allowGoLiveNotificationsMenuItem.Checked = _tabPage.EnableGoLiveNotifications;
                 };
             }
 

@@ -82,6 +82,7 @@
     <Compile Include="MessageInputLogic.cs" />
     <Compile Include="MessageReceivedEventArgs.cs" />
     <Compile Include="NotificationSound.cs" />
+    <Compile Include="NotificationSoundPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomState.cs" />
     <Compile Include="Selection.cs" />

@@ -69,6 +69,7 @@ namespace Chatterino.Controls
 
         public bool EnableNewMessageHighlights { get; set; } = true;
         public bool EnableGoLiveHighlights { get; set; } = true;
+        public bool EnableGoLiveNotifications { get; set; } = true;
 
         public event EventHandler TitleChanged;
 

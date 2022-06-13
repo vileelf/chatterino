@@ -242,6 +242,11 @@ namespace Chatterino.Common
         public static bool ChatEnableHighlightSound { get; set; } = false;
         public static bool ChatEnableHighlightTaskbar { get; set; } = true;
         public static bool ChatCustomHighlightSound { get; set; } = false;
+        
+        public static bool ChatEnableGoLiveSound { get; set; } = false;
+        public static bool ChatEnableGoLiveTaskbar { get; set; } = true;
+        public static bool ChatCustomGoLiveSound { get; set; } = false;
+        public static string ChatCustomGoLiveSoundPath { get; set; } = "";
 
         public static ConcurrentDictionary<string, object> IgnoredUsers { get; private set; } = new ConcurrentDictionary<string, object>();
         public static ConcurrentDictionary<string, object> HighlightIgnoredUsers { get; private set; } = new ConcurrentDictionary<string, object>();

@@ -142,10 +142,20 @@ namespace Chatterino.Controls
         private void Channel_LiveStatusUpdated(object sender, LiveStatusEventArgs e)
         {
             var parent = Parent as ColumnTabPage;
-            if (e.IsLive == true && parent.EnableGoLiveHighlights == true) {
-                parent.HighlightType = TabPageHighlightType.IsLive;
-                updateMessageBounds();
-                ProposeInvalidation();
+            if (e.IsLive == true) {
+                if (parent.EnableGoLiveHighlights == true) {
+                    parent.HighlightType = TabPageHighlightType.IsLive;
+                    ProposeInvalidation();
+                }
+                if (parent.EnableGoLiveNotifications == true) {
+                    if (AppSettings.ChatEnableGoLiveSound) {
+                        GuiEngine.Current.PlaySound(NotificationSound.GoLive, false);
+                    }
+                    if (AppSettings.ChatEnableGoLiveTaskbar) {
+                        GuiEngine.Current.FlashTaskbar();
+                    }
+                    
+                }
             }
             this.Invoke(() => _header.Invalidate());
         }

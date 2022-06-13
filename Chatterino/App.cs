@@ -275,6 +275,7 @@ namespace Chatterino
             Cache.Load();
 
             _updateTheme();
+            
 
             AppSettings.ThemeChanged += (s, e) => _updateTheme();
 
@@ -341,6 +342,7 @@ namespace Chatterino
             Emotes.LoadGlobalEmotes();
             Badges.LoadGlobalBadges();
             GuiEngine.Current.LoadBadges();
+            GuiEngine.Current.UpdateSoundPaths();
             Net.StartHttpServer();
 
             // Show form

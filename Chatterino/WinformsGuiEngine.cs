@@ -147,7 +147,6 @@ namespace Chatterino
 
         // SOUNDS
         SoundPlayer defaultHighlightSound = new SoundPlayer(Properties.Resources.ping2);
-        public SoundPlayer HighlightSound { get; private set; } = null;
 
         public bool IsDarkTheme
         {
@@ -156,66 +155,41 @@ namespace Chatterino
                 return !App.ColorScheme.IsLightTheme;
             }
         }
+        
+        public NotificationSoundPlayer HighlightSound = new NotificationSoundPlayer(Path.Combine(Util.GetUserDataPath(), "Custom", "Ping.wav"));
+        public NotificationSoundPlayer GoLiveSound = new NotificationSoundPlayer();
 
-        DateTime highlightTimeStamp = DateTime.MinValue;
+        public void UpdateSoundPaths() {
+            GoLiveSound.SetPath(AppSettings.ChatCustomGoLiveSoundPath);
+        }
 
         public void PlaySound(NotificationSound sound, bool forceCustom = false)
         {
-            try
+            var focused = false;
+
+            App.MainForm.Invoke(() => focused = App.MainForm.ContainsFocus);
+
+            if (!focused)
             {
-                var focused = false;
-
-                App.MainForm.Invoke(() => focused = App.MainForm.ContainsFocus);
-
-                if (!focused)
-                {
-                    SoundPlayer player = null;
-
-                    if (forceCustom || AppSettings.ChatCustomHighlightSound)
-                    {
-                        try
+                bool soundPlayed = false;
+                switch (sound) {
+                    case NotificationSound.Ping:
+                        if (forceCustom || AppSettings.ChatCustomHighlightSound)
                         {
-                            var fileInfo = new FileInfo(Path.Combine(Util.GetUserDataPath(), "Custom", "Ping.wav"));
-                            if (fileInfo.Exists)
-                            {
-                                if (fileInfo.LastWriteTime != highlightTimeStamp)
-                                {
-                                    HighlightSound?.Dispose();
-
-                                    try
-                                    {
-                                        using (var stream = new FileStream(Path.Combine(Util.GetUserDataPath(), "Custom", "Ping.wav"), FileMode.Open))
-                                        {
-                                            HighlightSound = new SoundPlayer(stream);
-                                            HighlightSound.Load();
-                                        }
-
-                                        player = HighlightSound;
-                                        Console.WriteLine("loaded");
-                                    }
-                                    catch
-                                    {
-                                        HighlightSound.Dispose();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                player = HighlightSound;
-                            }
+                            soundPlayed = HighlightSound.Play();
                         }
-                        catch { }
-                    }
-
-                    if (player == null)
-                    {
-                        player = defaultHighlightSound;
-                    }
-
-                    player.Play();
+                        break;
+                    case NotificationSound.GoLive:
+                        if (forceCustom || AppSettings.ChatCustomGoLiveSound)
+                        {
+                            soundPlayed = GoLiveSound.Play();
+                        }
+                        break;
+                }
+                if (!soundPlayed) {
+                    defaultHighlightSound.Play();
                 }
             }
-            catch { }
         }
 
 
