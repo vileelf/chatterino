@@ -288,7 +288,7 @@ namespace Chatterino.Common
                             
                             if (type.Equals("follower")) {
                                 Emotes.RecentlyUsedEmotes.TryRemove(name, out LazyLoadedImage image);
-                                FollowerEmotes[id] = emote;
+                                FollowerEmotes[name] = emote;
                             } else {
                                 ChannelEmotes[id] = emote;
                             }
@@ -1275,11 +1275,13 @@ namespace Chatterino.Common
             if (AppSettings.ChatEnableEmojis) {
                 names.UnionWith(Emojis.ShortCodeToEmoji.Keys.Select(x => new KeyValuePair<string, string>(":" + x.ToUpper() + ":", ":" + x + ":")));
             }
+            
             if (IsFollowing) {
-               names.UnionWith(FollowerEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x))); 
+               names.UnionWith(FollowerEmotes.Keys.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             }
 
             emoteNames = new List<KeyValuePair<string, string>>(names);
+            
         }
 
         public enum UsernameOrEmotes {
