@@ -1,5 +1,16 @@
 ﻿# changelog
 
+## 2.9
+-- Added more permissions to the login to allow for mod commands like /host and /commercial and fix some stuff not working anymore like whispers.
+-- Hovering over the sub badge will now show the number of months subbed.
+-- Added a menu option to display who's live from your follow list.
+-- Added support for the new announcements feature twitch added.
+-- Fixed a bug where 7tv emotes would show up as the wrong alias in some conditions.
+-- Added notification options for when a tab goes live. you can add a custom sound for it and flash the taskbar.
+-- Added a reload global emotes menu option.
+-- Added support for deleting messages. You can delete them by clicking on a username on the message you wanna delete and then clicking delete.
+-- Added several missing commands to command tab complete list.
+
 ## 2.8
 - switched everything over to using the new helix api.
 - switched over to using the automatic login. this change will require you to relogin sorry.
