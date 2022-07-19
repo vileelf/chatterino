@@ -931,6 +931,7 @@ namespace Chatterino.Common
                             string reason;
                             string duration;
                             int iduration;
+                            HSLColor syscolor;
                             
                             foreach (string s in _messages)
                             {
@@ -959,9 +960,21 @@ namespace Chatterino.Common
                                         msg.Tags.TryGetValue("login", out login);
                                         msg.Tags.TryGetValue("msg-id", out string msgid);
                                         msg.Tags.TryGetValue("msg-param-color", out string msgcolor);
-                
+                                        syscolor = HSLColor.Gray;
+                                        
                                         if (!string.IsNullOrEmpty(msgid) && msgid.Equals("announcement")) {
                                             sysMsg = "Announcement";
+                                            if (!string.IsNullOrEmpty(msgcolor)){
+                                                if (msgcolor.Equals("BLUE")) {
+                                                    syscolor = HSLColor.Blue;
+                                                } else if (msgcolor.Equals("ORANGE")) {
+                                                    syscolor = HSLColor.Orange;
+                                                } else if (msgcolor.Equals("PURPLE")) {
+                                                    syscolor = HSLColor.Purple;
+                                                } else if (msgcolor.Equals("GREEN")) {
+                                                    syscolor = HSLColor.Green;
+                                                }
+                                            }
                                         } else {
                                             if (!string.IsNullOrEmpty(displayname)&&!string.IsNullOrEmpty(login)&&
                                                 !string.Equals(displayname,login,StringComparison.OrdinalIgnoreCase)) {
@@ -980,7 +993,7 @@ namespace Chatterino.Common
                                                 }
                                             }
                                         }
-                                        message = new Message(sysMsg, HSLColor.Gray, true)
+                                        message = new Message(sysMsg, syscolor, true)
                                         {
                                             HighlightType = HighlightType.Resub
                                         };

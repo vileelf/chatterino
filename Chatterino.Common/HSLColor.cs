@@ -5,6 +5,11 @@ namespace Chatterino.Common
     public struct HSLColor
     {
         public static readonly HSLColor Gray = new HSLColor(.8333f, .25f, 0.5f);
+        
+        public static readonly HSLColor Green = new HSLColor(.433f, 1f, 0.42f);
+        public static readonly HSLColor Purple = new HSLColor(.733f, 1f, .73f);
+        public static readonly HSLColor Blue = new HSLColor(.5f, 1f, 0.42f);
+        public static readonly HSLColor Orange = new HSLColor(.111f, 1f, 0.55f);
 
         private float hue;
 
