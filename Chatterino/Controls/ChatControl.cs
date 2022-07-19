@@ -1161,6 +1161,10 @@ namespace Chatterino.Controls
                     _selected.Channel.ReloadEmotes();
                     _selected.Channel.ReloadSubEmotes();
                 }));
+                _contextMenu.MenuItems.Add(new MenuItem("Reload Global Emotes", (s, e) =>
+                {
+                    Emotes.LoadGlobalEmotes();
+                }));
                 _contextMenu.MenuItems.Add(new MenuItem("Clear Recently Used Emotes", (s, e) =>
                 {
                     Emotes.RecentlyUsedEmotes.Clear();

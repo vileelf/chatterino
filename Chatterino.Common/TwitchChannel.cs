@@ -1701,14 +1701,6 @@ namespace Chatterino.Common
                     CheckIfFollowing(RoomID);
                 });
                 
-                if (AppSettings.EmoteScaleChanged) {
-                    Task.Run(() =>
-                    {
-                        Emotes.LoadGlobalEmotes();
-                        AppSettings.EmoteScaleChanged = false;
-                    });
-                }
-                
                 //Emotes.ClearTwitchEmoteCache();
                 // bttv channel emotes
                 Task.Run(() =>
