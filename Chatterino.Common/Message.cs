@@ -450,7 +450,7 @@ namespace Chatterino.Common
                 Value = messageUser,
                 Color = UsernameColor,
                 Font = FontType.MediumBold,
-                Link = new Link(LinkType.UserInfo, new UserInfoData { UserName = Username, UserId = UserId, Channel = channel }),
+                Link = new Link(LinkType.UserInfo, new UserInfoData { UserName = Username, UserId = UserId, MessageId = this.MessageId, Channel = channel }),
                 CopyText = messageUser
             });
 

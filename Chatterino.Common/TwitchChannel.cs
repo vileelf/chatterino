@@ -952,6 +952,14 @@ namespace Chatterino.Common
                                             $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
                                             HSLColor.Gray, true);
                                         messages.Add(message);
+                                    } else if (msg.Command == "CLEARMSG" && !string.IsNullOrWhiteSpace(msg.Params)) {
+                                        msg.Tags.TryGetValue("target-msg-id", out string msgId);
+                                        foreach(Message targetmsg in messages) {
+                                            if (targetmsg.MessageId == msgId) {
+                                                targetmsg.Disabled = true;
+                                                break;
+                                            }
+                                        }
                                     } else if (msg.Command == "USERNOTICE") {
                                         msg.Tags.TryGetValue("system-msg", out sysMsg);
                                         msg.Tags.TryGetValue("msg-param-recipient-display-name", out giftdisplayname);
@@ -1532,6 +1540,19 @@ namespace Chatterino.Common
 
                 AddMessage(new Message("Chat has been cleared by a moderator.", HSLColor.Gray, true));
             }
+        }
+
+        public void ClearMsg(string msgId) {
+            Monitor.Enter(MessageLock);
+            foreach (var msg in Messages)
+            {
+                if (msg.MessageId == msgId)
+                {
+                    msg.Disabled = true;
+                    break;
+                }
+            }
+            Monitor.Exit(MessageLock);
         }
 
         public void ClearChat(string user, string reason, int duration)

@@ -193,6 +193,7 @@ namespace Chatterino.Controls
             btnUnban.SetTooltip("Unban User");
             btnWhisper.SetTooltip("Whisper User");
             btnPurge.SetTooltip("Timeout User for 1 Second");
+            btnDelete.SetTooltip("Delete this message");
 
             btnTimeout2Hours.SetTooltip("Timeout User for 2 Hours");
             btnTimeout30Mins.SetTooltip("Timeout User for 30 Minutes");
@@ -226,7 +227,6 @@ namespace Chatterino.Controls
                 btnWhisper.Visible = false;
                 btnIgnore.Visible = false;
                 btnFollow.Visible = false;
-                btnPurge.Visible = false;
 
                 btnMod.Visible = false;
                 btnUnmod.Visible = false;
@@ -240,12 +240,15 @@ namespace Chatterino.Controls
                 btnTimeout5Min.Visible = false;
                 btnTimeout7Days.Visible = false;
                 btnPurge.Visible = false;
+                btnDelete.Visible = false;
             }
             else
             {
                 if (data.Channel.IsModOrBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
                 {
-
+                    if (String.IsNullOrEmpty(data.MessageId)) {
+                        btnDelete.Visible = false;
+                    }
                 }
                 else
                 {
@@ -260,6 +263,7 @@ namespace Chatterino.Controls
                     btnTimeout5Min.Visible = false;
                     btnTimeout7Days.Visible = false;
                     btnPurge.Visible = false;
+                    btnDelete.Visible = false;
                 }
 
                 if (data.Channel.IsBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
@@ -294,6 +298,12 @@ namespace Chatterino.Controls
                 btnPurge.Click += (s, e) =>
                 {
                     data.Channel.SendMessage("/timeout " + data.UserName + " 1");
+                };
+                
+                // Delete message
+                btnDelete.Click += (s, e) =>
+                {
+                    data.Channel.SendMessage("/delete " + data.MessageId);
                 };
 
                 // ignore user
@@ -437,6 +447,7 @@ namespace Chatterino.Controls
             this.btnBan = new Chatterino.Controls.FlatButton();
             this.btnUnban = new Chatterino.Controls.FlatButton();
             this.btnPurge = new Chatterino.Controls.FlatButton();
+            this.btnDelete = new Chatterino.Controls.FlatButton();
             this.btnTimeout5Min = new Chatterino.Controls.FlatButton();
             this.btnTimeout30Mins = new Chatterino.Controls.FlatButton();
             this.btnTimeout2Hours = new Chatterino.Controls.FlatButton();
@@ -467,6 +478,7 @@ namespace Chatterino.Controls
             this.flowLayoutPanel1.Controls.Add(this.btnUnmod);
             this.flowLayoutPanel1.Controls.Add(this.btnBan);
             this.flowLayoutPanel1.Controls.Add(this.btnUnban);
+            this.flowLayoutPanel1.Controls.Add(this.btnDelete);
             this.flowLayoutPanel1.Controls.Add(this.btnPurge);
             this.flowLayoutPanel1.Controls.Add(this.btnTimeout5Min);
             this.flowLayoutPanel1.Controls.Add(this.btnTimeout30Mins);
@@ -579,13 +591,23 @@ namespace Chatterino.Controls
             // 
             // btnUnban
             // 
-            this.flowLayoutPanel1.SetFlowBreak(this.btnUnban, true);
+            
             this.btnUnban.Image = null;
             this.btnUnban.Location = new System.Drawing.Point(145, 81);
             this.btnUnban.Name = "btnUnban";
             this.btnUnban.Size = new System.Drawing.Size(46, 18);
             this.btnUnban.TabIndex = 5;
             this.btnUnban.Text = "Unban";
+            // 
+            // btnDelete
+            // 
+            this.flowLayoutPanel1.SetFlowBreak(this.btnDelete, true);
+            this.btnDelete.Image = null;
+            this.btnDelete.Location = new System.Drawing.Point(184, 81);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(42, 18);
+            this.btnDelete.TabIndex = 10;
+            this.btnDelete.Text = "Delete";
             // 
             // btnPurge
             // 
@@ -775,6 +797,7 @@ namespace Chatterino.Controls
         private FlatButton btnProfile;
         private FlatButton btnFollow;
         private FlatButton btnPurge;
+        private FlatButton btnDelete;
         private PictureBox picAvatar;
         private FlowLayoutPanel flowLayoutPanel2;
         private Label lblViews;
