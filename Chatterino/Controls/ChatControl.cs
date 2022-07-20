@@ -1190,6 +1190,7 @@ namespace Chatterino.Controls
                 }));
                 _contextMenu.MenuItems.Add("-");
                 _contextMenu.MenuItems.Add(new MenuItem("Show Changelog", (s, e) => App.MainForm.ShowChangelog()));
+                _contextMenu.MenuItems.Add(new MenuItem("Check For Updates", (s, e) => Updates.CheckForUpdate(App.CurrentVersion)));
                 //contextMenu.MenuItems.Add(LoginMenuItem = new MenuItem("Login", (s, e) => new LoginForm().ShowDialog(), Shortcut.CtrlL));
                 //contextMenu.MenuItems.Add(new MenuItem("Preferences", (s, e) => App.ShowSettings(), Shortcut.CtrlP));
 #if DEBUG

@@ -55,9 +55,9 @@ namespace Chatterino.Common
         public bool IsNewerThan(VersionNumber other)
         {
             return Major > other.Major ||
-                Minor > other.Minor ||
-                Build > other.Build ||
-                Revision > other.Revision;
+                (Major == other.Major && Minor > other.Minor) ||
+                (Major == other.Major && Minor == other.Minor && Build > other.Build) ||
+                (Major == other.Major && Minor == other.Minor && Build == other.Build && Revision > other.Revision);
         }
 
         public override string ToString()

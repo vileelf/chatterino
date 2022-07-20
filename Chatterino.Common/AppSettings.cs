@@ -170,6 +170,8 @@ namespace Chatterino.Common
                 }
             }
         }
+        
+        public static string SkipVersionNumber { get; set; }
 
         public static bool IgnoreSystemProxy { get; set; } = false;
         public static bool EnableStreamlinkPath { get; set; }

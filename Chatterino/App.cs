@@ -99,22 +99,23 @@ namespace Chatterino
             CurrentVersion = VersionNumber.Parse(
                     AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().Location).Version.ToString());
 
+            Directory.SetCurrentDirectory(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName);
+            
             if (!File.Exists("./removeupdatenew") && Directory.Exists("./Updater.new"))
             {
-                UpdaterPath = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
+                string path = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
                     "Updater.new", "Chatterino.Updater.exe");
-            }
-            else
-            {
-                if (File.Exists("./update2"))
-                {
-                    UpdaterPath = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
-                        "Updater2", "Chatterino.Updater.exe");
+                if (Directory.Exists(path)) {
+                    UpdaterPath = path;
                 }
             }
-
-            Directory.SetCurrentDirectory(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName);
-
+            else if (File.Exists("./update2")) {
+                string path = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
+                        "Updater2", "Chatterino.Updater.exe");
+                if (Directory.Exists(path)) {
+                    UpdaterPath = path;
+                }
+            }
             GuiEngine.Initialize(new WinformsGuiEngine());
 
             ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true;
@@ -279,22 +280,6 @@ namespace Chatterino
 
             AppSettings.ThemeChanged += (s, e) => _updateTheme();
 
-            // Check for updates
-            //try
-            //{
-            //    string updaterPath = "./Updater";
-            //    string newUpdaterPath = "./Updater.new";
-
-            //    if (Directory.Exists(newUpdaterPath))
-            //    {
-            //        if (Directory.Exists(updaterPath))
-            //            Directory.Delete(updaterPath, true);
-
-            //        Directory.Move(newUpdaterPath, updaterPath);
-            //    }
-            //}
-            //catch { }
-
             Updates.UpdateFound += (s, e) =>
             {
                 try
@@ -307,6 +292,7 @@ namespace Chatterino
 
                             // OK -> install now
                             // Yes -> install on exit
+                            // Ignore -> skip this update
                             if (result == DialogResult.OK || result == DialogResult.Yes)
                             {
                                 using (var client = new WebClient())
@@ -321,21 +307,26 @@ namespace Chatterino
                                     restartAfterUpdates = true;
                                     MainForm?.Close();
                                 }
+                            } else if (result == DialogResult.Ignore) {
+                                AppSettings.SkipVersionNumber = e.Version.ToString();
                             }
                         }
                         else
                         {
-                            MessageBox.Show("An update is available but the update executable could not be found. If you want to update chatterino you will have to reinstall it.");
+                            MessageBox.Show("An update is available but the update executable could not be found. If you want to update chatterino you will have to do it manually.");
                         }
                     }
                 }
                 catch { }
             };
 
-#if DEBUG
-            Updates.CheckForUpdate("win-dev", CurrentVersion);
-#else
-            Updates.CheckForUpdate("win-release", CurrentVersion);
+#if !DEBUG
+            if (!String.IsNullOrEmpty(AppSettings.SkipVersionNumber)) {
+                VersionNumber SkipVersion = VersionNumber.Parse(AppSettings.SkipVersionNumber);
+                Updates.CheckForUpdate(SkipVersion);
+            } else {
+                Updates.CheckForUpdate(CurrentVersion);
+            }
 #endif
 
             // Start irc
@@ -367,6 +358,13 @@ namespace Chatterino
                 EmoteCache.SaveEmoteList();
                 
                 Commands.Save(Path.Combine(Util.GetUserDataPath(), "Custom", "Commands.txt"));
+                
+                // Install updates
+                if (installUpdatesOnExit)
+                {
+                    Process.Start(UpdaterPath, restartAfterUpdates ? "--restart" :"");
+                    System.Threading.Thread.Sleep(1000);
+                }
             };
 
             Application.Run();
