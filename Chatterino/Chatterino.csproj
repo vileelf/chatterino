@@ -196,6 +196,12 @@
     <Compile Include="Controls\InputDialogForm.Designer.cs">
       <DependentUpon>InputDialogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SearchDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchDialog.Designer.cs">
+      <DependentUpon>SearchDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GifEmoteState.cs" />
     <Compile Include="HotkeyMapper.cs" />
     <Compile Include="Net.cs" />

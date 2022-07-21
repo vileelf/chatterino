@@ -154,21 +154,33 @@ namespace Chatterino
             }
         }
 
+        private SearchDialog dialog = null;
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, Keys keyData)
         {
             switch (keyData)
             {
                 case Keys.Control | Keys.F:
                     (selected as ChatControl)?.CloseAutocomplete();
-                     using (InputDialogForm dialog = new InputDialogForm("Search (results highlighted green)") { Value = (selected as MessageContainerControl)?.GetSelectedText(false) }) {
-                        DialogResult res = dialog.ShowDialog();
-                        if (res == DialogResult.OK)
-                        {
-                            (selected as ChatControl)?.SearchFor(dialog.Value);
-                        } else {
-                            (selected as ChatControl)?.SearchFor("");
-                        }
+                    if (dialog != null) {
+                        dialog.Close();
+                        dialog = null;
                     }
+                    dialog = new SearchDialog("Search (results highlighted green)", (res, value) => {
+                         if (res == DialogResult.OK)
+                         {
+                            (selected as ChatControl)?.SearchFor(value);
+                         } else if (res == DialogResult.Yes) { //next
+                            (selected as ChatControl)?.SearchNext(value, true);
+                         } else if (res == DialogResult.No) { //prev
+                            (selected as ChatControl)?.SearchNext(value, false);
+                         } else {
+                            (selected as ChatControl)?.SearchFor("");
+                         }
+                         if (res != DialogResult.Yes && res!= DialogResult.No) {
+                            dialog = null;
+                         }
+                     }) { Value = (selected as MessageContainerControl)?.GetSelectedText(false) };
+                     dialog.Show();
                     break;
                 case Keys.Control | Keys.U:
                     (selected as ChatControl)?.CloseAutocomplete();

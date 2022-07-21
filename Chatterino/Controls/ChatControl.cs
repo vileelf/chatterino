@@ -984,62 +984,96 @@ namespace Chatterino.Controls
             resetCompletion();
         }
 
-        public ConcurrentDictionary<long, object> SearchResults { get; } = new ConcurrentDictionary<long, object>();
+        public List<int> SearchResults = new List<int>();
+        private string searchterm = "";
+        private int searchvalue;
         static object searchTag = "searchfor";
         public void SearchFor(string term)
         {
-            ClearSearchHighlights();
-            if (string.IsNullOrEmpty(term))
-            {
-                return;
-            }
-            var searchId = ++CurrentSearchId;
-
-            var messages = Channel.CloneMessages();
-
-            var results = new Queue<Message>();
-
-            for (var i = messages.Length - 1; i >= 0; i--)
-            {
-                if (searchId != CurrentSearchId)
+            searchterm = term;
+            try {
+                ClearSearchHighlights();
+                if (string.IsNullOrEmpty(term))
+                {
                     return;
-
-                var message = messages[i];
-
-                if ((message.Username != null &&
-                    message.Username.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1) ||
-                    message.RawMessage.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    results.Enqueue(message);
                 }
-            }
+                var searchId = ++CurrentSearchId;
 
-            lock (Channel.MessageLock)
-            {
+                var messages = Channel.CloneMessages();
 
-                if (results.Count != 0)
+                var results = new Queue<Message>();
+
+                for (var i = messages.Length - 1; i >= 0; i--)
                 {
-                    int count = Channel.Messages.Count;
-                    for (var i = Channel.Messages.Last; i != null; i = i.Previous)
+                    if (searchId != CurrentSearchId)
+                        return;
+
+                    var message = messages[i];
+
+                    if ((message.Username != null &&
+                        message.Username.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1) ||
+                        message.RawMessage.IndexOf(term, StringComparison.OrdinalIgnoreCase) != -1)
                     {
-                        var message = i.Value;
-                        var peek = results.Peek();
+                        results.Enqueue(message);
+                    }
+                }
 
-                        if (message.Id == peek.Id)
+                lock (Channel.MessageLock)
+                {
+
+                    if (results.Count != 0)
+                    {
+                        int count = Channel.Messages.Count;
+                        for (var i = Channel.Messages.Last; i != null; i = i.Previous)
                         {
-                            message.HighlightType |= HighlightType.SearchResult;
-                            _scroll.AddHighlight(count, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
-                            SearchResults[results.Dequeue().Id] = null;
-
-                            if (results.Count == 0)
-                                break;
+                            var message = i.Value;
+                            var peek = results.Peek();
+                            if (message.Id == peek.Id)
+                            {
+                                message.HighlightType |= HighlightType.SearchResult;
+                                _scroll.AddHighlight(count, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
+                                SearchResults.Add(count);
+                                results.Dequeue();
+                                if (results.Count == 0)
+                                    break;
+                            }
+                            count--;
                         }
-                        count--;
+                    }
+                }
+            } catch (Exception e) {
+                GuiEngine.Current.log(e.ToString());
+            }
+            this.Invoke(Invalidate);
+        }
+        
+        public void SearchNext(string term, bool next) {
+            if (!searchterm.Equals(term)) {
+                SearchFor(term);
+            } 
+            else {
+                if (next) {
+                    searchvalue--;
+                    if (searchvalue < 0) {
+                        searchvalue = SearchResults.Count -1;
+                    }
+                } else {
+                    searchvalue++;
+                    if (searchvalue >= SearchResults.Count) {
+                        searchvalue = 0;
                     }
                 }
             }
-
-            this.Invoke(Invalidate);
+            if (SearchResults.Count > 0) {
+                if ((_scroll.Maximum - (SearchResults[searchvalue]-1)) <= 1) {
+                    scrollAtBottom = true;
+                } else {
+                    scrollAtBottom = false;
+                    _scroll.Value = (SearchResults[searchvalue]-1);
+                }
+                updateMessageBounds();
+                ProposeInvalidation();
+            }
         }
 
         public void ClearSearchHighlights()
@@ -1054,6 +1088,8 @@ namespace Chatterino.Controls
                     message.HighlightType &= ~HighlightType.SearchResult;
                 }
             }
+            searchvalue = 0;
+            SearchResults.Clear();
             _scroll.RemoveHighlightsWhere(h => h.Tag == searchTag);
             this.Invoke(Invalidate);
         }
