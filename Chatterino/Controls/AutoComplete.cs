@@ -119,6 +119,19 @@ namespace Chatterino.Controls
             return "";
         }
         
+        const int WHEEL_DELTA = 120;
+        public void MouseWheel(MouseEventArgs e)
+        {
+            int numticks = e.Delta/WHEEL_DELTA;
+            selected -= numticks;
+            if (selected<0) {
+                selected = 0;
+            } else if (selected >= items.Length) {
+                selected = items.Length;
+            }
+            AutoCompleteListBox.SetSelected(selected, true);
+        }
+        
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int WS_EX_NOACTIVATE = 0x08000000;
         protected override CreateParams CreateParams

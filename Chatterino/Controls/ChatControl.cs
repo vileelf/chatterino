@@ -467,7 +467,7 @@ namespace Chatterino.Controls
         
         public bool AutoCompleteOpen { get; private set; } = false;
         public int AutoCompleteStart { get; private set; } = -1;
-        static Controls.AutoComplete AutoComplete { get; set; } = null;
+        static public Controls.AutoComplete AutoComplete { get; set; } = null;
         private object AutoCompleteLock = new object();
         
         public void OpenAutocomplete() {
