@@ -423,6 +423,18 @@ namespace Chatterino.Common
                         else
                             state &= ~RoomState.R9k;
                     }
+                    if (msg.Tags.TryGetValue("followers-only", out value))
+                    {
+                        if (value == "-1")
+                            state &= ~RoomState.FollowerOnly;
+                        else
+                        {
+                            if (!int.TryParse(value, out int time))
+                                time = 0;
+                            c.FollowModeTime = time;
+                            state |= RoomState.FollowerOnly;
+                        }
+                    }
 
                     c.RoomState = state;
                 });

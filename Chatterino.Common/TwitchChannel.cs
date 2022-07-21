@@ -148,6 +148,21 @@ namespace Chatterino.Common
                 }
             }
         }
+        
+        private int followModeTime;
+        
+        public int FollowModeTime
+        {
+            get { return followModeTime; }
+            set
+            {
+                if (followModeTime != value)
+                {
+                    followModeTime = value;
+                    RoomStateChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
 
 
         // Userstate

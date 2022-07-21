@@ -14,5 +14,6 @@ namespace Chatterino.Common
         SlowMode = 2,
         EmoteOnly = 4,
         R9k = 8,
+        FollowerOnly = 16,
     }
 }

@@ -398,7 +398,7 @@ namespace Chatterino.Controls
                         text += "\n";
                     if (state.HasFlag(RoomState.R9k))
                     {
-                        text += "r9k, ";
+                        text += "unique, ";
                         count++;
                     }
                     if (count == 2)
@@ -406,6 +406,13 @@ namespace Chatterino.Controls
                     if (state.HasFlag(RoomState.EmoteOnly))
                     {
                         text += "emote, ";
+                        count++;
+                    }
+                    if (count == 2)
+                        text += "\n";
+                    if (state.HasFlag(RoomState.FollowerOnly))
+                    {
+                        text += "follower (" + c.FollowModeTime + "), ";
                         count++;
                     }
 
@@ -1063,6 +1070,7 @@ namespace Chatterino.Controls
             static MenuItem _roomstateSub;
             static MenuItem _roomstateEmoteonly;
             static MenuItem _roomstateR9K;
+            static MenuItem _roomstateFolloweronly;
 
             static MenuItem _streamlink;
 
@@ -1207,6 +1215,8 @@ namespace Chatterino.Controls
                     _roomstateSub.Checked = (_selected.Channel?.RoomState ?? RoomState.None).HasFlag(RoomState.SubOnly);
                     _roomstateEmoteonly.Checked =
                         (_selected.Channel?.RoomState ?? RoomState.None).HasFlag(RoomState.EmoteOnly);
+                    _roomstateFolloweronly.Checked =
+                        (_selected.Channel?.RoomState ?? RoomState.None).HasFlag(RoomState.FollowerOnly);
 
                     _streamlink.Visible = !_selected.ChannelName.StartsWith("/");
                 };
@@ -1231,14 +1241,14 @@ namespace Chatterino.Controls
                             _selected.Channel.SendMessage("/Subscribers");
                     }
                 }));
-                _roomstateContextMenu.MenuItems.Add(_roomstateR9K = new MenuItem("R9K", (s, e) =>
+                _roomstateContextMenu.MenuItems.Add(_roomstateR9K = new MenuItem("Unique Chat", (s, e) =>
                 {
                     if (_selected.Channel != null)
                     {
                         if (_selected.Channel.RoomState.HasFlag(RoomState.R9k))
-                            _selected.Channel.SendMessage("/R9KBetaOff");
+                            _selected.Channel.SendMessage("/uniquechatoff");
                         else
-                            _selected.Channel.SendMessage("/R9KBeta");
+                            _selected.Channel.SendMessage("/uniquechat");
                     }
                 }));
                 _roomstateContextMenu.MenuItems.Add(_roomstateEmoteonly = new MenuItem("Emote Only", (s, e) =>
@@ -1249,6 +1259,16 @@ namespace Chatterino.Controls
                             _selected.Channel.SendMessage("/Emoteonlyoff");
                         else
                             _selected.Channel.SendMessage("/emoteonly ");
+                    }
+                }));
+                _roomstateContextMenu.MenuItems.Add(_roomstateFolloweronly = new MenuItem("Follower Only", (s, e) =>
+                {
+                    if (_selected.Channel != null)
+                    {
+                        if (_selected.Channel.RoomState.HasFlag(RoomState.FollowerOnly))
+                            _selected.Channel.SendMessage("/followersoff");
+                        else
+                            _selected.Channel.SendMessage("/followers");
                     }
                 }));
 
