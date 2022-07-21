@@ -542,6 +542,16 @@ namespace Chatterino.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap streamlink {
+            get {
+                object obj = ResourceManager.GetObject("streamlink", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap UserProfile_22x {
             get {
                 object obj = ResourceManager.GetObject("UserProfile_22x", resourceCulture);

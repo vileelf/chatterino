@@ -190,6 +190,8 @@ namespace Chatterino.Common
         
         public static bool CacheEmotes { get; set; } = true;
         
+        public static bool CheckUpdates { get; set; } = true;
+        
         public static bool RecentlyUsedEmoteList { get; set; } = true;
         
         public static bool IgnoreViaTwitch { get; set; } = true;

@@ -364,6 +364,7 @@
     <None Include="Resources\cheer1.png" />
     <None Include="Resources\cheer100000.png" />
     <None Include="Resources\OpenFolder_16x.png" />
+    <None Include="Resources\streamlink.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

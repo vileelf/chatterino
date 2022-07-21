@@ -321,11 +321,13 @@ namespace Chatterino
             };
 
 #if !DEBUG
-            if (!String.IsNullOrEmpty(AppSettings.SkipVersionNumber)) {
-                VersionNumber SkipVersion = VersionNumber.Parse(AppSettings.SkipVersionNumber);
-                Updates.CheckForUpdate(SkipVersion);
-            } else {
-                Updates.CheckForUpdate(CurrentVersion);
+            if (AppSettings.CheckUpdates) {
+                if (!String.IsNullOrEmpty(AppSettings.SkipVersionNumber)) {
+                    VersionNumber SkipVersion = VersionNumber.Parse(AppSettings.SkipVersionNumber);
+                    Updates.CheckForUpdate(SkipVersion);
+                } else {
+                    Updates.CheckForUpdate(CurrentVersion);
+                }
             }
 #endif
 

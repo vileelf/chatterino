@@ -53,6 +53,7 @@ namespace Chatterino.Controls
             this.btnAddTimeout = new System.Windows.Forms.Button();
             this.chkBanButton = new System.Windows.Forms.CheckBox();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.paneStreamLink = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.chkEnableInlineWhispers = new System.Windows.Forms.CheckBox();
             this.panel10 = new System.Windows.Forms.Panel();
@@ -156,6 +157,7 @@ namespace Chatterino.Controls
             this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
             this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
             this.chkCacheEmotes = new System.Windows.Forms.CheckBox();
+            this.chkAutomaticUpdate = new System.Windows.Forms.CheckBox();
             this.chkTabLocalizedNames = new System.Windows.Forms.CheckBox();
             this.chkMentionUserWithAt = new System.Windows.Forms.CheckBox();
             this.lblScrollSpeed = new System.Windows.Forms.Label();
@@ -204,6 +206,7 @@ namespace Chatterino.Controls
             this.spHighlighted = new Chatterino.Controls.SettingsTabPage();
             this.spModeration = new Chatterino.Controls.SettingsTabPage();
             this.spWhispers = new Chatterino.Controls.SettingsTabPage();
+            this.spStreamLink = new Chatterino.Controls.SettingsTabPage();
             this.spBrowserExtension = new Chatterino.Controls.SettingsTabPage();
             this.spConnection = new Chatterino.Controls.SettingsTabPage();
             this.tabs.SuspendLayout();
@@ -211,6 +214,7 @@ namespace Chatterino.Controls
             this.panel13.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel8.SuspendLayout();
+            this.paneStreamLink.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).BeginInit();
@@ -265,6 +269,7 @@ namespace Chatterino.Controls
             this.tabs.Controls.Add(this.spHighlighted);
             this.tabs.Controls.Add(this.spModeration);
             this.tabs.Controls.Add(this.spWhispers);
+            this.tabs.Controls.Add(this.spStreamLink);
             this.tabs.Controls.Add(this.spBrowserExtension);
             this.tabs.Controls.Add(this.spConnection);
             this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -284,6 +289,7 @@ namespace Chatterino.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RightPanel.Controls.Add(this.panel6);
             this.RightPanel.Controls.Add(this.panel8);
+            this.RightPanel.Controls.Add(this.paneStreamLink);
             this.RightPanel.Controls.Add(this.panel3);
             this.RightPanel.Controls.Add(this.panel13);
             this.RightPanel.Controls.Add(this.panel10);
@@ -378,6 +384,15 @@ namespace Chatterino.Controls
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(481, 500);
             this.panel8.TabIndex = 6;
+            // 
+            // paneStreamLink
+            // 
+            this.paneStreamLink.Controls.Add(this.groupBox2);
+            this.paneStreamLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.paneStreamLink.Location = new System.Drawing.Point(0, 0);
+            this.paneStreamLink.Name = "paneStreamLink";
+            this.paneStreamLink.Size = new System.Drawing.Size(481, 500);
+            this.paneStreamLink.TabIndex = 6;
             // 
             // label13
             // 
@@ -1399,10 +1414,10 @@ namespace Chatterino.Controls
             // panel12
             // 
             this.panel12.Controls.Add(this.chkPrefereEmotes);
-            this.panel12.Controls.Add(this.groupBox2);
             this.panel12.Controls.Add(this.chkAllowSameMessages);
             this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
             this.panel12.Controls.Add(this.chkCacheEmotes);
+            this.panel12.Controls.Add(this.chkAutomaticUpdate);
             this.panel12.Controls.Add(this.chkTabLocalizedNames);
             this.panel12.Controls.Add(this.chkMentionUserWithAt);
             this.panel12.Controls.Add(this.lblScrollSpeed);
@@ -1439,7 +1454,7 @@ namespace Chatterino.Controls
             this.groupBox2.Controls.Add(this.chkStreamlinkPath);
             this.groupBox2.Controls.Add(this.btnStreamlinkPath);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(15, 203);
+            this.groupBox2.Location = new System.Drawing.Point(15, 15);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(431, 215);
             this.groupBox2.TabIndex = 54;
@@ -1593,6 +1608,17 @@ namespace Chatterino.Controls
             this.chkCacheEmotes.TabIndex = 55;
             this.chkCacheEmotes.Text = "Locally store copys of emotes to make loading faster";
             this.chkCacheEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chkAutomaticUpdate
+            // 
+            this.chkAutomaticUpdate.AutoSize = true;
+            this.chkAutomaticUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkAutomaticUpdate.Location = new System.Drawing.Point(15, 205);
+            this.chkAutomaticUpdate.Name = "chkAutomaticUpdate";
+            this.chkAutomaticUpdate.Size = new System.Drawing.Size(306, 17);
+            this.chkAutomaticUpdate.TabIndex = 56;
+            this.chkAutomaticUpdate.Text = "Automatically check for updates on startup";
+            this.chkAutomaticUpdate.UseVisualStyleBackColor = true;
             // 
             // chkTabLocalizedNames
             // 
@@ -2142,6 +2168,18 @@ namespace Chatterino.Controls
             this.spWhispers.TabIndex = 8;
             this.spWhispers.Text = "Whispers";
             // 
+            // spStreamLink
+            // 
+            this.spStreamLink.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spStreamLink.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.streamlink);
+            this.spStreamLink.Location = new System.Drawing.Point(0, 330);
+            this.spStreamLink.Name = "spStreamLink";
+            this.spStreamLink.Panel = this.paneStreamLink;
+            this.spStreamLink.Selected = false;
+            this.spStreamLink.Size = new System.Drawing.Size(150, 30);
+            this.spStreamLink.TabIndex = 8;
+            this.spStreamLink.Text = "StreamLink";
+            // 
             // spBrowserExtension
             // 
             this.spBrowserExtension.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -2191,6 +2229,8 @@ namespace Chatterino.Controls
             this.groupBox3.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            this.paneStreamLink.ResumeLayout(false);
+            this.paneStreamLink.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -2330,6 +2370,8 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkDoubleClickLinks;
         private System.Windows.Forms.Panel panel8;
         private SettingsTabPage spWhispers;
+        private SettingsTabPage spStreamLink;
+        private System.Windows.Forms.Panel paneStreamLink;
         private System.Windows.Forms.CheckBox chkTwitchIgnores;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label label10;
@@ -2382,6 +2424,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.CheckBox chkAllowSameMessages;
         private System.Windows.Forms.CheckBox chkRecentlyUsedEmoteList;
         private System.Windows.Forms.CheckBox chkCacheEmotes;
+        private System.Windows.Forms.CheckBox chkAutomaticUpdate;
         private System.Windows.Forms.CheckBox chkTabLocalizedNames;
         private System.Windows.Forms.CheckBox chkMentionUserWithAt;
         private System.Windows.Forms.Label lblScrollSpeed;
