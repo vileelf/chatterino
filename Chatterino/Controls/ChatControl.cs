@@ -289,7 +289,7 @@ namespace Chatterino.Controls
 
             if (e.Message.HighlightTab && parent != null)
             {
-                if (e.Message.HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Whisper))
+                if (parent.EnableHighlightedMessageHighlights && (e.Message.HasAnyHighlightType(HighlightType.Highlighted | HighlightType.Whisper)))
                 {
                     parent.HighlightType = TabPageHighlightType.Highlighted;
                 }

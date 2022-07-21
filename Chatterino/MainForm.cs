@@ -596,6 +596,8 @@ namespace Chatterino
 
                             page.EnableNewMessageHighlights = (tab.Attribute("enableNewMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
                             
+                            page.EnableHighlightedMessageHighlights = (tab.Attribute("enableHighlightedMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
+                            
                             page.EnableGoLiveHighlights = (tab.Attribute("enableGoLiveHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
                             
                             page.EnableGoLiveNotifications = (tab.Attribute("enableGoLiveNotifications")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
@@ -705,6 +707,11 @@ namespace Chatterino
                         if (!page.EnableNewMessageHighlights)
                         {
                             xtab.SetAttributeValue("enableNewMessageHighlights", false);
+                        }
+                        
+                        if (!page.EnableHighlightedMessageHighlights)
+                        {
+                            xtab.SetAttributeValue("enableHighlightedMessageHighlights", false);
                         }
 
                         if (!page.EnableGoLiveHighlights)
