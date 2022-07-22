@@ -166,14 +166,11 @@ namespace Chatterino
                         dialog = null;
                     }
                     dialog = new SearchDialog("Search (results highlighted green)", (res, value) => {
-                         if (res == DialogResult.OK)
-                         {
-                            (selected as ChatControl)?.SearchFor(value);
-                         } else if (res == DialogResult.Yes) { //next
+                         if (res == DialogResult.Yes) { //next
                             (selected as ChatControl)?.SearchNext(value, true);
                          } else if (res == DialogResult.No) { //prev
                             (selected as ChatControl)?.SearchNext(value, false);
-                         } else {
+                         } else { //cancel
                             (selected as ChatControl)?.SearchFor("");
                          }
                          if (res != DialogResult.Yes && res!= DialogResult.No) {

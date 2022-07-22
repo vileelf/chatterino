@@ -38,21 +38,23 @@ namespace Chatterino.Controls
             KeyPreview = true;
             KeyDown += (s, e) =>
             {
-                if (textBox.Focused)
+                if (e.Shift && e.KeyCode == Keys.Enter)
                 {
-                    if (e.KeyCode == Keys.Enter)
-                    {
-                        e.Handled = true;
+                    e.Handled = true;
 
-                        okButton.PerformClick();
-                    }
+                    btnPrev.PerformClick();
                 }
-            };
-            okButton.Click += (s, e) =>
-            {
-                DialogResult = DialogResult.OK;
-                cb(DialogResult, textBox.Text);
-                this.Close();
+                else if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+
+                    btnNext.PerformClick();
+                }
+                else if (e.KeyCode == Keys.Escape)
+                {
+                    e.Handled = true;
+                    cancelButton.PerformClick();
+                }
             };
             cancelButton.Click += (s, e) =>
             {
@@ -70,17 +72,11 @@ namespace Chatterino.Controls
                 DialogResult = DialogResult.No;
                 cb(DialogResult, textBox.Text);
             };
-        }
-        
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-
-            if (e.KeyCode == Keys.Escape)
+            FormClosing += (s, e) =>
             {
-                cancelButton.PerformClick();
-            }
+                DialogResult = DialogResult.Cancel;
+                cb(DialogResult, textBox.Text);
+            };
         }
     }
 }
