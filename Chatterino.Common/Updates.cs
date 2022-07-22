@@ -33,6 +33,7 @@ namespace Chatterino.Common
 
                             dynamic json = parser.Parse(stream);
                             string tagname = json["tag_name"];
+                            string patchnotes = json["body"];
                             dynamic assets = json["assets"];
                             
                             foreach (var asset in assets) {
@@ -43,7 +44,7 @@ namespace Chatterino.Common
 
                                     if (onlineVersion.IsNewerThan(currentVersion))
                                     {
-                                        UpdateFound?.Invoke(null, new UpdateFoundEventArgs(onlineVersion, url));
+                                        UpdateFound?.Invoke(null, new UpdateFoundEventArgs(onlineVersion, url, patchnotes));
                                     }
                                 }
                             }
@@ -81,11 +82,14 @@ namespace Chatterino.Common
     {
         public VersionNumber Version { get; private set; }
         public string Url { get; private set; }
+        public string PatchNotes { get; private set; }
 
-        public UpdateFoundEventArgs(VersionNumber version, string url)
+        public UpdateFoundEventArgs(VersionNumber version, string url, string patchnotes)
         {
             Version = version;
             Url = url;
+            PatchNotes = patchnotes;
+            
         }
     }
 }

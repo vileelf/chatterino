@@ -284,7 +284,7 @@ namespace Chatterino
             {
                 try
                 {
-                    using (var dialog = new UpdateDialog())
+                    using (var dialog = new UpdateDialog(e.PatchNotes, e.Version.ToString()))
                     {
                         if (File.Exists(UpdaterPath))
                         {
