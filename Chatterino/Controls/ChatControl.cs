@@ -285,6 +285,13 @@ namespace Chatterino.Controls
                         ? Color.Orange
                         : Color.FromArgb(-16777216 | 0x3F6ABF));
             }
+            if (!string.IsNullOrEmpty(searchterm) && ((e.Message.Username != null &&
+                        e.Message.Username.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1) ||
+                        e.Message.RawMessage.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1)) {
+                e.Message.HighlightType |= HighlightType.SearchResult;
+                _scroll.AddHighlight((channel?.MessageCount ?? 1) - 1, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
+                SearchResults.Add((channel?.MessageCount ?? 1) - 1);
+            }
 
             var parent = Parent as ColumnTabPage;
 
@@ -319,6 +326,13 @@ namespace Chatterino.Controls
                             ? Color.Orange
                             : Color.FromArgb(-16777216 | 0x3F6ABF));
                 }
+                if (!string.IsNullOrEmpty(searchterm) && ((e.Value[i].Username != null &&
+                        e.Value[i].Username.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1) ||
+                        e.Value[i].RawMessage.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1)) {
+                    e.Value[i].HighlightType |= HighlightType.SearchResult;
+                    _scroll.AddHighlight(i, Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
+                    SearchResults.Add(i);
+                }
             }
 
             updateMessageBounds();
@@ -337,6 +351,13 @@ namespace Chatterino.Controls
                             : e.Value[i].HasAnyHighlightType(HighlightType.UsernameHighlighted)
                             ? Color.Orange
                             : Color.FromArgb(-16777216 | 0x3F6ABF));
+                }
+                if (!string.IsNullOrEmpty(searchterm) && ((e.Value[i].Username != null &&
+                        e.Value[i].Username.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1) ||
+                        e.Value[i].RawMessage.IndexOf(searchterm, StringComparison.OrdinalIgnoreCase) != -1)) {
+                    e.Value[i].HighlightType |= HighlightType.SearchResult;
+                    _scroll.AddHighlight(channel.MessageCount - (e.Value.Length - i), Color.GreenYellow, ScrollBarHighlightStyle.Right, searchTag);
+                    SearchResults.Add(channel.MessageCount - (e.Value.Length - i));
                 }
             }
 
@@ -1006,7 +1027,7 @@ namespace Chatterino.Controls
 
                 var results = new Queue<Message>();
 
-                for (var i = messages.Length - 1; i >= 0; i--)
+                for (var i = 0; i <  messages.Length; i++)
                 {
                     if (searchId != CurrentSearchId)
                         return;
@@ -1026,8 +1047,8 @@ namespace Chatterino.Controls
 
                     if (results.Count != 0)
                     {
-                        int count = Channel.Messages.Count;
-                        for (var i = Channel.Messages.Last; i != null; i = i.Previous)
+                        int count = 0;
+                        for (var i = Channel.Messages.First; i != null; i = i.Next)
                         {
                             var message = i.Value;
                             var peek = results.Peek();
@@ -1040,7 +1061,7 @@ namespace Chatterino.Controls
                                 if (results.Count == 0)
                                     break;
                             }
-                            count--;
+                            count++;
                         }
                     }
                 }
@@ -1058,14 +1079,14 @@ namespace Chatterino.Controls
                 incrementSearchValue(next);
             }
             if (SearchResults.Count > 0) {
-                int searchresult = SearchResults[searchvalue]-1 + searchResultsAdjust;
+                int searchresult = SearchResults[searchvalue] + searchResultsAdjust;
                 int cursearchvalue = searchvalue;
                 while (searchresult<0) { //message has gone off screen. skip it
                     incrementSearchValue(next);
                     if (searchvalue == cursearchvalue) {
                         break;
                     }
-                    searchresult = SearchResults[searchvalue]-1 + searchResultsAdjust;
+                    searchresult = SearchResults[searchvalue] + searchResultsAdjust;
                 }
                 if (searchresult >= 0) {
                     if ((_scroll.Maximum - searchresult) <= 1) {
@@ -1080,7 +1101,7 @@ namespace Chatterino.Controls
             }
         }
         private void incrementSearchValue(bool next) {
-            if (next) {
+            if (!next) {
                 searchvalue--;
                 if (searchvalue < 0) {
                     searchvalue = SearchResults.Count -1;
