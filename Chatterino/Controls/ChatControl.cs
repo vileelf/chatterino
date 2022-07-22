@@ -270,6 +270,7 @@ namespace Chatterino.Controls
                 }
 
                 _scroll.Value--;
+                searchResultsAdjust--;
 
                 _scroll.UpdateHighlights(h => h.Position--);
                 _scroll.RemoveHighlightsWhere(h => h.Position < 0);
@@ -356,6 +357,7 @@ namespace Chatterino.Controls
             }
 
             _scroll.Value -= e.Value.Length;
+            searchResultsAdjust -= e.Value.Length;
 
             _scroll.UpdateHighlights(h => h.Position -= e.Value.Length);
             _scroll.RemoveHighlightsWhere(h => h.Position < 0);
@@ -987,6 +989,7 @@ namespace Chatterino.Controls
         public List<int> SearchResults = new List<int>();
         private string searchterm = "";
         private int searchvalue;
+        private int searchResultsAdjust;
         static object searchTag = "searchfor";
         public void SearchFor(string term)
         {
@@ -1052,27 +1055,41 @@ namespace Chatterino.Controls
                 SearchFor(term);
             } 
             else {
-                if (next) {
-                    searchvalue--;
-                    if (searchvalue < 0) {
-                        searchvalue = SearchResults.Count -1;
-                    }
-                } else {
-                    searchvalue++;
-                    if (searchvalue >= SearchResults.Count) {
-                        searchvalue = 0;
-                    }
-                }
+                incrementSearchValue(next);
             }
             if (SearchResults.Count > 0) {
-                if ((_scroll.Maximum - (SearchResults[searchvalue]-1)) <= 1) {
-                    scrollAtBottom = true;
-                } else {
-                    scrollAtBottom = false;
-                    _scroll.Value = (SearchResults[searchvalue]-1);
+                int searchresult = SearchResults[searchvalue]-1 + searchResultsAdjust;
+                int cursearchvalue = searchvalue;
+                while (searchresult<0) { //message has gone off screen. skip it
+                    incrementSearchValue(next);
+                    if (searchvalue == cursearchvalue) {
+                        break;
+                    }
+                    searchresult = SearchResults[searchvalue]-1 + searchResultsAdjust;
                 }
-                updateMessageBounds();
-                ProposeInvalidation();
+                if (searchresult >= 0) {
+                    if ((_scroll.Maximum - searchresult) <= 1) {
+                        scrollAtBottom = true;
+                    } else {
+                        scrollAtBottom = false;
+                        _scroll.Value = searchresult;
+                    }
+                    updateMessageBounds();
+                    ProposeInvalidation();
+                }
+            }
+        }
+        private void incrementSearchValue(bool next) {
+            if (next) {
+                searchvalue--;
+                if (searchvalue < 0) {
+                    searchvalue = SearchResults.Count -1;
+                }
+            } else {
+                searchvalue++;
+                if (searchvalue >= SearchResults.Count) {
+                    searchvalue = 0;
+                }
             }
         }
 
@@ -1089,6 +1106,7 @@ namespace Chatterino.Controls
                 }
             }
             searchvalue = 0;
+            searchResultsAdjust = 0;
             SearchResults.Clear();
             _scroll.RemoveHighlightsWhere(h => h.Tag == searchTag);
             this.Invoke(Invalidate);
