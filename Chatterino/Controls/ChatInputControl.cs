@@ -52,7 +52,7 @@ namespace Chatterino.Controls
 
             contextMenu.MenuItems.Add("Send and Keep Message", (s, e) => { (App.MainForm.Selected as ChatControl)?.SendMessage(false); });
         }
-
+        
         public ChatInputControl(ChatControl chatControl)
         {
             Size = new Size(100, 100);
@@ -202,7 +202,20 @@ namespace Chatterino.Controls
             end:
             return position;
         }
-
+        
+        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+            var g = App.UseDirectX ? null : CreateGraphics();
+            Message msg = Logic.Message;
+            Word word = msg.WordAtPoint(new CommonPoint(e.X - messagePadding.Left, e.Y - messagePadding.Top));
+            MessagePosition position = msg.MessagePositionAtPoint(g, new CommonPoint(word.X + 1, e.Y), 0);
+            MessagePosition position2 = msg.MessagePositionAtPoint(g, new CommonPoint((word.X + 1 + word.Width), e.Y), 0);
+            Logic.SelectionStart = getIndexFromMessagePosition(position);
+            Logic.SetSelectionEnd(getIndexFromMessagePosition(position2));
+            g?.Dispose();
+        }
+        
         protected override void OnMouseDown(MouseEventArgs e)
         {
             var g = App.UseDirectX ? null : CreateGraphics();
@@ -215,6 +228,7 @@ namespace Chatterino.Controls
                 {
                     Logic.SetSelectionEnd(Logic.SelectionStart = getIndexFromMessagePosition(Logic.Message.MessagePositionAtPoint(g, new CommonPoint(e.X - messagePadding.Left, e.Y - messagePadding.Top), 0)));
                 }
+                
             }
 
             g?.Dispose();
