@@ -26,6 +26,7 @@ namespace Chatterino.Common
         public string TooltipImageUrl { get; set; } = null;
         public LazyLoadedImage TooltipImage = null;
         public string click_url {get; set; } = null;
+        public string copyText {get; set; } = null;
         public bool IsDanke = false;
         
         public struct EmoteInfoStruct {

@@ -385,9 +385,7 @@ namespace Chatterino.Common
                                         {
                                             readStream.CopyTo(writeStream);
                                         }
-                                        readStream.Close();
                                     }
-                                    webClient.Dispose();
                                 }
                             }
                         }

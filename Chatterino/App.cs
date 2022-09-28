@@ -334,6 +334,7 @@ namespace Chatterino
             // Start irc
             Emotes.LoadGlobalEmotes();
             Badges.LoadGlobalBadges();
+            Emojis.LoadEmojis();
             GuiEngine.Current.LoadBadges();
             GuiEngine.Current.UpdateSoundPaths();
             Net.StartHttpServer();

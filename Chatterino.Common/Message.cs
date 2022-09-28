@@ -625,7 +625,7 @@ namespace Chatterino.Common
                                 Tooltip = e.Tooltip,
                                 TooltipImageUrl = e.TooltipImageUrl,
                                 TooltipImage = e.TooltipImage,
-                                CopyText = e.Name,
+                                CopyText = e.copyText ?? e.Name,
                                 HasTrailingSpace = e.HasTrailingSpace
                             });
                         }

@@ -2,11 +2,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace Chatterino.Common
 {
@@ -16,8 +18,21 @@ namespace Chatterino.Common
         public static ConcurrentDictionary<string, string> ShortCodeToEmoji = new ConcurrentDictionary<string, string>();
         public static ConcurrentDictionary<string, string> EmojiToShortCode = new ConcurrentDictionary<string, string>();
 
-        public static ConcurrentDictionary<char, ConcurrentDictionary<string, LazyLoadedImage>> FirstEmojiChars = new ConcurrentDictionary<char, ConcurrentDictionary<string, LazyLoadedImage>>();
+        public static ConcurrentDictionary<char, ConcurrentDictionary<string, Emoji>> FirstEmojiChars = new ConcurrentDictionary<char, ConcurrentDictionary<string, Emoji>>();
 
+        private static string EmojiGlobalCache = Path.Combine(Util.GetUserDataPath(), "Cache", "emoji_global.json");
+
+        public class Emoji {
+            public string unified;
+            public string non_qualified;
+            public string name;
+            public string image;
+            public string[] short_names;
+            public bool has_img_twitter;
+            public string url;
+            public string shortcode;
+            public LazyLoadedImage img;
+        }
         public static string ReplaceShortCodes(string s)
         {
             return findShortCodes.Replace(s, m =>
@@ -46,6 +61,74 @@ namespace Chatterino.Common
 
             return codePoints.ToArray();
         }
+        
+        public static void LoadEmojis() {
+            //https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji_pretty.json
+            
+            //https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/0023-fe0f-20e3.png
+            try {
+                using (var webClient = new WebClient()) {
+                    using (var readStream = webClient.OpenRead("https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json")) {
+                        if (File.Exists(EmojiGlobalCache)) {
+                            File.Delete(EmojiGlobalCache);
+                        }
+                        using (var writeStream = File.OpenWrite(EmojiGlobalCache))
+                        {
+                            readStream.CopyTo(writeStream);
+                        }
+                    }
+                }
+                using (var stream = File.OpenRead(EmojiGlobalCache))
+                {
+                    using (var reader = new StreamReader(stream)) {
+                        var jsonstring = reader.ReadToEnd();
+                        var json = JsonConvert.DeserializeObject<Emoji[]>(jsonstring);
+                    
+                        string[] hexlist;
+                        string shortcode;
+                        for(int i=0; i<json.Length; i++)
+                        {
+                            if (json[i].has_img_twitter) {
+                                json[i].shortcode = "";
+                                if (!String.IsNullOrEmpty(json[i].non_qualified)) {
+                                    shortcode = json[i].non_qualified;
+                                } else {
+                                    shortcode = json[i].unified;
+                                }
+                                hexlist = shortcode.Split('-');
+                                for (int j=0;j<hexlist.Length;j++) {
+                                    json[i].shortcode += Char.ConvertFromUtf32((int)System.Convert.ToUInt32(hexlist[j],16));
+                                }
+                                json[i].img = new LazyLoadedImage
+                                {
+                                    Url = $"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/{json[i].image}",
+                                    Tooltip = $":{json[i].short_names[0]}:\nemoji",
+                                    TooltipImageUrl = $"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/{json[i].image}",
+                                    Name = json[i].name,
+                                    Scale = 0.35,
+                                    HasTrailingSpace = false,
+                                    copyText = json[i].shortcode,
+                                    IsEmote = true
+                                };
+                                if (json[i].short_names[0]=="gun") {
+                                    //specifically gun gets the old image so we dont have squirt guns
+                                    json[i].img.Url = $"https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f52b.png";
+                                    json[i].img.TooltipImageUrl = json[i].img.Url;
+                                }
+                                for (int j=0; j < json[i].short_names.Length; j++) {
+                                    ShortCodeToEmoji[json[i].short_names[j]] = json[i].shortcode;
+                                }
+                                EmojiToShortCode[json[i].shortcode] = json[i].short_names[0];
+                                FirstEmojiChars.GetOrAdd(json[i].shortcode[0], c => new ConcurrentDictionary<string, Emoji>())[json[i].shortcode] = json[i];
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                GuiEngine.Current.log(e.ToString());
+            }
+            //(Emotes.EmotesLoaded)?.Invoke(null, EventArgs.Empty);
+        }
 
         public static object[] ParseEmojis(string text)
         {
@@ -57,65 +140,20 @@ namespace Chatterino.Common
             {
                 if (!char.IsLowSurrogate(text, i))
                 {
-                    ConcurrentDictionary<string, LazyLoadedImage> _emojis;
+                    ConcurrentDictionary<string, Emoji> _emojis;
                     if (FirstEmojiChars.TryGetValue(text[i], out _emojis))
                     {
                         for (var j = Math.Min(8, text.Length - i); j > 0; j--)
                         {
                             var emoji = text.Substring(i, j);
-                            LazyLoadedImage emote;
+                            Emoji emote;
 
                             if (_emojis.TryGetValue(emoji, out emote))
                             {
-                                if (emote == null)
-                                {
-                                    var codepoints = string.Join("-", ToCodePoints(emoji).Select(n => n.ToString("X").ToLower()));
-
-                                    var url = $"https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/{codepoints}.png";
-
-                                    _emojis[emoji] = emote = new LazyLoadedImage
-                                    {
-                                        Url = url,
-                                        Tooltip = $":{EmojiToShortCode[emoji]}:\nemoji",
-                                        Name = emoji,
-                                        LoadAction = () =>
-                                        {
-                                            ChatterinoImage img;
-                                            try
-                                            {
-                                                var request = WebRequest.Create(url);
-                                                if (AppSettings.IgnoreSystemProxy)
-                                                {
-                                                    request.Proxy = null;
-                                                }
-                                                using (var response = request.GetResponse()) {
-                                                    using (var stream = response.GetResponseStream())
-                                                    {
-                                                        img = GuiEngine.Current.ReadImageFromStream(stream);
-                                                        //img = GuiEngine.Current.ScaleImage(img, 0.35);
-                                                        GuiEngine.Current.FreezeImage(img);
-                                                        return img;
-                                                    }
-                                                    response.Close();
-                                                }
-                                            }
-                                            catch
-                                            {
-                                                img = null;
-                                            }
-
-                                            return img;
-                                        },
-                                        Scale = 0.35,
-                                        HasTrailingSpace = false,
-                                        IsEmote = true
-                                    };
-                                }
-
                                 if (i - lastSlice != 0)
                                     objects.Add(text.Substring(lastSlice, i - lastSlice));
 
-                                objects.Add(emote);
+                                objects.Add(emote.img);
 
                                 i += j - 1;
 
@@ -140,7 +178,7 @@ namespace Chatterino.Common
 
         static Emojis()
         {
-            ShortCodeToEmoji["100"] = "\U0001f4af";
+            /*ShortCodeToEmoji["100"] = "\U0001f4af";
             ShortCodeToEmoji["1234"] = "\U0001f522";
             ShortCodeToEmoji["grinning"] = "\U0001f600";
             ShortCodeToEmoji["grimacing"] = "\U0001f62c";
@@ -1971,7 +2009,7 @@ namespace Chatterino.Common
                 foreach (var emoji in ShortCodeToEmoji.Values)
             {
                 FirstEmojiChars.GetOrAdd(emoji[0], c => new ConcurrentDictionary<string, LazyLoadedImage>())[emoji] = null;
-            }
+            }*/
         }
     }
 }

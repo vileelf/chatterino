@@ -950,6 +950,7 @@ namespace Chatterino.Common
                 string temp = "";
                 int count = 1;
                 string emote_set;
+                string emote_set_id_string = "";
                 //split into groups of 10 since thats the limit you can request at once from the api https://api.twitch.tv/helix/chat/emotes/set?emote_set_id=
                 for (int i = 0; i < emote_sets.Length; i++)
                 {
@@ -994,6 +995,7 @@ namespace Chatterino.Common
                                             string emote_type = emote["emote_type"];
                                             string name = emote["name"];
                                             int emote_set_id = Int32.Parse(emote["emote_set_id"]);
+                                            emote_set_id_string = emote["emote_set_id"];
                                             //GuiEngine.Current.log("name : " + name + " set_id " + emote_set_id + " owner_id " + owner_id + " emotetype " + emote_type );
                                             string code = Emotes.GetTwitchEmoteCodeReplacement(name);
                                             Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
@@ -1018,7 +1020,7 @@ namespace Chatterino.Common
                         }
                         catch (Exception exc)
                         {
-                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString());
+                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString() + " " + emote_set_id_string);
                         }
                         temp = "";
                         count = 1;
