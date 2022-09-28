@@ -32,6 +32,7 @@ namespace Chatterino.Common
             public string url;
             public string shortcode;
             public LazyLoadedImage img;
+            public Dictionary<string, Emoji> skin_variations;
         }
         public static string ReplaceShortCodes(string s)
         {
@@ -84,21 +85,12 @@ namespace Chatterino.Common
                         var jsonstring = reader.ReadToEnd();
                         var json = JsonConvert.DeserializeObject<Emoji[]>(jsonstring);
                     
-                        string[] hexlist;
-                        string shortcode;
+                        
                         for(int i=0; i<json.Length; i++)
                         {
                             if (json[i].has_img_twitter) {
-                                json[i].shortcode = "";
-                                if (!String.IsNullOrEmpty(json[i].non_qualified)) {
-                                    shortcode = json[i].non_qualified;
-                                } else {
-                                    shortcode = json[i].unified;
-                                }
-                                hexlist = shortcode.Split('-');
-                                for (int j=0;j<hexlist.Length;j++) {
-                                    json[i].shortcode += Char.ConvertFromUtf32((int)System.Convert.ToUInt32(hexlist[j],16));
-                                }
+                                json[i].shortcode = getEmojiShortcode(json[i]);
+                                
                                 json[i].img = new LazyLoadedImage
                                 {
                                     Url = $"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/{json[i].image}",
@@ -120,6 +112,26 @@ namespace Chatterino.Common
                                 }
                                 EmojiToShortCode[json[i].shortcode] = json[i].short_names[0];
                                 FirstEmojiChars.GetOrAdd(json[i].shortcode[0], c => new ConcurrentDictionary<string, Emoji>())[json[i].shortcode] = json[i];
+                                if (json[i].skin_variations != null) {
+                                    Emoji skintone;
+                                    foreach (var skintoneKeyValue in json[i].skin_variations) {
+                                        skintone = skintoneKeyValue.Value;
+                                        if (skintone.has_img_twitter) {
+                                            skintone.shortcode = getEmojiShortcode(skintone);
+                                            skintone.img = new LazyLoadedImage {
+                                                Url = $"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/{skintone.image}",
+                                                Tooltip = $":{json[i].short_names[0]}:\nemoji",
+                                                TooltipImageUrl = $"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-twitter-72/{skintone.image}",
+                                                Name = json[i].name,
+                                                Scale = 0.35,
+                                                HasTrailingSpace = false,
+                                                copyText = skintone.shortcode,
+                                                IsEmote = true
+                                            };
+                                            FirstEmojiChars.GetOrAdd(skintone.shortcode[0], c => new ConcurrentDictionary<string, Emoji>())[skintone.shortcode] = skintone;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -128,6 +140,22 @@ namespace Chatterino.Common
                 GuiEngine.Current.log(e.ToString());
             }
             //(Emotes.EmotesLoaded)?.Invoke(null, EventArgs.Empty);
+        }
+        
+        private static string getEmojiShortcode(Emoji emoji) {
+            string[] hexlist;
+            string shortcode;
+            string retshortcode = "";
+            if (!String.IsNullOrEmpty(emoji.non_qualified)) {
+                shortcode = emoji.non_qualified;
+            } else {
+                shortcode = emoji.unified;
+            }
+            hexlist = shortcode.Split('-');
+            for (int j=0;j<hexlist.Length;j++) {
+                retshortcode += Char.ConvertFromUtf32((int)System.Convert.ToUInt32(hexlist[j],16));
+            }
+            return retshortcode;
         }
 
         public static object[] ParseEmojis(string text)
