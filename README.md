@@ -7,8 +7,8 @@ The old classic version of chatterino with a bunch of updates.
 - several new settings
 - autocomplete support when using @ and :
 - emote caching
-
+- new emoji support
+- automatic updater
 
 # Still Missing but Planned
-- new emoji support
-- automatic updater (coming next update)
+- support for channel point stuff
