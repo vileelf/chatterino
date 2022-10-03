@@ -1,5 +1,12 @@
 ﻿# changelog
 
+## 3.0
+-- Added support for elevated chat messages.
+-- Added support for most modern emojis except for some flags.
+-- Added double click to highlight word on the input box.
+-- Updated the search dialog with next and prev buttons.
+-- Added an automatic updater with patch notes and the option to skip the update.
+
 ## 2.9
 -- Added more permissions to the login to allow for mod commands like /host and /commercial and fix some stuff not working anymore like whispers.
 -- Hovering over the sub badge will now show the number of months subbed.
