@@ -315,6 +315,29 @@ namespace Chatterino.Common
                     {
                         c.AddMessage(new Message(msg.Params ?? "", HSLColor.Gray, true) { HighlightType = HighlightType.Resub });
                     }
+                    else if (msg.Tags.TryGetValue("pinned-chat-paid-canonical-amount", out string paidamount)) {
+                        msg.Tags.TryGetValue("pinned-chat-paid-currency", out string currency);
+                        msg.Tags.TryGetValue("login", out string login);
+                        msg.Tags.TryGetValue("display-name", out string displayname);
+                        string name = displayname ?? login;
+                        if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
+                                !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase)) {
+                                name = displayname + "(" + login + ")";
+                        }
+                        var sysMessage = new Message($"{name} elevated their chat message for {paidamount}$ ({currency.ToLower()})", HSLColor.Gray, true)
+                        {
+                            HighlightType = HighlightType.Resub
+                        };
+                        c.AddMessage(sysMessage);
+                        if (!string.IsNullOrEmpty(msg.Params))
+                        {
+                            var message = new Message(msg, c)
+                            {
+                                HighlightType = HighlightType.Resub
+                            };
+                            c.AddMessage(message);
+                        }
+                    }
                     else
                     {
                         // check if ignore keyword is triggered

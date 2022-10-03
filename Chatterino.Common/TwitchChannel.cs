@@ -1029,6 +1029,28 @@ namespace Chatterino.Common
                                             };
                                             messages.Add(message);
                                         }
+                                    } else if (msg.Tags.TryGetValue("pinned-chat-paid-canonical-amount", out string paidamount)) {
+                                        msg.Tags.TryGetValue("pinned-chat-paid-currency", out string currency);
+                                        msg.Tags.TryGetValue("login", out login);
+                                        msg.Tags.TryGetValue("display-name", out displayname);
+                                        string name = displayname ?? login;
+                                        if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
+                                                !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase)) {
+                                                name = displayname + "(" + login + ")";
+                                        }
+                                        var sysMessage = new Message($"{name} elevated their chat message for {paidamount}$ ({currency.ToLower()})", HSLColor.Gray, true)
+                                        {
+                                            HighlightType = HighlightType.Resub
+                                        };
+                                        messages.Add(sysMessage);
+                                        if (!string.IsNullOrEmpty(msg.Params))
+                                        {
+                                            message = new Message(msg, this)
+                                            {
+                                                HighlightType = HighlightType.Resub
+                                            };
+                                            messages.Add(message);
+                                        }
                                     } else {
                                         message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
                                         if (IrcManager.IsMessageIgnored(message, this) != true ) {
