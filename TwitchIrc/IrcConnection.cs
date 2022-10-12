@@ -171,13 +171,13 @@ namespace TwitchIrc
                 writeLine(stream, "CAP REQ :twitch.tv/tags");
                 
                 hasReceivedPong = true;
-                IsConnected = true;
                 Connected?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception exc)
             {
                 ConnectionException?.Invoke(this, new ExceptionEventArgs(exc));
             }
+            IsConnected = true;
         }
 
         private void writeLine(Stream stream, string value)

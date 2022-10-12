@@ -157,7 +157,7 @@ namespace Chatterino.Common
             
             if (!String.IsNullOrEmpty(emoji.non_qualified) && emoji.non_qualified!=emoji.unified) {
                 shortcode = emoji.non_qualified;
-                 convertHexToStrings(shortcode, retshortcodes);
+                convertHexToStrings(shortcode, retshortcodes);
             }
             return retshortcodes;
         }
