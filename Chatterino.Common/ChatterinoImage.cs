@@ -14,7 +14,7 @@ namespace Chatterino.Common
     public class ChatterinoImage
     {
         public Image ActiveImage;
-        private Stream OriginalImageStream;
+        private MemoryStream OriginalImageStream;
         private List<Image> Frames;
         public int TotalFrames;
         public int CurrentFrame;
@@ -23,6 +23,8 @@ namespace Chatterino.Common
         public int Height;
         public int Width;
         private bool framesLoaded = true;
+        public bool UsedLastCycle = true;
+        public bool IsLoaded;
         
         public ChatterinoImage(MemoryStream stream){
             OriginalImageStream = stream;
@@ -42,6 +44,7 @@ namespace Chatterino.Common
                 Height = image.Height;
             }
             LoadImageFrameInfo();
+            IsLoaded = true;
         }
         
         public ChatterinoImage(Stream stream){
@@ -51,6 +54,7 @@ namespace Chatterino.Common
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(memstream);
+            IsLoaded = true;
         }
         
         public ChatterinoImage(string filename){
@@ -62,6 +66,29 @@ namespace Chatterino.Common
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(stream);
+            IsLoaded = true;
+        }
+        
+        //unloads the image and its frames and frees up the memory. Only done if the original stream is preserved
+        public void UnloadImage() {
+            if (OriginalImageStream != null) {
+                ActiveImage?.Dispose();
+                foreach (var frame in Frames) {
+                    frame.Dispose();
+                }
+                Frames.Clear();
+                FrameDurations.Clear();
+                ActiveImage = null;
+                IsLoaded = false;
+            }
+        }
+        
+        //reload the image after its been unloaded. 
+        public void ReloadImage() {
+            if (!IsLoaded && OriginalImageStream != null) {
+                loadImageFromStream(OriginalImageStream);
+                IsLoaded = true;
+            }
         }
         
         private void loadImageFromStream(MemoryStream stream) {
@@ -74,6 +101,7 @@ namespace Chatterino.Common
                 }
                 LoadImageFrameInfo();
             } else {
+                TotalFrames = 0;
                 decodeWebP(stream);
             }
         }
@@ -158,6 +186,10 @@ namespace Chatterino.Common
         
         //Sets the current active frame to the one indicated by frame index
         public void SelectActiveFrame(int frameIndex) {
+            if (!IsLoaded) {
+                ReloadImage();
+            }
+            UsedLastCycle = true;
             if (framesLoaded) {
                 ActiveImage = Frames[frameIndex];
             } else {
@@ -175,14 +207,22 @@ namespace Chatterino.Common
         
         //Get the frame duration for frameIndex
         public int GetFrameDuration(int frameIndex) {
+            if (!IsLoaded) {
+                ReloadImage();
+            }
             return FrameDurations[frameIndex];
+            
         }
         
         //gets the frame at frameIndex
         public Image GetFrame(int frameIndex) {
+            if (!IsLoaded) {
+                ReloadImage();
+            }
             if (!framesLoaded) {
                 LoadImageFrames();
             }
+            UsedLastCycle = true;
             return Frames[frameIndex];
         }
         
@@ -240,14 +280,22 @@ namespace Chatterino.Common
         
         //Draws the current active frame
         public void DrawImage(Graphics g, int x, int y) {
+            if (!IsLoaded) {
+                ReloadImage();
+            }
             lock(ActiveImage) {
+                UsedLastCycle = true;
                 g.DrawImage(ActiveImage, x, y);
             }
         }
         
         //Draws the current active frame
         public void DrawImage(Graphics g, int x, int y, int width, int height) {
+            if (!IsLoaded) {
+                ReloadImage();
+            }
             lock(ActiveImage) {
+                UsedLastCycle = true;
                 g.DrawImage(ActiveImage, x, y, width, height);
             }
         }

@@ -160,7 +160,10 @@ namespace Chatterino
                             }
                             try {
                                 if (EmoteList!=null && EmoteList.GetGifEmotes()!=null) {
-                                    GuiEngine.Current.GifEmotesOnScreen.UnionWith(EmoteList.GetGifEmotes());
+                                    var gifemotes = EmoteList.GetGifEmotes();
+                                    lock (gifemotes) {
+                                        GuiEngine.Current.GifEmotesOnScreen.UnionWith(gifemotes);
+                                    }
                                 }
                                 foreach (LazyLoadedImage emote in GuiEngine.Current.GifEmotesOnScreen) {
                                     if (emote.HandleAnimation != null) {

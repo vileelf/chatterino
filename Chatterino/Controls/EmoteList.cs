@@ -30,6 +30,18 @@ namespace Chatterino.Controls
             AllowMessageSeperator = false;
             EnableHatEmotes = false;
         }
+        
+        private void addGifEmote(LazyLoadedImage emote) {
+            lock (GifEmotes) {
+                GifEmotes.Add(emote);
+            }
+        }
+        
+        private void clearGifEmotes() {
+            lock (GifEmotes) {
+                GifEmotes.Clear();
+            }
+        }
 
         public void LoadChannel(TwitchChannel channel)
         {
@@ -41,7 +53,7 @@ namespace Chatterino.Controls
                         var messages = _messages;
                         LazyLoadedImage twitchemote;
                         messages.Clear();
-                        GifEmotes.Clear();
+                        clearGifEmotes();
                         
                         if (!show_only_channel_emotes) {
                             // recently used emotes
@@ -51,11 +63,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in Emotes.RecentlyUsedEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -79,11 +91,11 @@ namespace Chatterino.Controls
                                     {
                                         twitchemote = Emotes.GetTwitchEmoteById(emote.Value.ID, emote.Key);
                                         if (twitchemote.IsAnimated) {
-                                            GifEmotes.Add(twitchemote);
+                                            addGifEmote(twitchemote);
                                         } else if (twitchemote.Image==null) {
                                             twitchemote.ImageLoaded += (s, e) => {
                                                 if (twitchemote.IsAnimated) {
-                                                    GifEmotes.Add(twitchemote);
+                                                    addGifEmote(twitchemote);
                                                 }
                                             };
                                         }
@@ -113,11 +125,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in channel.FollowerEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -139,11 +151,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in channel.BttvChannelEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -164,11 +176,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in Emotes.BttvGlobalEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -190,11 +202,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in channel.FfzChannelEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -215,11 +227,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in Emotes.FfzGlobalEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -240,11 +252,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in channel.SeventvChannelEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -265,11 +277,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in Emotes.SeventvGlobalEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -290,11 +302,11 @@ namespace Chatterino.Controls
                                 foreach (var emote in channel.FollowerEmotes.Values)
                                 {
                                     if (emote.IsAnimated) {
-                                        GifEmotes.Add(emote);
+                                        addGifEmote(emote);
                                     } else if (emote.Image==null) {
                                         emote.ImageLoaded += (s, e) => {
                                             if (emote.IsAnimated) {
-                                                GifEmotes.Add(emote);
+                                                addGifEmote(emote);
                                             }
                                         };
                                     }
@@ -319,11 +331,11 @@ namespace Chatterino.Controls
                                     {
                                         emote = emotepair.Value;
                                         if (emote.IsAnimated) {
-                                            GifEmotes.Add(emote);
+                                            addGifEmote(emote);
                                         } else if (emote.Image==null) {
                                             emote.ImageLoaded += (s, e) => {
                                                 if (emote.IsAnimated) {
-                                                    GifEmotes.Add(emote);
+                                                    addGifEmote(emote);
                                                 }
                                             };
                                         }

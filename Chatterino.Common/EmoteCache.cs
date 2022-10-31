@@ -47,6 +47,8 @@ namespace Chatterino.Common
             }
             return false;
         }
+        
+        private static System.Timers.Timer imageUnloadTimer = new System.Timers.Timer { Enabled = true, Interval = 3600000 }; //ran every hour
 
         //async
         public static void GetEmote(string url, EmoteCallback callback) {
@@ -197,6 +199,22 @@ namespace Chatterino.Common
         public static void init () {
             //load list of emotes from file and delete unused ones
             try {
+                imageUnloadTimer.Elapsed += (s,e) => {
+                    try {
+                        ChatterinoImage image;
+                        foreach (var emotecache in CachedEmotes) {
+                            image = emotecache.Value.emote;
+                            if (image != null) {
+                                if (image.UsedLastCycle == false) {
+                                    image.UnloadImage();
+                                }
+                                image.UsedLastCycle = false;
+                            }
+                        }
+                    }  catch (Exception ex) {
+                        GuiEngine.Current.log("unloading image " + ex.ToString());
+                    }
+                };
                 string dir = Path.Combine(Util.GetUserDataPath(), "Cache", "Emotes");
                 Directory.CreateDirectory(dir);
                 string emotesCache = Path.Combine(Util.GetUserDataPath(), "Cache", "emote_cache.json");
