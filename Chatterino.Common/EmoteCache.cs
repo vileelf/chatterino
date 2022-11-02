@@ -59,7 +59,7 @@ namespace Chatterino.Common
                     ecache.emote = null;
                     Mutex m;
                     
-                    using(m = new Mutex(false, url)) {
+                    using(m = new Mutex(false, "Global\\"+url)) {
                         try {
                             m.WaitOne();
                         } catch (AbandonedMutexException e) {
@@ -75,7 +75,7 @@ namespace Chatterino.Common
                                         ecache.emote = ChatterinoImage.FromStream(mem);
                                     }
                                 } catch (Exception e) {
-                                    GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
+                                    GuiEngine.Current.log("emote failed to load " + ecache.emotePath + " " +e.ToString());
                                     ecache.emote = null;
                                 }
                             }
@@ -101,7 +101,7 @@ namespace Chatterino.Common
                 _emotes_cache ecache;
                 ChatterinoImage ret = null;
                 Mutex m;
-                using(m = new Mutex(false, url)){
+                using(m = new Mutex(false, "Global\\"+url)){
                     try {
                         m.WaitOne();
                     } catch (AbandonedMutexException e) {
@@ -117,7 +117,7 @@ namespace Chatterino.Common
                                     ecache.emote = ChatterinoImage.FromStream(mem);
                                 }
                             } catch (Exception e) {
-                                GuiEngine.Current.log("emote faild to load " + ecache.emotePath + " " +e.ToString());
+                                GuiEngine.Current.log("emote failed to load " + ecache.emotePath + " " +e.ToString());
                                 ecache.emote = null;
                             }
                         }
@@ -143,7 +143,7 @@ namespace Chatterino.Common
                 {
                     _emotes_cache ecache;
                     Mutex m;
-                    using(m = new Mutex(false, url)) {
+                    using(m = new Mutex(false, "Global\\"+url)) {
                         try {
                             m.WaitOne();
                         } catch (AbandonedMutexException e) {
@@ -169,7 +169,7 @@ namespace Chatterino.Common
                                 }
                                 CachedEmotes.TryAdd(url, ecache);
                             } catch (Exception e) {
-                                GuiEngine.Current.log("emote faild to save " + ecache.emotePath + " " +e.ToString());
+                                GuiEngine.Current.log("emote failed to save " + ecache.emotePath + " " +e.ToString());
                             }
                         }
                         m.ReleaseMutex();
@@ -241,7 +241,7 @@ namespace Chatterino.Common
                                 File.Delete(ecache.emotePath);
                             }
                         } catch (Exception e) {
-                            GuiEngine.Current.log("emote faild to delete " + ecache.emotePath + " " +e.ToString());
+                            GuiEngine.Current.log("emote failed to delete " + ecache.emotePath + " " +e.ToString());
                         }
                     }
                 }

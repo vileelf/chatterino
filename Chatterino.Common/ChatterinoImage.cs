@@ -54,7 +54,6 @@ namespace Chatterino.Common
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(memstream);
-            IsLoaded = true;
         }
         
         public ChatterinoImage(string filename){
@@ -66,7 +65,6 @@ namespace Chatterino.Common
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(stream);
-            IsLoaded = true;
         }
         
         //unloads the image and its frames and frees up the memory. Only done if the original stream is preserved
@@ -104,6 +102,7 @@ namespace Chatterino.Common
                 TotalFrames = 0;
                 decodeWebP(stream);
             }
+            IsLoaded = true;
         }
         
         private void LoadImageFrameInfo() {
