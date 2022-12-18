@@ -34,7 +34,7 @@ namespace Chatterino.Common
 
         public struct TwitchEmoteValue
         {
-            public int Set { get; set; }
+            public string Set { get; set; }
             public string ID { get; set; }
             public string OwnerID { get; set; }
             public string Name { get; set; }
@@ -98,7 +98,6 @@ namespace Chatterino.Common
 
                         foreach (var set in json["emoticon_sets"])
                         {
-                            int.TryParse(set.Key, out int setID);
 
                             foreach (var emote in set.Value)
                             {
@@ -110,7 +109,7 @@ namespace Chatterino.Common
                                     Emotes.TwitchEmotes[code] = new TwitchEmoteValue
                                     {
                                         ID = id,
-                                        Set = setID,
+                                        Set = set.Key,
                                         OwnerID = set.Key,
                                         ChannelName = ""
                                     };
@@ -641,21 +640,6 @@ namespace Chatterino.Common
         {
             if (channel != null)
             {
-                if (!_message.StartsWith(".color "))
-                {
-                    if (!isMod && nextMessageSendTime > DateTime.Now) // do we really need this?
-                    {
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(300);
-                            channel.AddMessage(new Message("Sending messages too fast, message not sent.", HSLColor.Gray, false));
-                        });
-
-                        return;
-                    }
-
-                    nextMessageSendTime = DateTime.Now.AddSeconds(1.1);
-                }
 
                 var message = Commands.ProcessMessage(_message, channel, true);
                 if (message == null)
@@ -973,7 +957,7 @@ namespace Chatterino.Common
                 string temp = "";
                 int count = 1;
                 string emote_set;
-                string emote_set_id_string = "";
+                string emote_set_id = "";
                 //split into groups of 10 since thats the limit you can request at once from the api https://api.twitch.tv/helix/chat/emotes/set?emote_set_id=
                 for (int i = 0; i < emote_sets.Length; i++)
                 {
@@ -1017,23 +1001,19 @@ namespace Chatterino.Common
                                             }
                                             string emote_type = emote["emote_type"];
                                             string name = emote["name"];
-                                            int emote_set_id = Int32.Parse(emote["emote_set_id"]);
-                                            emote_set_id_string = emote["emote_set_id"];
-                                            //GuiEngine.Current.log("name : " + name + " set_id " + emote_set_id + " owner_id " + owner_id + " emotetype " + emote_type );
+                                            emote_set_id = emote["emote_set_id"];
+                                            
                                             string code = Emotes.GetTwitchEmoteCodeReplacement(name);
                                             Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
-                                            if (!emote_type.Equals("limitedtime") && !emote_type.Equals("owl2019"))
+                                            Emotes.TwitchEmotes[code] = new TwitchEmoteValue
                                             {
-                                                Emotes.TwitchEmotes[code] = new TwitchEmoteValue
-                                                {
-                                                    OwnerID = owner_id,
-                                                    Type = emote_type,
-                                                    Name = name,
-                                                    ID = id,
-                                                    Set = emote_set_id,
-                                                    ChannelName = ""
-                                                };
-                                            }
+                                                OwnerID = owner_id,
+                                                Type = emote_type,
+                                                Name = name,
+                                                ID = id,
+                                                Set = emote_set_id,
+                                                ChannelName = ""
+                                            };
                                         }
 
                                     }
@@ -1043,7 +1023,7 @@ namespace Chatterino.Common
                         }
                         catch (Exception exc)
                         {
-                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString() + " " + emote_set_id_string);
+                            GuiEngine.Current.log("Generic Exception Handler: " + exc.ToString() + " " + emote_set_id);
                         }
                         temp = "";
                         count = 1;

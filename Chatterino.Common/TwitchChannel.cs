@@ -774,7 +774,7 @@ namespace Chatterino.Common
                                 ownername = owner["display_name"];
                                 if (!string.IsNullOrEmpty(ownername)) {
                                     ownername = owner["login"];
-                                } else if (string.Compare(ownername.ToUpper(), owner["login"].ToUpper())) {
+                                } else if (string.Compare(ownername.ToUpper(), owner["login"].ToUpper())!=0) {
                                     ownername = ownername + "(" + owner["login"] + ")";
                                 }
                             }

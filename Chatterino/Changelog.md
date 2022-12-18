@@ -1,5 +1,12 @@
 ﻿# changelog
 
+## 3.1
+-- Added support for some more emojis.
+-- Chatterino should keep trying to reconnect when disconnected.
+-- Emote cache can now unload emotes that arnt used for a while.
+-- Fixed emote bugs due to twitches changes to follower emotes.
+-- Removed code that gives errors for sending messages too quickly.
+
 ## 3.0
 -- Added support for elevated chat messages.
 -- Added support for most modern emojis except for some flags.
