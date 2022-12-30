@@ -1,6 +1,6 @@
 ﻿# changelog
 
-## 3.1.2
+## 3.1.2.1
 -- Fixed a bug with 7tv global emotes not loading.
 -- Fixed a bug with the updater not working in some instances.
 
