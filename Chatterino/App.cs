@@ -100,7 +100,6 @@ namespace Chatterino
                     AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().Location).Version.ToString());
 
             Directory.SetCurrentDirectory(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName);
-            
             if (!File.Exists("./removeupdatenew") && Directory.Exists("./Updater.new"))
             {
                 string path = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
@@ -112,12 +111,14 @@ namespace Chatterino
             else if (File.Exists("./update2")) {
                 string path = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,
                         "Updater2", "Chatterino.Updater.exe");
-                if (Directory.Exists(path)) {
+                if (File.Exists(path)) {
                     UpdaterPath = path;
                 }
             }
             GuiEngine.Initialize(new WinformsGuiEngine());
-
+            GuiEngine.Current.log("update path " + UpdaterPath + " " + File.Exists("./update2") + " " + 
+            Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,"Updater2", "Chatterino.Updater.exe") + " " + 
+            File.Exists(Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName,"Updater2", "Chatterino.Updater.exe")));
             ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true;
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
             //ServicePointManager.UseNagleAlgorithm = false;

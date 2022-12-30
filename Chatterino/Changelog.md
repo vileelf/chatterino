@@ -1,7 +1,8 @@
 ﻿# changelog
 
 ## 3.1.2
--- fixed a bug with 7tv global emotes not loading.
+-- Fixed a bug with 7tv global emotes not loading.
+-- Fixed a bug with the updater not working in some instances.
 
 ## 3.1
 -- Added support for some more emojis.
