@@ -537,9 +537,9 @@ namespace Chatterino.Common
                             ownername = "";
                             if (owner != null) {
                                 ownername = owner["display_name"];
-                                if (!string.IsNullOrEmpty(ownername)) {
+                                if (string.IsNullOrEmpty(ownername)) {
                                     ownername = owner["login"];
-                                } else if (string.Compare(ownername.ToUpper(), owner["login"].ToUpper())) {
+                                } else if (!string.IsNullOrEmpty(owner["login"]) && string.Compare(ownername.ToUpper(), owner["login"].ToUpper()) != 0) {
                                     ownername = ownername + "(" + owner["login"] + ")";
                                 }
                             }
@@ -561,6 +561,7 @@ namespace Chatterino.Common
                 catch (Exception exc)
                 {
                     Console.WriteLine("error loading emotes: " + exc.Message);
+                    GuiEngine.Current.log("error loading emotes: " + exc.Message);
                 }
             });
         }

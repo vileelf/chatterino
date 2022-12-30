@@ -1,9 +1,12 @@
 ﻿# changelog
 
+## 3.1.2
+-- fixed a bug with 7tv global emotes not loading.
+
 ## 3.1
 -- Added support for some more emojis.
 -- Chatterino should keep trying to reconnect when disconnected.
--- Emote cache can now unload emotes that arnt used for a while.
+-- Emote cache can now unload emotes that aren't used for a while.
 -- Fixed emote bugs due to twitches changes to follower emotes.
 -- Removed code that gives errors for sending messages too quickly.
 
