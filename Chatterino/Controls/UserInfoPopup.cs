@@ -63,7 +63,19 @@ namespace Chatterino.Controls
             string notes = AppSettings.GetNotes(data.UserId);
 
             setControlFont(this);
+            string displayName;
 
+            if (!data.Channel.Users.TryGetValue(data.UserName, out displayName))
+            {
+                displayName = data.UserName;
+            }
+
+            lblUsername.Text = data.UserName;
+            
+            if (!String.IsNullOrEmpty(notes)) {
+                lblNotes.Text = $"Notes: {notes}";
+            }
+            
             Task.Run(() =>
             {
                 try
@@ -88,6 +100,11 @@ namespace Chatterino.Controls
                                 string createdAt = channel["created_at"];
                                 string viewCount = channel["view_count"];
                                 string broadCasterType = channel["broadcaster_type"];
+                                string username = channel["login"];
+                                
+                                if (!String.IsNullOrEmpty(username) && username.ToUpper() != displayName.ToUpper()) {
+                                    lblUsername.Invoke(() => lblUsername.Text = username + "(oldname:" + displayName + ")");
+                                }
 
                                 lblViews.Invoke(() => lblViews.Text = $"Channel Views: {viewCount}\n" + $"Streamer type: {broadCasterType}" 
                                 #if DEBUG
@@ -95,10 +112,6 @@ namespace Chatterino.Controls
                                 #endif
                                 ); 
                                 
-                                if (!String.IsNullOrEmpty(notes)) {
-                                    lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
-                                }
-
                                 DateTime createAtTime;
 
                                 if (DateTime.TryParse(createdAt, out createAtTime))
@@ -163,16 +176,7 @@ namespace Chatterino.Controls
                 catch { }
                 updateLocation();
             });
-
-            string displayName;
-
-            if (!data.Channel.Users.TryGetValue(data.UserName, out displayName))
-            {
-                displayName = data.UserName;
-            }
-
-            lblUsername.Text = data.UserName;
-
+            
             btnCopyUsername.Font = Fonts.GdiSmall;
             btnCopyUsername.Click += (s, e) =>
             {

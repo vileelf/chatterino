@@ -1696,7 +1696,7 @@ namespace Chatterino.Common
             {
                 Message m;
                 bool messages_are_added = false;
-                for (var i = Messages.Last; i != null; i = i.Previous) {
+                for (var i = Messages.Last; i != null && !messages_are_added; i = i.Previous) {
                     m = i.Value;
                     if (m.MessageId != null) {
                         for (int j = newmessages.Length - 1; j >= 0; j--) {
@@ -1709,7 +1709,6 @@ namespace Chatterino.Common
                                 break;
                             }
                         }
-                        break;
                     }
                 }
                 if (!messages_are_added) {
