@@ -570,10 +570,10 @@ namespace Chatterino.Common
                                         bitsColor = HSLColor.FromRGBHex(color);
                                         bitsLink = emote.Url;
 
-                                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = "Twitch Bits Donation", TooltipImageUrl = emote.TooltipImageUrl, TooltipImage = emote.TooltipImage, CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
+                                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = Emotes.MiscEmotesByUrl.GetOrAdd(bitsLink, url => new LazyLoadedImage { Name = "cheer", Url = url, Tooltip = "Twitch Bits Badge" }), Tooltip = $"{prefix}{getcheer}\nTwitch Bits Donation", TooltipImageUrl = emote.TooltipImageUrl, TooltipImage = emote.TooltipImage, CopyText = s, Link = new Link(LinkType.Url, "https://blog.twitch.tv/introducing-cheering-celebrate-together-da62af41fac6") });
                                         words.Add(new Word { Type = SpanType.Text, Value = getcheer, Font = FontType.Small, Color = bitsColor });
+                                        continue;
                                     }
-                                    continue;
                                 }
                             } catch (Exception e) {
                                 GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());

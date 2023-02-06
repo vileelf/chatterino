@@ -1878,7 +1878,7 @@ namespace Chatterino.Common
                     {
                         var parser = new JsonParser();
 
-                    {
+                        {
                             try
                             {
 
