@@ -21,7 +21,7 @@ namespace Chatterino.Gtk
             GuiEngine.Initialize(new GtkGuiEngine());
 
             Cache.Load();
-            AppSettings.Load();
+            AppSettings.Load(null);
 
             IrcManager.Connect();
 
@@ -32,7 +32,7 @@ namespace Chatterino.Gtk
 
             Application.Run();
 
-            AppSettings.Save();
+            AppSettings.Save(null);
         }
     }
 }

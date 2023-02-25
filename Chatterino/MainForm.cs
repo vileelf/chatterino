@@ -46,7 +46,7 @@ namespace Chatterino
             TwitchChannelJoiner.runChannelLoop();
 
             // load layout
-            LoadLayout(Path.Combine(Util.GetUserDataPath(), "Layout.xml"));
+            tabControl.LoadLayout(Path.Combine(Util.GetUserDataPath(), "Layout.xml"));
 
 #if !DEBUG
             if (AppSettings.CurrentVersion != App.CurrentVersion.ToString())
@@ -388,112 +388,6 @@ namespace Chatterino
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-
-            //if ((e.KeyCode & ~Keys.Modifiers) != Keys.ControlKey)
-            //{
-            //    ;
-            //}
-
-            //if (e.Modifiers == Keys.Control)
-            //{
-            //    switch (e.KeyCode)
-            //    {
-            //        case Keys.T:
-            //            AddNewSplit();
-            //            break;
-            //        case Keys.W:
-            //            RemoveSelectedSplit();
-            //            break;
-            //        case Keys.R:
-            //            {
-            //                ChatControl focused = Selected as ChatControl;
-            //                if (focused != null)
-            //                {
-            //                    using (InputDialogForm dialog = new InputDialogForm("channel name") { Value = focused.ChannelName })
-            //                    {
-            //                        if (dialog.ShowDialog() == DialogResult.OK)
-            //                        {
-            //                            focused.ChannelName = dialog.Value;
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //            break;
-            //        case Keys.P:
-            //            App.ShowSettings();
-            //            break;
-            //        case Keys.C:
-            //            (App.MainForm?.Selected as ChatControl)?.CopySelection(false);
-            //            break;
-            //        case Keys.X:
-            //            (App.MainForm?.Selected as ChatControl)?.CopySelection(true);
-            //            break;
-            //        case Keys.V:
-            //            try
-            //            {
-            //                if (Clipboard.ContainsText())
-            //                {
-            //                    (App.MainForm?.Selected as ChatControl)?.PasteText(Clipboard.GetText());
-            //                }
-            //            }
-            //            catch { }
-            //            break;
-            //        case Keys.L:
-            //            new LoginForm().ShowDialog();
-            //            break;
-            //        case Keys.D1:
-            //        case Keys.D2:
-            //        case Keys.D3:
-            //        case Keys.D4:
-            //        case Keys.D5:
-            //        case Keys.D6:
-            //        case Keys.D7:
-            //        case Keys.D8:
-            //        case Keys.D9:
-            //            {
-            //                int tab = e.KeyCode - Keys.D0;
-
-            //                var t = tabControl.TabPages.ElementAtOrDefault(tab - 1);
-
-            //                if (t != null)
-            //                {
-            //                    TabControl.Select(t);
-            //                }
-            //            }
-            //            break;
-            //        case Keys.Left:
-            //            var page = tabControl.Selected as ColumnTabPage;
-            //            if (page != null)
-            //            {
-            //                bool cont = false;
-            //                int index = page.Columns.TakeWhile(x => !(cont = x.Widgets.Contains(selected))).Count();
-
-            //                if (cont && index != 0)
-            //                {
-            //                    var newCol = page.Columns.ElementAt(index - 1);
-
-            //                    var newSelected = newCol.Widgets.ElementAtOrDefault(page.Columns.ElementAt(index).Widgets.TakeWhile(x => x != selected).Count()) ?? newCol.Widgets.Last();
-
-            //                    Selected = newSelected;
-            //                }
-            //            }
-            //            break;
-            //    }
-            //}
-            //else if (e.Modifiers == Keys.None)
-            //{
-            //    switch (e.KeyCode)
-            //    {
-            //        case Keys.Home:
-
-            //            break;
-            //        case Keys.End:
-
-            //            break;
-            //    }
-            //}
-
-            //e.Handled = true;
         }
 
         public void AddNewSplit()
@@ -560,7 +454,6 @@ namespace Chatterino
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            SaveLayout(Path.Combine(Util.GetUserDataPath(), "Layout.xml"));
             
             TwitchChannelJoiner.stopChannelLoop();
 
@@ -572,214 +465,13 @@ namespace Chatterino
             base.OnClosing(e);
         }
 
-        public void LoadLayout(string path)
-        {
-            try
-            {
-                string channelNames = "";
-                if (File.Exists(path))
-                {
-                    var doc = XDocument.Load(path);
-
-                    doc.Root.Process(root =>
-                    {
-                        foreach (var tab in doc.Elements().First().Elements("tab"))
-                        {
-                            Console.WriteLine("tab");
-
-                            var page = new ColumnTabPage();
-
-                            page.CustomTitle = tab.Attribute("title")?.Value;
-
-                            page.EnableNewMessageHighlights = (tab.Attribute("enableNewMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
-                            
-                            page.EnableHighlightedMessageHighlights = (tab.Attribute("enableHighlightedMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
-                            
-                            page.EnableGoLiveHighlights = (tab.Attribute("enableGoLiveHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
-                            
-                            page.EnableGoLiveNotifications = (tab.Attribute("enableGoLiveNotifications")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
-
-                            foreach (var col in tab.Elements("column"))
-                            {
-                                var column = new ChatColumn();
-
-                                foreach (var chat in col.Elements("chat"))
-                                {
-                                    if (chat.Attribute("type")?.Value == "twitch")
-                                    {
-                                        Console.WriteLine("added chat");
-
-                                        var channel = chat.Attribute("channel")?.Value;
-                                        try {
-                                            var widget = new ChatControl();
-                                            widget.ChannelName = channel;
-                                            column.AddWidget(widget);
-                                        }  catch (Exception e) {
-                                             GuiEngine.Current.log("error loading tab " + e.Message);
-                                        }
-                                    }
-                                }
-
-                                if (column.WidgetCount == 0)
-                                {
-                                    column.AddWidget(new ChatControl());
-                                }
-
-                                page.AddColumn(column);
-                            }
-                            
-
-                            tabControl.AddTab(page);
-                        }
-                    });
-                }
-            }
-            catch (Exception exc)
-            {
-                GuiEngine.Current.log("error loading layout " + exc.Message);
-            }
-
-            //columnLayoutControl1.ClearGrid();
-
-            //try
-            //{
-            //    if (File.Exists(path))
-            //    {
-            //        XDocument doc = XDocument.Load(path);
-            //        doc.Root.Process(root =>
-            //        {
-            //            root.Elements("tab").Do(tab =>
-            //            {
-            //                int columnIndex = 0;
-            //                tab.Elements("column").Do(xD =>
-            //                {
-            //                    int rowIndex = 0;
-            //                    xD.Elements().Do(x =>
-            //                    {
-            //                        switch (x.Name.LocalName)
-            //                        {
-            //                            case "chat":
-            //                                if (x.Attribute("type").Value == "twitch")
-            //                                {
-            //                                    AddChannel(x.Attribute("channel").Value, columnIndex, rowIndex == 0 ? -1 : rowIndex);
-            //                                }
-            //                                break;
-            //                        }
-            //                        rowIndex++;
-            //                    });
-            //                    columnIndex++;
-            //                });
-            //            });
-            //        });
-            //    }
-            //}
-            //catch { }
-
-            if (!tabControl.TabPages.Any())
-            {
-                tabControl.AddTab(new ColumnTabPage());
-            }
-
-            //if (columnLayoutControl1.Columns.Count == 0)
-            //    AddChannel("fourtf");
-        }
-
-        public void SaveLayout(string path)
-        {
-            try
-            {
-                var doc = new XDocument();
-                var root = new XElement("layout");
-                doc.Add(root);
-
-                foreach (ColumnTabPage page in tabControl.TabPages)
-                {
-                    root.Add(new XElement("tab").With(xtab =>
-                    {
-                        if (page.CustomTitle != null)
-                        {
-                            xtab.SetAttributeValue("title", page.Title);
-                        }
-
-                        if (!page.EnableNewMessageHighlights)
-                        {
-                            xtab.SetAttributeValue("enableNewMessageHighlights", false);
-                        }
-                        
-                        if (!page.EnableHighlightedMessageHighlights)
-                        {
-                            xtab.SetAttributeValue("enableHighlightedMessageHighlights", false);
-                        }
-
-                        if (!page.EnableGoLiveHighlights)
-                        {
-                            xtab.SetAttributeValue("enableGoLiveHighlights", false);
-                        }
-                        
-                        if (!page.EnableGoLiveNotifications)
-                        {
-                            xtab.SetAttributeValue("enableGoLiveNotifications", false);
-                        }
-
-                        foreach (var col in page.Columns)
-                        {
-                            xtab.Add(new XElement("column").With(xcol =>
-                            {
-                                foreach (ChatControl widget in col.Widgets.Where(x => x is ChatControl))
-                                {
-                                    xcol.Add(new XElement("chat").With(x =>
-                                    {
-                                        x.SetAttributeValue("type", "twitch");
-                                        x.SetAttributeValue("channel", widget.ChannelName ?? "");
-                                    }));
-                                }
-                            }));
-                        }
-                    }));
-                }
-
-                doc.Save(path);
-            }
-            catch { }
-
-            //try
-            //{
-            //    XDocument doc = new XDocument();
-            //    XElement root = new XElement("layout");
-            //    doc.Add(root);
-
-            //    foreach (var column in columnLayoutControl1.Columns)
-            //    {
-            //        root.Add(new XElement("column").With(xcol =>
-            //        {
-            //            foreach (var row in column)
-            //            {
-            //                var chat = row as ChatControl;
-
-            //                if (chat != null)
-            //                {
-            //                    xcol.Add(new XElement("chat").With(x =>
-            //                    {
-            //                        x.SetAttributeValue("type", "twitch");
-            //                        x.SetAttributeValue("channel", chat.ChannelName ?? "");
-            //                    }));
-            //                }
-            //            }
-            //        }));
-            //    }
-
-            //    doc.Save(path);
-            //}
-            //catch { }
-        }
-
         public void ShowChangelog()
         {
             try
             {
                 if (File.Exists("./Changelog.md"))
                 {
-                    var page = new ColumnTabPage();
+                    var page = new ColumnTabPage(TabControl);
                     page.CustomTitle = "Changelog";
 
                     page.AddColumn(new ChatColumn(new ChangelogControl(File.ReadAllText("./Changelog.md"))));
@@ -789,19 +481,5 @@ namespace Chatterino
             }
             catch { }
         }
-
-        //public void AddChannel(string name, int column = -1, int row = -1)
-        //{
-        //    //columnLayoutControl1.AddToGrid(new ChatControl { ChannelName = name }, column, row);
-        //}
-
-        //public void AddChangelog()
-        //{
-        //    try
-        //    {
-        //        ColumnLayout.AddToGrid(new ChangelogControl(File.ReadAllText("Changelog.md")));
-        //    }
-        //    catch { }
-        //}
     }
 }

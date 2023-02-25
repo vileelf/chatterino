@@ -269,7 +269,7 @@ namespace Chatterino
 
             }
 
-            AppSettings.Load();
+            AppSettings.Load(null);
 
             AccountManager.LoadFromJson(Path.Combine(Util.GetUserDataPath(), "Login.json"));
 
@@ -356,15 +356,10 @@ namespace Chatterino
             MainForm.FormClosed += (s, e) =>
             {
                 Application.Exit();
-                
-                // Save settings
-                AppSettings.Save();
 
                 Cache.Save();
                 
                 EmoteCache.SaveEmoteList();
-                
-                Commands.Save(Path.Combine(Util.GetUserDataPath(), "Custom", "Commands.txt"));
                 
                 // Install updates
                 if (installUpdatesOnExit)

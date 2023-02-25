@@ -43,6 +43,8 @@ namespace Chatterino.Controls
 
         public ColumnLayoutItem LastSelected { get; set; } = null;
 
+        private TabControl TabControl;
+
         public int ColumnCount
         {
             get
@@ -133,15 +135,6 @@ namespace Chatterino.Controls
                 layout();
 
                 return Tuple.Create(c, r);
-
-                //Columns.FirstOrDefault(x => x.Widgets.Contains(w)).Process(col =>
-                //{
-                //    col.RemoveWidget(w);
-                //    if (col.WidgetCount == 0)
-                //    {
-                //        RemoveColumn(col);
-                //    }
-                //});
             }
             return null;
         }
@@ -149,7 +142,6 @@ namespace Chatterino.Controls
         public bool CanRemoveWidget()
         {
             return true;
-            //return columns.Count > 1 || ((columns.FirstOrDefault()?.WidgetCount ?? 1) > 1);
         }
 
         public ChatColumn FindColumn(ColumnLayoutItem w)
@@ -207,21 +199,12 @@ namespace Chatterino.Controls
             Console.WriteLine(menu.MenuItems.Count);
         }
 
-        //static Image getImage(string name)
-        //{
-        //    try
-        //    {
-        //        return Image.FromResource("Chatterino.Desktop.Assets." + name);
-        //    }
-        //    catch { }
-
-        //    return null;
-        //}
-
         // CONSTRUCTOR
-        public ColumnTabPage()
+        public ColumnTabPage(TabControl tabControl)
         {
             AllowDrop = true;
+
+            TabControl = tabControl;
 
             LayoutPreviewItem = new ColumnLayoutPreviewItem
             {
@@ -236,11 +219,11 @@ namespace Chatterino.Controls
                 foreach (var w in e.Value.Widgets)
                 {
                     Controls.Add(w);
-
-                    //w.MouseUp += W_ButtonReleased;
                 }
 
                 layout();
+
+                tabControl.TabChanged();
 
                 e.Value.WidgetAdded += Value_WidgetAdded;
                 e.Value.WidgetRemoved += Value_WidgetRemoved;
@@ -256,6 +239,8 @@ namespace Chatterino.Controls
                 }
 
                 layout();
+
+                tabControl.TabChanged();
 
                 e.Value.WidgetAdded -= Value_WidgetAdded;
                 e.Value.WidgetRemoved -= Value_WidgetRemoved;
@@ -315,21 +300,11 @@ namespace Chatterino.Controls
 
                     var container = (ColumnLayoutDragDropContainer)e.Data.GetData(typeof(ColumnLayoutDragDropContainer));
 
-                    if (container != null/* && dragColumn != -1*/)
+                    if (container != null)
                     {
                         var control = container.Control;
 
                         AddWidget(control, dragColumn, dragRow);
-
-                        //if (dragRow == -1)
-                        //{
-                        //    InsertColumn(dragColumn, new ChatColumn(control));
-                        //}
-                        //else
-                        //{
-                        //    ChatColumn row = Columns.ElementAt(dragColumn);
-                        //    row.InsertWidget(dragRow, control);
-                        //}
                     }
                 }
             };
@@ -480,6 +455,7 @@ namespace Chatterino.Controls
             }
 
             DefaultTitle = any ? title.TrimEnd(',', ' ') : "empty";
+            TabControl?.TabChanged();
         }
 
         void checkAddChatControl()
@@ -503,29 +479,9 @@ namespace Chatterino.Controls
             }
         }
 
-        //private void W_ButtonReleased(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button == MouseButtons.Right)
-        //    {
-        //        menuPage = this;
-        //        menuWidget = (ColumnLayoutItem)sender;
-
-        //        foreach (MenuItem x in menu.MenuItems)
-        //        {
-        //            if (x.Tag == "rsplit")
-        //            {
-        //                x.Enabled = CanRemoveWidget();
-        //            }
-        //        }
-
-        //        menu.Show((Control)sender, new Point(0, ((Control)sender).Height));
-        //    }
-        //}
-
         private void Value_WidgetAdded(object sender, ValueEventArgs<ColumnLayoutItem> e)
         {
             Controls.Add(e.Value);
-            //e.Value.MouseUp += W_ButtonReleased;
 
             layout();
         }
@@ -533,7 +489,6 @@ namespace Chatterino.Controls
         private void Value_WidgetRemoved(object sender, ValueEventArgs<ColumnLayoutItem> e)
         {
             Controls.Remove(e.Value);
-            //e.Value.MouseUp -= W_ButtonReleased;
 
             layout();
         }

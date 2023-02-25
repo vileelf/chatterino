@@ -48,9 +48,12 @@ namespace Chatterino.Controls
             private bool _mouseOverX;
             private bool _mouseDownX;
 
+            private TabControl TabControl;
+
             // Constructor
             public Tab(TabControl tabControl, TabPage tabPage)
             {
+                TabControl = tabControl;
                 SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 AllowDrop = true;
@@ -60,6 +63,8 @@ namespace Chatterino.Controls
                 Padding = new Padding(8, 4, 8, 4);
 
                 _tabPage = tabPage;
+
+                bool tabMoved = false;
 
                 tabPage.TitleChanged += (s, e) =>
                 {
@@ -106,6 +111,12 @@ namespace Chatterino.Controls
                         tabControl.RemoveTab(tabPage);
                     }
 
+                    if (tabMoved)
+                    {
+                        tabControl.TabChanged();
+                        tabMoved = false;
+                    }
+
                     _mouseDownX = false;
                     _mouseDown = false;
                 };
@@ -148,6 +159,7 @@ namespace Chatterino.Controls
                                         t._tabPages.RemoveAt(originalIndex);
 
                                         t._tabPages.Insert(i, original);
+                                        tabMoved = true;
                                         t.layout();
                                         break;
                                     }
@@ -192,10 +204,26 @@ namespace Chatterino.Controls
                 // Context
                 _menu.MenuItems.Add(new MenuItem("Rename", (s, e) => Rename()));
                 _menu.MenuItems.Add(new MenuItem("Close", (s, e) => (Parent as TabControl)?.RemoveTab(tabPage)));
-                _menu.MenuItems.Add(_allowNewMessageHighlightsMenuItem = new MenuItem("Enable highlights on new message", (s, e) => _tabPage.EnableNewMessageHighlights = !_tabPage.EnableNewMessageHighlights));
-                _menu.MenuItems.Add(_allowHighlightedMessageHighlightsMenuItem = new MenuItem("Enable highlights on highlighted message", (s, e) => _tabPage.EnableHighlightedMessageHighlights = !_tabPage.EnableHighlightedMessageHighlights));
-                _menu.MenuItems.Add(_allowGoLiveHighlightsMenuItem = new MenuItem("Enable highlights on going live", (s, e) => _tabPage.EnableGoLiveHighlights = !_tabPage.EnableGoLiveHighlights));
-                _menu.MenuItems.Add(_allowGoLiveNotificationsMenuItem = new MenuItem("Enable notifications on going live", (s, e) => _tabPage.EnableGoLiveNotifications = !_tabPage.EnableGoLiveNotifications));
+                _menu.MenuItems.Add(_allowNewMessageHighlightsMenuItem = new MenuItem("Enable highlights on new message", 
+                    (s, e) => {
+                        _tabPage.EnableNewMessageHighlights = !_tabPage.EnableNewMessageHighlights;
+                        tabControl.TabChanged();
+                    }));
+                _menu.MenuItems.Add(_allowHighlightedMessageHighlightsMenuItem = new MenuItem("Enable highlights on highlighted message", 
+                    (s, e) => {
+                        _tabPage.EnableHighlightedMessageHighlights = !_tabPage.EnableHighlightedMessageHighlights;
+                        tabControl.TabChanged();
+                    }));
+                _menu.MenuItems.Add(_allowGoLiveHighlightsMenuItem = new MenuItem("Enable highlights on going live", 
+                    (s, e) => {
+                        _tabPage.EnableGoLiveHighlights = !_tabPage.EnableGoLiveHighlights;
+                        tabControl.TabChanged();
+                    }));
+                _menu.MenuItems.Add(_allowGoLiveNotificationsMenuItem = new MenuItem("Enable notifications on going live", 
+                    (s, e) => {
+                        _tabPage.EnableGoLiveNotifications = !_tabPage.EnableGoLiveNotifications;
+                        tabControl.TabChanged();
+                    }));
                 
                 _menu.Popup += (s, e) =>
                 {
@@ -235,6 +263,7 @@ namespace Chatterino.Controls
                             {
                                 page.CustomTitle = title;
                             }
+                            TabControl.TabChanged();
                         }
                     }
                 }

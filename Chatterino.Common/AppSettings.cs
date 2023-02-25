@@ -406,9 +406,12 @@ namespace Chatterino.Common
 
 
         // IO
-        public static void Load()
+        public static void Load(string path)
         {
-            var path = SavePath;
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = SavePath;
+            }
 
             var settings = new IniSettings();
             settings.Load(path);
@@ -471,9 +474,12 @@ namespace Chatterino.Common
             }
         }
 
-        public static void Save()
+        public static void Save(string path)
         {
-            var path = SavePath;
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = SavePath;
+            }
 
             var settings = new IniSettings();
 
@@ -490,7 +496,7 @@ namespace Chatterino.Common
                 else if (prop.PropertyType == typeof(string[]))
                     settings.Set(prop.Name, (string[])prop.GetValue(null));
                 else if (prop.PropertyType == typeof(ConcurrentDictionary<string, object>))
-                    settings.Set(prop.Name, ((ConcurrentDictionary<string, object>)prop.GetValue(null)).Keys);
+                    settings.Set(prop.Name, ((ConcurrentDictionary<string, object>)prop.GetValue(null)).Keys.OrderBy(s => s));
                 else if (prop.PropertyType == typeof(ConcurrentDictionary<string, string>)) 
                     settings.Set(prop.Name, JsonConvert.SerializeObject(((ConcurrentDictionary<string, string>)prop.GetValue(null))));  
                 else if (prop.PropertyType == typeof(List<int>))

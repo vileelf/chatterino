@@ -221,7 +221,7 @@ namespace Chatterino.Common
                 if (AppSettings.SelectedUser != username)
                 {
                     AppSettings.SelectedUser = username;
-                    AppSettings.Save();
+                    AppSettings.Save(null);
                 }
             }
             catch (Exception)

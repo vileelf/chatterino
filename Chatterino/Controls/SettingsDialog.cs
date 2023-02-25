@@ -835,7 +835,8 @@ namespace Chatterino.Controls
 
             Closed += (s, e) =>
             {
-                AppSettings.Save();
+                AppSettings.Save(null);
+                Commands.Save(Path.Combine(Util.GetUserDataPath(), "Custom", "Commands.txt"));
             };
         }
 

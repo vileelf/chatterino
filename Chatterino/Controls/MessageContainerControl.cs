@@ -909,20 +909,6 @@ namespace Chatterino.Controls
                             }
                         }
                     }
-                    //for (int i = selection.First.MessageIndex; i <= selection.Last.MessageIndex; i++)
-                    //{
-                    //    if (i != selection.First.MessageIndex)
-                    //        b.AppendLine();
-
-                    //    for (int j = (i == selection.First.MessageIndex ? selection.First.WordIndex : 0); j < (i == selection.Last.MessageIndex ? selection.Last.WordIndex : c.Messages[i].Words.Count); j++)
-                    //    {
-                    //        if (c.Messages[i].Words[j].CopyText != null)
-                    //        {
-                    //            b.Append(c.Messages[i].Words[j].CopyText);
-                    //            b.Append(' ');
-                    //        }
-                    //    }
-                    //}
                 }
 
             }

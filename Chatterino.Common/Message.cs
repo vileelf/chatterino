@@ -552,7 +552,7 @@ namespace Chatterino.Common
                         Match m = Regex.Match(s, "([A-Za-z]+)([1-9][0-9]*)");
                         if (bits != null && m.Success)
                         {
-                            try{
+                            try {
                                 int cheer;
                                 string prefix = m.Groups[1].Value;
                                 string getcheer = m.Groups[2].Value;

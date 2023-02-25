@@ -31,7 +31,7 @@
             this.tabControl = new Chatterino.Controls.TabControl();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // tabControl
             // 
             this.tabControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;

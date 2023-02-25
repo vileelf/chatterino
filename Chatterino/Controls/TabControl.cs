@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Xml.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +26,10 @@ namespace Chatterino.Controls
 
         List<Tuple<Tab, TabPage>> _tabPages = new List<Tuple<Tab, TabPage>>();
         public TabPage Selected { get; private set; }
+
+        private bool IsLoading = false;
+
+        public string SavePath { get; } = Path.Combine(Util.GetUserDataPath(), "Layout.xml");
 
         Tuple<Tab, TabPage> _selected
         {
@@ -122,7 +128,7 @@ namespace Chatterino.Controls
 
             newTabButton.Click += (s, e) =>
             {
-                AddTab(new ColumnTabPage(), true);
+                AddTab(new ColumnTabPage(this), true);
             };
 
             // colors
@@ -219,6 +225,14 @@ namespace Chatterino.Controls
             }
         }
 
+        public void TabChanged()
+        {
+            if (!IsLoading)
+            {
+                SaveLayout(SavePath);
+            }
+        }
+
         // public
         public void AddTab(TabPage page, bool select = false)
         {
@@ -234,6 +248,7 @@ namespace Chatterino.Controls
             }
 
             layout();
+            TabChanged();
         }
 
         public void InsertTab(int index, TabPage page, bool select = false)
@@ -250,6 +265,7 @@ namespace Chatterino.Controls
             }
 
             layout();
+            TabChanged();
         }
 
         public void RemoveTab(TabPage page)
@@ -274,6 +290,7 @@ namespace Chatterino.Controls
 
             Controls.Remove(page);
 
+            bool tabAdded = false;
             if (index < _tabPages.Count)
             {
                 Select(_tabPages[index].Item2);
@@ -284,8 +301,13 @@ namespace Chatterino.Controls
             }
             else
             {
-                var p = new ColumnTabPage();
+                var p = new ColumnTabPage(this);
                 AddTab(p);
+                tabAdded = true;
+            }
+            if (!tabAdded)
+            {
+                TabChanged();
             }
         }
 
@@ -311,6 +333,142 @@ namespace Chatterino.Controls
                 layout();
                 TabPageSelected?.Invoke(this, new ValueEventArgs<TabPage>(page));
             }
+        }
+
+        public void LoadLayout(string path)
+        {
+            IsLoading = true;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var doc = XDocument.Load(path);
+
+                    doc.Root.Process(root =>
+                    {
+                        foreach (var tab in doc.Elements().First().Elements("tab"))
+                        {
+                            Console.WriteLine("tab");
+
+                            var page = new ColumnTabPage(this);
+
+                            page.CustomTitle = tab.Attribute("title")?.Value;
+
+                            page.EnableNewMessageHighlights = (tab.Attribute("enableNewMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
+
+                            page.EnableHighlightedMessageHighlights = (tab.Attribute("enableHighlightedMessageHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
+
+                            page.EnableGoLiveHighlights = (tab.Attribute("enableGoLiveHighlights")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
+
+                            page.EnableGoLiveNotifications = (tab.Attribute("enableGoLiveNotifications")?.Value?.ToUpper() ?? "TRUE") == "TRUE";
+
+                            foreach (var col in tab.Elements("column"))
+                            {
+                                var column = new ChatColumn();
+
+                                foreach (var chat in col.Elements("chat"))
+                                {
+                                    if (chat.Attribute("type")?.Value == "twitch")
+                                    {
+                                        Console.WriteLine("added chat");
+
+                                        var channel = chat.Attribute("channel")?.Value;
+                                        try
+                                        {
+                                            var widget = new ChatControl();
+                                            widget.ChannelName = channel;
+                                            column.AddWidget(widget);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            GuiEngine.Current.log("error loading tab " + e.Message);
+                                        }
+                                    }
+                                }
+
+                                if (column.WidgetCount == 0)
+                                {
+                                    column.AddWidget(new ChatControl());
+                                }
+
+                                page.AddColumn(column);
+                            }
+
+
+                            AddTab(page);
+                        }
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                GuiEngine.Current.log("error loading layout " + exc.Message);
+            }
+
+            if (!TabPages.Any())
+            {
+                AddTab(new ColumnTabPage(this));
+            }
+            IsLoading = false;
+        }
+
+        public void SaveLayout(string path)
+        {
+            try
+            {
+                var doc = new XDocument();
+                var root = new XElement("layout");
+                doc.Add(root);
+
+                foreach (ColumnTabPage page in TabPages)
+                {
+                    root.Add(new XElement("tab").With(xtab =>
+                    {
+                        if (page.CustomTitle != null)
+                        {
+                            xtab.SetAttributeValue("title", page.Title);
+                        }
+
+                        if (!page.EnableNewMessageHighlights)
+                        {
+                            xtab.SetAttributeValue("enableNewMessageHighlights", false);
+                        }
+
+                        if (!page.EnableHighlightedMessageHighlights)
+                        {
+                            xtab.SetAttributeValue("enableHighlightedMessageHighlights", false);
+                        }
+
+                        if (!page.EnableGoLiveHighlights)
+                        {
+                            xtab.SetAttributeValue("enableGoLiveHighlights", false);
+                        }
+
+                        if (!page.EnableGoLiveNotifications)
+                        {
+                            xtab.SetAttributeValue("enableGoLiveNotifications", false);
+                        }
+
+                        foreach (var col in page.Columns)
+                        {
+                            xtab.Add(new XElement("column").With(xcol =>
+                            {
+                                foreach (ChatControl widget in col.Widgets.Where(x => x is ChatControl))
+                                {
+                                    xcol.Add(new XElement("chat").With(x =>
+                                    {
+                                        x.SetAttributeValue("type", "twitch");
+                                        x.SetAttributeValue("channel", widget.ChannelName ?? "");
+                                    }));
+                                }
+                            }));
+                        }
+                    }));
+                }
+
+                doc.Save(path);
+            }
+            catch { }
         }
     }
 }
