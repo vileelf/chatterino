@@ -185,6 +185,15 @@ namespace Chatterino.Common
             return link.Replace("{{image}}", ((_scale == 4) ? 3 : _scale) + "x");
         }
 
+        public static string fixFFZUrl(string url)
+        {
+            if (url.IndexOf("https:") != 0)
+            {
+                url = "https:" + url;
+            }
+            return url;
+        }
+
         public static IEnumerable<LazyLoadedImage> GetFfzEmoteFromDynamic(dynamic d, bool global)
         {
             List<LazyLoadedImage> emotes = new List<LazyLoadedImage>();
@@ -197,19 +206,19 @@ namespace Chatterino.Common
 
                 int maxScale = 1;
 
-                var urlX1 = "https:" + urls["1"];
+                string urlX1 = fixFFZUrl(urls["1"]);
 
                 string urlX2 = null;
                 if (urls.ContainsKey("2"))
                 {
-                    urlX2 = "https:" + urls["2"];
+                    urlX2 = fixFFZUrl(urls["2"]);
                     maxScale = 2;
                 }
 
                 string urlX4 = null;
                 if (urls.ContainsKey("4"))
                 {
-                    urlX4 = "https:" + urls["4"];
+                    urlX4 = fixFFZUrl(urls["4"]);
                     maxScale = 4;
                 }
 

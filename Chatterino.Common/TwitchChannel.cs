@@ -581,11 +581,11 @@ namespace Chatterino.Common
                                     string url = vip_badge["1"];
                                     string tooltipurl = vip_badge["4"];
                                     if (!string.IsNullOrWhiteSpace(url)) {
-                                        url = "https:" + url;
+                                        url = Emotes.fixFFZUrl(url);
                                         if (string.IsNullOrWhiteSpace(tooltipurl)) {
                                             tooltipurl = url;
                                         } else {
-                                            tooltipurl = "https:" + tooltipurl;
+                                            tooltipurl = Emotes.fixFFZUrl(tooltipurl);
                                         }
                                         VipBadge = new LazyLoadedImage {
                                             Url = url,
@@ -609,7 +609,7 @@ namespace Chatterino.Common
                             {
                                 if (moderator != null && !string.IsNullOrWhiteSpace((string)moderator))
                                 {
-                                    var url = "https:" + (moderator as string);
+                                    var url = Emotes.fixFFZUrl((moderator as string));
                                     string tooltipurl = "";
                                     LazyLoadedImage tooltipImage = null;
                                     if (room.ContainsKey("mod_urls")) {
@@ -617,7 +617,7 @@ namespace Chatterino.Common
                                         if (mod_urls != null) {
                                             tooltipurl = mod_urls["4"];
                                             if (tooltipurl != null) {
-                                                tooltipurl = "https:" + tooltipurl;
+                                                tooltipurl = Emotes.fixFFZUrl(tooltipurl);
                                             }
                                         }
                                     }
