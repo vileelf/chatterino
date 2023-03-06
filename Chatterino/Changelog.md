@@ -1,5 +1,12 @@
 ﻿# changelog
 
+## 3.2
+-- fixed bug where ffz emotes wouldn't display anymore. 
+-- Updated appsettings, commands, and layout to be saved when changes are made and not on closing.
+-- Updated bit emotes to include the name in the tooltip. 
+-- Fixed bug causing messages to duplicate sometimes on rejoin. 
+-- If the users name on user info popup is different from the name in the chat it now shows that.
+
 ## 3.1.2.1
 -- Fixed a bug with 7tv global emotes not loading.
 -- Fixed a bug with the updater not working in some instances.
