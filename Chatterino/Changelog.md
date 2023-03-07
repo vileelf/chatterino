@@ -1,5 +1,8 @@
 ﻿# changelog
 
+## 3.2.1
+-- fixed bug preventing 7tv emotes from loading.
+
 ## 3.2
 -- fixed bug where ffz emotes wouldn't display anymore. 
 -- Updated appsettings, commands, and layout to be saved when changes are made and not on closing.

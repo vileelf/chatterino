@@ -194,6 +194,34 @@ namespace Chatterino.Common
             return url;
         }
 
+        public static string getUrlFromScale(string url1, string url2, string url4, double curscale, int maxScale, out double scale)
+        {
+            var _scale = curscale > 2 ? 4 : (curscale > 1 ? 2 : 1);
+
+            
+
+            string url;
+            if (maxScale >= 2 && _scale == 2)
+            {
+                _scale = 2;
+                url = url2;
+            }
+            else if (maxScale == 4 && _scale == 4)
+            {
+                _scale = 4;
+                url = url4;
+            }
+            else
+            {
+                _scale = 1;
+                url = url1;
+            }
+
+            scale = 1.0 / _scale;
+
+            return url;
+        }
+
         public static IEnumerable<LazyLoadedImage> GetFfzEmoteFromDynamic(dynamic d, bool global)
         {
             List<LazyLoadedImage> emotes = new List<LazyLoadedImage>();
@@ -222,29 +250,10 @@ namespace Chatterino.Common
                     maxScale = 4;
                 }
 
-                var _scale = AppSettings.EmoteScale > 2 ? 4 : (AppSettings.EmoteScale > 1 ? 2 : 1);
-
-                string url;
-                if (maxScale >= 2 && _scale == 2)
-                {
-                    _scale = 2;
-                    url = urlX2;
-                }
-                else if (maxScale == 4 && _scale == 4)
-                {
-                    _scale = 4;
-                    url = urlX4;
-                }
-                else
-                {
-                    _scale = 1;
-                    url = urlX1;
-                }
-
-                var scale = 1.0 / _scale;
+                string url = getUrlFromScale(urlX1, urlX2, urlX4, AppSettings.EmoteScale, maxScale, out double scale);
 
                 string margins = emote["margins"];
-                string tooltipurl = urlX4!=null?urlX4:urlX2!=null?urlX2:url;
+                string tooltipurl = getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out double temp);
 
                 Margin margin = null;
 
@@ -535,9 +544,33 @@ namespace Chatterino.Common
                         {
                             emotename = e["name"];
                             emoteid = e["id"];
-                            url = template.Replace("{{id}}", emoteid);     
-                            tooltipurl = GetBttvEmoteLink(url, true, out fake);
-                            url = GetBttvEmoteLink(url, false, out scale);
+                            var urls = e["urls"];
+
+                            int maxScale = 1;
+                            string urlX1 = null;
+                            if (urls.Count > 0 && urls[0].Count > 1)
+                            {
+                                urlX1 = fixFFZUrl(urls[0][1]);
+                            }
+
+                            string urlX2 = null;
+                            if (urls.Count > 1 && urls[1].Count > 1)
+                            {
+                                urlX2 = fixFFZUrl(urls[1][1]);
+                                maxScale = 2;
+                            }
+
+                            string urlX4 = null;
+                            if (urls.Count > 3 && urls[3].Count > 1)
+                            {
+                                urlX4 = fixFFZUrl(urls[3][1]);
+                                maxScale = 4;
+                            }
+
+                            url = getUrlFromScale(urlX1, urlX2, urlX4, AppSettings.EmoteScale, maxScale, out scale);
+
+                            tooltipurl = getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
+
                             owner = e["owner"];
                             visibility = e["visibility"];
                             if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {

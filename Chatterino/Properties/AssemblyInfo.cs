@@ -20,8 +20,8 @@ using System.Runtime.InteropServices;
 
 #if DEBUG
 [assembly: AssemblyVersion("3.2.*")]
-[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyFileVersion("3.2.1.0")]
 #else
-[assembly: AssemblyVersion("3.2.0.0")]
-[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyVersion("3.2.1.0")]
+[assembly: AssemblyFileVersion("3.2.1.0")]
 #endif

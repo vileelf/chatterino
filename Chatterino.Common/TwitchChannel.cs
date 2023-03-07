@@ -749,7 +749,6 @@ namespace Chatterino.Common
                         string emoteid;
                         dynamic owner;
                         string ownername;
-                        string template = "https://cdn.7tv.app/emote/{{id}}/{{image}}";
                         bool getemote;
                         double fake;
                         double scale;
@@ -765,9 +764,32 @@ namespace Chatterino.Common
                         {
                             emotename = e["name"];
                             emoteid = e["id"];
-                            url = template.Replace("{{id}}", emoteid);     
-                            tooltipurl = Emotes.GetBttvEmoteLink(url, true, out fake);
-                            url = Emotes.GetBttvEmoteLink(url, false, out scale);
+                            var urls = e["urls"];
+
+                            int maxScale = 1;
+                            string urlX1 = null;
+                            if (urls.Count>0 && urls[0].Count > 1)
+                            {
+                                urlX1 = Emotes.fixFFZUrl(urls[0][1]);
+                            }
+
+                            string urlX2 = null;
+                            if (urls.Count > 1 && urls[1].Count > 1)
+                            {
+                                urlX2 = Emotes.fixFFZUrl(urls[1][1]);
+                                maxScale = 2;
+                            }
+
+                            string urlX4 = null;
+                            if (urls.Count > 3 && urls[3].Count > 1)
+                            {
+                                urlX4 = Emotes.fixFFZUrl(urls[3][1]);
+                                maxScale = 4;
+                            }
+
+                            url = Emotes.getUrlFromScale(urlX1, urlX2, urlX4, AppSettings.EmoteScale, maxScale, out scale);
+
+                            tooltipurl = Emotes.getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
                             owner = e["owner"];
                             visibility = e["visibility"];
                             if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
