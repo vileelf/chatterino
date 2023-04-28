@@ -82,7 +82,15 @@ namespace Chatterino
                         if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(whisperMessage))
                         {
                             var toUserId = IrcManager.LoadUserIDFromTwitch(name);
-                            if (IrcManager.Account.UserId == null || toUserId == null) { return null; }
+                            if (toUserId == null)
+                            {
+                                channel.AddMessage(new Common.Message($"User {name} not found", HSLColor.Gray, true));
+                                return null;
+                            } else if (IrcManager.Account.UserId == null)
+                            {
+                                channel.AddMessage(new Common.Message($"You must be logged in to whisper", HSLColor.Gray, true));
+                                return null;
+                            }
                             status = TwitchApiHandler.Post("whispers", $"from_user_id={IrcManager.Account.UserId}&to_user_id={toUserId}", $"{{\"message\": \"{whisperMessage}\"}}");
                         }
                         if (status == null) { return null; }
