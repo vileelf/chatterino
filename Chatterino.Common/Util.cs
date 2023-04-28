@@ -42,6 +42,11 @@ namespace Chatterino.Common
             "/unvip",
             "/announce",
             "/clear",
+            "/uptime",
+            "/user",
+            "/ignore",
+            "/unignore",
+            "/rejoin",
         };
 
         public static string GetUserDataPath()

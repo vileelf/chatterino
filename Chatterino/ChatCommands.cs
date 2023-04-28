@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using TwitchIrc;
 using Chatterino.Common;
 using Chatterino.Controls;
+using System;
+using System.Drawing;
+using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using TwitchIrc;
 
 namespace Chatterino
 {
@@ -63,7 +57,7 @@ namespace Chatterino
 
                             popup.Location = new Point(x, y);
                         } else {
-                            channel.AddMessage(new Chatterino.Common.Message($"This user could not be found (/user {data.UserName})"));
+                            channel.AddMessage(new Common.Message($"This user could not be found (/user {data.UserName})"));
                         }
                     }
                 }
@@ -80,17 +74,40 @@ namespace Chatterino
                     if (S.Length > 1)
                     {
                         var name = S[0];
+                        var whisperMessage = s.SubstringFromWordIndex(1);
 
                         IrcMessage message;
-                        IrcMessage.TryParse($":{name}!{name}@{name}.tmi.twitch.tv PRIVMSG #whispers :" + s.SubstringFromWordIndex(1), out message);
+                        IrcMessage.TryParse($":{name}!{name}@{name}.tmi.twitch.tv PRIVMSG #whispers :" + whisperMessage, out message);
+                        HttpStatusCode? status = null;
+                        if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(whisperMessage))
+                        {
+                            var toUserId = IrcManager.LoadUserIDFromTwitch(name);
+                            if (IrcManager.Account.UserId == null || toUserId == null) { return null; }
+                            status = TwitchApiHandler.Post("whispers", $"from_user_id={IrcManager.Account.UserId}&to_user_id={toUserId}", $"{{\"message\": \"{whisperMessage}\"}}");
+                        }
+                        if (status == null) { return null; }
+                        if (status != HttpStatusCode.NoContent) {
+                            channel.AddMessage(new Common.Message($"Whisper failed to send. Server returned error: {status}.", HSLColor.Gray, true));
+                            if (status == HttpStatusCode.Unauthorized)
+                            {
+                                channel.AddMessage(new Common.Message("You must have a verified phone number to send whispers via chatterino", HSLColor.Gray, true));
+                            } else if (status == HttpStatusCode.BadRequest)
+                            {
+                                channel.AddMessage(new Common.Message("The person your whispering may have whispers turned off.", HSLColor.Gray, true));
+                            }
+                            return null;
+                        }
 
-                        TwitchChannel.WhisperChannel.AddMessage(new Chatterino.Common.Message(message, TwitchChannel.WhisperChannel, isSentWhisper: true));
+
+                        TwitchChannel.WhisperChannel.AddMessage(new Common.Message(message, TwitchChannel.WhisperChannel, isSentWhisper: true));
 
                         if (AppSettings.ChatEnableInlineWhispers)
                         {
-                            var inlineMessage = new Chatterino.Common.Message(message, TwitchChannel.WhisperChannel, true, false, isSentWhisper: true) { HighlightTab = false };
-
-                            inlineMessage.HighlightType = HighlightType.Whisper;
+                            var inlineMessage = new Common.Message(message, TwitchChannel.WhisperChannel, true, false, isSentWhisper: true)
+                            {
+                                HighlightTab = false,
+                                HighlightType = HighlightType.Whisper
+                            };
 
                             foreach (var c in TwitchChannel.Channels)
                             {
@@ -100,7 +117,7 @@ namespace Chatterino
                     }
                 }
 
-                return "/w " + s;
+                return null;
             });
 
             Commands.ChatCommands.TryAdd("ignore", (s, channel, execute) =>
@@ -182,7 +199,7 @@ namespace Chatterino
                                     text += uptime.ToString("hh\\h\\ mm\\m\\ ss\\s");
                                 }
 
-                                channel.AddMessage(new Chatterino.Common.Message(text));
+                                channel.AddMessage(new Common.Message(text));
                             }
                         }
                     }

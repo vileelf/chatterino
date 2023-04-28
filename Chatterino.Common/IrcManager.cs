@@ -15,7 +15,8 @@ namespace Chatterino.Common
         public static Account Account { get; set; } = Account.AnonAccount;
         public static string DefaultClientID { get; } = "eo3lkitgi8ctbrm4dlsxc8yarrohvq";
         public static string DefaultScope { get; } = "chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+"+
-        "user:read:blocked_users+user:read:follows+channel:moderate+whispers:edit+whispers:read+channel_editor+channel_commercial";
+            "user:read:blocked_users+user:read:follows+moderator:manage:banned_users+user:manage:whispers+whispers:read+" +
+            "channel_editor+channel:edit:commercial+channel:manage:vips";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
@@ -64,6 +65,7 @@ namespace Chatterino.Common
                         using (var stream = response.GetResponseStream())
                         {
                             dynamic json = new JsonParser().Parse(stream);
+                            if (json == null || json["data"] == null || json["data"][0] == null) { return null; }
                             return json["data"][0]["id"];
                         }
                     }
@@ -76,7 +78,7 @@ namespace Chatterino.Common
             return null;
         }
 
-        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likley use UpdateEmotes instead", true)]
+        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likely use UpdateEmotes instead", true)]
         public static void LoadEmotesFromApi(){
             try
             {

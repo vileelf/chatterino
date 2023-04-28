@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AccountManager.cs" />
+    <Compile Include="TwitchApiHandler.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Badges.cs" />
     <Compile Include="Cache.cs" />
@@ -99,7 +100,7 @@
     <Content Include="libwebp_x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Include="libwebp_x86.dll">
+    <Content Include="libwebp_x86.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="libwebpdemux_x64.dll">
