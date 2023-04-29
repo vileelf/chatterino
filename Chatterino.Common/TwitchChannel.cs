@@ -1072,6 +1072,7 @@ namespace Chatterino.Common
                                         }
                                     } else {
                                         message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
+                                        Users[message.Username.ToUpper()] = message.DisplayName;
                                         if (IrcManager.IsMessageIgnored(message, this) != true ) {
                                             messages.Add(message);
                                         }
