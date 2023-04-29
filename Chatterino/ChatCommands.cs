@@ -140,11 +140,7 @@ namespace Chatterino
                         }
                         else if (status == HttpStatusCode.Unauthorized)
                         {
-                            channel.AddMessage(new Common.Message($"You need to be logged in.", HSLColor.Gray, true));
-                        }
-                        else if (status == HttpStatusCode.Forbidden)
-                        {
-                            channel.AddMessage(new Common.Message($"You must be the broadcaster or a mod to make a prediction.", HSLColor.Gray, true));
+                            channel.AddMessage(new Common.Message($"You need to be the broadcaster and logged in to make predictions.", HSLColor.Gray, true));
                         }
                     }
                 }
@@ -172,7 +168,7 @@ namespace Chatterino
                     {
                         if (json == HttpStatusCode.Unauthorized)
                         {
-                            channel.AddMessage(new Common.Message($"You must be logged in to end predictions.", HSLColor.Gray, true));
+                            channel.AddMessage(new Common.Message($"You must be the broadcaster and logged in to end predictions.", HSLColor.Gray, true));
                         }
                         return null;
                     }
@@ -224,7 +220,7 @@ namespace Chatterino
                     {
                         if (json == HttpStatusCode.Unauthorized)
                         {
-                            channel.AddMessage(new Common.Message($"You must be logged in to end predictions.", HSLColor.Gray, true));
+                            channel.AddMessage(new Common.Message($"You must be the broadcaster and logged in to lock predictions.", HSLColor.Gray, true));
                         }
                         return null;
                     }
@@ -266,7 +262,7 @@ namespace Chatterino
                     {
                         if (json == HttpStatusCode.Unauthorized)
                         {
-                            channel.AddMessage(new Common.Message($"You must be logged in to end predictions.", HSLColor.Gray, true));
+                            channel.AddMessage(new Common.Message($"You must be the broadcaster and logged in to cancel predictions.", HSLColor.Gray, true));
                         }
                         return null;
                     }
@@ -1367,7 +1363,7 @@ namespace Chatterino
                                 { "color", "Usage \"/color <color>\" - Changes your username color. Color must be in hex (#000000) or one of the following: Blue, BlueViolet, CadetBlue, Chocolate, Coral, DodgerBlue, Firebrick, GoldenRod, Green, HotPink, OrangeRed, Red, SeaGreen, SpringGreen, YellowGreen. You must have Prime or Turbo to use the hex option." },
                                 { "marker", "Usage \"/marker [description]\" - Adds a stream marker (with an optional comment, max 140 characters) at the current timestamp. You can use markers in the Highlighter for easier editing. You must be either the broadcaster or a channel editor to use this command." },
                                 { "user", "Usage \"/user <username>\" - Displays information about a specific user." },
-                                { "prediction", "Usage \"/prediction <duration>,<title>,<outcome1>,<outcome2>,...\" - Creates a prediction. Will remain active for <duration> seconds. You must be a mod or the broadcaster to use this. Requires at least 2 outcomes." },
+                                { "prediction", "Usage \"/prediction <duration>,<title>,<outcome1>,<outcome2>,...\" - Creates a prediction. Will remain active for <duration> seconds. You must be the broadcaster to use this. Requires at least 2 outcomes." },
                                 { "endprediction", "Usage \"/endprediction <winning outcome number>\" - Ends the ongoing prediction ands selects the winning outcome based on the number entered. Number must be from 1 to the number of possible outcomes." },
                                 { "lockprediction", "Usage \"/lockprediction\" - Locks the ongoing prediction so users can no longer make predictions." },
                                 { "cancelprediction", "Usage \"/cancelprediction\" - Cancels the ongoing prediction and refunds points back to the users." },
