@@ -17,7 +17,8 @@ namespace Chatterino.Common
         public static string DefaultScope { get; } = "chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+"+
             "user:read:blocked_users+user:read:follows+moderator:manage:banned_users+user:manage:whispers+whispers:read+" +
             "channel:edit:commercial+channel:manage:vips+channel:manage:moderators+moderator:manage:announcements+" +
-            "moderator:manage:chat_messages+channel:manage:raids+moderator:manage:chat_settings+user:manage:chat_color";
+            "moderator:manage:chat_messages+channel:manage:raids+moderator:manage:chat_settings+user:manage:chat_color+" +
+            "channel:manage:broadcast+channel:manage:predictions";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;

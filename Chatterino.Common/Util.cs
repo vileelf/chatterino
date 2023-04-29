@@ -162,13 +162,13 @@ namespace Chatterino.Common
             return value.Split(ws, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static string SubstringFromWordIndex(this string s, int index)
+        public static string SubstringFromIndex(this string s, char separator, int index)
         {
             var i = 0;
 
             for (; i < s.Length; i++)
             {
-                if (s[i] != ' ')
+                if (s[i] != separator)
                     break;
             }
 
@@ -176,13 +176,13 @@ namespace Chatterino.Common
             {
                 for (; i < s.Length; i++)
                 {
-                    if (s[i] == ' ')
+                    if (s[i] == separator)
                         break;
                 }
 
                 for (; i < s.Length; i++)
                 {
-                    if (s[i] != ' ')
+                    if (s[i] != separator)
                         break;
                 }
             }
@@ -191,6 +191,11 @@ namespace Chatterino.Common
                 return s.Substring(i);
 
             return null;
+        }
+
+        public static string SubstringFromWordIndex(this string s, int index)
+        {
+            return SubstringFromIndex(s, ' ', index);
         }
 
         public static bool IsLinux

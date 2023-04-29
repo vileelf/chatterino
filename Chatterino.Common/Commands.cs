@@ -16,8 +16,6 @@ namespace Chatterino.Common
     {
         public static readonly string[] TwitchChatCommandNames = new[]
         {
-            "/marker",
-            "/help",
             "/me",
         };
 
