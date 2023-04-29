@@ -329,6 +329,7 @@ namespace Chatterino.Common
 
         public static bool ChatEnableInlineWhispers { get; set; } = false;
         public static bool Rainbow { get; set; } = false;
+        public static string OldColor { get; set; }
         public static bool TimestampsAmPm { get; set; } = false;
 
         public static bool ProxyEnable { get; set; } = false;

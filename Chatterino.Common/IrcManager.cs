@@ -16,7 +16,8 @@ namespace Chatterino.Common
         public static string DefaultClientID { get; } = "eo3lkitgi8ctbrm4dlsxc8yarrohvq";
         public static string DefaultScope { get; } = "chat:read+chat:edit+user:read:subscriptions+user:manage:blocked_users+"+
             "user:read:blocked_users+user:read:follows+moderator:manage:banned_users+user:manage:whispers+whispers:read+" +
-            "channel_editor+channel:edit:commercial+channel:manage:vips";
+            "channel:edit:commercial+channel:manage:vips+channel:manage:moderators+moderator:manage:announcements+" +
+            "moderator:manage:chat_messages+channel:manage:raids+moderator:manage:chat_settings+user:manage:chat_color";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
@@ -375,6 +376,11 @@ namespace Chatterino.Common
                                     };
 
                                     TwitchChannel.MentionsChannel.AddMessage(mentionMessage);
+                                }
+
+                                if (message.UserId == Account.UserId && !AppSettings.Rainbow)
+                                {
+                                    AppSettings.OldColor = message.UsernameColor.ToRGBHex();
                                 }
 
                                 c.AddMessage(message);

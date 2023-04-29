@@ -61,6 +61,12 @@ namespace Chatterino.Common
             return FromRGB(rgb);
         }
 
+        public string ToRGBHex()
+        {
+            ToRGB(out var r, out var g, out var b);
+            return $"#{(int)(r * 255):X2}{(int)(g * 255):X2}{(int)(b * 255):X2}";
+        }
+
         public static HSLColor FromRGB(float red, float green, float blue)
         {
             var r = red;

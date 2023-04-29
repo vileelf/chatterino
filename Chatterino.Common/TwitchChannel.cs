@@ -20,8 +20,6 @@ namespace Chatterino.Common
     public class TwitchChannel
     {
        int maxMessages = AppSettings.ChatMessageLimit;
-
-        static readonly System.Timers.Timer refreshChatterListTimer = new System.Timers.Timer(30 * 1000 * 60);
         
         private System.Timers.Timer reconnectTryAgainTimer;
 
@@ -912,11 +910,6 @@ namespace Chatterino.Common
                         }
                     });
 
-                    // get chatters
-                    Task.Run(() =>
-                    {
-                        fetchUsernames();
-                    });
                     checkIfIsLive();
                     
                     try {
@@ -990,7 +983,7 @@ namespace Chatterino.Common
                                             int.TryParse(duration, out iduration);
                                         }
                                         message = new Message(
-                                            $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}: \"{reason}\"",
+                                            $"{msg.Params} was timed out for {iduration} second{(iduration != 1 ? "s" : "")}",
                                             HSLColor.Gray, true);
                                         messages.Add(message);
                                     } else if (msg.Command == "CLEARMSG" && !string.IsNullOrWhiteSpace(msg.Params)) {
@@ -1192,15 +1185,6 @@ namespace Chatterino.Common
             MentionsChannel?.AddMessage(
                 new Message("Please note that chatterino can only read mentions while it is running!", null, true));
 
-            refreshChatterListTimer.Elapsed += (s, e) =>
-            {
-                foreach (var channel in Channels)
-                {
-                    channel.fetchUsernames();
-                }
-            };
-            refreshChatterListTimer.Start();
-
             UpdateIsLiveTimer.Elapsed += UpdateIsLiveTimerElapsed;
             UpdateIsLiveTimer.Start();
             UpdateIsLiveTimerElapsed(null, null);
@@ -1393,10 +1377,9 @@ namespace Chatterino.Common
                 usernames.AddRange(Commands.CustomCommands.Select(x => new KeyValuePair<string, string>("/" + x.Name.ToUpper(), "/" + x.Name)));
             }
 
-            lock (Util.TwitchChatCommandNames)
-            {
-                usernames.AddRange(Util.TwitchChatCommandNames.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
-            }
+            usernames.AddRange(Commands.ChatCommands.Select(x => new KeyValuePair<string, string>("/" + x.Key.ToUpper(), "/" + x.Key)));
+
+            usernames.AddRange(Commands.TwitchChatCommandNames.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             
             if (usernamesoremotes == UsernameOrEmotes.Both) {
                 if (AppSettings.PrefereEmotesOverUsernames)
@@ -1492,7 +1475,6 @@ namespace Chatterino.Common
 
                     if (channel != null)
                     {
-                        //IrcManager.Client.Say(text, "fivetf", true);
                         IrcManager.SendMessage(channel, text, IsModOrBroadcaster || IsVip);
                     }
                 }
@@ -1504,15 +1486,15 @@ namespace Chatterino.Common
             
             if (AppSettings.Rainbow)
             {
-                usernameHue += 0.1f;
+                usernameHue += 0.05f;
 
-                float r, g, b;
-                (new HSLColor(usernameHue % 1, 0.5f, 0.5f)).ToRGB(out r, out g, out b);
+                var color = new HSLColor(usernameHue % 1, 0.5f, 0.5f);
 
-                IrcManager.SendMessage(this, $".color #{(int)(r * 255):X}{(int)(g * 255):X}{(int)(b * 255):X}", IsModOrBroadcaster || IsVip);
+                IrcManager.SendMessage(this, $"/color {color.ToRGBHex()}", IsModOrBroadcaster || IsVip);
             }
         }
 
+        [Obsolete("Twitch has killed this functionality. Hopefully some third party website will be made to replace it", true)]
         public void fetchUsernames()
         {
             try
@@ -1646,7 +1628,7 @@ namespace Chatterino.Common
 
                         i.Value =
                             new Message(
-                                $"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")}: \"{reason}\" (multiple times)",
+                                $"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")} (multiple times)",
                                 HSLColor.Gray, true)
                             { TimeoutUser = user, Id = m.Id };
                         Monitor.Exit(MessageLock);
@@ -1662,7 +1644,7 @@ namespace Chatterino.Common
             Monitor.Exit(MessageLock);
 
             AddMessage(
-                new Message($"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")}: \"{reason}\"",
+                new Message($"{user} was timed out for {duration} second{(duration != 1 ? "s" : "")}",
                     HSLColor.Gray, true)
                 { TimeoutUser = user });
 

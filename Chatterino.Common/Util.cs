@@ -13,42 +13,6 @@ namespace Chatterino.Common
 {
     public static class Util
     {
-        public static string[] TwitchChatCommandNames = new[]
-        {
-            "/mod",
-            "/unmod",
-            "/mods",
-            "/host",
-            "/unhost",
-            "/raid",
-            "/unraid",
-            "/commercial",
-            "/marker",
-            "/help",
-            "/me",
-            "/uniquechat",
-            "/uniquechatoff",
-            "/emoteonly",
-            "/emoteonlyoff",
-            "/subscribers",
-            "/subscribersoff",
-            "/slow",
-            "/slowoff",
-            "/followers",
-            "/followersoff",
-            "/ban",
-            "/unban",
-            "/vip",
-            "/unvip",
-            "/announce",
-            "/clear",
-            "/uptime",
-            "/user",
-            "/ignore",
-            "/unignore",
-            "/rejoin",
-        };
-
         public static string GetUserDataPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Chatterino");

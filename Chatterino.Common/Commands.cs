@@ -14,6 +14,13 @@ namespace Chatterino.Common
 {
     public static class Commands
     {
+        public static readonly string[] TwitchChatCommandNames = new[]
+        {
+            "/marker",
+            "/help",
+            "/me",
+        };
+
         public static ConcurrentDictionary<string, Func<string, TwitchChannel, bool, string>> ChatCommands = new ConcurrentDictionary<string, Func<string, TwitchChannel, bool, string>>();
 
         public static readonly object CustomCommandsLock = new object();
@@ -23,6 +30,7 @@ namespace Chatterino.Common
         static Commands()
         {
 
+#if DEBUG
             ChatCommands.TryAdd("testcheering", (s, channel, execute) =>
             {
                 if (execute)
@@ -54,7 +62,7 @@ namespace Chatterino.Common
                 return null;
             });
         }
-
+#endif
         // public
         public static string ProcessMessage(string text, TwitchChannel channel, bool executeCommands)
         {

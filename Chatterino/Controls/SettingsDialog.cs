@@ -260,14 +260,22 @@ namespace Chatterino.Controls
             BindCheckBox(chkAllowSameMessages, "ChatAllowSameMessage");
             BindCheckBox(chkDoubleClickLinks, "ChatLinksDoubleClickOnly");
             BindCheckBox(chkHideInput, "ChatHideInputIfEmpty");
-            BindCheckBox(chkMessageSeperators, "ChatSeperateMessages");
             BindCheckBox(chkRainbow, "Rainbow");
+            BindCheckBox(chkMessageSeperators, "ChatSeperateMessages");
             BindCheckBox(chkStreamlinkPath, "EnableStreamlinkPath");
             BindCheckBox(chkPrefereEmotes, "PrefereEmotesOverUsernames");
 
             chkMessageSeperators.CheckedChanged += (s, e) =>
             {
                 App.MainForm.Refresh();
+            };
+
+            chkRainbow.CheckedChanged += (s, e) =>
+            {
+                if (!AppSettings.Rainbow)
+                {
+                    (App.MainForm.Selected as ChatControl)?.Channel.SendMessage($"/color {AppSettings.OldColor}");
+                }
             };
 
             txtMsgLimit.Text = AppSettings.ChatMessageLimit.ToString();
