@@ -48,7 +48,14 @@ namespace Chatterino
             {
                 IrcManager.Account = AccountManager.FromUsername(listView.FocusedItem.Text) ?? Account.AnonAccount;
                 IrcManager.Connect();
-
+                if (IrcManager.Account != Account.AnonAccount && !GuiEngine.Current.GlobalBadgesLoaded)
+                {
+                    foreach (var channel in TwitchChannel.Channels)
+                    {
+                        channel.ReloadEmotes();
+                    }
+                    GuiEngine.Current.LoadBadges();
+                }
                 Close();
             };
 

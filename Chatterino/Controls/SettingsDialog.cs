@@ -74,6 +74,15 @@ namespace Chatterino.Controls
                             IrcManager.Account = loginForm.Account;
                             IrcManager.Connect();
 
+                            if (!GuiEngine.Current.GlobalBadgesLoaded)
+                            {
+                                foreach (var channel in TwitchChannel.Channels)
+                                {
+                                    channel.ReloadEmotes();
+                                }
+                                GuiEngine.Current.LoadBadges(); 
+                            }
+
                             var username = loginForm.Account.Username.ToLowerInvariant();
 
                             var addGridViewItem = true;

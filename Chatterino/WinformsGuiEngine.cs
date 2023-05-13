@@ -1,21 +1,16 @@
-﻿using Newtonsoft.Json;
-using Chatterino.Common;
+﻿using Chatterino.Common;
+using Chatterino.Controls;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.IO;
-using System.Text.Json;
-using System.Net;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Media;
-using System.Drawing.Imaging;
-using System.Collections.Concurrent;
-using System.Security.Cryptography;
-using Chatterino.Controls;
+using System.Net;
+using System.Text.Json;
+using System.Windows.Forms;
 
 namespace Chatterino
 {
@@ -27,7 +22,8 @@ namespace Chatterino
         private bool debug = false;
         #endif
 
-        public bool globalEmotesLoaded{get; set;} = false;
+        public bool GlobalEmotesLoaded {get; set;} = false;
+        public bool GlobalBadgesLoaded { get; set;} = false;
         public  HashSet<LazyLoadedImage> GifEmotesOnScreen{get;} =  new HashSet<LazyLoadedImage>();
         public object GifEmotesLock{get;} =  new object();
         
@@ -348,6 +344,7 @@ namespace Chatterino
             }
         }
 
+
         public void LoadBadges()
         {
             try
@@ -381,7 +378,7 @@ namespace Chatterino
                             string clickUrl = value["click_url"];
                             string tooltipimageurl = value["image_url_4x"];
 
-                            badges.TryAdd(name+"/"+key,
+                            badges.TryAdd(name + "/" + key,
                             new LazyLoadedImage
                             {
                                 Name = title,
@@ -391,12 +388,53 @@ namespace Chatterino
                             });
                         }
                     }
-                    response.Close();
+                    GlobalBadgesLoaded = true;
                 }
             }
             catch
             {
             }
+        }
+
+        public void NewLoadBadges()
+        {
+            try
+            {
+                dynamic json = TwitchApiHandler.Get("chat/badges/global", "");
+                if (json is HttpStatusCode) { return; }
+                dynamic data = json["data"];
+                foreach (var badge in data)
+                {
+                    string name = badge["set_id"];
+                    dynamic versions = badge["versions"];
+
+                    foreach (var version in versions)
+                    {
+                        string key = version["id"];
+
+                        string imageUrl = version["image_url_1x"];
+                        string title = version["title"];
+                        string description = version["description"];
+                        string clickUrl = version["click_url"];
+                        string tooltipimageurl = version["image_url_4x"];
+
+                        var newBadge = new LazyLoadedImage
+                        {
+                            Name = title,
+                            Url = imageUrl,
+                            TooltipImageUrl = tooltipimageurl,
+                            Tooltip = title
+                        };
+
+                        badges.AddOrUpdate(name + "/" + key, newBadge, (x, y) => newBadge);
+                    }
+                }
+                GlobalBadgesLoaded = true;
+            } catch (Exception e)
+            {
+
+            }
+            
         }
         
         public ChatterinoImage GetImage(ImageType type)
@@ -437,7 +475,7 @@ namespace Chatterino
 
         public void AddCheerEmote(string prefix, CheerEmote emote)
         {
-            CheerEmotes.TryAdd(prefix, emote);
+            CheerEmotes.AddOrUpdate(prefix, emote, (x, y) => emote);
         }
 
         public void ClearCheerEmotes(){

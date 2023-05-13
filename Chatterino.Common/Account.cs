@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+﻿using Newtonsoft.Json;
 using System.Net;
-using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Chatterino.Common
 {
@@ -44,7 +38,7 @@ namespace Chatterino.Common
         protected bool loadUserIDFromTwitch(Account account, string username, string clientId)
         {
             // call twitch api
-            if (username != string.Empty && clientId != string.Empty) {
+            if (username != "" && clientId != string.Empty) {
                 try
                 {
                     var request =
@@ -79,6 +73,6 @@ namespace Chatterino.Common
             
         }
 
-        public static Account AnonAccount { get; } = new Account("justinfan123", string.Empty, string.Empty, string.Empty) { IsAnon = true};
+        public static Account AnonAccount { get; } = new Account("Anon", "", "", "") { IsAnon = true};
     }
 }

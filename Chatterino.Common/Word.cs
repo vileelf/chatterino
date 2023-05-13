@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chatterino.Common
 {
@@ -74,11 +69,29 @@ namespace Chatterino.Common
             }
             return false;
         }
+
+        /// <summary>
+        /// Replaces this word with the word given in replacementWord.
+        /// </summary>
+        /// <param name="replacementWord">The word that will replace this word.</param>
+        public void Copy(Word replacementWord)
+        {
+            Type = replacementWord.Type;
+            Value = replacementWord.Value;
+            Color = replacementWord.Color;
+            Link = replacementWord.Link;
+            Tooltip = replacementWord.Tooltip;
+            TooltipImageUrl = replacementWord.TooltipImageUrl;
+            TooltipImage = replacementWord.TooltipImage;
+            CopyText = replacementWord.CopyText;
+            Highlighted = replacementWord.Highlighted;
+        }
     }
+}
 
     public enum SpanType
     {
         Text,
-        LazyLoadedImage
+        LazyLoadedImage,
+        UnloadedBadge
     }
-}

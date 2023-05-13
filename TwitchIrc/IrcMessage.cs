@@ -113,10 +113,14 @@ namespace TwitchIrc
         public string Command { get; private set; }
         public string Middle { get; private set; }
         public string Params { get; private set; }
+        
+        public string Text { get; private set; }
 
-        private IrcMessage(string tags, string prefix, string command, string channel, string @params)
+        private IrcMessage(string tags, string prefix, string command, string channel, string @params, string line)
         {
             _tags = tags;
+
+            Text = line;
 
             // prefix
             RawPrefix = prefix;
@@ -237,7 +241,7 @@ namespace TwitchIrc
                 }
             }
 
-            message = new IrcMessage(tags, prefix, command, middle, @params);
+            message = new IrcMessage(tags, prefix, command, middle, @params, line);
             return true;
 
             error:

@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 
 namespace Chatterino.Common
 {
@@ -158,6 +155,12 @@ namespace Chatterino.Common
             _bttvHatEmotes["CandyCane"] = null;
             _bttvHatEmotes["cvHazmat"] = null;
             _bttvHatEmotes["cvMask"] = null;
+        }
+
+        public static void ReloadSubEmotes()
+        {
+            TwitchEmotes.Clear();
+            IrcManager.LoadUsersEmotes();
         }
 
         public static string GetTwitchEmoteLink(string id, bool getMax, out double scale)

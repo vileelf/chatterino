@@ -116,7 +116,7 @@ namespace Chatterino.Controls
 
                                 if (DateTime.TryParse(createdAt, out createAtTime))
                                 {
-                                    lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime.ToString()}");
+                                    lblCreatedAt.Invoke(() => lblCreatedAt.Text = $"Created at: {createAtTime}");
                                 }
 
                                 Task.Run(() =>
@@ -148,13 +148,13 @@ namespace Chatterino.Controls
                                 {
                                     try
                                     {
-                                        var req = WebRequest.Create($"https://api.twitch.tv/helix/users/follows?to_id={data.UserId}");
+                                        var req = WebRequest.Create($"https://api.twitch.tv/helix/channels/followers?broadcaster_id={data.UserId}");
                                         if (AppSettings.IgnoreSystemProxy)
                                         {
                                             request.Proxy = null;
                                         }
                                         req.Headers["Authorization"]=$"Bearer {IrcManager.Account.OauthToken}";
-                                        req.Headers["Client-ID"]=$"{Common.IrcManager.DefaultClientID}";
+                                        req.Headers["Client-ID"]=$"{IrcManager.DefaultClientID}";
                                         using (var res = req.GetResponse()) {
                                             using (var s = res.GetResponseStream())
                                             {

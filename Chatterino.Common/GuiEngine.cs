@@ -35,7 +35,7 @@ namespace Chatterino.Common
         void FlashTaskbar();
         void LoadBadges();
         void log(string log);
-        bool globalEmotesLoaded{ get; set;}
+        bool GlobalEmotesLoaded{ get; set;}
         void AddCheerEmote(string prefix, CheerEmote emote);
         void ClearCheerEmotes();
         void UpdateSoundPaths();
@@ -45,6 +45,7 @@ namespace Chatterino.Common
         ChatterinoImage DrawImageBackground(ChatterinoImage image, HSLColor color);
         HashSet<LazyLoadedImage> GifEmotesOnScreen{get;}
         object GifEmotesLock{get;}
+        bool GlobalBadgesLoaded { get; set; }
 
         CommonSize MeasureStringSize(object graphics, FontType font, string text);
         //void DrawMessage(object graphics, Message message, int xOffset, int yOffset, Selection selection, int currentLineIndex);

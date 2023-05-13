@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Drawing;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -17,7 +15,7 @@ namespace Chatterino.Common
         public static bool EnablePings { get; set; } = true;
 
         public bool HighlightTab { get; set; } = true;
-        
+
 
         public int X { get; set; } = 0;
         public int Y { get; set; } = 0;
@@ -38,6 +36,7 @@ namespace Chatterino.Common
         public string Params { get; set; }
         public string MessageId { get; set; } = null;
         public Word UsernameWord { get; set; } = null;
+        public IrcMessage Data { get; private set; }
 
         public string DisplayName { get; set; }
         public HSLColor UsernameColor { get; set; }
@@ -46,23 +45,6 @@ namespace Chatterino.Common
         public int TimeoutCount { get; set; } = 0;
 
         public MessageBadges Badges { get; set; }
-
-        //private bool isVisible = false;
-
-        //public bool IsVisible
-        //{
-        //    get { return isVisible; }
-        //    set
-        //    {
-        //        isVisible = value;
-        //        if (!value && buffer != null)
-        //        {
-        //            var b = buffer;
-        //            buffer = null;
-        //            GuiEngine.Current.DisposeMessageGraphicsBuffer(this);
-        //        }
-        //    }
-        //}
 
         public object buffer = null;
 
@@ -74,6 +56,7 @@ namespace Chatterino.Common
         private static char[] _linkIdentifiers = { '.', ':' };
 
         public DateTime ParseTime { get; set; }
+        private int numberOfMonthsSubbed;
 
         private Message()
         {
@@ -103,6 +86,8 @@ namespace Chatterino.Common
 
             ParseTime = DateTime.Now;
             Channel = channel;
+
+            Data = data;
 
             List<Word> words = new List<Word>();
             string value;
@@ -353,21 +338,25 @@ namespace Chatterino.Common
             }
             aftermod:
 
-            //get number of months subed
-            int numberOfMonthsSubbed = 0;
+            //get number of months subbed
             if (data.Tags.TryGetValue("badge-info", out value))
             {
                 var badgeinfos = value.Split(',');
-                foreach(var badgeinfo in badgeinfos) {
-                    if (badgeinfo.StartsWith("subscriber/")) {
+                foreach (var badgeinfo in badgeinfos)
+                {
+                    if (badgeinfo.StartsWith("subscriber/"))
+                    {
                         numberOfMonthsSubbed = int.Parse(badgeinfo.Substring("subscriber/".Length));
                         break;
-                    } else if (badgeinfo.StartsWith("founder/")) {
+                    }
+                    else if (badgeinfo.StartsWith("founder/"))
+                    {
                         numberOfMonthsSubbed = int.Parse(badgeinfo.Substring("founder/".Length));
                         break;
                     }
                 }
             }
+
             // get badges from tags
             if (data.Tags.TryGetValue("badges", out value))
             {
@@ -375,52 +364,9 @@ namespace Chatterino.Common
                 LazyLoadedImage image;
                 foreach (var badge in badges)
                 {
-                    if (badge.StartsWith("subscriber/"))
+                    if (!string.IsNullOrEmpty(badge))
                     {
-                        try
-                        {
-                            int n = int.Parse(badge.Substring("subscriber/".Length));
-
-                            Badges |= MessageBadges.Sub;
-                            image = channel.GetSubscriberBadge(n);
-                            if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                            } else {
-                                image = GuiEngine.Current.GetBadge(badge);
-                                if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                                }
-                            }
-                        }
-                        catch { }
-                    } else if (badge.StartsWith("founder/")) {
-                        image = GuiEngine.Current.GetBadge(badge);
-                        if (image != null) {
-                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                        }
-                    } else if (badge.Equals("moderator/1") && channel.ModeratorBadge != null) {
-                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.ModeratorBadge, Tooltip = channel.ModeratorBadge.Tooltip, TooltipImageUrl = channel.ModeratorBadge.TooltipImageUrl, TooltipImage =  channel.ModeratorBadge.TooltipImage});
-                    } else if (badge.Equals("vip/1") && channel.VipBadge != null) {
-                        words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = channel.VipBadge, Tooltip = channel.VipBadge.Tooltip, TooltipImageUrl = channel.VipBadge.TooltipImageUrl, TooltipImage =  channel.VipBadge.TooltipImage});
-                    } else if (badge.StartsWith("bits/")) {
-                        try {
-                            int n = int.Parse(badge.Substring("bits/".Length));
-
-                            image = channel.GetCheerBadge(n);
-                            if (image!=null) {
-                                words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                            } else {
-                                image = GuiEngine.Current.GetBadge(badge);
-                                if (image != null) {
-                                    words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                                }
-                            }
-                        } catch {}
-                    } else {
-                        image = GuiEngine.Current.GetBadge(badge);
-                        if (image != null) {
-                            words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage });
-                        }
+                        words.Add(GetBadge(badge));
                     }
                 }
             }
@@ -530,7 +476,7 @@ namespace Chatterino.Common
                         {
                             Type = SpanType.LazyLoadedImage,
                             Value = currentTwitchEmote.Item2,
-                            Link = new Link(LinkType.Url, currentTwitchEmote.Item2.Url),
+                            Link = new Link(LinkType.Url, currentTwitchEmote.Item2.TooltipImageUrl),
                             Tooltip = currentTwitchEmote.Item2.Tooltip,
                             TooltipImageUrl = currentTwitchEmote.Item2.TooltipImageUrl,
                             TooltipImage = currentTwitchEmote.Item2.TooltipImage,
@@ -839,6 +785,14 @@ namespace Chatterino.Common
                             }
                         }
                     }
+                    else if (word.Type == SpanType.UnloadedBadge)
+                    {
+                        var newWord = GetBadge((string)word.Value);
+                        if (newWord.Type != SpanType.UnloadedBadge)
+                        {
+                            word.Copy(newWord);
+                        }
+                    }
                 }
 
                 measureText = false;
@@ -1135,6 +1089,82 @@ namespace Chatterino.Common
             }
 
             return new MessagePosition(messageIndex, currentWord, _currentSplit, currentChar);
+        }
+
+        private Word GetBadge(string badge)
+        {
+            LazyLoadedImage image;
+
+            if (badge.StartsWith("subscriber/"))
+            {
+                try
+                {
+                    int n = int.Parse(badge.Substring("subscriber/".Length));
+
+                    Badges |= MessageBadges.Sub;
+                    image = Channel.GetSubscriberBadge(n);
+                    if (image != null)
+                    {
+                        return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, Channel.SubLink), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                    }
+                    else
+                    {
+                        image = GuiEngine.Current.GetBadge(badge);
+                        if (image != null)
+                        {
+                            return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + "\n(" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                        }
+                    }
+                }
+                catch { }
+            }
+            else if (badge.StartsWith("founder/"))
+            {
+                image = GuiEngine.Current.GetBadge(badge);
+                if (image != null)
+                {
+                    return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip + " (" + numberOfMonthsSubbed + " months)", TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                }
+            }
+            else if (badge.Equals("moderator/1") && Channel.ModeratorBadge != null)
+            {
+                return new Word { Type = SpanType.LazyLoadedImage, Value = Channel.ModeratorBadge, Tooltip = Channel.ModeratorBadge.Tooltip, TooltipImageUrl = Channel.ModeratorBadge.TooltipImageUrl, TooltipImage = Channel.ModeratorBadge.TooltipImage };
+            }
+            else if (badge.Equals("vip/1") && Channel.VipBadge != null)
+            {
+                return new Word { Type = SpanType.LazyLoadedImage, Value = Channel.VipBadge, Tooltip = Channel.VipBadge.Tooltip, TooltipImageUrl = Channel.VipBadge.TooltipImageUrl, TooltipImage = Channel.VipBadge.TooltipImage };
+            }
+            else if (badge.StartsWith("bits/"))
+            {
+                try
+                {
+                    int n = int.Parse(badge.Substring("bits/".Length));
+
+                    image = Channel.GetCheerBadge(n);
+                    if (image != null)
+                    {
+                        return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                    }
+                    else
+                    {
+                        image = GuiEngine.Current.GetBadge(badge);
+                        if (image != null)
+                        {
+                            return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                        }
+                    }
+                }
+                catch { }
+            }
+            else
+            {
+                image = GuiEngine.Current.GetBadge(badge);
+                if (image != null)
+                {
+                    return new Word { Type = SpanType.LazyLoadedImage, Value = image, Link = new Link(LinkType.Url, image.click_url), Tooltip = image.Tooltip, TooltipImageUrl = image.TooltipImageUrl, TooltipImage = image.TooltipImage };
+                }
+            }
+            return new Word { Type = SpanType.UnloadedBadge, Value = badge };
         }
 
         public MessagePosition PositionFromIndex(int index)

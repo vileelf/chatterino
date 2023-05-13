@@ -38,15 +38,13 @@
             this.button1 = new System.Windows.Forms.Button();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBoxByHand1 = new System.Windows.Forms.TextBox();
-            this.textBoxByHand2 = new System.Windows.Forms.TextBox();
-            this.textBoxByHand3 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxByHand3 = new System.Windows.Forms.TextBox();
+            this.textBoxByHand2 = new System.Windows.Forms.TextBox();
+            this.textBoxByHand1 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -79,15 +77,10 @@
             // 
             // btnManualLogin
             // 
-            this.btnManualLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnManualLogin.Location = new System.Drawing.Point(15, 101);
-            this.btnManualLogin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnManualLogin.Location = new System.Drawing.Point(0, 0);
             this.btnManualLogin.Name = "btnManualLogin";
-            this.btnManualLogin.Size = new System.Drawing.Size(146, 30);
-            this.btnManualLogin.TabIndex = 3;
-            this.btnManualLogin.Text = "Start Manual Login";
-            this.btnManualLogin.UseVisualStyleBackColor = true;
-            this.btnManualLogin.Click += new System.EventHandler(this.btnManualLogin_Click);
+            this.btnManualLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnManualLogin.TabIndex = 4;
             // 
             // groupBox1
             // 
@@ -95,7 +88,7 @@
             this.groupBox1.Controls.Add(this.buttonLogin);
             this.groupBox1.Controls.Add(this.lblError);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 60);
+            this.groupBox1.Location = new System.Drawing.Point(17, 19);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -140,15 +133,10 @@
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(167, 101);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button1.Location = new System.Drawing.Point(0, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(126, 30);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Paste Code";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 5;
             // 
             // groupBox3
             // 
@@ -166,6 +154,56 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Fill in data by hand";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 91);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(58, 17);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Client Id:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 60);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(85, 17);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Oauth Token:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 27);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(70, 17);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Username:";
+            // 
+            // textBoxByHand3
+            // 
+            this.textBoxByHand3.Location = new System.Drawing.Point(98, 88);
+            this.textBoxByHand3.Name = "textBoxByHand3";
+            this.textBoxByHand3.Size = new System.Drawing.Size(195, 25);
+            this.textBoxByHand3.TabIndex = 10;
+            this.textBoxByHand3.UseSystemPasswordChar = true;
+            // 
+            // textBoxByHand2
+            // 
+            this.textBoxByHand2.Location = new System.Drawing.Point(98, 57);
+            this.textBoxByHand2.Name = "textBoxByHand2";
+            this.textBoxByHand2.Size = new System.Drawing.Size(195, 25);
+            this.textBoxByHand2.TabIndex = 9;
+            this.textBoxByHand2.UseSystemPasswordChar = true;
+            // 
+            // textBoxByHand1
+            // 
+            this.textBoxByHand1.Location = new System.Drawing.Point(98, 24);
+            this.textBoxByHand1.Name = "textBoxByHand1";
+            this.textBoxByHand1.Size = new System.Drawing.Size(195, 25);
+            this.textBoxByHand1.TabIndex = 8;
+            // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -177,84 +215,11 @@
             this.button2.Text = "Login";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 216);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(166, 21);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Show advanced options";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(18, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(296, 20);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Use one of the two options below to log in.";
-            // 
-            // textBoxByHand1
-            // 
-            this.textBoxByHand1.Location = new System.Drawing.Point(98, 24);
-            this.textBoxByHand1.Name = "textBoxByHand1";
-            this.textBoxByHand1.Size = new System.Drawing.Size(195, 25);
-            this.textBoxByHand1.TabIndex = 8;
-            // 
-            // textBoxByHand2
-            // 
-            this.textBoxByHand2.Location = new System.Drawing.Point(98, 57);
-            this.textBoxByHand2.Name = "textBoxByHand2";
-            this.textBoxByHand2.Size = new System.Drawing.Size(195, 25);
-            this.textBoxByHand2.TabIndex = 9;
-            this.textBoxByHand2.UseSystemPasswordChar = true;
-            // 
-            // textBoxByHand3
-            // 
-            this.textBoxByHand3.Location = new System.Drawing.Point(98, 88);
-            this.textBoxByHand3.Name = "textBoxByHand3";
-            this.textBoxByHand3.Size = new System.Drawing.Size(195, 25);
-            this.textBoxByHand3.TabIndex = 10;
-            this.textBoxByHand3.UseSystemPasswordChar = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 27);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 17);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Username:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 60);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 17);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Oauth Token:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 91);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 17);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Client Id:";
-            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(629, 212);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.checkBox1);
+            this.ClientSize = new System.Drawing.Size(326, 170);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
@@ -267,7 +232,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -282,9 +246,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxByHand3;
         private System.Windows.Forms.TextBox textBoxByHand2;
         private System.Windows.Forms.TextBox textBoxByHand1;

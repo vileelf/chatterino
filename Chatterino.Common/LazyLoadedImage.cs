@@ -118,7 +118,7 @@ namespace Chatterino.Common
                     }
                     catch (Exception e)
                     {
-                        GuiEngine.Current.log("emote faild to load " + Name + " " + Url+ " " +e.ToString());
+                        GuiEngine.Current.log("emote failed to load " + Name + " " + Url+ " " +e.ToString());
                         img = null;
                     }
                 }

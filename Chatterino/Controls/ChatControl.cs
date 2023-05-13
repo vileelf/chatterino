@@ -1242,11 +1242,20 @@ namespace Chatterino.Controls
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Emotes", (s, e) =>
                 {
                     _selected.Channel.ReloadEmotes();
-                    _selected.Channel.ReloadSubEmotes();
+                    Emotes.ReloadSubEmotes();
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Global Emotes", (s, e) =>
                 {
                     Emotes.LoadGlobalEmotes();
+                    GuiEngine.Current.LoadBadges();
+                }));
+                _contextMenu.MenuItems.Add(new MenuItem("Reload All Channels Emotes", (s, e) =>
+                {
+                    Emotes.ReloadSubEmotes();
+                    foreach (var channel in TwitchChannel.Channels)
+                    {
+                        channel.ReloadEmotes();
+                    }
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Clear Recently Used Emotes", (s, e) =>
                 {

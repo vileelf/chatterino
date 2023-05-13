@@ -1,15 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -360,8 +355,8 @@ namespace Chatterino.Common
                             if(type.Equals("channel_custom")){
                                 //this channels custom bit emote
                                 CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
-                                ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
-                            } else if(!GuiEngine.Current.globalEmotesLoaded){
+                                ChannelCheerEmotes.AddOrUpdate(prefix.ToUpper(), customCheer, (x, y) => customCheer);
+                            } else if(!GuiEngine.Current.GlobalEmotesLoaded){
                                 //global bit emote
                                 CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
                                 GuiEngine.Current.AddCheerEmote(prefix.ToUpper(), customCheer);
@@ -374,14 +369,14 @@ namespace Chatterino.Common
                                 prefix = actions[i]["prefix"];
                                 //this channels custom bit emote
                                 CheerEmote customCheer = JsonLoadCheerEmote(actions[i]);
-                                ChannelCheerEmotes.TryAdd(prefix.ToUpper(), customCheer);
-                                if (!GuiEngine.Current.globalEmotesLoaded) {
-                                    //unload these from global since they arnt actually global Jebaited thx twitch
+                                ChannelCheerEmotes.AddOrUpdate(prefix.ToUpper(), customCheer, (x, y) => customCheer);
+                                if (!GuiEngine.Current.GlobalEmotesLoaded) {
+                                    //unload these from global since they aren't actually global Jebaited thx twitch
                                     GuiEngine.Current.ClearCheerEmotes();
                                 }
                             }
                         } else {
-                            GuiEngine.Current.globalEmotesLoaded = true;
+                            GuiEngine.Current.GlobalEmotesLoaded = true;
                         }
                         stream.Close();
                     }
@@ -402,7 +397,8 @@ namespace Chatterino.Common
                 {
                     request.Proxy = null;
                 }
-                using (var response = request.GetResponse()) {
+                using (var response = request.GetResponse())
+                {
                     using (var stream = response.GetResponseStream())
                     {
                         var parser = new JsonParser();
@@ -410,10 +406,11 @@ namespace Chatterino.Common
                         dynamic json = parser.Parse(stream);
 
                         dynamic badgeSets = json["badge_sets"];
-                        if (badgeSets.ContainsKey("subscriber")) {
+                        if (badgeSets.ContainsKey("subscriber"))
+                        {
                             dynamic subscriber = badgeSets["subscriber"];
                             dynamic versions = subscriber["versions"];
-                            
+
                             foreach (var version in versions)
                             {
                                 int months = int.Parse(version.Key);
@@ -425,7 +422,7 @@ namespace Chatterino.Common
                                 string description = value["description"];
                                 string clickUrl = value["click_url"];
                                 string tooltipurl = value["image_url_4x"];
-                                
+
                                 LazyLoadedImage subBadge = new LazyLoadedImage
                                 {
                                     Name = title,
@@ -437,10 +434,12 @@ namespace Chatterino.Common
                                 SubscriberBadges.AddOrUpdate(months, subBadge, (key, oldvalue) => subBadge);
                             }
                         }
-                        if (badgeSets.ContainsKey("bits")) {
+                        if (badgeSets.ContainsKey("bits"))
+                        {
                             dynamic bits = badgeSets["bits"];
                             dynamic bitversions = bits["versions"];
-                            foreach (var version in bitversions) {
+                            foreach (var version in bitversions)
+                            {
                                 int cheer = int.Parse(version.Key);
                                 dynamic value = version.Value;
                                 string imageUrl = value["image_url_1x"];
@@ -456,13 +455,80 @@ namespace Chatterino.Common
                                     TooltipImageUrl = tooltipurl,
                                     click_url = clickUrl
                                 };
-                                
+
                                 CheerBadges.AddOrUpdate(cheer, cheerbadge, (key, oldvalue) => cheerbadge);
                             }
                         }
                         stream.Close();
                     }
                     response.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                GuiEngine.Current.log("Generic Exception Handler: " + "room " + RoomID + " " + e.ToString());
+            }
+        }
+
+        public void NewLoadSubBadges(int RoomID)
+        {
+            try
+            {
+                dynamic json = TwitchApiHandler.Get("chat/badges", $"broadcaster_id={RoomID}");
+                if (json is HttpStatusCode) { return; }
+                dynamic badgeSets = json["data"];
+                
+                foreach (var badgeSet in badgeSets)
+                {
+                    string set_id = badgeSet["set_id"];
+                    if (set_id == "subscriber")
+                    {
+                        dynamic versions = badgeSet["versions"];
+
+                        foreach (var version in versions)
+                        {
+                            int months = int.Parse(version["id"]);
+
+                            string imageUrl = version["image_url_1x"];
+                            string title = version["title"];
+                            string description = version["description"];
+                            string clickUrl = version["click_url"];
+                            string tooltipurl = version["image_url_4x"];
+
+                            LazyLoadedImage subBadge = new LazyLoadedImage
+                            {
+                                Name = title,
+                                Url = imageUrl,
+                                TooltipImageUrl = tooltipurl,
+                                Tooltip = title
+                            };
+
+                            SubscriberBadges.AddOrUpdate(months, subBadge, (key, oldvalue) => subBadge);
+                        }
+                    }
+                    else if (set_id == "bits")
+                    {
+                        dynamic bitversions = badgeSet["versions"];
+                        foreach (var version in bitversions)
+                        {
+                            int cheer = int.Parse(version["id"]);
+                            string imageUrl = version["image_url_1x"];
+                            string title = version["title"];
+                            string description = version["description"];
+                            string clickUrl = version["click_url"];
+                            string tooltipurl = version["image_url_4x"];
+                            LazyLoadedImage cheerbadge = new LazyLoadedImage
+                            {
+                                Name = title,
+                                Url = imageUrl,
+                                Tooltip = title,
+                                TooltipImageUrl = tooltipurl,
+                                click_url = clickUrl
+                            };
+
+                            CheerBadges.AddOrUpdate(cheer, cheerbadge, (key, oldvalue) => cheerbadge);
+                        }
+                    }
                 }
             }
             catch ( Exception e)
@@ -1193,6 +1259,7 @@ namespace Chatterino.Common
 
         private void checkIfIsLive()
         {
+            if (IrcManager.Account.IsAnon) { return; }
             if (RoomID != -1) {
                 Task.Run(() =>
                 {
@@ -1745,13 +1812,6 @@ namespace Chatterino.Common
             AppSettings.MessageLimitChanged -= AppSettings_MessageLimitChanged;
         }
 
-        public void ReloadSubEmotes()
-        {
-            Emotes.TwitchEmotes.Clear();
-            IrcManager.LoadUsersEmotes();
-            updateEmoteNameList();
-        }
-
         public void ReloadEmotes()
         {
             if (RoomID != -1)
@@ -1930,8 +1990,8 @@ namespace Chatterino.Common
             }
         }
 
-        // seperate method to prevent redundant code after moving to bttv v3 api
-        // call once for "channel emotes", and a seperate time for "shared emotes"
+        // separate method to prevent redundant code after moving to bttv v3 api
+        // call once for "channel emotes", and a separate time for "shared emotes"
         private void AddBttvEmotes(string template, dynamic e, string channel)
         {
             string id = e["id"];
