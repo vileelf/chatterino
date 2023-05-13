@@ -3,11 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -59,8 +55,9 @@ namespace Chatterino.Common
                 TwitchChannel.WhisperChannel.AddMessage(new Message(string.Join(", ", TwitchChannel.Channels.Select(x => x.Name))));
                 return null;
             });
-        }
+        
 #endif
+        }
         // public
         public static string ProcessMessage(string text, TwitchChannel channel, bool executeCommands)
         {

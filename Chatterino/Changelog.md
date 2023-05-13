@@ -1,5 +1,12 @@
 ﻿# changelog
 
+## 3.3
+-- Added a reload all channels button to the dropdown.
+-- Updated commands to use the twitch api. All old commands should be functional again. 
+-- Also added commands for streamers to do predictions. use /help prediction for more info.
+-- Twitch killed the get chatters endpoint so now we no longer have a proper list of chatters. As such name complete will only include people that have chatted since you opened chatterino and wont refresh.
+-- Cleaned up the login form a bit.
+
 ## 3.2.1
 -- fixed bug preventing 7tv emotes from loading.
 
