@@ -1,5 +1,8 @@
 ﻿# changelog
 
+## 3.3.1
+-- Switched over to use twitches new api handles for badges since the old ones died.
+
 ## 3.3
 -- Added a reload all channels button to the dropdown.
 -- Updated commands to use the twitch api. All old commands should be functional again. 
