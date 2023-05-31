@@ -344,59 +344,7 @@ namespace Chatterino
             }
         }
 
-
         public void LoadBadges()
-        {
-            try
-            {
-                var request =
-                    WebRequest.Create($"https://badges.twitch.tv/v1/badges/global/display?language=en");
-                if (AppSettings.IgnoreSystemProxy)
-                {
-                    request.Proxy = null;
-                }
-                using (var response = request.GetResponse())
-                using (var stream = response.GetResponseStream())
-                {
-                    var parser = new JsonParser();
-                    dynamic json = parser.Parse(stream);
-                    dynamic badgeSets = json["badge_sets"];
-                    foreach (var badge in badgeSets)
-                    {
-                        string name = badge.Key;
-                        dynamic versions = badge.Value["versions"];
-
-                        foreach (var version in versions)
-                        {
-                            string key = version.Key;
-
-                            dynamic value = version.Value;
-
-                            string imageUrl = value["image_url_1x"];
-                            string title = value["title"];
-                            string description = value["description"];
-                            string clickUrl = value["click_url"];
-                            string tooltipimageurl = value["image_url_4x"];
-
-                            badges.TryAdd(name + "/" + key,
-                            new LazyLoadedImage
-                            {
-                                Name = title,
-                                Url = imageUrl,
-                                TooltipImageUrl = tooltipimageurl,
-                                Tooltip = title
-                            });
-                        }
-                    }
-                    GlobalBadgesLoaded = true;
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        public void NewLoadBadges()
         {
             try
             {
