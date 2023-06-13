@@ -1,5 +1,8 @@
 ﻿# changelog
 
+# 3.3.2
+-- Fixed 7tv emotes not loading due to them changing their api.
+
 ## 3.3.1
 -- Switched over to use twitches new api handles for badges since the old ones died.
 

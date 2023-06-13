@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 
 #if DEBUG
 [assembly: AssemblyVersion("3.3.*")]
-[assembly: AssemblyFileVersion("3.3.1.0")]
+[assembly: AssemblyFileVersion("3.3.2.0")]
 #else
-[assembly: AssemblyVersion("3.3.1.0")]
-[assembly: AssemblyFileVersion("3.3.1.0")]
+[assembly: AssemblyVersion("3.3.2.0")]
+[assembly: AssemblyFileVersion("3.3.2.0")]
 #endif

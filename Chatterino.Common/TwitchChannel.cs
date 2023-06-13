@@ -1857,7 +1857,7 @@ namespace Chatterino.Common
                     }
                 });
                 
-                //7tv channel emotes https://api.7tv.app/v2/users/{Name}/emotes
+                //7tv channel emotes https://api.7tv.app/v2/users/{RoomID}/emotes
                 Task.Run(() =>
                 {
                     try
@@ -1873,12 +1873,12 @@ namespace Chatterino.Common
                                     if (File.Exists(seventvChannelEmotesCache)) {
                                         File.Delete(seventvChannelEmotesCache);
                                     }
-                                    Util.LinuxDownloadFile($"https://api.7tv.app/v2/users/{Name}/emotes", seventvChannelEmotesCache);
+                                    Util.LinuxDownloadFile($"https://api.7tv.app/v2/users/{RoomID}/emotes", seventvChannelEmotesCache);
                                 }
                                 else
                                 {
                                     using (var webClient = new WebClient()) {
-                                        using (var readStream = webClient.OpenRead($"https://api.7tv.app/v2/users/{Name}/emotes")) {
+                                        using (var readStream = webClient.OpenRead($"https://api.7tv.app/v2/users/{RoomID}/emotes")) {
                                             if (File.Exists(seventvChannelEmotesCache)) {
                                                 File.Delete(seventvChannelEmotesCache);
                                             }
