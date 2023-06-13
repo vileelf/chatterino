@@ -28,7 +28,7 @@ namespace Chatterino
         private static bool installUpdatesOnExit = false;
         private static bool restartAfterUpdates = false;
 
-        public static bool CanShowChangelogs { get; private set; } = true;
+        public static bool CanShowChangelogs { get; set; } = true;
         public static string UpdaterPath { get; private set; } = Path.Combine(new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName, "Updater", "Chatterino.Updater.exe");
 
         // Drawing
