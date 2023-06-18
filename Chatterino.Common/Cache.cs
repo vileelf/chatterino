@@ -85,7 +85,10 @@ namespace Chatterino.Common
             lock (_dataLock)
             {
                 int d;
-
+                if (_data == null)
+                {
+                    return -1;
+                }
                 if (_data.TryGetValue(name, out d))
                 {
                     return d;
@@ -116,6 +119,9 @@ namespace Chatterino.Common
                     Console.WriteLine("error loading room id cache: " + exc.Message);
 
                     _data.Clear();
+                }
+                if ( _data == null ) { 
+                    _data = new Dictionary<string, int>();
                 }
             }
         }

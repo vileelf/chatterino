@@ -56,7 +56,6 @@ namespace Chatterino
                 if (App.CanShowChangelogs)
                 {
                     ShowChangelog();
-                    App.CanShowChangelogs = false;
                     AppSettings.Save(null);
                 }
             }
