@@ -1036,11 +1036,12 @@ namespace Chatterino.Common
                                         msg.Tags.TryGetValue("login", out login);
                                         msg.Tags.TryGetValue("display-name", out displayname);
                                         string name = displayname ?? login;
+                                        double paid = double.Parse(paidamount);
                                         if (!string.IsNullOrEmpty(displayname) && !string.IsNullOrEmpty(login) &&
                                                 !string.Equals(displayname, login, StringComparison.OrdinalIgnoreCase)) {
                                                 name = displayname + "(" + login + ")";
                                         }
-                                        var sysMessage = new Message($"{name} elevated their chat message for {paidamount}$ ({currency.ToLower()})", HSLColor.Gray, true)
+                                        var sysMessage = new Message($"{name} elevated their chat message for {paid/100:F2}$ ({currency.ToLower()})", HSLColor.Gray, true)
                                         {
                                             HighlightType = HighlightType.Resub
                                         };
