@@ -1,5 +1,13 @@
 ﻿# changelog
 
+# 3.4
+-- Switched over to 7tvs newer api. Fixes them not loading again.
+-- Fixed wide zero width emotes going too far to the left and covering users names.
+-- Made it so channel emotes have priority over global emotes for display.
+-- Fixed elevated chat messages displaying values multiplied by 100.
+-- Fixed changelog showing every time even though the user has seen it already.
+-- Fixed a rare bug where the cache can get corrupted and cause Chatterino to crash on launch.
+
 # 3.3.2
 -- Fixed 7tv emotes not loading due to them changing their api.
 
