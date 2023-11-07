@@ -499,12 +499,12 @@ namespace Chatterino.Common
 
                             if (Util.IsLinux)
                             {
-                                Util.LinuxDownloadFile("https://api.7tv.app/v2/emotes/global", seventvEmotesGlobalCache);
+                                Util.LinuxDownloadFile("https://7tv.io/v3/emote-sets/global", seventvEmotesGlobalCache);
                             }
                             else
                             {
                                 using (var webClient = new WebClient()) {
-                                    using (var readStream = webClient.OpenRead("https://api.7tv.app/v2/emotes/global")) {
+                                    using (var readStream = webClient.OpenRead("https://7tv.io/v3/emote-sets/global")) {
                                         if (File.Exists(seventvEmotesGlobalCache)) {
                                             File.Delete(seventvEmotesGlobalCache);
                                         }
@@ -539,43 +539,42 @@ namespace Chatterino.Common
                         string url;
                         int visibilityFlags;
                         string visibility;
-                        const int zeroWidthFlag = 0x80;
+                        const int zeroWidthFlag = 0x100;
                         bool zeroWidth = false;
                         
                         LazyLoadedImage emote;
-                        foreach (var e in json)
+                        var emotes = json["emotes"];
+                        foreach (var e in emotes)
                         {
-                            emotename = e["name"];
-                            emoteid = e["id"];
-                            var urls = e["urls"];
+                            var data = e["data"];
+                            emotename = data["name"];
+                            emoteid = data["id"];
+                            var host = data["host"];
+                            var baseUrl = fixFFZUrl(host["url"]);
+                            var urls = host["files"];
 
                             int maxScale = 1;
                             string urlX1 = null;
-                            if (urls.Count > 0 && urls[0].Count > 1)
-                            {
-                                urlX1 = fixFFZUrl(urls[0][1]);
-                            }
-
                             string urlX2 = null;
-                            if (urls.Count > 1 && urls[1].Count > 1)
-                            {
-                                urlX2 = fixFFZUrl(urls[1][1]);
-                                maxScale = 2;
-                            }
-
                             string urlX4 = null;
-                            if (urls.Count > 3 && urls[3].Count > 1)
-                            {
-                                urlX4 = fixFFZUrl(urls[3][1]);
-                                maxScale = 4;
+                            foreach (var file in urls) {
+                                if (file["name"] == "1x.webp") {
+                                    urlX1 = $"{baseUrl}/{file["name"]}";
+                                } else if (file["name"] == "2x.webp") {
+                                    urlX2 = $"{baseUrl}/{file["name"]}";
+                                    maxScale = Math.Max(maxScale, 2);
+                                } else if (file["name"] == "4x.webp") {
+                                    urlX4 = $"{baseUrl}/{file["name"]}";
+                                    maxScale = Math.Max(maxScale, 4);
+                                }
                             }
 
                             url = getUrlFromScale(urlX1, urlX2, urlX4, AppSettings.EmoteScale, maxScale, out scale);
 
                             tooltipurl = getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
 
-                            owner = e["owner"];
-                            visibility = e["visibility"];
+                            owner = data["owner"];
+                            visibility = data["flags"];
                             if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
                                 zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;
                             }
@@ -583,9 +582,9 @@ namespace Chatterino.Common
                             if (owner != null) {
                                 ownername = owner["display_name"];
                                 if (string.IsNullOrEmpty(ownername)) {
-                                    ownername = owner["login"];
-                                } else if (!string.IsNullOrEmpty(owner["login"]) && string.Compare(ownername.ToUpper(), owner["login"].ToUpper()) != 0) {
-                                    ownername = ownername + "(" + owner["login"] + ")";
+                                    ownername = owner["username"];
+                                } else if (!string.IsNullOrEmpty(owner["username"]) && string.Compare(ownername.ToUpper(), owner["username"].ToUpper()) != 0) {
+                                    ownername = ownername + "(" + owner["username"] + ")";
                                 }
                             }
                             emote = new LazyLoadedImage

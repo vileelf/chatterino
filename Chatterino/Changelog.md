@@ -1,5 +1,8 @@
 ﻿# changelog
 
+# 3.4.1
+-- Switched 7tv global emotes over to the newer api. Fixes them not loading either.
+
 # 3.4
 -- Switched over to 7tvs newer api. Fixes them not loading again.
 -- Fixed wide zero width emotes going too far to the left and covering users names.
