@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AccountManager.cs" />
+    <Compile Include="EmoteModifiers.cs" />
     <Compile Include="TwitchApiHandler.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Badges.cs" />

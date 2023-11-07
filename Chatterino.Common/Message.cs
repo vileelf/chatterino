@@ -361,7 +361,6 @@ namespace Chatterino.Common
             if (data.Tags.TryGetValue("badges", out value))
             {
                 var badges = value.Split(',');
-                LazyLoadedImage image;
                 foreach (var badge in badges)
                 {
                     if (!string.IsNullOrEmpty(badge))
@@ -854,7 +853,7 @@ namespace Chatterino.Common
                         if (img.IsHat)
                         {
 #warning emote size
-                            x -= word.Width + 2;
+                            x -= Math.Min(word.Width, Words[i-1].Width) + 2;
                         }
                         else if (img.Margin != null)
                         {
