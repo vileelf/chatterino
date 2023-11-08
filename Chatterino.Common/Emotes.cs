@@ -573,7 +573,7 @@ namespace Chatterino.Common
 
                             tooltipurl = getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
 
-                            owner = data["owner"];
+                            owner = data.ContainsKey("owner") ? data["owner"] : null;
                             visibility = data["flags"];
                             if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
                                 zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;

@@ -1,6 +1,10 @@
 ﻿# changelog
 
 # 3.4.1
+-- Fixed bug preventing all of the 7tv emotes from loading for some channels.
+-- Fixed aliased emotes showing the wrong name.
+
+# 3.4.1
 -- Switched 7tv global emotes over to the newer api. Fixes them not loading either.
 
 # 3.4

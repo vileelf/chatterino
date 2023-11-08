@@ -745,7 +745,7 @@ namespace Chatterino.Common
                         foreach (var e in emotes)
                         {
                             var data = e["data"];
-                            emotename = data["name"];
+                            emotename = e["name"];
                             emoteid = data["id"];
                             var host = data["host"];
                             var files = host["files"];
@@ -771,7 +771,7 @@ namespace Chatterino.Common
                             url = Emotes.getUrlFromScale(urlX1, urlX2, urlX4, AppSettings.EmoteScale, maxScale, out scale);
 
                             tooltipurl = Emotes.getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
-                            owner = data["owner"];
+                            owner = data.ContainsKey("owner") ? data["owner"] : null;
                             visibility = data["flags"];
                             if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
                                 zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;
