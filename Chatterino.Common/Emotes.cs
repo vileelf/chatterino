@@ -356,6 +356,8 @@ namespace Chatterino.Common
                         //var template = "https:" + json["urlTemplate"]; // urlTemplate is outdated, came from bttv v2 api, returned: //cdn.betterttv.net/emote/{{id}}/{{image}}
                         var template = "https://cdn.betterttv.net/emote/{{id}}/{{image}}";
 
+                        BttvGlobalEmotes.Clear();
+
                         foreach (var e in json)
                         {
                             string id = e["id"];
@@ -378,7 +380,7 @@ namespace Chatterino.Common
                     Console.WriteLine("error loading emotes: " + exc.Message);
                 }
             });
-
+            FfzGlobalEmotes.Clear();
             // ffz emotes
             Task.Run(() =>
             {
@@ -419,7 +421,6 @@ namespace Chatterino.Common
                     using (var stream = File.OpenRead(ffzEmotesGlobalCache))
                     {
                         dynamic json = parser.Parse(stream);
-
                         foreach (var set in json["sets"])
                         {
                             var val = set.Value;
@@ -542,6 +543,8 @@ namespace Chatterino.Common
                         const int zeroWidthFlag = 0x100;
                         bool zeroWidth = false;
                         
+                        SeventvGlobalEmotes.Clear();
+
                         LazyLoadedImage emote;
                         var emotes = json["emotes"];
                         foreach (var e in emotes)

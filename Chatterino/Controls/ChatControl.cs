@@ -1247,6 +1247,7 @@ namespace Chatterino.Controls
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Global Emotes", (s, e) =>
                 {
                     Emotes.LoadGlobalEmotes();
+                    Emojis.LoadEmojis();
                     GuiEngine.Current.LoadBadges();
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Reload All Channels Emotes", (s, e) =>

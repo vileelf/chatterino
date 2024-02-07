@@ -1088,6 +1088,31 @@ namespace Chatterino
                 return null;
             });
 
+            Commands.ChatCommands.TryAdd("reply", (s, channel, execute) => {
+                if (execute) {
+                    var S = s.SplitWords();
+                    if (S.Length < 1) {
+                        channel.AddMessage(new Common.Message($"Enter a message id or click a users name on the message and click reply", HSLColor.Gray, true));
+                        return null;
+                    }
+                    var messageId = S[0];
+                    var message = s.SubstringFromWordIndex(1);
+                    var status = TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{IrcManager.Account.UserId}\",\"message\":\"{message}\",\"reply_parent_message_id\": \"{messageId}\"}}");
+                    if (status != HttpStatusCode.OK) {
+                        channel.AddMessage(new Common.Message($"Reply failed to go through. Server returned error: {status}.", HSLColor.Gray, true));
+                        if (status == HttpStatusCode.Forbidden) {
+                            channel.AddMessage(new Common.Message($"You are not permitted to send chat messages to this chat room.", HSLColor.Gray, true));
+                        } else if (status == (HttpStatusCode)422) {
+                            channel.AddMessage(new Common.Message($"Message is too large.", HSLColor.Gray, true));
+                        } else if (status == HttpStatusCode.BadRequest) {
+                            channel.AddMessage(new Common.Message($"The message your replying to does not exist.", HSLColor.Gray, true));
+                        } else if (status == HttpStatusCode.Unauthorized) {
+                            channel.AddMessage(new Common.Message($"You are not logged in.", HSLColor.Gray, true));
+                        }
+                    }
+                }
+                return null;
+            });
             Commands.ChatCommands.TryAdd("announce", (s, channel, execute) =>
             {
                 if (execute)
@@ -1330,6 +1355,7 @@ namespace Chatterino
                                 { "rejoin", "Usage \"/rejoin\" - Rejoins the current channel and tries to retrieve messages missed." },
                                 { "w", "Usage \"/w <username> <message>\" - Whispers <username> with <message>. Requires a verified phone number to use." },
                                 { "r", "Usage \"/r \" - Replies to the last user that whispered you while chatterino was open. Requires a verified phone number to use." },
+                                { "reply", "Usage \"/reply <message-id> <message> \" - Replies to a message in chat using twitches reply feature. (If you click on the username on the message your want to reply to you can use the reply button to do this)" },
                                 { "announce", "Usage \"/announce <announcement>\" - Call attention to your message with a highlight. (Uses same color as your name)" },
                                 { "announceorange", "Usage \"/announceorange <announcement>\" - Call attention to your message with an orange highlight." },
                                 { "announceblue", "Usage \"/announceblue <announcement>\" - Call attention to your message with an blue highlight." },

@@ -192,6 +192,7 @@ namespace Chatterino.Controls
             btnFollow.SetTooltip("Follow User");
             btnIgnore.SetTooltip("Ignore User");
             btnMessage.SetTooltip("Send Private Message");
+            btnReply.SetTooltip("Reply to Message");
             btnNotes.SetTooltip("Set User Notes");
             btnProfile.SetTooltip("Show Profile");
             btnUnban.SetTooltip("Unban User");
@@ -227,6 +228,7 @@ namespace Chatterino.Controls
                 btnBan.Visible = false;
                 btnUnban.Visible = false;
                 btnMessage.Visible = false;
+                btnReply.Visible = false;
                 btnNotes.Visible = false;
                 btnWhisper.Visible = false;
                 btnIgnore.Visible = false;
@@ -308,6 +310,11 @@ namespace Chatterino.Controls
                 btnDelete.Click += (s, e) =>
                 {
                     data.Channel.SendMessage("/delete " + data.MessageId);
+                };
+
+                // Reply to message
+                btnReply.Click += (s, e) => {
+                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + data.MessageId + " ");
                 };
 
                 // ignore user
@@ -466,6 +473,7 @@ namespace Chatterino.Controls
             this.btnIgnoreHighlights = new Chatterino.Controls.FlatButton();
             this.btnWhisper = new Chatterino.Controls.FlatButton();
             this.btnMessage = new Chatterino.Controls.FlatButton();
+            this.btnReply = new Chatterino.Controls.FlatButton();
             this.btnNotes = new Chatterino.Controls.FlatButton();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
@@ -498,6 +506,7 @@ namespace Chatterino.Controls
             this.flowLayoutPanel1.Controls.Add(this.btnIgnoreHighlights);
             this.flowLayoutPanel1.Controls.Add(this.btnWhisper);
             this.flowLayoutPanel1.Controls.Add(this.btnMessage);
+            this.flowLayoutPanel1.Controls.Add(this.btnReply);
             this.flowLayoutPanel1.Controls.Add(this.btnNotes);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -749,6 +758,15 @@ namespace Chatterino.Controls
             this.btnMessage.TabIndex = 7;
             this.btnMessage.Text = "Message";
             // 
+            // btnReply
+            // 
+            this.btnReply.Image = null;
+            this.btnReply.Location = new System.Drawing.Point(174, 182);
+            this.btnReply.Name = "btnReply";
+            this.btnReply.Size = new System.Drawing.Size(57, 18);
+            this.btnReply.TabIndex = 7;
+            this.btnReply.Text = "Reply";
+            // 
             // btnNotes
             // 
             this.btnNotes.Image = null;
@@ -797,6 +815,7 @@ namespace Chatterino.Controls
         private FlatButton btnUnban;
         private FlatButton btnWhisper;
         private FlatButton btnMessage;
+        private FlatButton btnReply;
         private FlatButton btnNotes;
         private FlatButton btnProfile;
         private FlatButton btnFollow;
