@@ -1055,9 +1055,15 @@ namespace Chatterino.Common
                                             messages.Add(message);
                                         }
                                     } else {
-                                        message = (new Message(msg, this, isPastMessage: true) { HighlightTab = false });
+                                        message = new Message(msg, this, isPastMessage: true) { HighlightTab = false };
                                         Users[message.Username.ToUpper()] = message.DisplayName;
                                         if (IrcManager.IsMessageIgnored(message, this) != true ) {
+                                            if (message.ReplyBody != null && AppSettings.EnableReplys) {
+                                                var sysMessage = new Message($"⤵️ Replying to @{message.ReplyUser}: {message.ReplyBody}", HSLColor.Gray, false, FontType.SmallItalic) {
+                                                    HighlightType = HighlightType.None
+                                                };
+                                                messages.Add(sysMessage);
+                                            }
                                             messages.Add(message);
                                         }
                                     }

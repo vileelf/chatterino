@@ -272,6 +272,10 @@ namespace Chatterino.Controls
                     btnDelete.Visible = false;
                 }
 
+                if (!AppSettings.EnableReplys) {
+                    btnReply.Visible = false;
+                }
+
                 if (data.Channel.IsBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     btnMod.Click += (s, e) =>
@@ -315,6 +319,8 @@ namespace Chatterino.Controls
                 // Reply to message
                 btnReply.Click += (s, e) => {
                     (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + data.MessageId + " ");
+                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                    App.MainForm.Focus();
                 };
 
                 // ignore user
@@ -348,6 +354,8 @@ namespace Chatterino.Controls
                 btnMessage.Click += (s, e) =>
                 {
                     (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText($"/w " + data.UserName + " ");
+                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                    App.MainForm.Focus();
                 };
                 
                 // notes

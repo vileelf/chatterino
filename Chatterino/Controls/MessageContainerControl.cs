@@ -874,22 +874,6 @@ namespace Chatterino.Controls
                                             appendNewline = true;
                                     }
                                 }
-                                //else if (word.Type == SpanType.Image)
-                                //{
-                                //    var textLength = word.Type == SpanType.Text ? ((string)word.Value).Length : 2;
-
-                                //    var offset = (first.MessageIndex == currentLine && first.WordIndex == i) ? first.CharIndex : 0;
-                                //    var length = ((last.MessageIndex == currentLine && last.WordIndex == i) ? last.CharIndex : textLength) - offset;
-
-                                //    if (word.CopyText != null)
-                                //    {
-                                //        if (offset == 0)
-                                //            b.Append(word.CopyText);
-                                //        if (offset + length == 2)
-                                //            appendNewline = true;
-                                //        //b.Append(' ');
-                                //    }
-                                //}
                                 else if (word.Type == SpanType.LazyLoadedImage)
                                 {
                                     var textLength = word.Type == SpanType.Text ? ((string)word.Value).Length : 2;
@@ -903,7 +887,6 @@ namespace Chatterino.Controls
                                             b.Append(word.CopyText);
                                         if (offset + length == 2 && word.HasTrailingSpace)
                                             appendNewline = true;
-                                        //b.Append(' ');
                                     }
                                 }
                             }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web.UI;
+using System.Xml.Linq;
 using TwitchIrc;
 
 namespace Chatterino.Common
@@ -344,49 +346,29 @@ namespace Chatterino.Common
                     }
                     else
                     {
-                        // check if ignore keyword is triggered
-                        if (AppSettings.IgnoredKeywordsRegex == null || !AppSettings.IgnoredKeywordsRegex.IsMatch(e.Message.Params))
-                        {
-                            var message = new Message(msg, c);
+                        var message = new Message(msg, c);
 
-                            // check if user is on the ignore list
-                            if (AppSettings.EnableTwitchUserIgnores && IsIgnoredUser(message.Username))
-                            {
-                                switch (AppSettings.ChatShowIgnoredUsersMessages)
-                                {
-                                    case 1:
-                                        if (!c.IsModOrBroadcaster)
-                                            return;
-                                        break;
-                                    case 2:
-                                        if (!c.IsBroadcaster)
-                                            return;
-                                        break;
-                                    default:
-                                        return;
-                                }
+                        c.Users[message.Username.ToUpper()] = message.DisplayName;
+
+                        if (!IsMessageIgnored(message, c)) {
+                            if (message.HasAnyHighlightType(HighlightType.Highlighted)) {
+                                var mentionMessage = new Message(msg, c, enablePingSound: false, includeChannel: true) {
+                                    HighlightType = HighlightType.None
+                                };
+
+                                TwitchChannel.MentionsChannel.AddMessage(mentionMessage);
                             }
 
-                            {
-                                c.Users[message.Username.ToUpper()] = message.DisplayName;
-
-                                if (message.HasAnyHighlightType(HighlightType.Highlighted))
-                                {
-                                    var mentionMessage = new Message(msg, c, enablePingSound: false, includeChannel: true)
-                                    {
-                                        HighlightType = HighlightType.None
-                                    };
-
-                                    TwitchChannel.MentionsChannel.AddMessage(mentionMessage);
-                                }
-
-                                if (message.UserId == Account.UserId && !AppSettings.Rainbow)
-                                {
-                                    AppSettings.OldColor = message.UsernameColor.ToRGBHex();
-                                }
-
-                                c.AddMessage(message);
+                            if (message.UserId == Account.UserId && !AppSettings.Rainbow) {
+                                AppSettings.OldColor = message.UsernameColor.ToRGBHex();
                             }
+                            if (message.ReplyBody != null && AppSettings.EnableReplys) {
+                                var sysMessage = new Message($"⤵️ Replying to @{message.ReplyUser}: {message.ReplyBody}", HSLColor.Gray, false, FontType.SmallItalic) {
+                                    HighlightType = HighlightType.None
+                                };
+                                c.AddMessage(sysMessage);
+                            }
+                            c.AddMessage(message);
                         }
                     }
                 });

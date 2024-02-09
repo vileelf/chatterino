@@ -46,16 +46,59 @@ namespace Chatterino.Controls
             this.openFileStreamlink = new System.Windows.Forms.OpenFileDialog();
             this.tabs = new Chatterino.Controls.SettingsTabControl();
             this.RightPanel = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.comboShowIgnoredUsersMessagesIf = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.chkTwitchIgnores = new System.Windows.Forms.CheckBox();
+            this.btnIgnoredUserRemove = new System.Windows.Forms.Button();
+            this.btnIgnoredUserAdd = new System.Windows.Forms.Button();
+            this.dgvIgnoredUsers = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label9 = new System.Windows.Forms.Label();
+            this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.chkEnableInlineWhispers = new System.Windows.Forms.CheckBox();
+            this.paneStreamLink = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtStreamlinkCustomArguments = new System.Windows.Forms.TextBox();
+            this.linkStreamlinkDownload = new System.Windows.Forms.LinkLabel();
+            this.linkStreamlinkWebsite = new System.Windows.Forms.LinkLabel();
+            this.label19 = new System.Windows.Forms.Label();
+            this.comboQuality = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.chkStreamlinkPath = new System.Windows.Forms.CheckBox();
+            this.btnStreamlinkPath = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.rtbHighlights = new System.Windows.Forms.RichTextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.rtbUserBlacklist = new System.Windows.Forms.RichTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.usernameHightlightTab = new System.Windows.Forms.TabPage();
+            this.rtbUsernamelist = new System.Windows.Forms.RichTextBox();
+            this.usernamelabel = new System.Windows.Forms.Label();
+            this.btnTextCustomPing = new System.Windows.Forms.Button();
+            this.btnTestGoLiveCustomPing = new System.Windows.Forms.Button();
+            this.btnCustomHighlightOpenFile = new System.Windows.Forms.Button();
+            this.btnCustomGoLiveOpenFile = new System.Windows.Forms.Button();
+            this.chkCustomPingSound = new System.Windows.Forms.CheckBox();
+            this.chkGoLiveSound = new System.Windows.Forms.CheckBox();
+            this.chkCustomGoLiveSound = new System.Windows.Forms.CheckBox();
+            this.chkFlashTaskbar = new System.Windows.Forms.CheckBox();
+            this.chkGoLiveTaskbar = new System.Windows.Forms.CheckBox();
+            this.chkHighlight = new System.Windows.Forms.CheckBox();
+            this.chkPings = new System.Windows.Forms.CheckBox();
             this.panel13 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkTimeoutButton = new System.Windows.Forms.CheckBox();
             this.listView1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddTimeout = new System.Windows.Forms.Button();
             this.chkBanButton = new System.Windows.Forms.CheckBox();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.paneStreamLink = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.chkEnableInlineWhispers = new System.Windows.Forms.CheckBox();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -77,7 +120,6 @@ namespace Chatterino.Controls
             this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
             this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
             this.chkChangeTabTitle = new System.Windows.Forms.CheckBox();
-            this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
             this.btnSelectFont = new System.Windows.Forms.Button();
             this.btnDefaultFont = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -90,28 +132,6 @@ namespace Chatterino.Controls
             this.chkHideInput = new System.Windows.Forms.CheckBox();
             this.txtMsgLimit = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.rtbHighlights = new System.Windows.Forms.RichTextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.rtbUserBlacklist = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.usernameHightlightTab = new System.Windows.Forms.TabPage();
-            this.rtbUsernamelist = new System.Windows.Forms.RichTextBox();
-            this.usernamelabel = new System.Windows.Forms.Label();
-            this.btnTextCustomPing = new System.Windows.Forms.Button();
-            this.btnTestGoLiveCustomPing = new System.Windows.Forms.Button();
-            this.btnCustomHighlightOpenFile = new System.Windows.Forms.Button();
-            this.btnCustomGoLiveOpenFile = new System.Windows.Forms.Button();
-            this.chkCustomPingSound = new System.Windows.Forms.CheckBox();
-            this.chkFlashTaskbar = new System.Windows.Forms.CheckBox();
-            this.chkHighlight = new System.Windows.Forms.CheckBox();
-            this.chkCustomGoLiveSound = new System.Windows.Forms.CheckBox();
-            this.chkGoLiveTaskbar = new System.Windows.Forms.CheckBox();
-            this.chkGoLiveSound = new System.Windows.Forms.CheckBox();
-            this.chkPings = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -132,28 +152,8 @@ namespace Chatterino.Controls
             this.btnCommandAdd = new System.Windows.Forms.Button();
             this.dgvCommands = new System.Windows.Forms.DataGridView();
             this.Command = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.comboShowIgnoredUsersMessagesIf = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.chkTwitchIgnores = new System.Windows.Forms.CheckBox();
-            this.btnIgnoredUserRemove = new System.Windows.Forms.Button();
-            this.btnIgnoredUserAdd = new System.Windows.Forms.Button();
-            this.dgvIgnoredUsers = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label9 = new System.Windows.Forms.Label();
             this.panel12 = new System.Windows.Forms.Panel();
             this.chkPrefereEmotes = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.txtStreamlinkCustomArguments = new System.Windows.Forms.TextBox();
-            this.linkStreamlinkDownload = new System.Windows.Forms.LinkLabel();
-            this.linkStreamlinkWebsite = new System.Windows.Forms.LinkLabel();
-            this.label19 = new System.Windows.Forms.Label();
-            this.comboQuality = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.chkStreamlinkPath = new System.Windows.Forms.CheckBox();
-            this.btnStreamlinkPath = new System.Windows.Forms.Button();
             this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
             this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
             this.chkCacheEmotes = new System.Windows.Forms.CheckBox();
@@ -209,33 +209,30 @@ namespace Chatterino.Controls
             this.spStreamLink = new Chatterino.Controls.SettingsTabPage();
             this.spBrowserExtension = new Chatterino.Controls.SettingsTabPage();
             this.spConnection = new Chatterino.Controls.SettingsTabPage();
+            this.chkReplys = new System.Windows.Forms.CheckBox();
             this.tabs.SuspendLayout();
             this.RightPanel.SuspendLayout();
-            this.panel13.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).BeginInit();
             this.panel8.SuspendLayout();
             this.paneStreamLink.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.usernameHightlightTab.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.panel3.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            try {
-            this.usernameHightlightTab.SuspendLayout();
-            } catch (Exception e) {
-                log(e.ToString());
-            }
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).BeginInit();
-            this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).BeginInit();
             this.panel12.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -276,9 +273,9 @@ namespace Chatterino.Controls
             this.tabs.Location = new System.Drawing.Point(0, 0);
             this.tabs.Name = "tabs";
             this.tabs.Panel = this.RightPanel;
-            this.tabs.SelectedIndex = 5;
-            this.tabs.SelectedTab = this.spIgnoredUsers;
-            this.tabs.Size = new System.Drawing.Size(631, 520);
+            this.tabs.SelectedIndex = 2;
+            this.tabs.SelectedTab = this.settingsTabPage1;
+            this.tabs.Size = new System.Drawing.Size(631, 498);
             this.tabs.TabIndex = 0;
             this.tabs.TabsWidth = 150;
             // 
@@ -287,27 +284,566 @@ namespace Chatterino.Controls
             this.RightPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RightPanel.Controls.Add(this.panel6);
-            this.RightPanel.Controls.Add(this.panel8);
+            this.RightPanel.Controls.Add(this.panel12);
+            this.RightPanel.Controls.Add(this.panel5);
             this.RightPanel.Controls.Add(this.paneStreamLink);
+            this.RightPanel.Controls.Add(this.panel1);
+            this.RightPanel.Controls.Add(this.panel6);
+            this.RightPanel.Controls.Add(this.panel4);
+            this.RightPanel.Controls.Add(this.panel8);
             this.RightPanel.Controls.Add(this.panel3);
             this.RightPanel.Controls.Add(this.panel13);
             this.RightPanel.Controls.Add(this.panel10);
-            this.RightPanel.Controls.Add(this.panel1);
             this.RightPanel.Controls.Add(this.panel2);
-            this.RightPanel.Controls.Add(this.panel5);
-            this.RightPanel.Controls.Add(this.panel12);
             this.RightPanel.Controls.Add(this.panel7);
             this.RightPanel.Controls.Add(this.panel9);
-            this.RightPanel.Controls.Add(this.panel4);
             this.RightPanel.Controls.Add(this.panel11);
             this.RightPanel.Controls.Add(this.comboBox2);
             this.RightPanel.Controls.Add(this.label18);
             this.RightPanel.Location = new System.Drawing.Point(150, 0);
             this.RightPanel.Name = "RightPanel";
             this.RightPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 42);
-            this.RightPanel.Size = new System.Drawing.Size(481, 520);
+            this.RightPanel.Size = new System.Drawing.Size(481, 498);
             this.RightPanel.TabIndex = 0;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.comboShowIgnoredUsersMessagesIf);
+            this.panel6.Controls.Add(this.label15);
+            this.panel6.Controls.Add(this.chkTwitchIgnores);
+            this.panel6.Controls.Add(this.btnIgnoredUserRemove);
+            this.panel6.Controls.Add(this.btnIgnoredUserAdd);
+            this.panel6.Controls.Add(this.dgvIgnoredUsers);
+            this.panel6.Controls.Add(this.label9);
+            this.panel6.Controls.Add(this.chkIgnoreViaTwitch);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(481, 456);
+            this.panel6.TabIndex = 4;
+            // 
+            // comboShowIgnoredUsersMessagesIf
+            // 
+            this.comboShowIgnoredUsersMessagesIf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboShowIgnoredUsersMessagesIf.FormattingEnabled = true;
+            this.comboShowIgnoredUsersMessagesIf.Items.AddRange(new object[] {
+            "You are moderator",
+            "You are broadcaster",
+            "Never"});
+            this.comboShowIgnoredUsersMessagesIf.Location = new System.Drawing.Point(322, 36);
+            this.comboShowIgnoredUsersMessagesIf.Name = "comboShowIgnoredUsersMessagesIf";
+            this.comboShowIgnoredUsersMessagesIf.Size = new System.Drawing.Size(109, 21);
+            this.comboShowIgnoredUsersMessagesIf.TabIndex = 25;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(177, 41);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(139, 13);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "Show messages anyways if:";
+            // 
+            // chkTwitchIgnores
+            // 
+            this.chkTwitchIgnores.AutoSize = true;
+            this.chkTwitchIgnores.Checked = true;
+            this.chkTwitchIgnores.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTwitchIgnores.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTwitchIgnores.Location = new System.Drawing.Point(16, 13);
+            this.chkTwitchIgnores.Name = "chkTwitchIgnores";
+            this.chkTwitchIgnores.Size = new System.Drawing.Size(156, 17);
+            this.chkTwitchIgnores.TabIndex = 24;
+            this.chkTwitchIgnores.Text = "Enable twitch ignored users";
+            this.chkTwitchIgnores.UseVisualStyleBackColor = true;
+            this.chkTwitchIgnores.Visible = false;
+            // 
+            // btnIgnoredUserRemove
+            // 
+            this.btnIgnoredUserRemove.Location = new System.Drawing.Point(96, 36);
+            this.btnIgnoredUserRemove.Name = "btnIgnoredUserRemove";
+            this.btnIgnoredUserRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnIgnoredUserRemove.TabIndex = 8;
+            this.btnIgnoredUserRemove.Text = "Remove";
+            this.btnIgnoredUserRemove.UseVisualStyleBackColor = true;
+            // 
+            // btnIgnoredUserAdd
+            // 
+            this.btnIgnoredUserAdd.Location = new System.Drawing.Point(16, 36);
+            this.btnIgnoredUserAdd.Name = "btnIgnoredUserAdd";
+            this.btnIgnoredUserAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnIgnoredUserAdd.TabIndex = 7;
+            this.btnIgnoredUserAdd.Text = "Add";
+            this.btnIgnoredUserAdd.UseVisualStyleBackColor = true;
+            // 
+            // dgvIgnoredUsers
+            // 
+            this.dgvIgnoredUsers.AllowUserToAddRows = false;
+            this.dgvIgnoredUsers.AllowUserToDeleteRows = false;
+            this.dgvIgnoredUsers.AllowUserToResizeColumns = false;
+            this.dgvIgnoredUsers.AllowUserToResizeRows = false;
+            this.dgvIgnoredUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvIgnoredUsers.ColumnHeadersVisible = false;
+            this.dgvIgnoredUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1});
+            this.dgvIgnoredUsers.Location = new System.Drawing.Point(16, 63);
+            this.dgvIgnoredUsers.Name = "dgvIgnoredUsers";
+            this.dgvIgnoredUsers.RowHeadersVisible = false;
+            this.dgvIgnoredUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvIgnoredUsers.Size = new System.Drawing.Size(415, 268);
+            this.dgvIgnoredUsers.TabIndex = 6;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.Location = new System.Drawing.Point(13, 334);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(190, 26);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "/ignore in chat to ignore someone\r\n/unignore in chat to unignore someone";
+            // 
+            // chkIgnoreViaTwitch
+            // 
+            this.chkIgnoreViaTwitch.AutoSize = true;
+            this.chkIgnoreViaTwitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkIgnoreViaTwitch.Location = new System.Drawing.Point(13, 357);
+            this.chkIgnoreViaTwitch.Name = "chkIgnoreViaTwitch";
+            this.chkIgnoreViaTwitch.Size = new System.Drawing.Size(178, 17);
+            this.chkIgnoreViaTwitch.TabIndex = 9;
+            this.chkIgnoreViaTwitch.Text = "Ignore users using the twitch api\r\n";
+            this.chkIgnoreViaTwitch.UseVisualStyleBackColor = true;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.label13);
+            this.panel8.Controls.Add(this.chkEnableInlineWhispers);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(481, 456);
+            this.panel8.TabIndex = 6;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(12, 40);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(300, 39);
+            this.label13.TabIndex = 25;
+            this.label13.Text = "You can join the channel /whispers to view your whispers!\r\n\r\nYou can send whisper" +
+    "s using this command: /w user message";
+            // 
+            // chkEnableInlineWhispers
+            // 
+            this.chkEnableInlineWhispers.AutoSize = true;
+            this.chkEnableInlineWhispers.Checked = true;
+            this.chkEnableInlineWhispers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkEnableInlineWhispers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkEnableInlineWhispers.Location = new System.Drawing.Point(15, 13);
+            this.chkEnableInlineWhispers.Name = "chkEnableInlineWhispers";
+            this.chkEnableInlineWhispers.Size = new System.Drawing.Size(130, 17);
+            this.chkEnableInlineWhispers.TabIndex = 24;
+            this.chkEnableInlineWhispers.Text = "Enable inline whispers";
+            this.chkEnableInlineWhispers.UseVisualStyleBackColor = true;
+            // 
+            // paneStreamLink
+            // 
+            this.paneStreamLink.Controls.Add(this.groupBox2);
+            this.paneStreamLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.paneStreamLink.Location = new System.Drawing.Point(0, 0);
+            this.paneStreamLink.Name = "paneStreamLink";
+            this.paneStreamLink.Size = new System.Drawing.Size(481, 456);
+            this.paneStreamLink.TabIndex = 6;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label21);
+            this.groupBox2.Controls.Add(this.label20);
+            this.groupBox2.Controls.Add(this.txtStreamlinkCustomArguments);
+            this.groupBox2.Controls.Add(this.linkStreamlinkDownload);
+            this.groupBox2.Controls.Add(this.linkStreamlinkWebsite);
+            this.groupBox2.Controls.Add(this.label19);
+            this.groupBox2.Controls.Add(this.comboQuality);
+            this.groupBox2.Controls.Add(this.label17);
+            this.groupBox2.Controls.Add(this.chkStreamlinkPath);
+            this.groupBox2.Controls.Add(this.btnStreamlinkPath);
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
+            this.groupBox2.Location = new System.Drawing.Point(15, 15);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(431, 215);
+            this.groupBox2.TabIndex = 54;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Streamlink";
+            // 
+            // label21
+            // 
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label21.ForeColor = System.Drawing.Color.Silver;
+            this.label21.Location = new System.Drawing.Point(9, 173);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(412, 39);
+            this.label21.TabIndex = 51;
+            this.label21.Text = "You can use {name}, {game} and {title} for the streamers name, game, and stream t" +
+    "itle respectively";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label20.Location = new System.Drawing.Point(9, 147);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(97, 13);
+            this.label20.TabIndex = 50;
+            this.label20.Text = "Custom arguments:";
+            // 
+            // txtStreamlinkCustomArguments
+            // 
+            this.txtStreamlinkCustomArguments.Location = new System.Drawing.Point(109, 143);
+            this.txtStreamlinkCustomArguments.Name = "txtStreamlinkCustomArguments";
+            this.txtStreamlinkCustomArguments.Size = new System.Drawing.Size(308, 20);
+            this.txtStreamlinkCustomArguments.TabIndex = 49;
+            // 
+            // linkStreamlinkDownload
+            // 
+            this.linkStreamlinkDownload.AutoSize = true;
+            this.linkStreamlinkDownload.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.linkStreamlinkDownload.Location = new System.Drawing.Point(67, 57);
+            this.linkStreamlinkDownload.Name = "linkStreamlinkDownload";
+            this.linkStreamlinkDownload.Size = new System.Drawing.Size(55, 13);
+            this.linkStreamlinkDownload.TabIndex = 48;
+            this.linkStreamlinkDownload.TabStop = true;
+            this.linkStreamlinkDownload.Text = "Download";
+            this.linkStreamlinkDownload.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.linkStreamlinkDownload.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStreamlinkDownload_LinkClicked);
+            // 
+            // linkStreamlinkWebsite
+            // 
+            this.linkStreamlinkWebsite.AutoSize = true;
+            this.linkStreamlinkWebsite.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.linkStreamlinkWebsite.Location = new System.Drawing.Point(12, 57);
+            this.linkStreamlinkWebsite.Name = "linkStreamlinkWebsite";
+            this.linkStreamlinkWebsite.Size = new System.Drawing.Size(46, 13);
+            this.linkStreamlinkWebsite.TabIndex = 47;
+            this.linkStreamlinkWebsite.TabStop = true;
+            this.linkStreamlinkWebsite.Text = "Website";
+            this.linkStreamlinkWebsite.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.linkStreamlinkWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStreamlinkWebsite_LinkClicked);
+            // 
+            // label19
+            // 
+            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label19.Location = new System.Drawing.Point(9, 19);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(413, 39);
+            this.label19.TabIndex = 46;
+            this.label19.Text = "Streamlink is a command-line utility that pipes video streams from various servic" +
+    "es into a video player, such as VLC. Make sure to edit the configuration file be" +
+    "fore you use it!";
+            // 
+            // comboQuality
+            // 
+            this.comboQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboQuality.FormattingEnabled = true;
+            this.comboQuality.Items.AddRange(new object[] {
+            "best",
+            "high",
+            "medium",
+            "low",
+            "worst"});
+            this.comboQuality.Location = new System.Drawing.Point(109, 88);
+            this.comboQuality.Name = "comboQuality";
+            this.comboQuality.Size = new System.Drawing.Size(119, 21);
+            this.comboQuality.TabIndex = 45;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label17.Location = new System.Drawing.Point(9, 91);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(42, 13);
+            this.label17.TabIndex = 44;
+            this.label17.Text = "Quality:";
+            // 
+            // chkStreamlinkPath
+            // 
+            this.chkStreamlinkPath.AutoSize = true;
+            this.chkStreamlinkPath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkStreamlinkPath.Location = new System.Drawing.Point(12, 116);
+            this.chkStreamlinkPath.Name = "chkStreamlinkPath";
+            this.chkStreamlinkPath.Size = new System.Drawing.Size(326, 17);
+            this.chkStreamlinkPath.TabIndex = 47;
+            this.chkStreamlinkPath.Text = "Use custom path (if using portable or it wasn\'t installed properly):";
+            this.chkStreamlinkPath.UseVisualStyleBackColor = true;
+            // 
+            // btnStreamlinkPath
+            // 
+            this.btnStreamlinkPath.ForeColor = System.Drawing.Color.Black;
+            this.btnStreamlinkPath.Location = new System.Drawing.Point(344, 113);
+            this.btnStreamlinkPath.Name = "btnStreamlinkPath";
+            this.btnStreamlinkPath.Size = new System.Drawing.Size(75, 23);
+            this.btnStreamlinkPath.TabIndex = 46;
+            this.btnStreamlinkPath.Text = "Select";
+            this.btnStreamlinkPath.UseVisualStyleBackColor = true;
+            this.btnStreamlinkPath.Click += new System.EventHandler(this.btnStreamlinkPath_Click);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.tabControl1);
+            this.panel3.Controls.Add(this.btnTextCustomPing);
+            this.panel3.Controls.Add(this.btnTestGoLiveCustomPing);
+            this.panel3.Controls.Add(this.btnCustomHighlightOpenFile);
+            this.panel3.Controls.Add(this.btnCustomGoLiveOpenFile);
+            this.panel3.Controls.Add(this.chkCustomPingSound);
+            this.panel3.Controls.Add(this.chkGoLiveSound);
+            this.panel3.Controls.Add(this.chkCustomGoLiveSound);
+            this.panel3.Controls.Add(this.chkFlashTaskbar);
+            this.panel3.Controls.Add(this.chkGoLiveTaskbar);
+            this.panel3.Controls.Add(this.chkHighlight);
+            this.panel3.Controls.Add(this.chkPings);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(481, 456);
+            this.panel3.TabIndex = 1;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.usernameHightlightTab);
+            this.tabControl1.Location = new System.Drawing.Point(17, 179);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(415, 220);
+            this.tabControl1.TabIndex = 21;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.rtbHighlights);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(407, 194);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Highlight keywords";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(3, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(163, 13);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Highlight keywords (one per line):";
+            // 
+            // rtbHighlights
+            // 
+            this.rtbHighlights.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbHighlights.Location = new System.Drawing.Point(6, 21);
+            this.rtbHighlights.Name = "rtbHighlights";
+            this.rtbHighlights.Size = new System.Drawing.Size(395, 236);
+            this.rtbHighlights.TabIndex = 17;
+            this.rtbHighlights.Text = "";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.rtbUserBlacklist);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(407, 194);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "User highlight blacklist";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // rtbUserBlacklist
+            // 
+            this.rtbUserBlacklist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbUserBlacklist.Location = new System.Drawing.Point(6, 21);
+            this.rtbUserBlacklist.Name = "rtbUserBlacklist";
+            this.rtbUserBlacklist.Size = new System.Drawing.Size(395, 246);
+            this.rtbUserBlacklist.TabIndex = 24;
+            this.rtbUserBlacklist.Text = "";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label6.ForeColor = System.Drawing.Color.Black;
+            this.label6.Location = new System.Drawing.Point(3, 5);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(204, 13);
+            this.label6.TabIndex = 23;
+            this.label6.Text = "Users that can not ping you (one per line):";
+            // 
+            // usernameHightlightTab
+            // 
+            this.usernameHightlightTab.Controls.Add(this.rtbUsernamelist);
+            this.usernameHightlightTab.Controls.Add(this.usernamelabel);
+            this.usernameHightlightTab.Location = new System.Drawing.Point(4, 22);
+            this.usernameHightlightTab.Name = "usernameHightlightTab";
+            this.usernameHightlightTab.Padding = new System.Windows.Forms.Padding(3);
+            this.usernameHightlightTab.Size = new System.Drawing.Size(407, 194);
+            this.usernameHightlightTab.TabIndex = 1;
+            this.usernameHightlightTab.Text = "Username highlight list";
+            this.usernameHightlightTab.UseVisualStyleBackColor = true;
+            // 
+            // rtbUsernamelist
+            // 
+            this.rtbUsernamelist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbUsernamelist.Location = new System.Drawing.Point(6, 21);
+            this.rtbUsernamelist.Name = "rtbUsernamelist";
+            this.rtbUsernamelist.Size = new System.Drawing.Size(395, 246);
+            this.rtbUsernamelist.TabIndex = 24;
+            this.rtbUsernamelist.Text = "";
+            // 
+            // usernamelabel
+            // 
+            this.usernamelabel.AutoSize = true;
+            this.usernamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.usernamelabel.ForeColor = System.Drawing.Color.Black;
+            this.usernamelabel.Location = new System.Drawing.Point(3, 5);
+            this.usernamelabel.Name = "usernamelabel";
+            this.usernamelabel.Size = new System.Drawing.Size(181, 13);
+            this.usernamelabel.TabIndex = 23;
+            this.usernamelabel.Text = "Usernames to highlight (one per line):";
+            // 
+            // btnTextCustomPing
+            // 
+            this.btnTextCustomPing.Location = new System.Drawing.Point(188, 78);
+            this.btnTextCustomPing.Name = "btnTextCustomPing";
+            this.btnTextCustomPing.Size = new System.Drawing.Size(75, 23);
+            this.btnTextCustomPing.TabIndex = 20;
+            this.btnTextCustomPing.Text = "Test";
+            this.btnTextCustomPing.UseVisualStyleBackColor = true;
+            // 
+            // btnTestGoLiveCustomPing
+            // 
+            this.btnTestGoLiveCustomPing.Location = new System.Drawing.Point(188, 151);
+            this.btnTestGoLiveCustomPing.Name = "btnTestGoLiveCustomPing";
+            this.btnTestGoLiveCustomPing.Size = new System.Drawing.Size(75, 23);
+            this.btnTestGoLiveCustomPing.TabIndex = 20;
+            this.btnTestGoLiveCustomPing.Text = "Test";
+            this.btnTestGoLiveCustomPing.UseVisualStyleBackColor = true;
+            // 
+            // btnCustomHighlightOpenFile
+            // 
+            this.btnCustomHighlightOpenFile.Image = global::Chatterino.Properties.Resources.OpenFolder_16x;
+            this.btnCustomHighlightOpenFile.Location = new System.Drawing.Point(156, 78);
+            this.btnCustomHighlightOpenFile.Name = "btnCustomHighlightOpenFile";
+            this.btnCustomHighlightOpenFile.Size = new System.Drawing.Size(24, 23);
+            this.btnCustomHighlightOpenFile.TabIndex = 19;
+            this.btnCustomHighlightOpenFile.UseVisualStyleBackColor = true;
+            // 
+            // btnCustomGoLiveOpenFile
+            // 
+            this.btnCustomGoLiveOpenFile.Image = global::Chatterino.Properties.Resources.OpenFolder_16x;
+            this.btnCustomGoLiveOpenFile.Location = new System.Drawing.Point(156, 151);
+            this.btnCustomGoLiveOpenFile.Name = "btnCustomGoLiveOpenFile";
+            this.btnCustomGoLiveOpenFile.Size = new System.Drawing.Size(24, 23);
+            this.btnCustomGoLiveOpenFile.TabIndex = 19;
+            this.btnCustomGoLiveOpenFile.UseVisualStyleBackColor = true;
+            // 
+            // chkCustomPingSound
+            // 
+            this.chkCustomPingSound.AutoSize = true;
+            this.chkCustomPingSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkCustomPingSound.Location = new System.Drawing.Point(16, 82);
+            this.chkCustomPingSound.Name = "chkCustomPingSound";
+            this.chkCustomPingSound.Size = new System.Drawing.Size(135, 17);
+            this.chkCustomPingSound.TabIndex = 18;
+            this.chkCustomPingSound.Text = "Custom highlight sound";
+            this.chkCustomPingSound.UseVisualStyleBackColor = true;
+            // 
+            // chkGoLiveSound
+            // 
+            this.chkGoLiveSound.AutoSize = true;
+            this.chkGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkGoLiveSound.Location = new System.Drawing.Point(16, 128);
+            this.chkGoLiveSound.Name = "chkGoLiveSound";
+            this.chkGoLiveSound.Size = new System.Drawing.Size(179, 17);
+            this.chkGoLiveSound.TabIndex = 18;
+            this.chkGoLiveSound.Text = "Play sound when a tab goes live";
+            this.chkGoLiveSound.UseVisualStyleBackColor = true;
+            // 
+            // chkCustomGoLiveSound
+            // 
+            this.chkCustomGoLiveSound.AutoSize = true;
+            this.chkCustomGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkCustomGoLiveSound.Location = new System.Drawing.Point(16, 151);
+            this.chkCustomGoLiveSound.Name = "chkCustomGoLiveSound";
+            this.chkCustomGoLiveSound.Size = new System.Drawing.Size(127, 17);
+            this.chkCustomGoLiveSound.TabIndex = 18;
+            this.chkCustomGoLiveSound.Text = "Custom go live sound";
+            this.chkCustomGoLiveSound.UseVisualStyleBackColor = true;
+            // 
+            // chkFlashTaskbar
+            // 
+            this.chkFlashTaskbar.AutoSize = true;
+            this.chkFlashTaskbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkFlashTaskbar.Location = new System.Drawing.Point(16, 59);
+            this.chkFlashTaskbar.Name = "chkFlashTaskbar";
+            this.chkFlashTaskbar.Size = new System.Drawing.Size(232, 17);
+            this.chkFlashTaskbar.TabIndex = 15;
+            this.chkFlashTaskbar.Text = "Flash taskbar when your name is mentioned";
+            this.chkFlashTaskbar.UseVisualStyleBackColor = true;
+            // 
+            // chkGoLiveTaskbar
+            // 
+            this.chkGoLiveTaskbar.AutoSize = true;
+            this.chkGoLiveTaskbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkGoLiveTaskbar.Location = new System.Drawing.Point(16, 105);
+            this.chkGoLiveTaskbar.Name = "chkGoLiveTaskbar";
+            this.chkGoLiveTaskbar.Size = new System.Drawing.Size(190, 17);
+            this.chkGoLiveTaskbar.TabIndex = 18;
+            this.chkGoLiveTaskbar.Text = "Flash taskbar when a tab goes live";
+            this.chkGoLiveTaskbar.UseVisualStyleBackColor = true;
+            // 
+            // chkHighlight
+            // 
+            this.chkHighlight.AutoSize = true;
+            this.chkHighlight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkHighlight.Location = new System.Drawing.Point(16, 13);
+            this.chkHighlight.Name = "chkHighlight";
+            this.chkHighlight.Size = new System.Drawing.Size(221, 17);
+            this.chkHighlight.TabIndex = 13;
+            this.chkHighlight.Text = "Highlight messages containing your name";
+            this.chkHighlight.UseVisualStyleBackColor = true;
+            // 
+            // chkPings
+            // 
+            this.chkPings.AutoSize = true;
+            this.chkPings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkPings.Location = new System.Drawing.Point(16, 36);
+            this.chkPings.Name = "chkPings";
+            this.chkPings.Size = new System.Drawing.Size(221, 17);
+            this.chkPings.TabIndex = 14;
+            this.chkPings.Text = "Play sound when your name is mentioned";
+            this.chkPings.UseVisualStyleBackColor = true;
             // 
             // panel13
             // 
@@ -316,7 +852,7 @@ namespace Chatterino.Controls
             this.panel13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel13.Location = new System.Drawing.Point(0, 0);
             this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(481, 500);
+            this.panel13.Size = new System.Drawing.Size(481, 456);
             this.panel13.TabIndex = 34;
             // 
             // groupBox3
@@ -375,55 +911,12 @@ namespace Chatterino.Controls
             this.chkBanButton.Text = "Enable \"ban user\" button if moderator or broadcaster";
             this.chkBanButton.UseVisualStyleBackColor = true;
             // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.label13);
-            this.panel8.Controls.Add(this.chkEnableInlineWhispers);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(481, 500);
-            this.panel8.TabIndex = 6;
-            // 
-            // paneStreamLink
-            // 
-            this.paneStreamLink.Controls.Add(this.groupBox2);
-            this.paneStreamLink.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.paneStreamLink.Location = new System.Drawing.Point(0, 0);
-            this.paneStreamLink.Name = "paneStreamLink";
-            this.paneStreamLink.Size = new System.Drawing.Size(481, 500);
-            this.paneStreamLink.TabIndex = 6;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(12, 40);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(300, 39);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "You can join the channel /whispers to view your whispers!\r\n\r\nYou can send whisper" +
-    "s using this command: /w user message";
-            // 
-            // chkEnableInlineWhispers
-            // 
-            this.chkEnableInlineWhispers.AutoSize = true;
-            this.chkEnableInlineWhispers.Checked = true;
-            this.chkEnableInlineWhispers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEnableInlineWhispers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkEnableInlineWhispers.Location = new System.Drawing.Point(15, 13);
-            this.chkEnableInlineWhispers.Name = "chkEnableInlineWhispers";
-            this.chkEnableInlineWhispers.Size = new System.Drawing.Size(130, 17);
-            this.chkEnableInlineWhispers.TabIndex = 24;
-            this.chkEnableInlineWhispers.Text = "Enable inline whispers";
-            this.chkEnableInlineWhispers.UseVisualStyleBackColor = true;
-            // 
             // panel10
             // 
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel10.Location = new System.Drawing.Point(0, 0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(481, 500);
+            this.panel10.Size = new System.Drawing.Size(481, 456);
             this.panel10.TabIndex = 8;
             // 
             // panel1
@@ -457,7 +950,7 @@ namespace Chatterino.Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(481, 500);
+            this.panel1.Size = new System.Drawing.Size(481, 456);
             this.panel1.TabIndex = 0;
             // 
             // groupBox1
@@ -666,7 +1159,7 @@ namespace Chatterino.Controls
             this.chkRemoveX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkRemoveX.Location = new System.Drawing.Point(17, 216);
             this.chkRemoveX.Name = "chkRemoveX";
-            this.chkRemoveX.Size = new System.Drawing.Size(133, 17);
+            this.chkRemoveX.Size = new System.Drawing.Size(155, 17);
             this.chkRemoveX.TabIndex = 27;
             this.chkRemoveX.Text = "Remove X button from tabs\r\n";
             this.chkRemoveX.UseVisualStyleBackColor = true;
@@ -677,7 +1170,7 @@ namespace Chatterino.Controls
             this.chkShowEmoteTooltip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkShowEmoteTooltip.Location = new System.Drawing.Point(17, 239);
             this.chkShowEmoteTooltip.Name = "chkShowEmoteTooltip";
-            this.chkShowEmoteTooltip.Size = new System.Drawing.Size(133, 17);
+            this.chkShowEmoteTooltip.Size = new System.Drawing.Size(158, 17);
             this.chkShowEmoteTooltip.TabIndex = 28;
             this.chkShowEmoteTooltip.Text = "Show large emotes in tooltip\r\n";
             this.chkShowEmoteTooltip.UseVisualStyleBackColor = true;
@@ -688,7 +1181,7 @@ namespace Chatterino.Controls
             this.chkHighlightHighlightedMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkHighlightHighlightedMessages.Location = new System.Drawing.Point(17, 262);
             this.chkHighlightHighlightedMessages.Name = "chkHighlightHighlightedMessages";
-            this.chkHighlightHighlightedMessages.Size = new System.Drawing.Size(133, 17);
+            this.chkHighlightHighlightedMessages.Size = new System.Drawing.Size(171, 17);
             this.chkHighlightHighlightedMessages.TabIndex = 29;
             this.chkHighlightHighlightedMessages.Text = "Highlight highlighted messages\r\n";
             this.chkHighlightHighlightedMessages.UseVisualStyleBackColor = true;
@@ -699,7 +1192,7 @@ namespace Chatterino.Controls
             this.chkChangeTabTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkChangeTabTitle.Location = new System.Drawing.Point(17, 285);
             this.chkChangeTabTitle.Name = "chkChangeTabTitle";
-            this.chkChangeTabTitle.Size = new System.Drawing.Size(133, 17);
+            this.chkChangeTabTitle.Size = new System.Drawing.Size(191, 17);
             this.chkChangeTabTitle.TabIndex = 29;
             this.chkChangeTabTitle.Text = "Double click tab to change tab title\r\n";
             this.chkChangeTabTitle.UseVisualStyleBackColor = true;
@@ -712,7 +1205,7 @@ namespace Chatterino.Controls
             this.btnSelectFont.TabIndex = 14;
             this.btnSelectFont.Text = "Select";
             this.btnSelectFont.UseVisualStyleBackColor = true;
-             // 
+            // 
             // btnDefaultFont
             // 
             this.btnDefaultFont.Location = new System.Drawing.Point(320, 109);
@@ -721,7 +1214,6 @@ namespace Chatterino.Controls
             this.btnDefaultFont.TabIndex = 15;
             this.btnDefaultFont.Text = "Default Font";
             this.btnDefaultFont.UseVisualStyleBackColor = true;
-            // 
             // 
             // label10
             // 
@@ -819,7 +1311,6 @@ namespace Chatterino.Controls
             this.txtMsgLimit.Name = "txtMsgLimit";
             this.txtMsgLimit.Size = new System.Drawing.Size(167, 20);
             this.txtMsgLimit.TabIndex = 10;
-            this.txtMsgLimit.Visible = true;
             // 
             // label3
             // 
@@ -831,261 +1322,6 @@ namespace Chatterino.Controls
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Message Limit:";
-            this.label3.Visible = true;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.tabControl1);
-            this.panel3.Controls.Add(this.btnTextCustomPing);
-            this.panel3.Controls.Add(this.btnTestGoLiveCustomPing);
-            this.panel3.Controls.Add(this.btnCustomHighlightOpenFile);
-            this.panel3.Controls.Add(this.btnCustomGoLiveOpenFile);
-            this.panel3.Controls.Add(this.chkCustomPingSound);
-            this.panel3.Controls.Add(this.chkGoLiveSound);
-            this.panel3.Controls.Add(this.chkCustomGoLiveSound);
-            this.panel3.Controls.Add(this.chkFlashTaskbar);
-            this.panel3.Controls.Add(this.chkGoLiveTaskbar);
-            this.panel3.Controls.Add(this.chkHighlight);
-            this.panel3.Controls.Add(this.chkPings);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(481, 500);
-            this.panel3.TabIndex = 1;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            try {
-            this.tabControl1.Controls.Add(this.usernameHightlightTab);
-            } catch (Exception e) {
-                log(e.ToString());
-            }
-            this.tabControl1.Location = new System.Drawing.Point(17, 179);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(415, 220);
-            this.tabControl1.TabIndex = 21;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.rtbHighlights);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(407, 263);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Highlight keywords";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(3, 5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(163, 13);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Highlight keywords (one per line):";
-            // 
-            // rtbHighlights
-            // 
-            this.rtbHighlights.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbHighlights.Location = new System.Drawing.Point(6, 21);
-            this.rtbHighlights.Name = "rtbHighlights";
-            this.rtbHighlights.Size = new System.Drawing.Size(395, 236);
-            this.rtbHighlights.TabIndex = 17;
-            this.rtbHighlights.Text = "";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.rtbUserBlacklist);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(407, 263);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "User highlight blacklist";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // rtbUserBlacklist
-            // 
-            this.rtbUserBlacklist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbUserBlacklist.Location = new System.Drawing.Point(6, 21);
-            this.rtbUserBlacklist.Name = "rtbUserBlacklist";
-            this.rtbUserBlacklist.Size = new System.Drawing.Size(395, 246);
-            this.rtbUserBlacklist.TabIndex = 24;
-            this.rtbUserBlacklist.Text = "";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(3, 5);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(204, 13);
-            this.label6.TabIndex = 23;
-            this.label6.Text = "Users that can not ping you (one per line):";
-            try {
-            // 
-            // usernameHightlightTab
-            // 
-            this.usernameHightlightTab.Controls.Add(this.rtbUsernamelist);
-            this.usernameHightlightTab.Controls.Add(this.usernamelabel);
-            this.usernameHightlightTab.Location = new System.Drawing.Point(4, 22);
-            this.usernameHightlightTab.Name = "usernameHightlightTab";
-            this.usernameHightlightTab.Padding = new System.Windows.Forms.Padding(3);
-            this.usernameHightlightTab.Size = new System.Drawing.Size(407, 263);
-            this.usernameHightlightTab.TabIndex = 1;
-            this.usernameHightlightTab.Text = "Username highlight list";
-            this.usernameHightlightTab.UseVisualStyleBackColor = true;
-            // 
-            // rtbUsernamelist
-            // 
-            this.rtbUsernamelist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbUsernamelist.Location = new System.Drawing.Point(6, 21);
-            this.rtbUsernamelist.Name = "rtbUsernamelist";
-            this.rtbUsernamelist.Size = new System.Drawing.Size(395, 246);
-            this.rtbUsernamelist.TabIndex = 24;
-            this.rtbUsernamelist.Text = "";
-            // 
-            // usernamelabel
-            // 
-            this.usernamelabel.AutoSize = true;
-            this.usernamelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.usernamelabel.ForeColor = System.Drawing.Color.Black;
-            this.usernamelabel.Location = new System.Drawing.Point(3, 5);
-            this.usernamelabel.Name = "usernamelabel";
-            this.usernamelabel.Size = new System.Drawing.Size(204, 13);
-            this.usernamelabel.TabIndex = 23;
-            this.usernamelabel.Text = "Usernames to highlight (one per line):";
-            } catch (Exception e) {
-                log(e.ToString());
-            }
-            // 
-            // btnTextCustomPing
-            // 
-            this.btnTextCustomPing.Location = new System.Drawing.Point(188, 78);
-            this.btnTextCustomPing.Name = "btnTextCustomPing";
-            this.btnTextCustomPing.Size = new System.Drawing.Size(75, 23);
-            this.btnTextCustomPing.TabIndex = 20;
-            this.btnTextCustomPing.Text = "Test";
-            this.btnTextCustomPing.UseVisualStyleBackColor = true;
-            // 
-            // btnCustomHighlightOpenFile
-            // 
-            this.btnCustomHighlightOpenFile.Image = global::Chatterino.Properties.Resources.OpenFolder_16x;
-            this.btnCustomHighlightOpenFile.Location = new System.Drawing.Point(156, 78);
-            this.btnCustomHighlightOpenFile.Name = "btnCustomHighlightOpenFile";
-            this.btnCustomHighlightOpenFile.Size = new System.Drawing.Size(24, 23);
-            this.btnCustomHighlightOpenFile.TabIndex = 19;
-            this.btnCustomHighlightOpenFile.UseVisualStyleBackColor = true;
-            // 
-            // chkCustomPingSound
-            // 
-            this.chkCustomPingSound.AutoSize = true;
-            this.chkCustomPingSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkCustomPingSound.Location = new System.Drawing.Point(16, 82);
-            this.chkCustomPingSound.Name = "chkCustomPingSound";
-            this.chkCustomPingSound.Size = new System.Drawing.Size(135, 17);
-            this.chkCustomPingSound.TabIndex = 18;
-            this.chkCustomPingSound.Text = "Custom highlight sound";
-            this.chkCustomPingSound.UseVisualStyleBackColor = true;
-            // 
-            // chkGoLiveTaskbar
-            // 
-            this.chkGoLiveTaskbar.AutoSize = true;
-            this.chkGoLiveTaskbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkGoLiveTaskbar.Location = new System.Drawing.Point(16, 105);
-            this.chkGoLiveTaskbar.Name = "chkGoLiveTaskbar";
-            this.chkGoLiveTaskbar.Size = new System.Drawing.Size(135, 17);
-            this.chkGoLiveTaskbar.TabIndex = 18;
-            this.chkGoLiveTaskbar.Text = "Flash taskbar when a tab goes live";
-            this.chkGoLiveTaskbar.UseVisualStyleBackColor = true;
-            // 
-            // chkGoLiveSound
-            // 
-            this.chkGoLiveSound.AutoSize = true;
-            this.chkGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkGoLiveSound.Location = new System.Drawing.Point(16, 128);
-            this.chkGoLiveSound.Name = "chkGoLiveSound";
-            this.chkGoLiveSound.Size = new System.Drawing.Size(135, 17);
-            this.chkGoLiveSound.TabIndex = 18;
-            this.chkGoLiveSound.Text = "Play sound when a tab goes live";
-            this.chkGoLiveSound.UseVisualStyleBackColor = true;
-            // 
-            // chkCustomGoLiveSound
-            // 
-            this.chkCustomGoLiveSound.AutoSize = true;
-            this.chkCustomGoLiveSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkCustomGoLiveSound.Location = new System.Drawing.Point(16, 151);
-            this.chkCustomGoLiveSound.Name = "chkCustomGoLiveSound";
-            this.chkCustomGoLiveSound.Size = new System.Drawing.Size(135, 17);
-            this.chkCustomGoLiveSound.TabIndex = 18;
-            this.chkCustomGoLiveSound.Text = "Custom go live sound";
-            this.chkCustomGoLiveSound.UseVisualStyleBackColor = true;
-            // 
-            // btnTestGoLiveCustomPing
-            // 
-            this.btnTestGoLiveCustomPing.Location = new System.Drawing.Point(188, 151);
-            this.btnTestGoLiveCustomPing.Name = "btnTestGoLiveCustomPing";
-            this.btnTestGoLiveCustomPing.Size = new System.Drawing.Size(75, 23);
-            this.btnTestGoLiveCustomPing.TabIndex = 20;
-            this.btnTestGoLiveCustomPing.Text = "Test";
-            this.btnTestGoLiveCustomPing.UseVisualStyleBackColor = true;
-            // 
-            // btnCustomGoLiveOpenFile
-            // 
-            this.btnCustomGoLiveOpenFile.Image = global::Chatterino.Properties.Resources.OpenFolder_16x;
-            this.btnCustomGoLiveOpenFile.Location = new System.Drawing.Point(156, 151);
-            this.btnCustomGoLiveOpenFile.Name = "btnCustomGoLiveOpenFile";
-            this.btnCustomGoLiveOpenFile.Size = new System.Drawing.Size(24, 23);
-            this.btnCustomGoLiveOpenFile.TabIndex = 19;
-            this.btnCustomGoLiveOpenFile.UseVisualStyleBackColor = true;
-            // 
-            // chkFlashTaskbar
-            // 
-            this.chkFlashTaskbar.AutoSize = true;
-            this.chkFlashTaskbar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkFlashTaskbar.Location = new System.Drawing.Point(16, 59);
-            this.chkFlashTaskbar.Name = "chkFlashTaskbar";
-            this.chkFlashTaskbar.Size = new System.Drawing.Size(232, 17);
-            this.chkFlashTaskbar.TabIndex = 15;
-            this.chkFlashTaskbar.Text = "Flash taskbar when your name is mentioned";
-            this.chkFlashTaskbar.UseVisualStyleBackColor = true;
-            // 
-            // chkHighlight
-            // 
-            this.chkHighlight.AutoSize = true;
-            this.chkHighlight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkHighlight.Location = new System.Drawing.Point(16, 13);
-            this.chkHighlight.Name = "chkHighlight";
-            this.chkHighlight.Size = new System.Drawing.Size(221, 17);
-            this.chkHighlight.TabIndex = 13;
-            this.chkHighlight.Text = "Highlight messages containing your name";
-            this.chkHighlight.UseVisualStyleBackColor = true;
-            // 
-            // chkPings
-            // 
-            this.chkPings.AutoSize = true;
-            this.chkPings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkPings.Location = new System.Drawing.Point(16, 36);
-            this.chkPings.Name = "chkPings";
-            this.chkPings.Size = new System.Drawing.Size(221, 17);
-            this.chkPings.TabIndex = 14;
-            this.chkPings.Text = "Play sound when your name is mentioned";
-            this.chkPings.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
@@ -1104,7 +1340,7 @@ namespace Chatterino.Controls
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(481, 500);
+            this.panel2.Size = new System.Drawing.Size(481, 456);
             this.panel2.TabIndex = 0;
             // 
             // comboBox1
@@ -1227,7 +1463,7 @@ namespace Chatterino.Controls
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(481, 500);
+            this.panel5.Size = new System.Drawing.Size(481, 456);
             this.panel5.TabIndex = 3;
             // 
             // chkAllowCommandAtEnd
@@ -1296,123 +1532,9 @@ namespace Chatterino.Controls
             this.Command.HeaderText = "Command";
             this.Command.Name = "Command";
             // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.comboShowIgnoredUsersMessagesIf);
-            this.panel6.Controls.Add(this.label15);
-            this.panel6.Controls.Add(this.chkTwitchIgnores);
-            this.panel6.Controls.Add(this.btnIgnoredUserRemove);
-            this.panel6.Controls.Add(this.btnIgnoredUserAdd);
-            this.panel6.Controls.Add(this.dgvIgnoredUsers);
-            this.panel6.Controls.Add(this.label9);
-            this.panel6.Controls.Add(this.chkIgnoreViaTwitch);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(481, 500);
-            this.panel6.TabIndex = 4;
-            // 
-            // comboShowIgnoredUsersMessagesIf
-            // 
-            this.comboShowIgnoredUsersMessagesIf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboShowIgnoredUsersMessagesIf.FormattingEnabled = true;
-            this.comboShowIgnoredUsersMessagesIf.Items.AddRange(new object[] {
-            "You are moderator",
-            "You are broadcaster",
-            "Never"});
-            this.comboShowIgnoredUsersMessagesIf.Location = new System.Drawing.Point(322, 36);
-            this.comboShowIgnoredUsersMessagesIf.Name = "comboShowIgnoredUsersMessagesIf";
-            this.comboShowIgnoredUsersMessagesIf.Size = new System.Drawing.Size(109, 21);
-            this.comboShowIgnoredUsersMessagesIf.TabIndex = 25;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.ForeColor = System.Drawing.Color.White;
-            this.label15.Location = new System.Drawing.Point(177, 41);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(139, 13);
-            this.label15.TabIndex = 6;
-            this.label15.Text = "Show messages anyways if:";
-            // 
-            // chkTwitchIgnores
-            // 
-            this.chkTwitchIgnores.AutoSize = true;
-            this.chkTwitchIgnores.Checked = true;
-            this.chkTwitchIgnores.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTwitchIgnores.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTwitchIgnores.Location = new System.Drawing.Point(16, 13);
-            this.chkTwitchIgnores.Name = "chkTwitchIgnores";
-            this.chkTwitchIgnores.Size = new System.Drawing.Size(156, 17);
-            this.chkTwitchIgnores.TabIndex = 24;
-            this.chkTwitchIgnores.Text = "Enable twitch ignored users";
-            this.chkTwitchIgnores.UseVisualStyleBackColor = true;
-            this.chkTwitchIgnores.Visible = false;
-            // 
-            // btnIgnoredUserRemove
-            // 
-            this.btnIgnoredUserRemove.Location = new System.Drawing.Point(96, 36);
-            this.btnIgnoredUserRemove.Name = "btnIgnoredUserRemove";
-            this.btnIgnoredUserRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnIgnoredUserRemove.TabIndex = 8;
-            this.btnIgnoredUserRemove.Text = "Remove";
-            this.btnIgnoredUserRemove.UseVisualStyleBackColor = true;
-            // 
-            // btnIgnoredUserAdd
-            // 
-            this.btnIgnoredUserAdd.Location = new System.Drawing.Point(16, 36);
-            this.btnIgnoredUserAdd.Name = "btnIgnoredUserAdd";
-            this.btnIgnoredUserAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnIgnoredUserAdd.TabIndex = 7;
-            this.btnIgnoredUserAdd.Text = "Add";
-            this.btnIgnoredUserAdd.UseVisualStyleBackColor = true;
-            // 
-            // dgvIgnoredUsers
-            // 
-            this.dgvIgnoredUsers.AllowUserToAddRows = false;
-            this.dgvIgnoredUsers.AllowUserToDeleteRows = false;
-            this.dgvIgnoredUsers.AllowUserToResizeColumns = false;
-            this.dgvIgnoredUsers.AllowUserToResizeRows = false;
-            this.dgvIgnoredUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIgnoredUsers.ColumnHeadersVisible = false;
-            this.dgvIgnoredUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1});
-            this.dgvIgnoredUsers.Location = new System.Drawing.Point(16, 63);
-            this.dgvIgnoredUsers.Name = "dgvIgnoredUsers";
-            this.dgvIgnoredUsers.RowHeadersVisible = false;
-            this.dgvIgnoredUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvIgnoredUsers.Size = new System.Drawing.Size(415, 268);
-            this.dgvIgnoredUsers.TabIndex = 6;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(13, 334);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(190, 26);
-            this.label9.TabIndex = 5;
-            this.label9.Text = "/ignore in chat to ignore someone\r\n/unignore in chat to unignore someone";
-            // 
-            // chkIgnoreViaTwitch
-            // 
-            this.chkIgnoreViaTwitch.AutoSize = true;
-            this.chkIgnoreViaTwitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkIgnoreViaTwitch.Location = new System.Drawing.Point(13, 357);
-            this.chkIgnoreViaTwitch.Name = "chkIgnoreViaTwitch";
-            this.chkIgnoreViaTwitch.Size = new System.Drawing.Size(133, 17);
-            this.chkIgnoreViaTwitch.TabIndex = 9;
-            this.chkIgnoreViaTwitch.Text = "Ignore users using the twitch api\r\n";
-            this.chkIgnoreViaTwitch.UseVisualStyleBackColor = true;
-            // 
             // panel12
             // 
+            this.panel12.Controls.Add(this.chkReplys);
             this.panel12.Controls.Add(this.chkPrefereEmotes);
             this.panel12.Controls.Add(this.chkAllowSameMessages);
             this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
@@ -1427,7 +1549,7 @@ namespace Chatterino.Controls
             this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(481, 500);
+            this.panel12.Size = new System.Drawing.Size(481, 456);
             this.panel12.TabIndex = 31;
             // 
             // chkPrefereEmotes
@@ -1440,141 +1562,6 @@ namespace Chatterino.Controls
             this.chkPrefereEmotes.TabIndex = 55;
             this.chkPrefereEmotes.Text = "Prefere emotes over usernames when tab-completing (unless starting with @)";
             this.chkPrefereEmotes.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label21);
-            this.groupBox2.Controls.Add(this.label20);
-            this.groupBox2.Controls.Add(this.txtStreamlinkCustomArguments);
-            this.groupBox2.Controls.Add(this.linkStreamlinkDownload);
-            this.groupBox2.Controls.Add(this.linkStreamlinkWebsite);
-            this.groupBox2.Controls.Add(this.label19);
-            this.groupBox2.Controls.Add(this.comboQuality);
-            this.groupBox2.Controls.Add(this.label17);
-            this.groupBox2.Controls.Add(this.chkStreamlinkPath);
-            this.groupBox2.Controls.Add(this.btnStreamlinkPath);
-            this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(15, 15);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(431, 215);
-            this.groupBox2.TabIndex = 54;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Streamlink";
-            // 
-            // label21
-            // 
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label21.ForeColor = System.Drawing.Color.Silver;
-            this.label21.Location = new System.Drawing.Point(9, 173);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(412, 39);
-            this.label21.TabIndex = 51;
-            this.label21.Text = "You can use {name}, {game} and {title} for the streamers name, game, and stream t" +
-    "itle respectively";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label20.Location = new System.Drawing.Point(9, 147);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(97, 13);
-            this.label20.TabIndex = 50;
-            this.label20.Text = "Custom arguments:";
-            // 
-            // txtStreamlinkCustomArguments
-            // 
-            this.txtStreamlinkCustomArguments.Location = new System.Drawing.Point(109, 143);
-            this.txtStreamlinkCustomArguments.Name = "txtStreamlinkCustomArguments";
-            this.txtStreamlinkCustomArguments.Size = new System.Drawing.Size(308, 20);
-            this.txtStreamlinkCustomArguments.TabIndex = 49;
-            // 
-            // linkStreamlinkDownload
-            // 
-            this.linkStreamlinkDownload.AutoSize = true;
-            this.linkStreamlinkDownload.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.linkStreamlinkDownload.Location = new System.Drawing.Point(67, 57);
-            this.linkStreamlinkDownload.Name = "linkStreamlinkDownload";
-            this.linkStreamlinkDownload.Size = new System.Drawing.Size(55, 13);
-            this.linkStreamlinkDownload.TabIndex = 48;
-            this.linkStreamlinkDownload.TabStop = true;
-            this.linkStreamlinkDownload.Text = "Download";
-            this.linkStreamlinkDownload.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.linkStreamlinkDownload.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStreamlinkDownload_LinkClicked);
-            // 
-            // linkStreamlinkWebsite
-            // 
-            this.linkStreamlinkWebsite.AutoSize = true;
-            this.linkStreamlinkWebsite.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.linkStreamlinkWebsite.Location = new System.Drawing.Point(12, 57);
-            this.linkStreamlinkWebsite.Name = "linkStreamlinkWebsite";
-            this.linkStreamlinkWebsite.Size = new System.Drawing.Size(46, 13);
-            this.linkStreamlinkWebsite.TabIndex = 47;
-            this.linkStreamlinkWebsite.TabStop = true;
-            this.linkStreamlinkWebsite.Text = "Website";
-            this.linkStreamlinkWebsite.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.linkStreamlinkWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStreamlinkWebsite_LinkClicked);
-            // 
-            // label19
-            // 
-            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label19.Location = new System.Drawing.Point(9, 19);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(413, 39);
-            this.label19.TabIndex = 46;
-            this.label19.Text = "Streamlink is a command-line utility that pipes video streams from various servic" +
-    "es into a video player, such as VLC. Make sure to edit the configuration file be" +
-    "fore you use it!";
-            // 
-            // comboQuality
-            // 
-            this.comboQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboQuality.FormattingEnabled = true;
-            this.comboQuality.Items.AddRange(new object[] {
-            "best",
-            "high",
-            "medium",
-            "low",
-            "worst"});
-            this.comboQuality.Location = new System.Drawing.Point(109, 88);
-            this.comboQuality.Name = "comboQuality";
-            this.comboQuality.Size = new System.Drawing.Size(119, 21);
-            this.comboQuality.TabIndex = 45;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label17.Location = new System.Drawing.Point(9, 91);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(42, 13);
-            this.label17.TabIndex = 44;
-            this.label17.Text = "Quality:";
-            // 
-            // chkStreamlinkPath
-            // 
-            this.chkStreamlinkPath.AutoSize = true;
-            this.chkStreamlinkPath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkStreamlinkPath.Location = new System.Drawing.Point(12, 116);
-            this.chkStreamlinkPath.Name = "chkStreamlinkPath";
-            this.chkStreamlinkPath.Size = new System.Drawing.Size(326, 17);
-            this.chkStreamlinkPath.TabIndex = 47;
-            this.chkStreamlinkPath.Text = "Use custom path (if using portable or it wasn\'t installed properly):";
-            this.chkStreamlinkPath.UseVisualStyleBackColor = true;
-            // 
-            // btnStreamlinkPath
-            // 
-            this.btnStreamlinkPath.ForeColor = System.Drawing.Color.Black;
-            this.btnStreamlinkPath.Location = new System.Drawing.Point(344, 113);
-            this.btnStreamlinkPath.Name = "btnStreamlinkPath";
-            this.btnStreamlinkPath.Size = new System.Drawing.Size(75, 23);
-            this.btnStreamlinkPath.TabIndex = 46;
-            this.btnStreamlinkPath.Text = "Select";
-            this.btnStreamlinkPath.UseVisualStyleBackColor = true;
-            this.btnStreamlinkPath.Click += new System.EventHandler(this.btnStreamlinkPath_Click);
             // 
             // chkAllowSameMessages
             // 
@@ -1593,7 +1580,7 @@ namespace Chatterino.Controls
             this.chkRecentlyUsedEmoteList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkRecentlyUsedEmoteList.Location = new System.Drawing.Point(15, 159);
             this.chkRecentlyUsedEmoteList.Name = "chkRecentlyUsedEmoteList";
-            this.chkRecentlyUsedEmoteList.Size = new System.Drawing.Size(306, 17);
+            this.chkRecentlyUsedEmoteList.Size = new System.Drawing.Size(320, 17);
             this.chkRecentlyUsedEmoteList.TabIndex = 54;
             this.chkRecentlyUsedEmoteList.Text = "Keep a list of recently used emotes not from twitches emote list";
             this.chkRecentlyUsedEmoteList.UseVisualStyleBackColor = true;
@@ -1604,7 +1591,7 @@ namespace Chatterino.Controls
             this.chkCacheEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkCacheEmotes.Location = new System.Drawing.Point(15, 182);
             this.chkCacheEmotes.Name = "chkCacheEmotes";
-            this.chkCacheEmotes.Size = new System.Drawing.Size(306, 17);
+            this.chkCacheEmotes.Size = new System.Drawing.Size(272, 17);
             this.chkCacheEmotes.TabIndex = 55;
             this.chkCacheEmotes.Text = "Locally store copys of emotes to make loading faster";
             this.chkCacheEmotes.UseVisualStyleBackColor = true;
@@ -1615,10 +1602,21 @@ namespace Chatterino.Controls
             this.chkAutomaticUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkAutomaticUpdate.Location = new System.Drawing.Point(15, 205);
             this.chkAutomaticUpdate.Name = "chkAutomaticUpdate";
-            this.chkAutomaticUpdate.Size = new System.Drawing.Size(306, 17);
+            this.chkAutomaticUpdate.Size = new System.Drawing.Size(227, 17);
             this.chkAutomaticUpdate.TabIndex = 56;
             this.chkAutomaticUpdate.Text = "Automatically check for updates on startup";
             this.chkAutomaticUpdate.UseVisualStyleBackColor = true;
+            // 
+            // chkReplys
+            // 
+            this.chkReplys.AutoSize = true;
+            this.chkReplys.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkReplys.Location = new System.Drawing.Point(15, 228);
+            this.chkReplys.Name = "chkReplys";
+            this.chkReplys.Size = new System.Drawing.Size(80, 17);
+            this.chkReplys.TabIndex = 57;
+            this.chkReplys.Text = "Enable twitch reply feature";
+            this.chkReplys.UseVisualStyleBackColor = true;
             // 
             // chkTabLocalizedNames
             // 
@@ -1699,7 +1697,7 @@ namespace Chatterino.Controls
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(0, 0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(481, 500);
+            this.panel7.Size = new System.Drawing.Size(481, 456);
             this.panel7.TabIndex = 5;
             // 
             // chkDoubleClickLinks
@@ -1733,7 +1731,7 @@ namespace Chatterino.Controls
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(481, 500);
+            this.panel9.Size = new System.Drawing.Size(481, 456);
             this.panel9.TabIndex = 7;
             // 
             // tabControl3
@@ -1795,7 +1793,7 @@ namespace Chatterino.Controls
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(481, 528);
+            this.panel4.Size = new System.Drawing.Size(481, 456);
             this.panel4.TabIndex = 2;
             // 
             // label16
@@ -1805,7 +1803,8 @@ namespace Chatterino.Controls
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(227, 37);
             this.label16.TabIndex = 27;
-            this.label16.Text = "(you will have to reload emotes for it to load the properly scaled images for that chat)";
+            this.label16.Text = "(you will have to reload emotes for it to load the properly scaled images for tha" +
+    "t chat)";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelEmoteScale
@@ -1954,7 +1953,7 @@ namespace Chatterino.Controls
             this.chk7tvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chk7tvEmotes.Location = new System.Drawing.Point(16, 82);
             this.chk7tvEmotes.Name = "chk7tvEmotes";
-            this.chk7tvEmotes.Size = new System.Drawing.Size(167, 17);
+            this.chk7tvEmotes.Size = new System.Drawing.Size(115, 17);
             this.chk7tvEmotes.TabIndex = 24;
             this.chk7tvEmotes.Text = "Enable 7tv Emotes";
             this.chk7tvEmotes.UseVisualStyleBackColor = true;
@@ -1968,7 +1967,7 @@ namespace Chatterino.Controls
             this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel11.Location = new System.Drawing.Point(0, 0);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(481, 500);
+            this.panel11.Size = new System.Drawing.Size(481, 456);
             this.panel11.TabIndex = 9;
             // 
             // label14
@@ -2040,7 +2039,6 @@ namespace Chatterino.Controls
             // spAccounts
             // 
             this.spAccounts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spAccounts.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.UserProfile_22x);
             this.spAccounts.Location = new System.Drawing.Point(0, 0);
             this.spAccounts.Name = "spAccounts";
             this.spAccounts.Panel = this.panel11;
@@ -2052,7 +2050,6 @@ namespace Chatterino.Controls
             // spAppearance
             // 
             this.spAppearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spAppearance.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.AppearanceEditorPart_16x);
             this.spAppearance.Location = new System.Drawing.Point(0, 30);
             this.spAppearance.Name = "spAppearance";
             this.spAppearance.Panel = this.panel1;
@@ -2064,11 +2061,9 @@ namespace Chatterino.Controls
             // settingsTabPage1
             // 
             this.settingsTabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.settingsTabPage1.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.processes_5760);
             this.settingsTabPage1.Location = new System.Drawing.Point(0, 60);
             this.settingsTabPage1.Name = "settingsTabPage1";
             this.settingsTabPage1.Panel = this.panel12;
-            this.settingsTabPage1.Selected = false;
             this.settingsTabPage1.Size = new System.Drawing.Size(150, 30);
             this.settingsTabPage1.TabIndex = 12;
             this.settingsTabPage1.Text = "Behaviour";
@@ -2076,7 +2071,6 @@ namespace Chatterino.Controls
             // spCommands
             // 
             this.spCommands.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spCommands.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.CustomActionEditor_16x);
             this.spCommands.Location = new System.Drawing.Point(0, 90);
             this.spCommands.Name = "spCommands";
             this.spCommands.Panel = this.panel5;
@@ -2088,7 +2082,6 @@ namespace Chatterino.Controls
             // spEmotes
             // 
             this.spEmotes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spEmotes.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Emoji_Color_1F60A_19);
             this.spEmotes.Location = new System.Drawing.Point(0, 120);
             this.spEmotes.Name = "spEmotes";
             this.spEmotes.Panel = this.panel4;
@@ -2100,10 +2093,10 @@ namespace Chatterino.Controls
             // spIgnoredUsers
             // 
             this.spIgnoredUsers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spIgnoredUsers.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.StatusAnnotations_Blocked_16xLG_color);
             this.spIgnoredUsers.Location = new System.Drawing.Point(0, 150);
             this.spIgnoredUsers.Name = "spIgnoredUsers";
             this.spIgnoredUsers.Panel = this.panel6;
+            this.spIgnoredUsers.Selected = false;
             this.spIgnoredUsers.Size = new System.Drawing.Size(150, 30);
             this.spIgnoredUsers.TabIndex = 6;
             this.spIgnoredUsers.Text = "Ignored Users";
@@ -2111,7 +2104,6 @@ namespace Chatterino.Controls
             // spIgnoredMessages
             // 
             this.spIgnoredMessages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spIgnoredMessages.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Filter_16x);
             this.spIgnoredMessages.Location = new System.Drawing.Point(0, 180);
             this.spIgnoredMessages.Name = "spIgnoredMessages";
             this.spIgnoredMessages.Panel = this.panel9;
@@ -2123,7 +2115,6 @@ namespace Chatterino.Controls
             // spLinks
             // 
             this.spLinks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spLinks.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.VSO_Link_blue_16x);
             this.spLinks.Location = new System.Drawing.Point(0, 210);
             this.spLinks.Name = "spLinks";
             this.spLinks.Panel = this.panel7;
@@ -2135,7 +2126,6 @@ namespace Chatterino.Controls
             // spHighlighted
             // 
             this.spHighlighted.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spHighlighted.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.format_Bold_16xLG);
             this.spHighlighted.Location = new System.Drawing.Point(0, 240);
             this.spHighlighted.Name = "spHighlighted";
             this.spHighlighted.Panel = this.panel3;
@@ -2147,7 +2137,6 @@ namespace Chatterino.Controls
             // spModeration
             // 
             this.spModeration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spModeration.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.ban);
             this.spModeration.Location = new System.Drawing.Point(0, 270);
             this.spModeration.Name = "spModeration";
             this.spModeration.Panel = this.panel13;
@@ -2159,7 +2148,6 @@ namespace Chatterino.Controls
             // spWhispers
             // 
             this.spWhispers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spWhispers.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.Message_16xLG);
             this.spWhispers.Location = new System.Drawing.Point(0, 300);
             this.spWhispers.Name = "spWhispers";
             this.spWhispers.Panel = this.panel8;
@@ -2171,7 +2159,6 @@ namespace Chatterino.Controls
             // spStreamLink
             // 
             this.spStreamLink.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spStreamLink.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.streamlink);
             this.spStreamLink.Location = new System.Drawing.Point(0, 330);
             this.spStreamLink.Name = "spStreamLink";
             this.spStreamLink.Panel = this.paneStreamLink;
@@ -2183,8 +2170,7 @@ namespace Chatterino.Controls
             // spBrowserExtension
             // 
             this.spBrowserExtension.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.spBrowserExtension.Image = new ChatterinoImage(global::Chatterino.Properties.Resources.BrowserLink_16x);
-            this.spBrowserExtension.Location = new System.Drawing.Point(0, 330);
+            this.spBrowserExtension.Location = new System.Drawing.Point(0, 360);
             this.spBrowserExtension.Name = "spBrowserExtension";
             this.spBrowserExtension.Panel = this.panel10;
             this.spBrowserExtension.Selected = false;
@@ -2197,7 +2183,7 @@ namespace Chatterino.Controls
             // 
             this.spConnection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.spConnection.Image = null;
-            this.spConnection.Location = new System.Drawing.Point(0, 360);
+            this.spConnection.Location = new System.Drawing.Point(0, 390);
             this.spConnection.Name = "spConnection";
             this.spConnection.Panel = this.panel2;
             this.spConnection.Selected = false;
@@ -2211,7 +2197,7 @@ namespace Chatterino.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.ClientSize = new System.Drawing.Size(631, 491);
+            this.ClientSize = new System.Drawing.Size(631, 498);
             this.ControlBox = false;
             this.Controls.Add(this.tabs);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -2223,21 +2209,14 @@ namespace Chatterino.Controls
             this.Text = "Preferences";
             this.tabs.ResumeLayout(false);
             this.RightPanel.ResumeLayout(false);
-            this.panel13.ResumeLayout(false);
-            this.panel13.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).EndInit();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
             this.paneStreamLink.ResumeLayout(false);
-            this.paneStreamLink.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -2245,24 +2224,26 @@ namespace Chatterino.Controls
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            try {
             this.usernameHightlightTab.ResumeLayout(false);
             this.usernameHightlightTab.PerformLayout();
-            } catch (Exception e) {
-                log(e.ToString());
-            }
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).EndInit();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).EndInit();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
@@ -2451,5 +2432,6 @@ namespace Chatterino.Controls
         private System.Windows.Forms.Button btnAddTimeout;
         private System.Windows.Forms.FlowLayoutPanel listView1;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox chkReplys;
     }
 }

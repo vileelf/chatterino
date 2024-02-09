@@ -118,7 +118,7 @@ namespace Chatterino.Common
             }
             catch (WebException ex)
             {
-                return ((HttpWebResponse)ex.Response).StatusCode;
+                return ((HttpWebResponse)ex.Response)?.StatusCode;
             }
         }
     }

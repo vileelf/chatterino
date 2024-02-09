@@ -30,11 +30,12 @@ namespace Chatterino.Common
         public bool Disabled { get; set; } = false;
         public HighlightType HighlightType { get; set; } = HighlightType.None;
         public bool EmoteBoundsChanged { get; set; } = true;
-
         public string Username { get; set; }
         public string UserId { get; set; }
         public string Params { get; set; }
         public string MessageId { get; set; } = null;
+        public string ReplyBody { get; set; }
+        public string ReplyUser { get; set; }
         public Word UsernameWord { get; set; } = null;
         public IrcMessage Data { get; private set; }
 
@@ -115,7 +116,15 @@ namespace Chatterino.Common
             {
                 MessageId = value;
             }
-            
+
+            if (data.Tags.TryGetValue("reply-parent-msg-body", out value)) {
+                ReplyBody = value;
+            }
+
+            if (data.Tags.TryGetValue("reply-parent-user-login", out value)) {
+                ReplyUser = value;
+            }
+
             var slashMe = false;
 
             // Handle /me messages
@@ -608,32 +617,26 @@ namespace Chatterino.Common
 
         }
 
-        public Message(string text, HSLColor? color, bool addTimeStamp)
-        {
+        public Message(string text, HSLColor? color, bool addTimeStamp, FontType fontType) {
             ParseTime = DateTime.Now;
 
             RawMessage = text;
             Words = new List<Word>();
 
             // Add timestamp
-            if (addTimeStamp && AppSettings.ChatShowTimestamps)
-            {
+            if (addTimeStamp && AppSettings.ChatShowTimestamps) {
                 //var timestamp = DateTime.Now.ToString(AppSettings.ChatShowTimestampSeconds ? "HH:mm:ss" : "HH:mm");
                 string timestampFormat;
 
-                if (AppSettings.ChatShowTimestampSeconds)
-                {
+                if (AppSettings.ChatShowTimestampSeconds) {
                     timestampFormat = AppSettings.TimestampsAmPm ? "hh:mm:ss tt" : "HH:mm:ss";
-                }
-                else
-                {
+                } else {
                     timestampFormat = AppSettings.TimestampsAmPm ? "hh:mm tt" : "HH:mm";
                 }
 
                 string timestamp = ParseTime.ToString(timestampFormat, enUS);
 
-                Words.Add(new Word
-                {
+                Words.Add(new Word {
                     Type = SpanType.Text,
                     Value = timestamp,
                     Color = color ?? HSLColor.FromRGB(-8355712),
@@ -642,7 +645,12 @@ namespace Chatterino.Common
                 });
             }
 
-            Words.AddRange(text.Split(' ').Select(x => _createWord(SpanType.Text, x.Replace('﷽', '?'), color)));
+            Words.AddRange(text.Split(' ').Select(x => _createWord(SpanType.Text, x.Replace('﷽', '?'), color, null, fontType)));
+        }
+
+        public Message(string text, HSLColor? color, bool addTimeStamp) : this(text, color, addTimeStamp, FontType.Medium)
+        {
+            
         }
 
         public Message(List<Word> words)
@@ -1240,7 +1248,7 @@ namespace Chatterino.Common
         }
 
         // private
-        private static Word _createWord(SpanType type, string text, HSLColor? color, string differentCopyText = null)
+        private static Word _createWord(SpanType type, string text, HSLColor? color, string differentCopyText = null, FontType fontType = FontType.Medium)
         {
             var link = _createLink(text);
 
@@ -1250,6 +1258,7 @@ namespace Chatterino.Common
                 Value = text,
                 Color = (link == null ? color : HSLColor.FromRGB(-8355712)),
                 CopyText = differentCopyText ?? text,
+                Font = fontType,
                 Link = link,
             };
         }

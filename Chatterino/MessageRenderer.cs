@@ -249,22 +249,6 @@ namespace Chatterino
                                         rect.Height);
                             }
                         }
-                        //else if (word.Type == SpanType.Image)
-                        //{
-                        //    var textLength = 2;
-
-                        //    var offset = (first.MessageIndex == currentLine && first.WordIndex == i)
-                        //        ? first.CharIndex
-                        //        : 0;
-                        //    var length = ((last.MessageIndex == currentLine && last.WordIndex == i)
-                        //                     ? last.CharIndex
-                        //                     : textLength) - offset;
-
-                        //    g.FillRectangle(_selectionBrush, word.X + xOffset + (offset == 0 ? 0 : word.Width),
-                        //        word.Y + yOffset,
-                        //        (offset == 0 ? word.Width : 0) + (offset + length == 2 ? spaceWidth : 0) - 1,
-                        //        word.Height);
-                        //}
                         else if (word.Type == SpanType.LazyLoadedImage)
                         {
                             var textLength = 2;
@@ -378,10 +362,6 @@ namespace Chatterino
                                 }
                             }
                             break;
-                            //    case SpanType.Image:
-                            //        g.DrawImage((Image)word.Value, word.X + state.MessageXOffset, word.Y + state.MessageYOffset, word.Width, word.Height);
-                            //        break;
-                            //}
                     }
                 }
 
