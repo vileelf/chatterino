@@ -278,7 +278,7 @@ namespace Chatterino.Common
             writeconnected = false;
 
             var readConnection = new IrcConnection();
-            var writeConnection = Account.IsAnon ? readConnection : new IrcConnection();
+            var writeConnection = (Account.IsAnon || AppSettings.UseSingleConnection) ? readConnection : new IrcConnection();
 
             Client = new IrcClient(readConnection, writeConnection);
 
@@ -637,8 +637,16 @@ namespace Chatterino.Common
                 if (message == null)
                     return;
                 message = Commands.AddSpace(message, isMod);
-
-                if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
+                //for single connection we send the messages through the api so they will show up on the read connection. Otherwise you cant see your own messages.
+                //I don't know why the irc is programmed this way.
+                if (Client.SingleConnection) {
+                    if (Client.IsAtMessageLimit(isMod)) {
+                        channel.AddMessage(new Message($"Message not sent to protect you from a global ban. (try again in {Client.GetTimeUntilNextMessage(isMod).Seconds} seconds)", HSLColor.Gray, false));
+                    } else {
+                        TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{Account.UserId}\",\"message\":\"{message}\"}}");
+                    }
+                }
+                else if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
                 {
                     if (nextProtectMessageSendTime < DateTime.Now)
                     {

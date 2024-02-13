@@ -46,19 +46,26 @@ namespace Chatterino.Controls
             this.openFileStreamlink = new System.Windows.Forms.OpenFileDialog();
             this.tabs = new Chatterino.Controls.SettingsTabControl();
             this.RightPanel = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.comboShowIgnoredUsersMessagesIf = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.chkTwitchIgnores = new System.Windows.Forms.CheckBox();
-            this.btnIgnoredUserRemove = new System.Windows.Forms.Button();
-            this.btnIgnoredUserAdd = new System.Windows.Forms.Button();
-            this.dgvIgnoredUsers = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label9 = new System.Windows.Forms.Label();
-            this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.chkEnableInlineWhispers = new System.Windows.Forms.CheckBox();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.chkReplys = new System.Windows.Forms.CheckBox();
+            this.chkPreferEmotes = new System.Windows.Forms.CheckBox();
+            this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
+            this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
+            this.chkCacheEmotes = new System.Windows.Forms.CheckBox();
+            this.chkAutomaticUpdate = new System.Windows.Forms.CheckBox();
+            this.chkTabLocalizedNames = new System.Windows.Forms.CheckBox();
+            this.chkMentionUserWithAt = new System.Windows.Forms.CheckBox();
+            this.lblScrollSpeed = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.chkRainbow = new System.Windows.Forms.CheckBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.chkAllowCommandAtEnd = new System.Windows.Forms.CheckBox();
+            this.lblCommands = new System.Windows.Forms.Label();
+            this.btnCommandRemove = new System.Windows.Forms.Button();
+            this.btnCommandAdd = new System.Windows.Forms.Button();
+            this.dgvCommands = new System.Windows.Forms.DataGridView();
+            this.Command = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.paneStreamLink = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -71,6 +78,66 @@ namespace Chatterino.Controls
             this.label17 = new System.Windows.Forms.Label();
             this.chkStreamlinkPath = new System.Windows.Forms.CheckBox();
             this.btnStreamlinkPath = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkTimestamps = new System.Windows.Forms.CheckBox();
+            this.chkTimestampAmPm = new System.Windows.Forms.CheckBox();
+            this.chkTimestampSeconds = new System.Windows.Forms.CheckBox();
+            this.chkMessageSeparators = new System.Windows.Forms.CheckBox();
+            this.chkLastReadMessageIndicator = new System.Windows.Forms.CheckBox();
+            this.labelNightDesc = new System.Windows.Forms.Label();
+            this.numThemeNightUntil = new System.Windows.Forms.NumericUpDown();
+            this.labelNightThemeUntil = new System.Windows.Forms.Label();
+            this.numThemeNightFrom = new System.Windows.Forms.NumericUpDown();
+            this.labelThemeNightFrom = new System.Windows.Forms.Label();
+            this.comboThemeNight = new System.Windows.Forms.ComboBox();
+            this.labelThemeNight = new System.Windows.Forms.Label();
+            this.checkBoxDifferentThemeAtNight = new System.Windows.Forms.CheckBox();
+            this.chkTopMost = new System.Windows.Forms.CheckBox();
+            this.chkRemoveX = new System.Windows.Forms.CheckBox();
+            this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
+            this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
+            this.chkChangeTabTitle = new System.Windows.Forms.CheckBox();
+            this.btnSelectFont = new System.Windows.Forms.Button();
+            this.btnDefaultFont = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.chkInputShowMessageLength = new System.Windows.Forms.CheckBox();
+            this.comboTheme = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblFont = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.chkHideInput = new System.Windows.Forms.CheckBox();
+            this.txtMsgLimit = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.comboShowIgnoredUsersMessagesIf = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.chkTwitchIgnores = new System.Windows.Forms.CheckBox();
+            this.btnIgnoredUserRemove = new System.Windows.Forms.Button();
+            this.btnIgnoredUserAdd = new System.Windows.Forms.Button();
+            this.dgvIgnoredUsers = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label9 = new System.Windows.Forms.Label();
+            this.chkIgnoreViaTwitch = new System.Windows.Forms.CheckBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.labelEmoteScale = new System.Windows.Forms.Label();
+            this.trackBarEmoteScale = new System.Windows.Forms.TrackBar();
+            this.checkBoxEmoteSizeBasedOnTextHeight = new System.Windows.Forms.CheckBox();
+            this.chkTwitchEmotes = new System.Windows.Forms.CheckBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.rtbIngoredEmotes = new System.Windows.Forms.RichTextBox();
+            this.chkEmojis = new System.Windows.Forms.CheckBox();
+            this.chkGifEmotes = new System.Windows.Forms.CheckBox();
+            this.chkBttvEmotes = new System.Windows.Forms.CheckBox();
+            this.chkFFzEmotes = new System.Windows.Forms.CheckBox();
+            this.chk7tvEmotes = new System.Windows.Forms.CheckBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.chkEnableInlineWhispers = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -100,38 +167,6 @@ namespace Chatterino.Controls
             this.btnAddTimeout = new System.Windows.Forms.Button();
             this.chkBanButton = new System.Windows.Forms.CheckBox();
             this.panel10 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkTimestamps = new System.Windows.Forms.CheckBox();
-            this.chkTimestampAmPm = new System.Windows.Forms.CheckBox();
-            this.chkTimestampSeconds = new System.Windows.Forms.CheckBox();
-            this.chkMessageSeperators = new System.Windows.Forms.CheckBox();
-            this.chkLastReadMessageIndicator = new System.Windows.Forms.CheckBox();
-            this.labelNightDesc = new System.Windows.Forms.Label();
-            this.numThemeNightUntil = new System.Windows.Forms.NumericUpDown();
-            this.labelNightThemeUntil = new System.Windows.Forms.Label();
-            this.numThemeNightFrom = new System.Windows.Forms.NumericUpDown();
-            this.labelThemeNightFrom = new System.Windows.Forms.Label();
-            this.comboThemeNight = new System.Windows.Forms.ComboBox();
-            this.labelThemeNight = new System.Windows.Forms.Label();
-            this.checkBoxDifferentThemeAtNight = new System.Windows.Forms.CheckBox();
-            this.chkTopMost = new System.Windows.Forms.CheckBox();
-            this.chkRemoveX = new System.Windows.Forms.CheckBox();
-            this.chkShowEmoteTooltip = new System.Windows.Forms.CheckBox();
-            this.chkHighlightHighlightedMessages = new System.Windows.Forms.CheckBox();
-            this.chkChangeTabTitle = new System.Windows.Forms.CheckBox();
-            this.btnSelectFont = new System.Windows.Forms.Button();
-            this.btnDefaultFont = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.chkInputShowMessageLength = new System.Windows.Forms.CheckBox();
-            this.comboTheme = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lblFont = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.chkHideInput = new System.Windows.Forms.CheckBox();
-            this.txtMsgLimit = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -145,25 +180,6 @@ namespace Chatterino.Controls
             this.lblProxyType = new System.Windows.Forms.Label();
             this.lblProxy = new System.Windows.Forms.Label();
             this.chkProxyEnabled = new System.Windows.Forms.CheckBox();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.chkAllowCommandAtEnd = new System.Windows.Forms.CheckBox();
-            this.lblCommands = new System.Windows.Forms.Label();
-            this.btnCommandRemove = new System.Windows.Forms.Button();
-            this.btnCommandAdd = new System.Windows.Forms.Button();
-            this.dgvCommands = new System.Windows.Forms.DataGridView();
-            this.Command = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.chkPrefereEmotes = new System.Windows.Forms.CheckBox();
-            this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
-            this.chkRecentlyUsedEmoteList = new System.Windows.Forms.CheckBox();
-            this.chkCacheEmotes = new System.Windows.Forms.CheckBox();
-            this.chkAutomaticUpdate = new System.Windows.Forms.CheckBox();
-            this.chkTabLocalizedNames = new System.Windows.Forms.CheckBox();
-            this.chkMentionUserWithAt = new System.Windows.Forms.CheckBox();
-            this.lblScrollSpeed = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.chkRainbow = new System.Windows.Forms.CheckBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.chkDoubleClickLinks = new System.Windows.Forms.CheckBox();
             this.chkUseDefaultBrowser = new System.Windows.Forms.CheckBox();
@@ -172,21 +188,6 @@ namespace Chatterino.Controls
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label12 = new System.Windows.Forms.Label();
             this.rtbIgnoreKeywords = new System.Windows.Forms.RichTextBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label16 = new System.Windows.Forms.Label();
-            this.labelEmoteScale = new System.Windows.Forms.Label();
-            this.trackBarEmoteScale = new System.Windows.Forms.TrackBar();
-            this.checkBoxEmoteSizeBasedOnTextHeight = new System.Windows.Forms.CheckBox();
-            this.chkTwitchEmotes = new System.Windows.Forms.CheckBox();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.rtbIngoredEmotes = new System.Windows.Forms.RichTextBox();
-            this.chkEmojis = new System.Windows.Forms.CheckBox();
-            this.chkGifEmotes = new System.Windows.Forms.CheckBox();
-            this.chkBttvEmotes = new System.Windows.Forms.CheckBox();
-            this.chkFFzEmotes = new System.Windows.Forms.CheckBox();
-            this.chk7tvEmotes = new System.Windows.Forms.CheckBox();
             this.panel11 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.buttonAccountRemove = new System.Windows.Forms.Button();
@@ -209,14 +210,27 @@ namespace Chatterino.Controls
             this.spStreamLink = new Chatterino.Controls.SettingsTabPage();
             this.spBrowserExtension = new Chatterino.Controls.SettingsTabPage();
             this.spConnection = new Chatterino.Controls.SettingsTabPage();
-            this.chkReplys = new System.Windows.Forms.CheckBox();
+            this.chkSingleConnection = new System.Windows.Forms.CheckBox();
             this.tabs.SuspendLayout();
             this.RightPanel.SuspendLayout();
-            this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).BeginInit();
-            this.panel8.SuspendLayout();
+            this.panel12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).BeginInit();
             this.paneStreamLink.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).BeginInit();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarEmoteScale)).BeginInit();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -224,24 +238,11 @@ namespace Chatterino.Controls
             this.usernameHightlightTab.SuspendLayout();
             this.panel13.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel2.SuspendLayout();
-            this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).BeginInit();
-            this.panel12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
             this.tabControl3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarEmoteScale)).BeginInit();
-            this.tabControl2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).BeginInit();
             this.SuspendLayout();
@@ -306,154 +307,254 @@ namespace Chatterino.Controls
             this.RightPanel.Size = new System.Drawing.Size(481, 498);
             this.RightPanel.TabIndex = 0;
             // 
-            // panel6
+            // panel12
             // 
-            this.panel6.Controls.Add(this.comboShowIgnoredUsersMessagesIf);
-            this.panel6.Controls.Add(this.label15);
-            this.panel6.Controls.Add(this.chkTwitchIgnores);
-            this.panel6.Controls.Add(this.btnIgnoredUserRemove);
-            this.panel6.Controls.Add(this.btnIgnoredUserAdd);
-            this.panel6.Controls.Add(this.dgvIgnoredUsers);
-            this.panel6.Controls.Add(this.label9);
-            this.panel6.Controls.Add(this.chkIgnoreViaTwitch);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(481, 456);
-            this.panel6.TabIndex = 4;
+            this.panel12.Controls.Add(this.chkSingleConnection);
+            this.panel12.Controls.Add(this.chkReplys);
+            this.panel12.Controls.Add(this.chkPreferEmotes);
+            this.panel12.Controls.Add(this.chkAllowSameMessages);
+            this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
+            this.panel12.Controls.Add(this.chkCacheEmotes);
+            this.panel12.Controls.Add(this.chkAutomaticUpdate);
+            this.panel12.Controls.Add(this.chkTabLocalizedNames);
+            this.panel12.Controls.Add(this.chkMentionUserWithAt);
+            this.panel12.Controls.Add(this.lblScrollSpeed);
+            this.panel12.Controls.Add(this.label11);
+            this.panel12.Controls.Add(this.trackBar2);
+            this.panel12.Controls.Add(this.chkRainbow);
+            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel12.Location = new System.Drawing.Point(0, 0);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(481, 456);
+            this.panel12.TabIndex = 31;
             // 
-            // comboShowIgnoredUsersMessagesIf
+            // chkReplys
             // 
-            this.comboShowIgnoredUsersMessagesIf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboShowIgnoredUsersMessagesIf.FormattingEnabled = true;
-            this.comboShowIgnoredUsersMessagesIf.Items.AddRange(new object[] {
-            "You are moderator",
-            "You are broadcaster",
-            "Never"});
-            this.comboShowIgnoredUsersMessagesIf.Location = new System.Drawing.Point(322, 36);
-            this.comboShowIgnoredUsersMessagesIf.Name = "comboShowIgnoredUsersMessagesIf";
-            this.comboShowIgnoredUsersMessagesIf.Size = new System.Drawing.Size(109, 21);
-            this.comboShowIgnoredUsersMessagesIf.TabIndex = 25;
+            this.chkReplys.AutoSize = true;
+            this.chkReplys.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkReplys.Location = new System.Drawing.Point(15, 228);
+            this.chkReplys.Name = "chkReplys";
+            this.chkReplys.Size = new System.Drawing.Size(151, 17);
+            this.chkReplys.TabIndex = 57;
+            this.chkReplys.Text = "Enable twitch reply feature";
+            this.chkReplys.UseVisualStyleBackColor = true;
             // 
-            // label15
+            // chkSingleConnection
             // 
-            this.label15.AutoSize = true;
-            this.label15.ForeColor = System.Drawing.Color.White;
-            this.label15.Location = new System.Drawing.Point(177, 41);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(139, 13);
-            this.label15.TabIndex = 6;
-            this.label15.Text = "Show messages anyways if:";
+            this.chkSingleConnection.AutoSize = true;
+            this.chkSingleConnection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkSingleConnection.Location = new System.Drawing.Point(15, 251);
+            this.chkSingleConnection.Name = "chkSingleConnection";
+            this.chkSingleConnection.Size = new System.Drawing.Size(151, 17);
+            this.chkSingleConnection.TabIndex = 58;
+            this.chkSingleConnection.Text = "Use single connection for chat";
+            this.chkSingleConnection.UseVisualStyleBackColor = true;
             // 
-            // chkTwitchIgnores
+            // chkPreferEmotes
             // 
-            this.chkTwitchIgnores.AutoSize = true;
-            this.chkTwitchIgnores.Checked = true;
-            this.chkTwitchIgnores.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTwitchIgnores.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTwitchIgnores.Location = new System.Drawing.Point(16, 13);
-            this.chkTwitchIgnores.Name = "chkTwitchIgnores";
-            this.chkTwitchIgnores.Size = new System.Drawing.Size(156, 17);
-            this.chkTwitchIgnores.TabIndex = 24;
-            this.chkTwitchIgnores.Text = "Enable twitch ignored users";
-            this.chkTwitchIgnores.UseVisualStyleBackColor = true;
-            this.chkTwitchIgnores.Visible = false;
+            this.chkPreferEmotes.AutoSize = true;
+            this.chkPreferEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkPreferEmotes.Location = new System.Drawing.Point(15, 44);
+            this.chkPreferEmotes.Name = "chkPreferEmotes";
+            this.chkPreferEmotes.Size = new System.Drawing.Size(388, 17);
+            this.chkPreferEmotes.TabIndex = 55;
+            this.chkPreferEmotes.Text = "Prefer emotes over usernames when tab-completing (unless starting with @)";
+            this.chkPreferEmotes.UseVisualStyleBackColor = true;
             // 
-            // btnIgnoredUserRemove
+            // chkAllowSameMessages
             // 
-            this.btnIgnoredUserRemove.Location = new System.Drawing.Point(96, 36);
-            this.btnIgnoredUserRemove.Name = "btnIgnoredUserRemove";
-            this.btnIgnoredUserRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnIgnoredUserRemove.TabIndex = 8;
-            this.btnIgnoredUserRemove.Text = "Remove";
-            this.btnIgnoredUserRemove.UseVisualStyleBackColor = true;
+            this.chkAllowSameMessages.AutoSize = true;
+            this.chkAllowSameMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkAllowSameMessages.Location = new System.Drawing.Point(15, 136);
+            this.chkAllowSameMessages.Name = "chkAllowSameMessages";
+            this.chkAllowSameMessages.Size = new System.Drawing.Size(306, 17);
+            this.chkAllowSameMessages.TabIndex = 53;
+            this.chkAllowSameMessages.Text = "Allow sending duplicate messages (add a space at the end)";
+            this.chkAllowSameMessages.UseVisualStyleBackColor = true;
             // 
-            // btnIgnoredUserAdd
+            // chkRecentlyUsedEmoteList
             // 
-            this.btnIgnoredUserAdd.Location = new System.Drawing.Point(16, 36);
-            this.btnIgnoredUserAdd.Name = "btnIgnoredUserAdd";
-            this.btnIgnoredUserAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnIgnoredUserAdd.TabIndex = 7;
-            this.btnIgnoredUserAdd.Text = "Add";
-            this.btnIgnoredUserAdd.UseVisualStyleBackColor = true;
+            this.chkRecentlyUsedEmoteList.AutoSize = true;
+            this.chkRecentlyUsedEmoteList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkRecentlyUsedEmoteList.Location = new System.Drawing.Point(15, 159);
+            this.chkRecentlyUsedEmoteList.Name = "chkRecentlyUsedEmoteList";
+            this.chkRecentlyUsedEmoteList.Size = new System.Drawing.Size(320, 17);
+            this.chkRecentlyUsedEmoteList.TabIndex = 54;
+            this.chkRecentlyUsedEmoteList.Text = "Keep a list of recently used emotes not from twitches emote list";
+            this.chkRecentlyUsedEmoteList.UseVisualStyleBackColor = true;
             // 
-            // dgvIgnoredUsers
+            // chkCacheEmotes
             // 
-            this.dgvIgnoredUsers.AllowUserToAddRows = false;
-            this.dgvIgnoredUsers.AllowUserToDeleteRows = false;
-            this.dgvIgnoredUsers.AllowUserToResizeColumns = false;
-            this.dgvIgnoredUsers.AllowUserToResizeRows = false;
-            this.dgvIgnoredUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIgnoredUsers.ColumnHeadersVisible = false;
-            this.dgvIgnoredUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1});
-            this.dgvIgnoredUsers.Location = new System.Drawing.Point(16, 63);
-            this.dgvIgnoredUsers.Name = "dgvIgnoredUsers";
-            this.dgvIgnoredUsers.RowHeadersVisible = false;
-            this.dgvIgnoredUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvIgnoredUsers.Size = new System.Drawing.Size(415, 268);
-            this.dgvIgnoredUsers.TabIndex = 6;
+            this.chkCacheEmotes.AutoSize = true;
+            this.chkCacheEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkCacheEmotes.Location = new System.Drawing.Point(15, 182);
+            this.chkCacheEmotes.Name = "chkCacheEmotes";
+            this.chkCacheEmotes.Size = new System.Drawing.Size(272, 17);
+            this.chkCacheEmotes.TabIndex = 55;
+            this.chkCacheEmotes.Text = "Locally store copys of emotes to make loading faster";
+            this.chkCacheEmotes.UseVisualStyleBackColor = true;
             // 
-            // dataGridViewTextBoxColumn1
+            // chkAutomaticUpdate
             // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.chkAutomaticUpdate.AutoSize = true;
+            this.chkAutomaticUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkAutomaticUpdate.Location = new System.Drawing.Point(15, 205);
+            this.chkAutomaticUpdate.Name = "chkAutomaticUpdate";
+            this.chkAutomaticUpdate.Size = new System.Drawing.Size(227, 17);
+            this.chkAutomaticUpdate.TabIndex = 56;
+            this.chkAutomaticUpdate.Text = "Automatically check for updates on startup";
+            this.chkAutomaticUpdate.UseVisualStyleBackColor = true;
             // 
-            // label9
+            // chkTabLocalizedNames
             // 
-            this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(13, 334);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(190, 26);
-            this.label9.TabIndex = 5;
-            this.label9.Text = "/ignore in chat to ignore someone\r\n/unignore in chat to unignore someone";
+            this.chkTabLocalizedNames.AutoSize = true;
+            this.chkTabLocalizedNames.Checked = true;
+            this.chkTabLocalizedNames.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTabLocalizedNames.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTabLocalizedNames.Location = new System.Drawing.Point(15, 89);
+            this.chkTabLocalizedNames.Name = "chkTabLocalizedNames";
+            this.chkTabLocalizedNames.Size = new System.Drawing.Size(190, 17);
+            this.chkTabLocalizedNames.TabIndex = 52;
+            this.chkTabLocalizedNames.Text = "Use localized names when tabbing";
+            this.chkTabLocalizedNames.UseVisualStyleBackColor = true;
             // 
-            // chkIgnoreViaTwitch
+            // chkMentionUserWithAt
             // 
-            this.chkIgnoreViaTwitch.AutoSize = true;
-            this.chkIgnoreViaTwitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkIgnoreViaTwitch.Location = new System.Drawing.Point(13, 357);
-            this.chkIgnoreViaTwitch.Name = "chkIgnoreViaTwitch";
-            this.chkIgnoreViaTwitch.Size = new System.Drawing.Size(178, 17);
-            this.chkIgnoreViaTwitch.TabIndex = 9;
-            this.chkIgnoreViaTwitch.Text = "Ignore users using the twitch api\r\n";
-            this.chkIgnoreViaTwitch.UseVisualStyleBackColor = true;
+            this.chkMentionUserWithAt.AutoSize = true;
+            this.chkMentionUserWithAt.Checked = true;
+            this.chkMentionUserWithAt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkMentionUserWithAt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkMentionUserWithAt.Location = new System.Drawing.Point(15, 66);
+            this.chkMentionUserWithAt.Name = "chkMentionUserWithAt";
+            this.chkMentionUserWithAt.Size = new System.Drawing.Size(249, 17);
+            this.chkMentionUserWithAt.TabIndex = 51;
+            this.chkMentionUserWithAt.Text = "Mention users with an @ (except in commands)";
+            this.chkMentionUserWithAt.UseVisualStyleBackColor = true;
             // 
-            // panel8
+            // lblScrollSpeed
             // 
-            this.panel8.Controls.Add(this.label13);
-            this.panel8.Controls.Add(this.chkEnableInlineWhispers);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(481, 456);
-            this.panel8.TabIndex = 6;
+            this.lblScrollSpeed.AutoSize = true;
+            this.lblScrollSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblScrollSpeed.Location = new System.Drawing.Point(377, 20);
+            this.lblScrollSpeed.Name = "lblScrollSpeed";
+            this.lblScrollSpeed.Size = new System.Drawing.Size(33, 13);
+            this.lblScrollSpeed.TabIndex = 50;
+            this.lblScrollSpeed.Text = "100%";
             // 
-            // label13
+            // label11
             // 
-            this.label13.AutoSize = true;
-            this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(12, 40);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(300, 39);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "You can join the channel /whispers to view your whispers!\r\n\r\nYou can send whisper" +
-    "s using this command: /w user message";
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label11.Location = new System.Drawing.Point(12, 20);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(105, 13);
+            this.label11.TabIndex = 49;
+            this.label11.Text = "Mouse Scroll Speed:";
             // 
-            // chkEnableInlineWhispers
+            // trackBar2
             // 
-            this.chkEnableInlineWhispers.AutoSize = true;
-            this.chkEnableInlineWhispers.Checked = true;
-            this.chkEnableInlineWhispers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEnableInlineWhispers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkEnableInlineWhispers.Location = new System.Drawing.Point(15, 13);
-            this.chkEnableInlineWhispers.Name = "chkEnableInlineWhispers";
-            this.chkEnableInlineWhispers.Size = new System.Drawing.Size(130, 17);
-            this.chkEnableInlineWhispers.TabIndex = 24;
-            this.chkEnableInlineWhispers.Text = "Enable inline whispers";
-            this.chkEnableInlineWhispers.UseVisualStyleBackColor = true;
+            this.trackBar2.LargeChange = 45;
+            this.trackBar2.Location = new System.Drawing.Point(121, 15);
+            this.trackBar2.Maximum = 400;
+            this.trackBar2.Minimum = 100;
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(250, 45);
+            this.trackBar2.TabIndex = 48;
+            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar2.Value = 200;
+            // 
+            // chkRainbow
+            // 
+            this.chkRainbow.AutoSize = true;
+            this.chkRainbow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkRainbow.Location = new System.Drawing.Point(15, 113);
+            this.chkRainbow.Name = "chkRainbow";
+            this.chkRainbow.Size = new System.Drawing.Size(437, 17);
+            this.chkRainbow.TabIndex = 43;
+            this.chkRainbow.Text = "Switch username color like a rainbow after each message (requires twitch prime / " +
+    "turbo)\r\n";
+            this.chkRainbow.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.chkAllowCommandAtEnd);
+            this.panel5.Controls.Add(this.lblCommands);
+            this.panel5.Controls.Add(this.btnCommandRemove);
+            this.panel5.Controls.Add(this.btnCommandAdd);
+            this.panel5.Controls.Add(this.dgvCommands);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(481, 456);
+            this.panel5.TabIndex = 3;
+            // 
+            // chkAllowCommandAtEnd
+            // 
+            this.chkAllowCommandAtEnd.AutoSize = true;
+            this.chkAllowCommandAtEnd.Checked = true;
+            this.chkAllowCommandAtEnd.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAllowCommandAtEnd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkAllowCommandAtEnd.Location = new System.Drawing.Point(176, 17);
+            this.chkAllowCommandAtEnd.Name = "chkAllowCommandAtEnd";
+            this.chkAllowCommandAtEnd.Size = new System.Drawing.Size(205, 17);
+            this.chkAllowCommandAtEnd.TabIndex = 1;
+            this.chkAllowCommandAtEnd.Text = "Allow commands at the end of the line";
+            this.chkAllowCommandAtEnd.UseVisualStyleBackColor = true;
+            // 
+            // lblCommands
+            // 
+            this.lblCommands.AutoSize = true;
+            this.lblCommands.ForeColor = System.Drawing.Color.White;
+            this.lblCommands.Location = new System.Drawing.Point(13, 321);
+            this.lblCommands.Name = "lblCommands";
+            this.lblCommands.Size = new System.Drawing.Size(270, 78);
+            this.lblCommands.TabIndex = 4;
+            this.lblCommands.Text = "/name command\r\n\r\n{1} = first word, {2} = seconds word, ...\r\n{1+} = first word and" +
+    " after, {2+} = second word and after\r\n\r\nwarning: you could override important tw" +
+    "itch commands";
+            // 
+            // btnCommandRemove
+            // 
+            this.btnCommandRemove.Location = new System.Drawing.Point(95, 13);
+            this.btnCommandRemove.Name = "btnCommandRemove";
+            this.btnCommandRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnCommandRemove.TabIndex = 2;
+            this.btnCommandRemove.Text = "Remove";
+            this.btnCommandRemove.UseVisualStyleBackColor = true;
+            // 
+            // btnCommandAdd
+            // 
+            this.btnCommandAdd.Location = new System.Drawing.Point(15, 13);
+            this.btnCommandAdd.Name = "btnCommandAdd";
+            this.btnCommandAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnCommandAdd.TabIndex = 1;
+            this.btnCommandAdd.Text = "Add";
+            this.btnCommandAdd.UseVisualStyleBackColor = true;
+            // 
+            // dgvCommands
+            // 
+            this.dgvCommands.AllowUserToAddRows = false;
+            this.dgvCommands.AllowUserToDeleteRows = false;
+            this.dgvCommands.AllowUserToResizeColumns = false;
+            this.dgvCommands.AllowUserToResizeRows = false;
+            this.dgvCommands.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCommands.ColumnHeadersVisible = false;
+            this.dgvCommands.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Command});
+            this.dgvCommands.Location = new System.Drawing.Point(16, 48);
+            this.dgvCommands.Name = "dgvCommands";
+            this.dgvCommands.RowHeadersVisible = false;
+            this.dgvCommands.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCommands.Size = new System.Drawing.Size(415, 270);
+            this.dgvCommands.TabIndex = 0;
+            // 
+            // Command
+            // 
+            this.Command.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Command.HeaderText = "Command";
+            this.Command.Name = "Command";
             // 
             // paneStreamLink
             // 
@@ -598,6 +699,740 @@ namespace Chatterino.Controls
             this.btnStreamlinkPath.Text = "Select";
             this.btnStreamlinkPath.UseVisualStyleBackColor = true;
             this.btnStreamlinkPath.Click += new System.EventHandler(this.btnStreamlinkPath_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this.labelNightDesc);
+            this.panel1.Controls.Add(this.numThemeNightUntil);
+            this.panel1.Controls.Add(this.labelNightThemeUntil);
+            this.panel1.Controls.Add(this.numThemeNightFrom);
+            this.panel1.Controls.Add(this.labelThemeNightFrom);
+            this.panel1.Controls.Add(this.comboThemeNight);
+            this.panel1.Controls.Add(this.labelThemeNight);
+            this.panel1.Controls.Add(this.checkBoxDifferentThemeAtNight);
+            this.panel1.Controls.Add(this.chkTopMost);
+            this.panel1.Controls.Add(this.chkRemoveX);
+            this.panel1.Controls.Add(this.chkShowEmoteTooltip);
+            this.panel1.Controls.Add(this.chkHighlightHighlightedMessages);
+            this.panel1.Controls.Add(this.chkChangeTabTitle);
+            this.panel1.Controls.Add(this.btnSelectFont);
+            this.panel1.Controls.Add(this.btnDefaultFont);
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.trackBar1);
+            this.panel1.Controls.Add(this.chkInputShowMessageLength);
+            this.panel1.Controls.Add(this.comboTheme);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.lblFont);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.chkHideInput);
+            this.panel1.Controls.Add(this.txtMsgLimit);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(481, 456);
+            this.panel1.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chkTimestamps);
+            this.groupBox1.Controls.Add(this.chkTimestampAmPm);
+            this.groupBox1.Controls.Add(this.chkTimestampSeconds);
+            this.groupBox1.Controls.Add(this.chkMessageSeparators);
+            this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(17, 310);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(435, 92);
+            this.groupBox1.TabIndex = 37;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Messages";
+            // 
+            // chkTimestamps
+            // 
+            this.chkTimestamps.AutoSize = true;
+            this.chkTimestamps.Checked = true;
+            this.chkTimestamps.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTimestamps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTimestamps.Location = new System.Drawing.Point(8, 17);
+            this.chkTimestamps.Name = "chkTimestamps";
+            this.chkTimestamps.Size = new System.Drawing.Size(108, 17);
+            this.chkTimestamps.TabIndex = 0;
+            this.chkTimestamps.Text = "Show timestamps";
+            this.chkTimestamps.UseVisualStyleBackColor = true;
+            // 
+            // chkTimestampAmPm
+            // 
+            this.chkTimestampAmPm.AutoSize = true;
+            this.chkTimestampAmPm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTimestampAmPm.Location = new System.Drawing.Point(320, 18);
+            this.chkTimestampAmPm.Name = "chkTimestampAmPm";
+            this.chkTimestampAmPm.Size = new System.Drawing.Size(81, 17);
+            this.chkTimestampAmPm.TabIndex = 36;
+            this.chkTimestampAmPm.Text = "Use am/pm";
+            this.chkTimestampAmPm.UseVisualStyleBackColor = true;
+            // 
+            // chkTimestampSeconds
+            // 
+            this.chkTimestampSeconds.AutoSize = true;
+            this.chkTimestampSeconds.Checked = true;
+            this.chkTimestampSeconds.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTimestampSeconds.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTimestampSeconds.Location = new System.Drawing.Point(146, 17);
+            this.chkTimestampSeconds.Name = "chkTimestampSeconds";
+            this.chkTimestampSeconds.Size = new System.Drawing.Size(162, 17);
+            this.chkTimestampSeconds.TabIndex = 1;
+            this.chkTimestampSeconds.Text = "Show seconds in timestamps";
+            this.chkTimestampSeconds.UseVisualStyleBackColor = true;
+            // 
+            // chkMessageSeperators
+            // 
+            this.chkMessageSeparators.AutoSize = true;
+            this.chkMessageSeparators.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkMessageSeparators.Location = new System.Drawing.Point(8, 40);
+            this.chkMessageSeparators.Name = "chkMessageSeperators";
+            this.chkMessageSeparators.Size = new System.Drawing.Size(119, 17);
+            this.chkMessageSeparators.TabIndex = 16;
+            this.chkMessageSeparators.Text = "Separate messages";
+            this.chkMessageSeparators.UseVisualStyleBackColor = true;
+            // 
+            // chkLastReadMessageIndicator
+            // 
+            this.chkLastReadMessageIndicator.AutoSize = true;
+            this.chkLastReadMessageIndicator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkLastReadMessageIndicator.Location = new System.Drawing.Point(9, 64);
+            this.chkLastReadMessageIndicator.Name = "chkLastReadMessageIndicator";
+            this.chkLastReadMessageIndicator.Size = new System.Drawing.Size(235, 17);
+            this.chkLastReadMessageIndicator.TabIndex = 27;
+            this.chkLastReadMessageIndicator.Text = "Show red indicator for the last read message\r\n";
+            this.chkLastReadMessageIndicator.UseVisualStyleBackColor = true;
+            // 
+            // labelNightDesc
+            // 
+            this.labelNightDesc.AutoSize = true;
+            this.labelNightDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.labelNightDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.labelNightDesc.Location = new System.Drawing.Point(410, 44);
+            this.labelNightDesc.Name = "labelNightDesc";
+            this.labelNightDesc.Size = new System.Drawing.Size(34, 13);
+            this.labelNightDesc.TabIndex = 35;
+            this.labelNightDesc.Text = "(1-24)";
+            // 
+            // numThemeNightUntil
+            // 
+            this.numThemeNightUntil.Location = new System.Drawing.Point(346, 40);
+            this.numThemeNightUntil.Maximum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.numThemeNightUntil.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numThemeNightUntil.Name = "numThemeNightUntil";
+            this.numThemeNightUntil.Size = new System.Drawing.Size(57, 20);
+            this.numThemeNightUntil.TabIndex = 34;
+            this.numThemeNightUntil.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // labelNightThemeUntil
+            // 
+            this.labelNightThemeUntil.AutoSize = true;
+            this.labelNightThemeUntil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.labelNightThemeUntil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.labelNightThemeUntil.Location = new System.Drawing.Point(315, 44);
+            this.labelNightThemeUntil.Name = "labelNightThemeUntil";
+            this.labelNightThemeUntil.Size = new System.Drawing.Size(26, 13);
+            this.labelNightThemeUntil.TabIndex = 33;
+            this.labelNightThemeUntil.Text = "until";
+            // 
+            // numThemeNightFrom
+            // 
+            this.numThemeNightFrom.Location = new System.Drawing.Point(252, 40);
+            this.numThemeNightFrom.Maximum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.numThemeNightFrom.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numThemeNightFrom.Name = "numThemeNightFrom";
+            this.numThemeNightFrom.Size = new System.Drawing.Size(57, 20);
+            this.numThemeNightFrom.TabIndex = 32;
+            this.numThemeNightFrom.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // labelThemeNightFrom
+            // 
+            this.labelThemeNightFrom.AutoSize = true;
+            this.labelThemeNightFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.labelThemeNightFrom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.labelThemeNightFrom.Location = new System.Drawing.Point(222, 44);
+            this.labelThemeNightFrom.Name = "labelThemeNightFrom";
+            this.labelThemeNightFrom.Size = new System.Drawing.Size(27, 13);
+            this.labelThemeNightFrom.TabIndex = 31;
+            this.labelThemeNightFrom.Text = "from";
+            // 
+            // comboThemeNight
+            // 
+            this.comboThemeNight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboThemeNight.FormattingEnabled = true;
+            this.comboThemeNight.Items.AddRange(new object[] {
+            "White",
+            "Light",
+            "Dark",
+            "Black"});
+            this.comboThemeNight.Location = new System.Drawing.Point(97, 41);
+            this.comboThemeNight.Name = "comboThemeNight";
+            this.comboThemeNight.Size = new System.Drawing.Size(119, 21);
+            this.comboThemeNight.TabIndex = 29;
+            // 
+            // labelThemeNight
+            // 
+            this.labelThemeNight.AutoSize = true;
+            this.labelThemeNight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.labelThemeNight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.labelThemeNight.Location = new System.Drawing.Point(14, 44);
+            this.labelThemeNight.Name = "labelThemeNight";
+            this.labelThemeNight.Size = new System.Drawing.Size(77, 13);
+            this.labelThemeNight.TabIndex = 30;
+            this.labelThemeNight.Text = "Theme (Night):";
+            // 
+            // checkBoxDifferentThemeAtNight
+            // 
+            this.checkBoxDifferentThemeAtNight.AutoSize = true;
+            this.checkBoxDifferentThemeAtNight.Checked = true;
+            this.checkBoxDifferentThemeAtNight.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDifferentThemeAtNight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.checkBoxDifferentThemeAtNight.Location = new System.Drawing.Point(243, 14);
+            this.checkBoxDifferentThemeAtNight.Name = "checkBoxDifferentThemeAtNight";
+            this.checkBoxDifferentThemeAtNight.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxDifferentThemeAtNight.TabIndex = 28;
+            this.checkBoxDifferentThemeAtNight.Text = "different Theme during Night";
+            this.checkBoxDifferentThemeAtNight.UseVisualStyleBackColor = true;
+            // 
+            // chkTopMost
+            // 
+            this.chkTopMost.AutoSize = true;
+            this.chkTopMost.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTopMost.Location = new System.Drawing.Point(17, 193);
+            this.chkTopMost.Name = "chkTopMost";
+            this.chkTopMost.Size = new System.Drawing.Size(133, 17);
+            this.chkTopMost.TabIndex = 26;
+            this.chkTopMost.Text = "Window always on top";
+            this.chkTopMost.UseVisualStyleBackColor = true;
+            // 
+            // chkRemoveX
+            // 
+            this.chkRemoveX.AutoSize = true;
+            this.chkRemoveX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkRemoveX.Location = new System.Drawing.Point(17, 216);
+            this.chkRemoveX.Name = "chkRemoveX";
+            this.chkRemoveX.Size = new System.Drawing.Size(155, 17);
+            this.chkRemoveX.TabIndex = 27;
+            this.chkRemoveX.Text = "Remove X button from tabs\r\n";
+            this.chkRemoveX.UseVisualStyleBackColor = true;
+            // 
+            // chkShowEmoteTooltip
+            // 
+            this.chkShowEmoteTooltip.AutoSize = true;
+            this.chkShowEmoteTooltip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkShowEmoteTooltip.Location = new System.Drawing.Point(17, 239);
+            this.chkShowEmoteTooltip.Name = "chkShowEmoteTooltip";
+            this.chkShowEmoteTooltip.Size = new System.Drawing.Size(158, 17);
+            this.chkShowEmoteTooltip.TabIndex = 28;
+            this.chkShowEmoteTooltip.Text = "Show large emotes in tooltip\r\n";
+            this.chkShowEmoteTooltip.UseVisualStyleBackColor = true;
+            // 
+            // chkHighlightHighlightedMessages
+            // 
+            this.chkHighlightHighlightedMessages.AutoSize = true;
+            this.chkHighlightHighlightedMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkHighlightHighlightedMessages.Location = new System.Drawing.Point(17, 262);
+            this.chkHighlightHighlightedMessages.Name = "chkHighlightHighlightedMessages";
+            this.chkHighlightHighlightedMessages.Size = new System.Drawing.Size(171, 17);
+            this.chkHighlightHighlightedMessages.TabIndex = 29;
+            this.chkHighlightHighlightedMessages.Text = "Highlight highlighted messages\r\n";
+            this.chkHighlightHighlightedMessages.UseVisualStyleBackColor = true;
+            // 
+            // chkChangeTabTitle
+            // 
+            this.chkChangeTabTitle.AutoSize = true;
+            this.chkChangeTabTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkChangeTabTitle.Location = new System.Drawing.Point(17, 285);
+            this.chkChangeTabTitle.Name = "chkChangeTabTitle";
+            this.chkChangeTabTitle.Size = new System.Drawing.Size(191, 17);
+            this.chkChangeTabTitle.TabIndex = 29;
+            this.chkChangeTabTitle.Text = "Double click tab to change tab title\r\n";
+            this.chkChangeTabTitle.UseVisualStyleBackColor = true;
+            // 
+            // btnSelectFont
+            // 
+            this.btnSelectFont.Location = new System.Drawing.Point(98, 109);
+            this.btnSelectFont.Name = "btnSelectFont";
+            this.btnSelectFont.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectFont.TabIndex = 14;
+            this.btnSelectFont.Text = "Select";
+            this.btnSelectFont.UseVisualStyleBackColor = true;
+            // 
+            // btnDefaultFont
+            // 
+            this.btnDefaultFont.Location = new System.Drawing.Point(320, 109);
+            this.btnDefaultFont.Name = "btnDefaultFont";
+            this.btnDefaultFont.Size = new System.Drawing.Size(75, 23);
+            this.btnDefaultFont.TabIndex = 15;
+            this.btnDefaultFont.Text = "Default Font";
+            this.btnDefaultFont.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label10.Location = new System.Drawing.Point(14, 77);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(64, 13);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "Theme hue:";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.LargeChange = 45;
+            this.trackBar1.Location = new System.Drawing.Point(86, 72);
+            this.trackBar1.Maximum = 360;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(250, 45);
+            this.trackBar1.TabIndex = 19;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            // 
+            // chkInputShowMessageLength
+            // 
+            this.chkInputShowMessageLength.AutoSize = true;
+            this.chkInputShowMessageLength.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkInputShowMessageLength.Location = new System.Drawing.Point(17, 170);
+            this.chkInputShowMessageLength.Name = "chkInputShowMessageLength";
+            this.chkInputShowMessageLength.Size = new System.Drawing.Size(316, 17);
+            this.chkInputShowMessageLength.TabIndex = 18;
+            this.chkInputShowMessageLength.Text = "Show message length (actual character count not text length)";
+            this.chkInputShowMessageLength.UseVisualStyleBackColor = true;
+            // 
+            // comboTheme
+            // 
+            this.comboTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboTheme.FormattingEnabled = true;
+            this.comboTheme.Items.AddRange(new object[] {
+            "White",
+            "Light",
+            "Dark",
+            "Black"});
+            this.comboTheme.Location = new System.Drawing.Point(97, 11);
+            this.comboTheme.Name = "comboTheme";
+            this.comboTheme.Size = new System.Drawing.Size(119, 21);
+            this.comboTheme.TabIndex = 16;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label7.Location = new System.Drawing.Point(14, 14);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 13);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Theme:";
+            // 
+            // lblFont
+            // 
+            this.lblFont.AutoSize = true;
+            this.lblFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblFont.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblFont.Location = new System.Drawing.Point(182, 114);
+            this.lblFont.Name = "lblFont";
+            this.lblFont.Size = new System.Drawing.Size(54, 13);
+            this.lblFont.TabIndex = 15;
+            this.lblFont.Text = "font name";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label5.Location = new System.Drawing.Point(15, 114);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(31, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Font:";
+            // 
+            // chkHideInput
+            // 
+            this.chkHideInput.AutoSize = true;
+            this.chkHideInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkHideInput.Location = new System.Drawing.Point(17, 147);
+            this.chkHideInput.Name = "chkHideInput";
+            this.chkHideInput.Size = new System.Drawing.Size(133, 17);
+            this.chkHideInput.TabIndex = 12;
+            this.chkHideInput.Text = "Hide input box if empty";
+            this.chkHideInput.UseVisualStyleBackColor = true;
+            // 
+            // txtMsgLimit
+            // 
+            this.txtMsgLimit.Location = new System.Drawing.Point(100, 47);
+            this.txtMsgLimit.Name = "txtMsgLimit";
+            this.txtMsgLimit.Size = new System.Drawing.Size(167, 20);
+            this.txtMsgLimit.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label3.Location = new System.Drawing.Point(14, 47);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(77, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Message Limit:";
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.comboShowIgnoredUsersMessagesIf);
+            this.panel6.Controls.Add(this.label15);
+            this.panel6.Controls.Add(this.chkTwitchIgnores);
+            this.panel6.Controls.Add(this.btnIgnoredUserRemove);
+            this.panel6.Controls.Add(this.btnIgnoredUserAdd);
+            this.panel6.Controls.Add(this.dgvIgnoredUsers);
+            this.panel6.Controls.Add(this.label9);
+            this.panel6.Controls.Add(this.chkIgnoreViaTwitch);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(481, 456);
+            this.panel6.TabIndex = 4;
+            // 
+            // comboShowIgnoredUsersMessagesIf
+            // 
+            this.comboShowIgnoredUsersMessagesIf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboShowIgnoredUsersMessagesIf.FormattingEnabled = true;
+            this.comboShowIgnoredUsersMessagesIf.Items.AddRange(new object[] {
+            "You are moderator",
+            "You are broadcaster",
+            "Never"});
+            this.comboShowIgnoredUsersMessagesIf.Location = new System.Drawing.Point(322, 36);
+            this.comboShowIgnoredUsersMessagesIf.Name = "comboShowIgnoredUsersMessagesIf";
+            this.comboShowIgnoredUsersMessagesIf.Size = new System.Drawing.Size(109, 21);
+            this.comboShowIgnoredUsersMessagesIf.TabIndex = 25;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(177, 41);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(139, 13);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "Show messages anyways if:";
+            // 
+            // chkTwitchIgnores
+            // 
+            this.chkTwitchIgnores.AutoSize = true;
+            this.chkTwitchIgnores.Checked = true;
+            this.chkTwitchIgnores.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTwitchIgnores.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTwitchIgnores.Location = new System.Drawing.Point(16, 13);
+            this.chkTwitchIgnores.Name = "chkTwitchIgnores";
+            this.chkTwitchIgnores.Size = new System.Drawing.Size(156, 17);
+            this.chkTwitchIgnores.TabIndex = 24;
+            this.chkTwitchIgnores.Text = "Enable twitch ignored users";
+            this.chkTwitchIgnores.UseVisualStyleBackColor = true;
+            this.chkTwitchIgnores.Visible = false;
+            // 
+            // btnIgnoredUserRemove
+            // 
+            this.btnIgnoredUserRemove.Location = new System.Drawing.Point(96, 36);
+            this.btnIgnoredUserRemove.Name = "btnIgnoredUserRemove";
+            this.btnIgnoredUserRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnIgnoredUserRemove.TabIndex = 8;
+            this.btnIgnoredUserRemove.Text = "Remove";
+            this.btnIgnoredUserRemove.UseVisualStyleBackColor = true;
+            // 
+            // btnIgnoredUserAdd
+            // 
+            this.btnIgnoredUserAdd.Location = new System.Drawing.Point(16, 36);
+            this.btnIgnoredUserAdd.Name = "btnIgnoredUserAdd";
+            this.btnIgnoredUserAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnIgnoredUserAdd.TabIndex = 7;
+            this.btnIgnoredUserAdd.Text = "Add";
+            this.btnIgnoredUserAdd.UseVisualStyleBackColor = true;
+            // 
+            // dgvIgnoredUsers
+            // 
+            this.dgvIgnoredUsers.AllowUserToAddRows = false;
+            this.dgvIgnoredUsers.AllowUserToDeleteRows = false;
+            this.dgvIgnoredUsers.AllowUserToResizeColumns = false;
+            this.dgvIgnoredUsers.AllowUserToResizeRows = false;
+            this.dgvIgnoredUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvIgnoredUsers.ColumnHeadersVisible = false;
+            this.dgvIgnoredUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1});
+            this.dgvIgnoredUsers.Location = new System.Drawing.Point(16, 63);
+            this.dgvIgnoredUsers.Name = "dgvIgnoredUsers";
+            this.dgvIgnoredUsers.RowHeadersVisible = false;
+            this.dgvIgnoredUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvIgnoredUsers.Size = new System.Drawing.Size(415, 268);
+            this.dgvIgnoredUsers.TabIndex = 6;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.Location = new System.Drawing.Point(13, 334);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(190, 26);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "/ignore in chat to ignore someone\r\n/unignore in chat to unignore someone";
+            // 
+            // chkIgnoreViaTwitch
+            // 
+            this.chkIgnoreViaTwitch.AutoSize = true;
+            this.chkIgnoreViaTwitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkIgnoreViaTwitch.Location = new System.Drawing.Point(13, 357);
+            this.chkIgnoreViaTwitch.Name = "chkIgnoreViaTwitch";
+            this.chkIgnoreViaTwitch.Size = new System.Drawing.Size(178, 17);
+            this.chkIgnoreViaTwitch.TabIndex = 9;
+            this.chkIgnoreViaTwitch.Text = "Ignore users using the twitch api\r\n";
+            this.chkIgnoreViaTwitch.UseVisualStyleBackColor = true;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label16);
+            this.panel4.Controls.Add(this.labelEmoteScale);
+            this.panel4.Controls.Add(this.trackBarEmoteScale);
+            this.panel4.Controls.Add(this.checkBoxEmoteSizeBasedOnTextHeight);
+            this.panel4.Controls.Add(this.chkTwitchEmotes);
+            this.panel4.Controls.Add(this.tabControl2);
+            this.panel4.Controls.Add(this.chkEmojis);
+            this.panel4.Controls.Add(this.chkGifEmotes);
+            this.panel4.Controls.Add(this.chkBttvEmotes);
+            this.panel4.Controls.Add(this.chkFFzEmotes);
+            this.panel4.Controls.Add(this.chk7tvEmotes);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(481, 456);
+            this.panel4.TabIndex = 2;
+            // 
+            // label16
+            // 
+            this.label16.ForeColor = System.Drawing.Color.White;
+            this.label16.Location = new System.Drawing.Point(225, 98);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(227, 37);
+            this.label16.TabIndex = 27;
+            this.label16.Text = "(you will have to reload emotes for it to load the properly scaled images for tha" +
+    "t chat)";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelEmoteScale
+            // 
+            this.labelEmoteScale.AutoSize = true;
+            this.labelEmoteScale.ForeColor = System.Drawing.Color.White;
+            this.labelEmoteScale.Location = new System.Drawing.Point(305, 47);
+            this.labelEmoteScale.Name = "labelEmoteScale";
+            this.labelEmoteScale.Size = new System.Drawing.Size(82, 13);
+            this.labelEmoteScale.TabIndex = 26;
+            this.labelEmoteScale.Text = "Emote scale: 1x";
+            // 
+            // trackBarEmoteScale
+            // 
+            this.trackBarEmoteScale.Location = new System.Drawing.Point(243, 63);
+            this.trackBarEmoteScale.Maximum = 45;
+            this.trackBarEmoteScale.Name = "trackBarEmoteScale";
+            this.trackBarEmoteScale.Size = new System.Drawing.Size(193, 45);
+            this.trackBarEmoteScale.TabIndex = 25;
+            this.trackBarEmoteScale.Value = 5;
+            // 
+            // checkBoxEmoteSizeBasedOnTextHeight
+            // 
+            this.checkBoxEmoteSizeBasedOnTextHeight.AutoSize = true;
+            this.checkBoxEmoteSizeBasedOnTextHeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.checkBoxEmoteSizeBasedOnTextHeight.Location = new System.Drawing.Point(252, 13);
+            this.checkBoxEmoteSizeBasedOnTextHeight.Name = "checkBoxEmoteSizeBasedOnTextHeight";
+            this.checkBoxEmoteSizeBasedOnTextHeight.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxEmoteSizeBasedOnTextHeight.TabIndex = 24;
+            this.checkBoxEmoteSizeBasedOnTextHeight.Text = "Emote size based on text height";
+            this.checkBoxEmoteSizeBasedOnTextHeight.UseVisualStyleBackColor = true;
+            // 
+            // chkTwitchEmotes
+            // 
+            this.chkTwitchEmotes.AutoSize = true;
+            this.chkTwitchEmotes.Checked = true;
+            this.chkTwitchEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTwitchEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTwitchEmotes.Location = new System.Drawing.Point(16, 13);
+            this.chkTwitchEmotes.Name = "chkTwitchEmotes";
+            this.chkTwitchEmotes.Size = new System.Drawing.Size(132, 17);
+            this.chkTwitchEmotes.TabIndex = 23;
+            this.chkTwitchEmotes.Text = "Enable Twitch Emotes";
+            this.chkTwitchEmotes.UseVisualStyleBackColor = true;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Location = new System.Drawing.Point(17, 154);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(415, 268);
+            this.tabControl2.TabIndex = 22;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Controls.Add(this.rtbIngoredEmotes);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(407, 242);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "Ignored Emotes";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(3, 5);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(230, 13);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "Emotes that will be shown as text (one per line):";
+            // 
+            // rtbIngoredEmotes
+            // 
+            this.rtbIngoredEmotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbIngoredEmotes.Location = new System.Drawing.Point(6, 21);
+            this.rtbIngoredEmotes.Name = "rtbIngoredEmotes";
+            this.rtbIngoredEmotes.Size = new System.Drawing.Size(395, 215);
+            this.rtbIngoredEmotes.TabIndex = 17;
+            this.rtbIngoredEmotes.Text = "";
+            // 
+            // chkEmojis
+            // 
+            this.chkEmojis.AutoSize = true;
+            this.chkEmojis.Checked = true;
+            this.chkEmojis.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkEmojis.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkEmojis.Location = new System.Drawing.Point(16, 128);
+            this.chkEmojis.Name = "chkEmojis";
+            this.chkEmojis.Size = new System.Drawing.Size(92, 17);
+            this.chkEmojis.TabIndex = 13;
+            this.chkEmojis.Text = "Enable Emojis";
+            this.chkEmojis.UseVisualStyleBackColor = true;
+            // 
+            // chkGifEmotes
+            // 
+            this.chkGifEmotes.AutoSize = true;
+            this.chkGifEmotes.Checked = true;
+            this.chkGifEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkGifEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkGifEmotes.Location = new System.Drawing.Point(16, 105);
+            this.chkGifEmotes.Name = "chkGifEmotes";
+            this.chkGifEmotes.Size = new System.Drawing.Size(133, 17);
+            this.chkGifEmotes.TabIndex = 12;
+            this.chkGifEmotes.Text = "Enable GIF Animations";
+            this.chkGifEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chkBttvEmotes
+            // 
+            this.chkBttvEmotes.AutoSize = true;
+            this.chkBttvEmotes.Checked = true;
+            this.chkBttvEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBttvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkBttvEmotes.Location = new System.Drawing.Point(16, 36);
+            this.chkBttvEmotes.Name = "chkBttvEmotes";
+            this.chkBttvEmotes.Size = new System.Drawing.Size(149, 17);
+            this.chkBttvEmotes.TabIndex = 11;
+            this.chkBttvEmotes.Text = "Enable BetterTTV Emotes";
+            this.chkBttvEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chkFFzEmotes
+            // 
+            this.chkFFzEmotes.AutoSize = true;
+            this.chkFFzEmotes.Checked = true;
+            this.chkFFzEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkFFzEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkFFzEmotes.Location = new System.Drawing.Point(16, 59);
+            this.chkFFzEmotes.Name = "chkFFzEmotes";
+            this.chkFFzEmotes.Size = new System.Drawing.Size(167, 17);
+            this.chkFFzEmotes.TabIndex = 10;
+            this.chkFFzEmotes.Text = "Enable FrankerFaceZ Emotes";
+            this.chkFFzEmotes.UseVisualStyleBackColor = true;
+            // 
+            // chk7tvEmotes
+            // 
+            this.chk7tvEmotes.AutoSize = true;
+            this.chk7tvEmotes.Checked = true;
+            this.chk7tvEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chk7tvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chk7tvEmotes.Location = new System.Drawing.Point(16, 82);
+            this.chk7tvEmotes.Name = "chk7tvEmotes";
+            this.chk7tvEmotes.Size = new System.Drawing.Size(115, 17);
+            this.chk7tvEmotes.TabIndex = 24;
+            this.chk7tvEmotes.Text = "Enable 7tv Emotes";
+            this.chk7tvEmotes.UseVisualStyleBackColor = true;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.label13);
+            this.panel8.Controls.Add(this.chkEnableInlineWhispers);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(481, 456);
+            this.panel8.TabIndex = 6;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(12, 40);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(300, 39);
+            this.label13.TabIndex = 25;
+            this.label13.Text = "You can join the channel /whispers to view your whispers!\r\n\r\nYou can send whisper" +
+    "s using this command: /w user message";
+            // 
+            // chkEnableInlineWhispers
+            // 
+            this.chkEnableInlineWhispers.AutoSize = true;
+            this.chkEnableInlineWhispers.Checked = true;
+            this.chkEnableInlineWhispers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkEnableInlineWhispers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkEnableInlineWhispers.Location = new System.Drawing.Point(15, 13);
+            this.chkEnableInlineWhispers.Name = "chkEnableInlineWhispers";
+            this.chkEnableInlineWhispers.Size = new System.Drawing.Size(130, 17);
+            this.chkEnableInlineWhispers.TabIndex = 24;
+            this.chkEnableInlineWhispers.Text = "Enable inline whispers";
+            this.chkEnableInlineWhispers.UseVisualStyleBackColor = true;
             // 
             // panel3
             // 
@@ -919,410 +1754,6 @@ namespace Chatterino.Controls
             this.panel10.Size = new System.Drawing.Size(481, 456);
             this.panel10.TabIndex = 8;
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.labelNightDesc);
-            this.panel1.Controls.Add(this.numThemeNightUntil);
-            this.panel1.Controls.Add(this.labelNightThemeUntil);
-            this.panel1.Controls.Add(this.numThemeNightFrom);
-            this.panel1.Controls.Add(this.labelThemeNightFrom);
-            this.panel1.Controls.Add(this.comboThemeNight);
-            this.panel1.Controls.Add(this.labelThemeNight);
-            this.panel1.Controls.Add(this.checkBoxDifferentThemeAtNight);
-            this.panel1.Controls.Add(this.chkTopMost);
-            this.panel1.Controls.Add(this.chkRemoveX);
-            this.panel1.Controls.Add(this.chkShowEmoteTooltip);
-            this.panel1.Controls.Add(this.chkHighlightHighlightedMessages);
-            this.panel1.Controls.Add(this.chkChangeTabTitle);
-            this.panel1.Controls.Add(this.btnSelectFont);
-            this.panel1.Controls.Add(this.btnDefaultFont);
-            this.panel1.Controls.Add(this.label10);
-            this.panel1.Controls.Add(this.trackBar1);
-            this.panel1.Controls.Add(this.chkInputShowMessageLength);
-            this.panel1.Controls.Add(this.comboTheme);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.lblFont);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.chkHideInput);
-            this.panel1.Controls.Add(this.txtMsgLimit);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(481, 456);
-            this.panel1.TabIndex = 0;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.chkTimestamps);
-            this.groupBox1.Controls.Add(this.chkTimestampAmPm);
-            this.groupBox1.Controls.Add(this.chkTimestampSeconds);
-            this.groupBox1.Controls.Add(this.chkMessageSeperators);
-            this.groupBox1.Controls.Add(this.chkLastReadMessageIndicator);
-            this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(17, 310);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(435, 92);
-            this.groupBox1.TabIndex = 37;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Messages";
-            // 
-            // chkTimestamps
-            // 
-            this.chkTimestamps.AutoSize = true;
-            this.chkTimestamps.Checked = true;
-            this.chkTimestamps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTimestamps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTimestamps.Location = new System.Drawing.Point(8, 17);
-            this.chkTimestamps.Name = "chkTimestamps";
-            this.chkTimestamps.Size = new System.Drawing.Size(108, 17);
-            this.chkTimestamps.TabIndex = 0;
-            this.chkTimestamps.Text = "Show timestamps";
-            this.chkTimestamps.UseVisualStyleBackColor = true;
-            // 
-            // chkTimestampAmPm
-            // 
-            this.chkTimestampAmPm.AutoSize = true;
-            this.chkTimestampAmPm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTimestampAmPm.Location = new System.Drawing.Point(320, 18);
-            this.chkTimestampAmPm.Name = "chkTimestampAmPm";
-            this.chkTimestampAmPm.Size = new System.Drawing.Size(81, 17);
-            this.chkTimestampAmPm.TabIndex = 36;
-            this.chkTimestampAmPm.Text = "Use am/pm";
-            this.chkTimestampAmPm.UseVisualStyleBackColor = true;
-            // 
-            // chkTimestampSeconds
-            // 
-            this.chkTimestampSeconds.AutoSize = true;
-            this.chkTimestampSeconds.Checked = true;
-            this.chkTimestampSeconds.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTimestampSeconds.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTimestampSeconds.Location = new System.Drawing.Point(146, 17);
-            this.chkTimestampSeconds.Name = "chkTimestampSeconds";
-            this.chkTimestampSeconds.Size = new System.Drawing.Size(162, 17);
-            this.chkTimestampSeconds.TabIndex = 1;
-            this.chkTimestampSeconds.Text = "Show seconds in timestamps";
-            this.chkTimestampSeconds.UseVisualStyleBackColor = true;
-            // 
-            // chkMessageSeperators
-            // 
-            this.chkMessageSeperators.AutoSize = true;
-            this.chkMessageSeperators.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkMessageSeperators.Location = new System.Drawing.Point(8, 40);
-            this.chkMessageSeperators.Name = "chkMessageSeperators";
-            this.chkMessageSeperators.Size = new System.Drawing.Size(119, 17);
-            this.chkMessageSeperators.TabIndex = 16;
-            this.chkMessageSeperators.Text = "Separate messages";
-            this.chkMessageSeperators.UseVisualStyleBackColor = true;
-            // 
-            // chkLastReadMessageIndicator
-            // 
-            this.chkLastReadMessageIndicator.AutoSize = true;
-            this.chkLastReadMessageIndicator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkLastReadMessageIndicator.Location = new System.Drawing.Point(9, 64);
-            this.chkLastReadMessageIndicator.Name = "chkLastReadMessageIndicator";
-            this.chkLastReadMessageIndicator.Size = new System.Drawing.Size(235, 17);
-            this.chkLastReadMessageIndicator.TabIndex = 27;
-            this.chkLastReadMessageIndicator.Text = "Show red indicator for the last read message\r\n";
-            this.chkLastReadMessageIndicator.UseVisualStyleBackColor = true;
-            // 
-            // labelNightDesc
-            // 
-            this.labelNightDesc.AutoSize = true;
-            this.labelNightDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.labelNightDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.labelNightDesc.Location = new System.Drawing.Point(410, 44);
-            this.labelNightDesc.Name = "labelNightDesc";
-            this.labelNightDesc.Size = new System.Drawing.Size(34, 13);
-            this.labelNightDesc.TabIndex = 35;
-            this.labelNightDesc.Text = "(1-24)";
-            // 
-            // numThemeNightUntil
-            // 
-            this.numThemeNightUntil.Location = new System.Drawing.Point(346, 40);
-            this.numThemeNightUntil.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.numThemeNightUntil.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numThemeNightUntil.Name = "numThemeNightUntil";
-            this.numThemeNightUntil.Size = new System.Drawing.Size(57, 20);
-            this.numThemeNightUntil.TabIndex = 34;
-            this.numThemeNightUntil.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // labelNightThemeUntil
-            // 
-            this.labelNightThemeUntil.AutoSize = true;
-            this.labelNightThemeUntil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.labelNightThemeUntil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.labelNightThemeUntil.Location = new System.Drawing.Point(315, 44);
-            this.labelNightThemeUntil.Name = "labelNightThemeUntil";
-            this.labelNightThemeUntil.Size = new System.Drawing.Size(26, 13);
-            this.labelNightThemeUntil.TabIndex = 33;
-            this.labelNightThemeUntil.Text = "until";
-            // 
-            // numThemeNightFrom
-            // 
-            this.numThemeNightFrom.Location = new System.Drawing.Point(252, 40);
-            this.numThemeNightFrom.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.numThemeNightFrom.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numThemeNightFrom.Name = "numThemeNightFrom";
-            this.numThemeNightFrom.Size = new System.Drawing.Size(57, 20);
-            this.numThemeNightFrom.TabIndex = 32;
-            this.numThemeNightFrom.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // labelThemeNightFrom
-            // 
-            this.labelThemeNightFrom.AutoSize = true;
-            this.labelThemeNightFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.labelThemeNightFrom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.labelThemeNightFrom.Location = new System.Drawing.Point(222, 44);
-            this.labelThemeNightFrom.Name = "labelThemeNightFrom";
-            this.labelThemeNightFrom.Size = new System.Drawing.Size(27, 13);
-            this.labelThemeNightFrom.TabIndex = 31;
-            this.labelThemeNightFrom.Text = "from";
-            // 
-            // comboThemeNight
-            // 
-            this.comboThemeNight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboThemeNight.FormattingEnabled = true;
-            this.comboThemeNight.Items.AddRange(new object[] {
-            "White",
-            "Light",
-            "Dark",
-            "Black"});
-            this.comboThemeNight.Location = new System.Drawing.Point(97, 41);
-            this.comboThemeNight.Name = "comboThemeNight";
-            this.comboThemeNight.Size = new System.Drawing.Size(119, 21);
-            this.comboThemeNight.TabIndex = 29;
-            // 
-            // labelThemeNight
-            // 
-            this.labelThemeNight.AutoSize = true;
-            this.labelThemeNight.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.labelThemeNight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.labelThemeNight.Location = new System.Drawing.Point(14, 44);
-            this.labelThemeNight.Name = "labelThemeNight";
-            this.labelThemeNight.Size = new System.Drawing.Size(77, 13);
-            this.labelThemeNight.TabIndex = 30;
-            this.labelThemeNight.Text = "Theme (Night):";
-            // 
-            // checkBoxDifferentThemeAtNight
-            // 
-            this.checkBoxDifferentThemeAtNight.AutoSize = true;
-            this.checkBoxDifferentThemeAtNight.Checked = true;
-            this.checkBoxDifferentThemeAtNight.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDifferentThemeAtNight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.checkBoxDifferentThemeAtNight.Location = new System.Drawing.Point(243, 14);
-            this.checkBoxDifferentThemeAtNight.Name = "checkBoxDifferentThemeAtNight";
-            this.checkBoxDifferentThemeAtNight.Size = new System.Drawing.Size(160, 17);
-            this.checkBoxDifferentThemeAtNight.TabIndex = 28;
-            this.checkBoxDifferentThemeAtNight.Text = "different Theme during Night";
-            this.checkBoxDifferentThemeAtNight.UseVisualStyleBackColor = true;
-            // 
-            // chkTopMost
-            // 
-            this.chkTopMost.AutoSize = true;
-            this.chkTopMost.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTopMost.Location = new System.Drawing.Point(17, 193);
-            this.chkTopMost.Name = "chkTopMost";
-            this.chkTopMost.Size = new System.Drawing.Size(133, 17);
-            this.chkTopMost.TabIndex = 26;
-            this.chkTopMost.Text = "Window always on top";
-            this.chkTopMost.UseVisualStyleBackColor = true;
-            // 
-            // chkRemoveX
-            // 
-            this.chkRemoveX.AutoSize = true;
-            this.chkRemoveX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkRemoveX.Location = new System.Drawing.Point(17, 216);
-            this.chkRemoveX.Name = "chkRemoveX";
-            this.chkRemoveX.Size = new System.Drawing.Size(155, 17);
-            this.chkRemoveX.TabIndex = 27;
-            this.chkRemoveX.Text = "Remove X button from tabs\r\n";
-            this.chkRemoveX.UseVisualStyleBackColor = true;
-            // 
-            // chkShowEmoteTooltip
-            // 
-            this.chkShowEmoteTooltip.AutoSize = true;
-            this.chkShowEmoteTooltip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkShowEmoteTooltip.Location = new System.Drawing.Point(17, 239);
-            this.chkShowEmoteTooltip.Name = "chkShowEmoteTooltip";
-            this.chkShowEmoteTooltip.Size = new System.Drawing.Size(158, 17);
-            this.chkShowEmoteTooltip.TabIndex = 28;
-            this.chkShowEmoteTooltip.Text = "Show large emotes in tooltip\r\n";
-            this.chkShowEmoteTooltip.UseVisualStyleBackColor = true;
-            // 
-            // chkHighlightHighlightedMessages
-            // 
-            this.chkHighlightHighlightedMessages.AutoSize = true;
-            this.chkHighlightHighlightedMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkHighlightHighlightedMessages.Location = new System.Drawing.Point(17, 262);
-            this.chkHighlightHighlightedMessages.Name = "chkHighlightHighlightedMessages";
-            this.chkHighlightHighlightedMessages.Size = new System.Drawing.Size(171, 17);
-            this.chkHighlightHighlightedMessages.TabIndex = 29;
-            this.chkHighlightHighlightedMessages.Text = "Highlight highlighted messages\r\n";
-            this.chkHighlightHighlightedMessages.UseVisualStyleBackColor = true;
-            // 
-            // chkChangeTabTitle
-            // 
-            this.chkChangeTabTitle.AutoSize = true;
-            this.chkChangeTabTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkChangeTabTitle.Location = new System.Drawing.Point(17, 285);
-            this.chkChangeTabTitle.Name = "chkChangeTabTitle";
-            this.chkChangeTabTitle.Size = new System.Drawing.Size(191, 17);
-            this.chkChangeTabTitle.TabIndex = 29;
-            this.chkChangeTabTitle.Text = "Double click tab to change tab title\r\n";
-            this.chkChangeTabTitle.UseVisualStyleBackColor = true;
-            // 
-            // btnSelectFont
-            // 
-            this.btnSelectFont.Location = new System.Drawing.Point(98, 109);
-            this.btnSelectFont.Name = "btnSelectFont";
-            this.btnSelectFont.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectFont.TabIndex = 14;
-            this.btnSelectFont.Text = "Select";
-            this.btnSelectFont.UseVisualStyleBackColor = true;
-            // 
-            // btnDefaultFont
-            // 
-            this.btnDefaultFont.Location = new System.Drawing.Point(320, 109);
-            this.btnDefaultFont.Name = "btnDefaultFont";
-            this.btnDefaultFont.Size = new System.Drawing.Size(75, 23);
-            this.btnDefaultFont.TabIndex = 15;
-            this.btnDefaultFont.Text = "Default Font";
-            this.btnDefaultFont.UseVisualStyleBackColor = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label10.Location = new System.Drawing.Point(14, 77);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 13);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "Theme hue:";
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.LargeChange = 45;
-            this.trackBar1.Location = new System.Drawing.Point(86, 72);
-            this.trackBar1.Maximum = 360;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(250, 45);
-            this.trackBar1.TabIndex = 19;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            // 
-            // chkInputShowMessageLength
-            // 
-            this.chkInputShowMessageLength.AutoSize = true;
-            this.chkInputShowMessageLength.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkInputShowMessageLength.Location = new System.Drawing.Point(17, 170);
-            this.chkInputShowMessageLength.Name = "chkInputShowMessageLength";
-            this.chkInputShowMessageLength.Size = new System.Drawing.Size(316, 17);
-            this.chkInputShowMessageLength.TabIndex = 18;
-            this.chkInputShowMessageLength.Text = "Show message length (actual character count not text length)";
-            this.chkInputShowMessageLength.UseVisualStyleBackColor = true;
-            // 
-            // comboTheme
-            // 
-            this.comboTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboTheme.FormattingEnabled = true;
-            this.comboTheme.Items.AddRange(new object[] {
-            "White",
-            "Light",
-            "Dark",
-            "Black"});
-            this.comboTheme.Location = new System.Drawing.Point(97, 11);
-            this.comboTheme.Name = "comboTheme";
-            this.comboTheme.Size = new System.Drawing.Size(119, 21);
-            this.comboTheme.TabIndex = 16;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label7.Location = new System.Drawing.Point(14, 14);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(43, 13);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "Theme:";
-            // 
-            // lblFont
-            // 
-            this.lblFont.AutoSize = true;
-            this.lblFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lblFont.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblFont.Location = new System.Drawing.Point(182, 114);
-            this.lblFont.Name = "lblFont";
-            this.lblFont.Size = new System.Drawing.Size(54, 13);
-            this.lblFont.TabIndex = 15;
-            this.lblFont.Text = "font name";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label5.Location = new System.Drawing.Point(15, 114);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(31, 13);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Font:";
-            // 
-            // chkHideInput
-            // 
-            this.chkHideInput.AutoSize = true;
-            this.chkHideInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkHideInput.Location = new System.Drawing.Point(17, 147);
-            this.chkHideInput.Name = "chkHideInput";
-            this.chkHideInput.Size = new System.Drawing.Size(133, 17);
-            this.chkHideInput.TabIndex = 12;
-            this.chkHideInput.Text = "Hide input box if empty";
-            this.chkHideInput.UseVisualStyleBackColor = true;
-            // 
-            // txtMsgLimit
-            // 
-            this.txtMsgLimit.Location = new System.Drawing.Point(100, 47);
-            this.txtMsgLimit.Name = "txtMsgLimit";
-            this.txtMsgLimit.Size = new System.Drawing.Size(167, 20);
-            this.txtMsgLimit.TabIndex = 10;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label3.Location = new System.Drawing.Point(14, 47);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Message Limit:";
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.comboBox1);
@@ -1453,243 +1884,6 @@ namespace Chatterino.Controls
             this.chkProxyEnabled.Text = "Enable Proxy";
             this.chkProxyEnabled.UseVisualStyleBackColor = true;
             // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.chkAllowCommandAtEnd);
-            this.panel5.Controls.Add(this.lblCommands);
-            this.panel5.Controls.Add(this.btnCommandRemove);
-            this.panel5.Controls.Add(this.btnCommandAdd);
-            this.panel5.Controls.Add(this.dgvCommands);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(481, 456);
-            this.panel5.TabIndex = 3;
-            // 
-            // chkAllowCommandAtEnd
-            // 
-            this.chkAllowCommandAtEnd.AutoSize = true;
-            this.chkAllowCommandAtEnd.Checked = true;
-            this.chkAllowCommandAtEnd.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAllowCommandAtEnd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkAllowCommandAtEnd.Location = new System.Drawing.Point(176, 17);
-            this.chkAllowCommandAtEnd.Name = "chkAllowCommandAtEnd";
-            this.chkAllowCommandAtEnd.Size = new System.Drawing.Size(205, 17);
-            this.chkAllowCommandAtEnd.TabIndex = 1;
-            this.chkAllowCommandAtEnd.Text = "Allow commands at the end of the line";
-            this.chkAllowCommandAtEnd.UseVisualStyleBackColor = true;
-            // 
-            // lblCommands
-            // 
-            this.lblCommands.AutoSize = true;
-            this.lblCommands.ForeColor = System.Drawing.Color.White;
-            this.lblCommands.Location = new System.Drawing.Point(13, 321);
-            this.lblCommands.Name = "lblCommands";
-            this.lblCommands.Size = new System.Drawing.Size(270, 78);
-            this.lblCommands.TabIndex = 4;
-            this.lblCommands.Text = "/name command\r\n\r\n{1} = first word, {2} = seconds word, ...\r\n{1+} = first word and" +
-    " after, {2+} = second word and after\r\n\r\nwarning: you could override important tw" +
-    "itch commands";
-            // 
-            // btnCommandRemove
-            // 
-            this.btnCommandRemove.Location = new System.Drawing.Point(95, 13);
-            this.btnCommandRemove.Name = "btnCommandRemove";
-            this.btnCommandRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnCommandRemove.TabIndex = 2;
-            this.btnCommandRemove.Text = "Remove";
-            this.btnCommandRemove.UseVisualStyleBackColor = true;
-            // 
-            // btnCommandAdd
-            // 
-            this.btnCommandAdd.Location = new System.Drawing.Point(15, 13);
-            this.btnCommandAdd.Name = "btnCommandAdd";
-            this.btnCommandAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnCommandAdd.TabIndex = 1;
-            this.btnCommandAdd.Text = "Add";
-            this.btnCommandAdd.UseVisualStyleBackColor = true;
-            // 
-            // dgvCommands
-            // 
-            this.dgvCommands.AllowUserToAddRows = false;
-            this.dgvCommands.AllowUserToDeleteRows = false;
-            this.dgvCommands.AllowUserToResizeColumns = false;
-            this.dgvCommands.AllowUserToResizeRows = false;
-            this.dgvCommands.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCommands.ColumnHeadersVisible = false;
-            this.dgvCommands.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Command});
-            this.dgvCommands.Location = new System.Drawing.Point(16, 48);
-            this.dgvCommands.Name = "dgvCommands";
-            this.dgvCommands.RowHeadersVisible = false;
-            this.dgvCommands.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvCommands.Size = new System.Drawing.Size(415, 270);
-            this.dgvCommands.TabIndex = 0;
-            // 
-            // Command
-            // 
-            this.Command.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Command.HeaderText = "Command";
-            this.Command.Name = "Command";
-            // 
-            // panel12
-            // 
-            this.panel12.Controls.Add(this.chkReplys);
-            this.panel12.Controls.Add(this.chkPrefereEmotes);
-            this.panel12.Controls.Add(this.chkAllowSameMessages);
-            this.panel12.Controls.Add(this.chkRecentlyUsedEmoteList);
-            this.panel12.Controls.Add(this.chkCacheEmotes);
-            this.panel12.Controls.Add(this.chkAutomaticUpdate);
-            this.panel12.Controls.Add(this.chkTabLocalizedNames);
-            this.panel12.Controls.Add(this.chkMentionUserWithAt);
-            this.panel12.Controls.Add(this.lblScrollSpeed);
-            this.panel12.Controls.Add(this.label11);
-            this.panel12.Controls.Add(this.trackBar2);
-            this.panel12.Controls.Add(this.chkRainbow);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel12.Location = new System.Drawing.Point(0, 0);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(481, 456);
-            this.panel12.TabIndex = 31;
-            // 
-            // chkPrefereEmotes
-            // 
-            this.chkPrefereEmotes.AutoSize = true;
-            this.chkPrefereEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkPrefereEmotes.Location = new System.Drawing.Point(15, 44);
-            this.chkPrefereEmotes.Name = "chkPrefereEmotes";
-            this.chkPrefereEmotes.Size = new System.Drawing.Size(388, 17);
-            this.chkPrefereEmotes.TabIndex = 55;
-            this.chkPrefereEmotes.Text = "Prefere emotes over usernames when tab-completing (unless starting with @)";
-            this.chkPrefereEmotes.UseVisualStyleBackColor = true;
-            // 
-            // chkAllowSameMessages
-            // 
-            this.chkAllowSameMessages.AutoSize = true;
-            this.chkAllowSameMessages.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkAllowSameMessages.Location = new System.Drawing.Point(15, 136);
-            this.chkAllowSameMessages.Name = "chkAllowSameMessages";
-            this.chkAllowSameMessages.Size = new System.Drawing.Size(306, 17);
-            this.chkAllowSameMessages.TabIndex = 53;
-            this.chkAllowSameMessages.Text = "Allow sending duplicate messages (add a space at the end)";
-            this.chkAllowSameMessages.UseVisualStyleBackColor = true;
-            // 
-            // chkRecentlyUsedEmoteList
-            // 
-            this.chkRecentlyUsedEmoteList.AutoSize = true;
-            this.chkRecentlyUsedEmoteList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkRecentlyUsedEmoteList.Location = new System.Drawing.Point(15, 159);
-            this.chkRecentlyUsedEmoteList.Name = "chkRecentlyUsedEmoteList";
-            this.chkRecentlyUsedEmoteList.Size = new System.Drawing.Size(320, 17);
-            this.chkRecentlyUsedEmoteList.TabIndex = 54;
-            this.chkRecentlyUsedEmoteList.Text = "Keep a list of recently used emotes not from twitches emote list";
-            this.chkRecentlyUsedEmoteList.UseVisualStyleBackColor = true;
-            // 
-            // chkCacheEmotes
-            // 
-            this.chkCacheEmotes.AutoSize = true;
-            this.chkCacheEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkCacheEmotes.Location = new System.Drawing.Point(15, 182);
-            this.chkCacheEmotes.Name = "chkCacheEmotes";
-            this.chkCacheEmotes.Size = new System.Drawing.Size(272, 17);
-            this.chkCacheEmotes.TabIndex = 55;
-            this.chkCacheEmotes.Text = "Locally store copys of emotes to make loading faster";
-            this.chkCacheEmotes.UseVisualStyleBackColor = true;
-            // 
-            // chkAutomaticUpdate
-            // 
-            this.chkAutomaticUpdate.AutoSize = true;
-            this.chkAutomaticUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkAutomaticUpdate.Location = new System.Drawing.Point(15, 205);
-            this.chkAutomaticUpdate.Name = "chkAutomaticUpdate";
-            this.chkAutomaticUpdate.Size = new System.Drawing.Size(227, 17);
-            this.chkAutomaticUpdate.TabIndex = 56;
-            this.chkAutomaticUpdate.Text = "Automatically check for updates on startup";
-            this.chkAutomaticUpdate.UseVisualStyleBackColor = true;
-            // 
-            // chkReplys
-            // 
-            this.chkReplys.AutoSize = true;
-            this.chkReplys.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkReplys.Location = new System.Drawing.Point(15, 228);
-            this.chkReplys.Name = "chkReplys";
-            this.chkReplys.Size = new System.Drawing.Size(80, 17);
-            this.chkReplys.TabIndex = 57;
-            this.chkReplys.Text = "Enable twitch reply feature";
-            this.chkReplys.UseVisualStyleBackColor = true;
-            // 
-            // chkTabLocalizedNames
-            // 
-            this.chkTabLocalizedNames.AutoSize = true;
-            this.chkTabLocalizedNames.Checked = true;
-            this.chkTabLocalizedNames.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTabLocalizedNames.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTabLocalizedNames.Location = new System.Drawing.Point(15, 89);
-            this.chkTabLocalizedNames.Name = "chkTabLocalizedNames";
-            this.chkTabLocalizedNames.Size = new System.Drawing.Size(190, 17);
-            this.chkTabLocalizedNames.TabIndex = 52;
-            this.chkTabLocalizedNames.Text = "Use localized names when tabbing";
-            this.chkTabLocalizedNames.UseVisualStyleBackColor = true;
-            // 
-            // chkMentionUserWithAt
-            // 
-            this.chkMentionUserWithAt.AutoSize = true;
-            this.chkMentionUserWithAt.Checked = true;
-            this.chkMentionUserWithAt.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkMentionUserWithAt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkMentionUserWithAt.Location = new System.Drawing.Point(15, 66);
-            this.chkMentionUserWithAt.Name = "chkMentionUserWithAt";
-            this.chkMentionUserWithAt.Size = new System.Drawing.Size(249, 17);
-            this.chkMentionUserWithAt.TabIndex = 51;
-            this.chkMentionUserWithAt.Text = "Mention users with an @ (except in commands)";
-            this.chkMentionUserWithAt.UseVisualStyleBackColor = true;
-            // 
-            // lblScrollSpeed
-            // 
-            this.lblScrollSpeed.AutoSize = true;
-            this.lblScrollSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lblScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblScrollSpeed.Location = new System.Drawing.Point(377, 20);
-            this.lblScrollSpeed.Name = "lblScrollSpeed";
-            this.lblScrollSpeed.Size = new System.Drawing.Size(33, 13);
-            this.lblScrollSpeed.TabIndex = 50;
-            this.lblScrollSpeed.Text = "100%";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label11.Location = new System.Drawing.Point(12, 20);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(105, 13);
-            this.label11.TabIndex = 49;
-            this.label11.Text = "Mouse Scroll Speed:";
-            // 
-            // trackBar2
-            // 
-            this.trackBar2.LargeChange = 45;
-            this.trackBar2.Location = new System.Drawing.Point(121, 15);
-            this.trackBar2.Maximum = 400;
-            this.trackBar2.Minimum = 100;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(250, 45);
-            this.trackBar2.TabIndex = 48;
-            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar2.Value = 200;
-            // 
-            // chkRainbow
-            // 
-            this.chkRainbow.AutoSize = true;
-            this.chkRainbow.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkRainbow.Location = new System.Drawing.Point(15, 113);
-            this.chkRainbow.Name = "chkRainbow";
-            this.chkRainbow.Size = new System.Drawing.Size(437, 17);
-            this.chkRainbow.TabIndex = 43;
-            this.chkRainbow.Text = "Switch username color like a rainbow after each message (requires twitch prime / " +
-    "turbo)\r\n";
-            this.chkRainbow.UseVisualStyleBackColor = true;
-            // 
             // panel7
             // 
             this.panel7.Controls.Add(this.chkDoubleClickLinks);
@@ -1777,187 +1971,6 @@ namespace Chatterino.Controls
             this.rtbIgnoreKeywords.TabIndex = 17;
             this.rtbIgnoreKeywords.Text = "";
             // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.label16);
-            this.panel4.Controls.Add(this.labelEmoteScale);
-            this.panel4.Controls.Add(this.trackBarEmoteScale);
-            this.panel4.Controls.Add(this.checkBoxEmoteSizeBasedOnTextHeight);
-            this.panel4.Controls.Add(this.chkTwitchEmotes);
-            this.panel4.Controls.Add(this.tabControl2);
-            this.panel4.Controls.Add(this.chkEmojis);
-            this.panel4.Controls.Add(this.chkGifEmotes);
-            this.panel4.Controls.Add(this.chkBttvEmotes);
-            this.panel4.Controls.Add(this.chkFFzEmotes);
-            this.panel4.Controls.Add(this.chk7tvEmotes);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(481, 456);
-            this.panel4.TabIndex = 2;
-            // 
-            // label16
-            // 
-            this.label16.ForeColor = System.Drawing.Color.White;
-            this.label16.Location = new System.Drawing.Point(225, 98);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(227, 37);
-            this.label16.TabIndex = 27;
-            this.label16.Text = "(you will have to reload emotes for it to load the properly scaled images for tha" +
-    "t chat)";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // labelEmoteScale
-            // 
-            this.labelEmoteScale.AutoSize = true;
-            this.labelEmoteScale.ForeColor = System.Drawing.Color.White;
-            this.labelEmoteScale.Location = new System.Drawing.Point(305, 47);
-            this.labelEmoteScale.Name = "labelEmoteScale";
-            this.labelEmoteScale.Size = new System.Drawing.Size(82, 13);
-            this.labelEmoteScale.TabIndex = 26;
-            this.labelEmoteScale.Text = "Emote scale: 1x";
-            // 
-            // trackBarEmoteScale
-            // 
-            this.trackBarEmoteScale.Location = new System.Drawing.Point(243, 63);
-            this.trackBarEmoteScale.Maximum = 45;
-            this.trackBarEmoteScale.Name = "trackBarEmoteScale";
-            this.trackBarEmoteScale.Size = new System.Drawing.Size(193, 45);
-            this.trackBarEmoteScale.TabIndex = 25;
-            this.trackBarEmoteScale.Value = 5;
-            // 
-            // checkBoxEmoteSizeBasedOnTextHeight
-            // 
-            this.checkBoxEmoteSizeBasedOnTextHeight.AutoSize = true;
-            this.checkBoxEmoteSizeBasedOnTextHeight.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.checkBoxEmoteSizeBasedOnTextHeight.Location = new System.Drawing.Point(252, 13);
-            this.checkBoxEmoteSizeBasedOnTextHeight.Name = "checkBoxEmoteSizeBasedOnTextHeight";
-            this.checkBoxEmoteSizeBasedOnTextHeight.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxEmoteSizeBasedOnTextHeight.TabIndex = 24;
-            this.checkBoxEmoteSizeBasedOnTextHeight.Text = "Emote size based on text height";
-            this.checkBoxEmoteSizeBasedOnTextHeight.UseVisualStyleBackColor = true;
-            // 
-            // chkTwitchEmotes
-            // 
-            this.chkTwitchEmotes.AutoSize = true;
-            this.chkTwitchEmotes.Checked = true;
-            this.chkTwitchEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTwitchEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTwitchEmotes.Location = new System.Drawing.Point(16, 13);
-            this.chkTwitchEmotes.Name = "chkTwitchEmotes";
-            this.chkTwitchEmotes.Size = new System.Drawing.Size(132, 17);
-            this.chkTwitchEmotes.TabIndex = 23;
-            this.chkTwitchEmotes.Text = "Enable Twitch Emotes";
-            this.chkTwitchEmotes.UseVisualStyleBackColor = true;
-            // 
-            // tabControl2
-            // 
-            this.tabControl2.Controls.Add(this.tabPage3);
-            this.tabControl2.Location = new System.Drawing.Point(17, 154);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(415, 268);
-            this.tabControl2.TabIndex = 22;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label8);
-            this.tabPage3.Controls.Add(this.rtbIngoredEmotes);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(407, 242);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "Ignored Emotes";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label8.ForeColor = System.Drawing.Color.Black;
-            this.label8.Location = new System.Drawing.Point(3, 5);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(230, 13);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "Emotes that will be shown as text (one per line):";
-            // 
-            // rtbIngoredEmotes
-            // 
-            this.rtbIngoredEmotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbIngoredEmotes.Location = new System.Drawing.Point(6, 21);
-            this.rtbIngoredEmotes.Name = "rtbIngoredEmotes";
-            this.rtbIngoredEmotes.Size = new System.Drawing.Size(395, 215);
-            this.rtbIngoredEmotes.TabIndex = 17;
-            this.rtbIngoredEmotes.Text = "";
-            // 
-            // chkEmojis
-            // 
-            this.chkEmojis.AutoSize = true;
-            this.chkEmojis.Checked = true;
-            this.chkEmojis.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEmojis.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkEmojis.Location = new System.Drawing.Point(16, 128);
-            this.chkEmojis.Name = "chkEmojis";
-            this.chkEmojis.Size = new System.Drawing.Size(92, 17);
-            this.chkEmojis.TabIndex = 13;
-            this.chkEmojis.Text = "Enable Emojis";
-            this.chkEmojis.UseVisualStyleBackColor = true;
-            // 
-            // chkGifEmotes
-            // 
-            this.chkGifEmotes.AutoSize = true;
-            this.chkGifEmotes.Checked = true;
-            this.chkGifEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkGifEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkGifEmotes.Location = new System.Drawing.Point(16, 105);
-            this.chkGifEmotes.Name = "chkGifEmotes";
-            this.chkGifEmotes.Size = new System.Drawing.Size(133, 17);
-            this.chkGifEmotes.TabIndex = 12;
-            this.chkGifEmotes.Text = "Enable GIF Animations";
-            this.chkGifEmotes.UseVisualStyleBackColor = true;
-            // 
-            // chkBttvEmotes
-            // 
-            this.chkBttvEmotes.AutoSize = true;
-            this.chkBttvEmotes.Checked = true;
-            this.chkBttvEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBttvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkBttvEmotes.Location = new System.Drawing.Point(16, 36);
-            this.chkBttvEmotes.Name = "chkBttvEmotes";
-            this.chkBttvEmotes.Size = new System.Drawing.Size(149, 17);
-            this.chkBttvEmotes.TabIndex = 11;
-            this.chkBttvEmotes.Text = "Enable BetterTTV Emotes";
-            this.chkBttvEmotes.UseVisualStyleBackColor = true;
-            // 
-            // chkFFzEmotes
-            // 
-            this.chkFFzEmotes.AutoSize = true;
-            this.chkFFzEmotes.Checked = true;
-            this.chkFFzEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkFFzEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkFFzEmotes.Location = new System.Drawing.Point(16, 59);
-            this.chkFFzEmotes.Name = "chkFFzEmotes";
-            this.chkFFzEmotes.Size = new System.Drawing.Size(167, 17);
-            this.chkFFzEmotes.TabIndex = 10;
-            this.chkFFzEmotes.Text = "Enable FrankerFaceZ Emotes";
-            this.chkFFzEmotes.UseVisualStyleBackColor = true;
-            // 
-            // chk7tvEmotes
-            // 
-            this.chk7tvEmotes.AutoSize = true;
-            this.chk7tvEmotes.Checked = true;
-            this.chk7tvEmotes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk7tvEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chk7tvEmotes.Location = new System.Drawing.Point(16, 82);
-            this.chk7tvEmotes.Name = "chk7tvEmotes";
-            this.chk7tvEmotes.Size = new System.Drawing.Size(115, 17);
-            this.chk7tvEmotes.TabIndex = 24;
-            this.chk7tvEmotes.Text = "Enable 7tv Emotes";
-            this.chk7tvEmotes.UseVisualStyleBackColor = true;
-            // 
             // panel11
             // 
             this.panel11.Controls.Add(this.label14);
@@ -2039,6 +2052,7 @@ namespace Chatterino.Controls
             // spAccounts
             // 
             this.spAccounts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spAccounts.Image = null;
             this.spAccounts.Location = new System.Drawing.Point(0, 0);
             this.spAccounts.Name = "spAccounts";
             this.spAccounts.Panel = this.panel11;
@@ -2050,6 +2064,7 @@ namespace Chatterino.Controls
             // spAppearance
             // 
             this.spAppearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spAppearance.Image = null;
             this.spAppearance.Location = new System.Drawing.Point(0, 30);
             this.spAppearance.Name = "spAppearance";
             this.spAppearance.Panel = this.panel1;
@@ -2061,6 +2076,7 @@ namespace Chatterino.Controls
             // settingsTabPage1
             // 
             this.settingsTabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.settingsTabPage1.Image = null;
             this.settingsTabPage1.Location = new System.Drawing.Point(0, 60);
             this.settingsTabPage1.Name = "settingsTabPage1";
             this.settingsTabPage1.Panel = this.panel12;
@@ -2071,6 +2087,7 @@ namespace Chatterino.Controls
             // spCommands
             // 
             this.spCommands.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spCommands.Image = null;
             this.spCommands.Location = new System.Drawing.Point(0, 90);
             this.spCommands.Name = "spCommands";
             this.spCommands.Panel = this.panel5;
@@ -2082,6 +2099,7 @@ namespace Chatterino.Controls
             // spEmotes
             // 
             this.spEmotes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spEmotes.Image = null;
             this.spEmotes.Location = new System.Drawing.Point(0, 120);
             this.spEmotes.Name = "spEmotes";
             this.spEmotes.Panel = this.panel4;
@@ -2093,6 +2111,7 @@ namespace Chatterino.Controls
             // spIgnoredUsers
             // 
             this.spIgnoredUsers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spIgnoredUsers.Image = null;
             this.spIgnoredUsers.Location = new System.Drawing.Point(0, 150);
             this.spIgnoredUsers.Name = "spIgnoredUsers";
             this.spIgnoredUsers.Panel = this.panel6;
@@ -2104,6 +2123,7 @@ namespace Chatterino.Controls
             // spIgnoredMessages
             // 
             this.spIgnoredMessages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spIgnoredMessages.Image = null;
             this.spIgnoredMessages.Location = new System.Drawing.Point(0, 180);
             this.spIgnoredMessages.Name = "spIgnoredMessages";
             this.spIgnoredMessages.Panel = this.panel9;
@@ -2115,6 +2135,7 @@ namespace Chatterino.Controls
             // spLinks
             // 
             this.spLinks.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spLinks.Image = null;
             this.spLinks.Location = new System.Drawing.Point(0, 210);
             this.spLinks.Name = "spLinks";
             this.spLinks.Panel = this.panel7;
@@ -2126,6 +2147,7 @@ namespace Chatterino.Controls
             // spHighlighted
             // 
             this.spHighlighted.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spHighlighted.Image = null;
             this.spHighlighted.Location = new System.Drawing.Point(0, 240);
             this.spHighlighted.Name = "spHighlighted";
             this.spHighlighted.Panel = this.panel3;
@@ -2137,6 +2159,7 @@ namespace Chatterino.Controls
             // spModeration
             // 
             this.spModeration.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spModeration.Image = null;
             this.spModeration.Location = new System.Drawing.Point(0, 270);
             this.spModeration.Name = "spModeration";
             this.spModeration.Panel = this.panel13;
@@ -2148,6 +2171,7 @@ namespace Chatterino.Controls
             // spWhispers
             // 
             this.spWhispers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spWhispers.Image = null;
             this.spWhispers.Location = new System.Drawing.Point(0, 300);
             this.spWhispers.Name = "spWhispers";
             this.spWhispers.Panel = this.panel8;
@@ -2159,6 +2183,7 @@ namespace Chatterino.Controls
             // spStreamLink
             // 
             this.spStreamLink.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spStreamLink.Image = null;
             this.spStreamLink.Location = new System.Drawing.Point(0, 330);
             this.spStreamLink.Name = "spStreamLink";
             this.spStreamLink.Panel = this.paneStreamLink;
@@ -2170,6 +2195,7 @@ namespace Chatterino.Controls
             // spBrowserExtension
             // 
             this.spBrowserExtension.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.spBrowserExtension.Image = null;
             this.spBrowserExtension.Location = new System.Drawing.Point(0, 360);
             this.spBrowserExtension.Name = "spBrowserExtension";
             this.spBrowserExtension.Panel = this.panel10;
@@ -2191,6 +2217,7 @@ namespace Chatterino.Controls
             this.spConnection.TabIndex = 2;
             this.spConnection.Text = "Connection";
             this.spConnection.Visible = false;
+            
             // 
             // SettingsDialog
             // 
@@ -2209,14 +2236,33 @@ namespace Chatterino.Controls
             this.Text = "Preferences";
             this.tabs.ResumeLayout(false);
             this.RightPanel.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).EndInit();
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
+            this.panel12.ResumeLayout(false);
+            this.panel12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).EndInit();
             this.paneStreamLink.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvIgnoredUsers)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarEmoteScale)).EndInit();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -2230,33 +2276,14 @@ namespace Chatterino.Controls
             this.panel13.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightUntil)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numThemeNightFrom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvCommands)).EndInit();
-            this.panel12.ResumeLayout(false);
-            this.panel12.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel9.ResumeLayout(false);
             this.tabControl3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarEmoteScale)).EndInit();
-            this.tabControl2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).EndInit();
@@ -2315,7 +2342,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.TabPage usernameHightlightTab;
         private System.Windows.Forms.RichTextBox rtbUsernamelist;
         private System.Windows.Forms.Label usernamelabel;
-        private System.Windows.Forms.CheckBox chkMessageSeperators;
+        private System.Windows.Forms.CheckBox chkMessageSeparators;
         private System.Windows.Forms.ComboBox comboTheme;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Panel panel4;
@@ -2423,7 +2450,7 @@ namespace Chatterino.Controls
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox txtStreamlinkCustomArguments;
-        private System.Windows.Forms.CheckBox chkPrefereEmotes;
+        private System.Windows.Forms.CheckBox chkPreferEmotes;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Panel panel13;
         private SettingsTabPage spModeration;
@@ -2433,5 +2460,6 @@ namespace Chatterino.Controls
         private System.Windows.Forms.FlowLayoutPanel listView1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox chkReplys;
+        private System.Windows.Forms.CheckBox chkSingleConnection;
     }
 }

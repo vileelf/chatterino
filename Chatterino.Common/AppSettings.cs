@@ -177,8 +177,8 @@ namespace Chatterino.Common
         public static bool EnableStreamlinkPath { get; set; }
         public static string StreamlinkPath { get; set; }
         public static string CustomStreamlinkArguments { get; set; }
-
-        public static bool PrefereEmotesOverUsernames { get; set; }
+        public static bool PreferEmotesOverUsernames { get; set; }
+        public static bool UseSingleConnection { get; set; }
 
         public static bool RemoveXButton { get; set; }
         
@@ -220,7 +220,7 @@ namespace Chatterino.Common
         public static bool ChatLinksDoubleClickOnly { get; set; } = false;
         public static bool ChatHideInputIfEmpty { get; set; } = false;
         public static bool ChatInputShowMessageLength { get; set; } = false;
-        public static bool ChatSeperateMessages { get; set; } = false;
+        public static bool ChatSeparateMessages { get; set; } = false;
         public static bool ChatTabLocalizedNames { get; set; } = true;
 
         public static bool ChatAllowCommandsAtEnd { get; set; } = false;

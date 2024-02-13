@@ -302,7 +302,7 @@ namespace Chatterino
                 }
             }
 
-            if (allowMessageSeperator && AppSettings.ChatSeperateMessages)
+            if (allowMessageSeperator && AppSettings.ChatSeparateMessages)
             {
                 g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorder, 0, yOffset + 1, message.Width + 128, yOffset + 1);
                 g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorderInner, 0, yOffset, message.Width + 128, yOffset);

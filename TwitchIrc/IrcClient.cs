@@ -70,6 +70,22 @@ namespace TwitchIrc
             return true;
         }
 
+        public bool IsAtMessageLimit(bool isMod) {
+            var messageQueueLimit = GetMessageQueueLimit(isMod);
+
+            lock (lastMessagesLock) {
+                while (lastMessages.Count > 0 && lastMessages.Peek() < DateTime.Now) {
+                    lastMessages.Dequeue();
+                }
+
+                if (lastMessages.Count >= messageQueueLimit) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private int GetMessageQueueLimit(bool isMod)
         {
             return isMod ? ModeratorMessageQueueLimit : UserMessageQueueLimit;

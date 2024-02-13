@@ -1374,7 +1374,7 @@ namespace Chatterino.Common
             usernames.AddRange(Commands.TwitchChatCommandNames.Select(x => new KeyValuePair<string, string>(x.ToUpper(), x)));
             
             if (usernamesoremotes == UsernameOrEmotes.Both) {
-                if (AppSettings.PrefereEmotesOverUsernames)
+                if (AppSettings.PreferEmotesOverUsernames)
                 {
                     usernames.Sort((x1, x2) => string.Compare(x1.Value, x2.Value));
 

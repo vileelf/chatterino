@@ -270,11 +270,11 @@ namespace Chatterino.Controls
             BindCheckBox(chkDoubleClickLinks, "ChatLinksDoubleClickOnly");
             BindCheckBox(chkHideInput, "ChatHideInputIfEmpty");
             BindCheckBox(chkRainbow, "Rainbow");
-            BindCheckBox(chkMessageSeperators, "ChatSeperateMessages");
+            BindCheckBox(chkMessageSeparators, "ChatSeparateMessages");
             BindCheckBox(chkStreamlinkPath, "EnableStreamlinkPath");
-            BindCheckBox(chkPrefereEmotes, "PrefereEmotesOverUsernames");
+            BindCheckBox(chkPreferEmotes, "PreferEmotesOverUsernames");
 
-            chkMessageSeperators.CheckedChanged += (s, e) =>
+            chkMessageSeparators.CheckedChanged += (s, e) =>
             {
                 App.MainForm.Refresh();
             };
@@ -305,6 +305,7 @@ namespace Chatterino.Controls
             BindCheckBox(chkChangeTabTitle, "ChangeTabTitle");
             BindCheckBox(chkCacheEmotes, "CacheEmotes");
             BindCheckBox(chkAutomaticUpdate, "CheckUpdates");
+            BindCheckBox(chkSingleConnection, "UseSingleConnection");
             BindCheckBox(chkReplys, "EnableReplys");
             BindCheckBox(chkShowEmoteTooltip, "ShowEmoteTooltip");
             BindCheckBox(chkIgnoreViaTwitch, "IgnoreViaTwitch");
@@ -602,15 +603,6 @@ namespace Chatterino.Controls
             };
             #endregion
 
-            // Links
-
-            //RegistryKey browserKeys;
-            ////on 64bit the browsers are in a different location
-            //browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
-            //if (browserKeys == null)
-            //    browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-            //string[] browserNames = browserKeys.GetSubKeyNames();
-
             // Proxy
             BindCheckBox(chkProxyEnabled, "ProxyEnable");
             BindTextBox(textBox1, "ProxyHost");
@@ -828,28 +820,6 @@ namespace Chatterino.Controls
             BtnOK.Click += new EventHandler(btnOK_Click);
             tabs.Panel.Controls.Add(BtnOK);
             x += 12 + BtnOK.Width;
-
-            /////ResetCurrent
-            //btnResetCurrent = new Button();
-            //btnResetCurrent.AutoSize = true;
-            //btnResetCurrent.Text = "Reset Current Page";
-            //btnResetCurrent.Location = new Point(tabs.Panel.Width - 12 - btnResetCurrent.Width - x, tabs.Panel.Height - 12 - btnOK.Height);
-            //btnResetCurrent.Anchor = (AnchorStyles.Right | AnchorStyles.Bottom);
-            //btnResetCurrent.BackColor = Color.FromArgb(0);
-            //btnResetCurrent.Click += new EventHandler(btnResetCurrent_Click);
-            //tabs.Panel.Controls.Add(btnResetCurrent);
-            //x += 12 + btnResetCurrent.Width;
-
-            /////ResetAll
-            //btnResetAll = new Button();
-            //btnResetAll.AutoSize = true;
-            //btnResetAll.Text = "Reset All";
-            //btnResetAll.Location = new Point(tabs.Panel.Width - 12 - btnResetAll.Width - x, tabs.Panel.Height - 12 - btnOK.Height);
-            //btnResetAll.Anchor = (AnchorStyles.Right | AnchorStyles.Bottom);
-            //btnResetAll.BackColor = Color.FromArgb(0);
-            //btnResetAll.Click += new EventHandler(btnResetAll_Click);
-            //tabs.Panel.Controls.Add(btnResetAll);
-            //x += 12 + btnResetAll.Width;
 
             Closed += (s, e) =>
             {
