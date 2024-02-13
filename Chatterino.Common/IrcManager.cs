@@ -639,7 +639,7 @@ namespace Chatterino.Common
                 message = Commands.AddSpace(message, isMod);
                 //for single connection we send the messages through the api so they will show up on the read connection. Otherwise you cant see your own messages.
                 //I don't know why the irc is programmed this way.
-                if (Client.SingleConnection) {
+                if (Client.SingleConnection && !Account.IsAnon) {
                     if (Client.IsAtMessageLimit(isMod)) {
                         channel.AddMessage(new Message($"Message not sent to protect you from a global ban. (try again in {Client.GetTimeUntilNextMessage(isMod).Seconds} seconds)", HSLColor.Gray, false));
                     } else {
