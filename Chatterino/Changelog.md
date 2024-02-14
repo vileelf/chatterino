@@ -1,6 +1,10 @@
 ﻿# changelog
 
-# 3.4.1
+# 3.5
+-- Added support for twitch replys. You can disable it in in settings.
+-- Added a setting to use single connection twitch. Should allow you to join 100 channels rather than 50 when twitch implements that limit.
+
+# 3.4.2
 -- Fixed bug preventing all of the 7tv emotes from loading for some channels.
 -- Fixed aliased emotes showing the wrong name.
 

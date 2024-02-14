@@ -347,7 +347,7 @@ namespace Chatterino.Controls
             this.chkSingleConnection.Name = "chkSingleConnection";
             this.chkSingleConnection.Size = new System.Drawing.Size(151, 17);
             this.chkSingleConnection.TabIndex = 58;
-            this.chkSingleConnection.Text = "Use single connection for chat (requires restart)";
+            this.chkSingleConnection.Text = "Use single connection for chat (will cause a reconnect)";
             this.chkSingleConnection.UseVisualStyleBackColor = true;
             // 
             // chkPreferEmotes

@@ -315,6 +315,9 @@ namespace Chatterino.Controls
             {
                 App.MainForm.Refresh();
             };
+            chkSingleConnection.CheckedChanged += (s, e) => {
+                IrcManager.Connect();
+            };
 
             txtStreamlinkCustomArguments.Text = AppSettings.CustomStreamlinkArguments;
 
