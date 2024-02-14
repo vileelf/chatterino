@@ -1,5 +1,6 @@
 using Chatterino.Common;
 using Chatterino.Controls;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1097,7 +1098,7 @@ namespace Chatterino
                     }
                     var messageId = S[0];
                     var message = s.SubstringFromWordIndex(1);
-                    var status = TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{IrcManager.Account.UserId}\",\"message\":\"{message}\",\"reply_parent_message_id\": \"{messageId}\"}}");
+                    var status = TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{IrcManager.Account.UserId}\",\"message\":{JsonConvert.ToString(message)},\"reply_parent_message_id\": \"{messageId}\"}}");
                     if (status != HttpStatusCode.OK) {
                         channel.AddMessage(new Common.Message($"Reply failed to go through. Server returned error: {status}.", HSLColor.Gray, true));
                         if (status == HttpStatusCode.Forbidden) {

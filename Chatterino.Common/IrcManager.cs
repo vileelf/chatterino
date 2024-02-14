@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
@@ -643,7 +644,7 @@ namespace Chatterino.Common
                     if (Client.IsAtMessageLimit(isMod)) {
                         channel.AddMessage(new Message($"Message not sent to protect you from a global ban. (try again in {Client.GetTimeUntilNextMessage(isMod).Seconds} seconds)", HSLColor.Gray, false));
                     } else {
-                        TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{Account.UserId}\",\"message\":\"{message}\"}}");
+                        TwitchApiHandler.Post("chat/messages", "", $"{{\"broadcaster_id\":\"{channel.RoomID}\",\"sender_id\":\"{Account.UserId}\",\"message\":{JsonConvert.ToString(message)}}}");
                     }
                 }
                 else if (!Client.Say(message, channel.Name.TrimStart('#'), isMod))
