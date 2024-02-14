@@ -19,7 +19,7 @@ namespace Chatterino
         {
             void announce(string message, string color, TwitchChannel channel)
             {
-                var status = TwitchApiHandler.Post("chat/announcements", $"broadcaster_id={channel.RoomID}&moderator_id={IrcManager.Account.UserId}", $"{{\"message\": \"{message}\"" + (color!=null ? $", \"color\": \"{color}\"}}" : "}"));
+                var status = TwitchApiHandler.Post("chat/announcements", $"broadcaster_id={channel.RoomID}&moderator_id={IrcManager.Account.UserId}", $"{{\"message\": {JsonConvert.ToString(message)}" + (color!=null ? $", \"color\": \"{color}\"}}" : "}"));
                 if (status != HttpStatusCode.NoContent)
                 {
                     channel.AddMessage(new Common.Message($"Mod failed to go through. Server returned error: {status}.", HSLColor.Gray, true));
@@ -92,7 +92,7 @@ namespace Chatterino
             {
                 if (execute)
                 {
-                    var status = TwitchApiHandler.Post("streams/markers", "", $"{{\"user_id\": {channel.RoomID}, \"description\", \"{s}\"}}");
+                    var status = TwitchApiHandler.Post("streams/markers", "", $"{{\"user_id\": {channel.RoomID}, \"description\": {JsonConvert.ToString(s)}}}");
                     if (status != HttpStatusCode.OK)
                     {
                         channel.AddMessage(new Common.Message($"Marker failed to create. Server returned error: {status}.", HSLColor.Gray, true));
@@ -128,10 +128,11 @@ namespace Chatterino
                     }
                     var duration = S[0];
                     var title = S[1];
-                    var optionsString = s.SubstringFromIndex(',', 2);
+                    var optionsString = JsonConvert.ToString(s.SubstringFromIndex(',', 2));
+                    optionsString = optionsString.Remove(optionsString.Length - 1, 1).Remove(0, 1);
                     var options = optionsString.Split(',');
                     var optionsJson = "\"outcomes\": [ {\"title\": \"" + string.Join("\"}, {\"title\": \"", options) + "\"}]";
-                    var status = TwitchApiHandler.Post("predictions", "", $"{{\"broadcaster_id\": {channel.RoomID}, \"title\": \"{title}\", \"prediction_window\": {duration}, {optionsJson}}}");
+                    var status = TwitchApiHandler.Post("predictions", "", $"{{\"broadcaster_id\": {channel.RoomID}, \"title\": {JsonConvert.ToString(title)}, \"prediction_window\": {duration}, {optionsJson}}}");
                     if (status != HttpStatusCode.OK)
                     {
                         channel.AddMessage(new Common.Message($"Prediction failed to create. Server returned error: {status}.", HSLColor.Gray, true));
@@ -1209,7 +1210,7 @@ namespace Chatterino
                                 channel.AddMessage(new Common.Message($"You must be logged in to whisper", HSLColor.Gray, true));
                                 return null;
                             }
-                            status = TwitchApiHandler.Post("whispers", $"from_user_id={IrcManager.Account.UserId}&to_user_id={toUserId}", $"{{\"message\": \"{whisperMessage}\"}}");
+                            status = TwitchApiHandler.Post("whispers", $"from_user_id={IrcManager.Account.UserId}&to_user_id={toUserId}", $"{{\"message\": {JsonConvert.ToString(whisperMessage)}}}");
                         }
                         if (status == null) { return null; }
                         if (status != HttpStatusCode.NoContent) {
