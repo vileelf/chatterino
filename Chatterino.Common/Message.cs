@@ -860,12 +860,20 @@ namespace Chatterino.Common
 
                         if (img.IsHat)
                         {
-                            x -= Math.Min(word.Width, Words[i-1].Width) + 2;
+                            x -= Words[i-1].Width + word.Width / 2 - Words[i-1].Width / 2;
                         }
                         else if (img.Margin != null)
                         {
                             margin = img.Margin;
                         }
+                    } else if (word.Type == SpanType.LazyLoadedImage 
+                        && enableHatEmotes 
+                        && i < (Words.Count - 1) 
+                        && Words[i + 1].Type == SpanType.LazyLoadedImage 
+                        && ((LazyLoadedImage)Words[i + 1].Value).IsHat
+                        ) 
+                    {
+                        x += Words[i + 1].Width/2 - word.Width/2;
                     }
 
                     // word wrapped text

@@ -6,20 +6,20 @@ namespace Chatterino.Common
 {
     public class EmoteModifiers
     {
-        public static readonly Dictionary<string, Func<ChatterinoImage, ChatterinoImage>> PreModifiers= new Dictionary<string, Func<ChatterinoImage, ChatterinoImage>>()
+        public static readonly Dictionary<string, Func<Word, Word>> PreModifiers= new Dictionary<string, Func<Word, Word>>()
         {
-            { "w!", (x) => { return x; } },
-            { "h!",  (x) => { x.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipX); return x; } },
-            { "v!",  (x) => { x.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipY); return x; } },
+            { "w!", (x) => { x.Width = (x.Width * 2); return x; } },
+            { "h!",  (x) => { ((LazyLoadedImage)x.Value).Image?.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipX); return x; } },
+            { "v!",  (x) => { ((LazyLoadedImage)x.Value).Image?.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipY); return x; } },
             { "z!",  (x) => { return x; } },
         };
 
-        public static readonly Dictionary<string, Func<ChatterinoImage, ChatterinoImage>> PostModifiers = new Dictionary<string, Func<ChatterinoImage, ChatterinoImage>>()
+        public static readonly Dictionary<string, Func<Word, Word>> PostModifiers = new Dictionary<string, Func<Word, Word>>()
         {
             { "ffzCursed", (x) => { return x; } },
-            { "ffzX", (x) => {x.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipX); return x; } },
-            { "ffzY", (x) => { x.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipY); return x; } },
-            { "ffzW", (x) => { return x; } },
+            { "ffzX", (x) => {((LazyLoadedImage)x.Value).Image?.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipX); return x; } },
+            { "ffzY", (x) => { ((LazyLoadedImage)x.Value).Image?.ActiveImage.RotateFlip(RotateFlipType.RotateNoneFlipY); return x; } },
+            { "ffzW", (x) => { x.Width = (x.Width * 2); return x; } },
         };
     }
 }

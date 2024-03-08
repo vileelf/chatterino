@@ -1,12 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Collections.Generic;
-using System.Security;
 
 //Wrapper class to handle various image functions for Chatterino including webp support.
 namespace Chatterino.Common {
