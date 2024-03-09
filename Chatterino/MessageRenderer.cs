@@ -1,29 +1,23 @@
 ﻿using Chatterino.Common;
-using SharpDX.Mathematics.Interop;
+using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SharpDX.Direct2D1;
 using Brush = System.Drawing.Brush;
-using Image = System.Drawing.Image;
 using InterpolationMode = System.Drawing.Drawing2D.InterpolationMode;
 
-namespace Chatterino
-{
+namespace Chatterino {
     public static class MessageRenderer
     {
-        public static SharpDX.Direct2D1.Factory D2D1Factory = new SharpDX.Direct2D1.Factory();
+        public static Factory D2D1Factory = new Factory();
 
-        public static SharpDX.Direct2D1.RenderTargetProperties RenderTargetProperties =
-            new SharpDX.Direct2D1.RenderTargetProperties(
-                new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm,
-                    SharpDX.Direct2D1.AlphaMode.Premultiplied))
+        public static RenderTargetProperties RenderTargetProperties =
+            new RenderTargetProperties(
+                new PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                    AlphaMode.Premultiplied))
             {
-                Usage = SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible
+                Usage = RenderTargetUsage.GdiCompatible
             };
 
         static Brush _selectionBrush = new SolidBrush(Color.FromArgb(127, Color.Orange));
@@ -134,10 +128,10 @@ namespace Chatterino
                         }
                     }
                 }
-                else if (word.Type == SpanType.LazyLoadedImage)
+                else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
                 {
                     var emote = (LazyLoadedImage)word.Value;
-                    var img = (ChatterinoImage)emote.Image;
+                    var img = emote.Image;
                     if (img != null)
                     {
                         try
@@ -249,7 +243,7 @@ namespace Chatterino
                                         rect.Height);
                             }
                         }
-                        else if (word.Type == SpanType.LazyLoadedImage)
+                        else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
                         {
                             var textLength = 2;
 
@@ -275,7 +269,7 @@ namespace Chatterino
                     }
                     else
                     {
-                        if (word.Type == SpanType.LazyLoadedImage)
+                        if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
                         {
                             var emote = (LazyLoadedImage)word.Value;
                             if (emote.IsAnimated)
@@ -291,7 +285,7 @@ namespace Chatterino
                 for (int i = 0; i < message.Words.Count; i++)
                 {
                     var word = message.Words[i];
-                    if (word.Type == SpanType.LazyLoadedImage)
+                    if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
                     {
                         var emote = (LazyLoadedImage)word.Value;
                         if (emote.IsAnimated)
@@ -352,7 +346,7 @@ namespace Chatterino
                         case SpanType.Text:
                             break;
                         case SpanType.LazyLoadedImage:
-                            ChatterinoImage img = (word.Value as LazyLoadedImage)?.Image as ChatterinoImage;
+                            ChatterinoImage img = (word.Value as LazyLoadedImage)?.Image;
 
                             if (img != null)
                             {

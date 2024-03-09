@@ -473,7 +473,7 @@ namespace Chatterino.Common
             var i = 0;
             var currentTwitchEmoteIndex = 0;
             var currentTwitchEmote = twitchEmotes.FirstOrDefault();
-
+            Word word;
             foreach (var split in text.Split(' '))
             {
                 if (currentTwitchEmote != null)
@@ -534,21 +534,21 @@ namespace Chatterino.Common
                             }
                         }
 
-                        LazyLoadedImage bttvEmote;
-                        if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (channel.BttvChannelEmotes.TryGetValue(s, out bttvEmote) || Emotes.BttvGlobalEmotes.TryGetValue(s, out bttvEmote))
-                            || (AppSettings.ChatEnableFfzEmotes && (channel.FfzChannelEmotes.TryGetValue(s, out bttvEmote) || Emotes.FfzGlobalEmotes.TryGetValue(s, out bttvEmote)))
-                            || (AppSettings.ChatEnable7tvEmotes && (channel.SeventvChannelEmotes.TryGetValue(s, out bttvEmote) || Emotes.SeventvGlobalEmotes.TryGetValue(s, out bttvEmote)))))
+                        LazyLoadedImage thirdPartyEmote;
+                        if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (channel.BttvChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.BttvGlobalEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnableFfzEmotes && (channel.FfzChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.FfzGlobalEmotes.TryGetValue(s, out thirdPartyEmote)))
+                            || (AppSettings.ChatEnable7tvEmotes && (channel.SeventvChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.SeventvGlobalEmotes.TryGetValue(s, out thirdPartyEmote)))))
                         {
-                            words.Add(new Word
-                            {
+                            words.Add(new Word {
                                 Type = SpanType.LazyLoadedImage,
-                                Value = bttvEmote,
+                                Value = thirdPartyEmote,
                                 Color = slashMe ? UsernameColor : new HSLColor?(),
-                                Tooltip = bttvEmote.Tooltip,
-                                TooltipImageUrl = bttvEmote.TooltipImageUrl,
-                                TooltipImage = bttvEmote.TooltipImage,
-                                Link = new Link(LinkType.Url, bttvEmote.TooltipImageUrl),
-                                CopyText = bttvEmote.Name
+                                Tooltip = thirdPartyEmote.Tooltip,
+                                TooltipImageUrl = thirdPartyEmote.TooltipImageUrl,
+                                TooltipImage = thirdPartyEmote.TooltipImage,
+                                Link = new Link(LinkType.Url, thirdPartyEmote.TooltipImageUrl),
+                                CopyText = thirdPartyEmote.Name,
+                                IsModifier = EmoteModifiers.IsEmoteModifier(thirdPartyEmote.Name)
                             });
                         }
                         else
@@ -582,6 +582,22 @@ namespace Chatterino.Common
                                 CopyText = e.copyText ?? e.Name,
                                 HasTrailingSpace = e.HasTrailingSpace
                             });
+                        }
+                    }
+                    var curword = words[words.Count - 1];
+                    if (curword.Type == SpanType.LazyLoadedImage && words.Count > 1) {
+                        int v = words.Count - 2;
+                        if (EmoteModifiers.IsPreEmoteModifier(words[words.Count - 2].CopyText) && !curword.IsModifier) {
+                            for (int z = v; z >= 0 && EmoteModifiers.IsPreEmoteModifier(words[z].CopyText); z--) {
+                                curword.Modifiers.Add(words[z].CopyText);
+                            }
+                        } else if (EmoteModifiers.IsPostEmoteModifier(curword.CopyText)) {
+                            for (int z = v; z >= 0; z--) {
+                                if (!words[z].IsModifier) {
+                                    words[z].Modifiers.Add(curword.CopyText);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -759,6 +775,7 @@ namespace Chatterino.Common
                         if (emotesChanged || _measureImages)
                         {
                             var emote = word.Value as LazyLoadedImage;
+                            
                             var image = emote?.Image;
                             if (image == null)
                             {
@@ -789,6 +806,17 @@ namespace Chatterino.Common
 
                                 word.Width = (int)w;
                                 word.Height = (int)h;
+                                if (word.IsModifier) {
+                                    word.Width = 0;
+                                    word.Height = 0;
+                                }
+                                if (word.Modifiers.Count > 0 && !word.DoneModifying) {
+                                    for (int z = 0; z < word.Modifiers.Count; z++) {
+                                        EmoteModifiers.ModifyWord(word, word.Modifiers[z]);
+                                    }
+                                    word.DoneModifying = true;
+                                }
+                                word.Width *= word.WidthMultiplier;
                             }
                         }
                     }
@@ -875,7 +903,9 @@ namespace Chatterino.Common
                     {
                         x += Words[i + 1].Width/2 - word.Width/2;
                     }
-
+                    if (!enableHatEmotes || word.Type != SpanType.LazyLoadedImage || !(word.Value as LazyLoadedImage).IsHat) {
+                        x += word.XOffset;
+                    }
                     // word wrapped text
                     if (word.Width > width && word.Type == SpanType.Text && ((string)word.Value).Length > 2)
                     {

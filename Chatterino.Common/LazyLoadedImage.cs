@@ -144,6 +144,7 @@ namespace Chatterino.Common
         public LazyLoadedImage(ChatterinoImage image)
         {
             this.image = image;
+            GuiEngine.Current.HandleAnimatedTwitchEmote(this, image);
             loading = false;
         }
     }

@@ -18,12 +18,14 @@ namespace Chatterino.Common {
         public bool IsAnimated;
         public int Height;
         public int Width;
-        private bool framesLoaded = true;
+        private bool FramesLoaded = false;
         public bool UsedLastCycle = true;
         public bool IsLoaded;
 
         public ChatterinoImage(MemoryStream stream) {
-            OriginalImageStream = stream;
+            MemoryStream memstream = new MemoryStream();
+            stream.CopyTo(memstream);
+            OriginalImageStream = memstream;
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(stream);
@@ -46,8 +48,10 @@ namespace Chatterino.Common {
 
         public ChatterinoImage(Stream stream) {
             MemoryStream memstream = new MemoryStream();
+            MemoryStream copyStream = new MemoryStream();
             stream.CopyTo(memstream);
-            OriginalImageStream = memstream;
+            memstream.CopyTo(copyStream);
+            OriginalImageStream = copyStream;
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(memstream);
@@ -69,11 +73,19 @@ namespace Chatterino.Common {
         /// </summary>
         /// <returns>a clone of this class</returns>
         public ChatterinoImage Clone() {
-            if (OriginalImageStream != null) {
+            if (FramesLoaded) {
+                var newImage = new ChatterinoImage(GetFrame(0));
+                newImage.FramesLoaded = true;
+                newImage.FrameDurations.Clear();
+                for (int i = 0; i < GetFrameCount(); i++) {
+                    newImage.AddFrame(GetFrame(i), GetFrameDuration(i));
+                }
+                return newImage;
+            } /* else if (OriginalImageStream != null) {
                 MemoryStream memstream = new MemoryStream();
                 OriginalImageStream.CopyTo(memstream);
                 return new ChatterinoImage(memstream);
-            } else {
+            }*/ else {
                 return new ChatterinoImage((Image)OriginalImage.Clone());
             }
         }
@@ -113,6 +125,7 @@ namespace Chatterino.Common {
                 TotalFrames = 0;
                 decodeWebP(stream);
             }
+            OriginalImage = (Image)ActiveImage.Clone();
             IsLoaded = true;
         }
 
@@ -132,20 +145,29 @@ namespace Chatterino.Common {
                     onlyAddFrameDelay(framedelay);
                 }
                 IsAnimated = true;
-                framesLoaded = false;
+                FramesLoaded = false;
             }
         }
 
         private void LoadImageFrames() {
-            FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
-            lock (ActiveImage) {
-                for (int i = 0; i < TotalFrames; i++) {
-                    ActiveImage.SelectActiveFrame(dimension, i);
-                    onlyAddFrame(ActiveImage);
+            if (ImageAnimator.CanAnimate(ActiveImage)) {
+                FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
+                lock (ActiveImage) {
+                    for (int i = 0; i < TotalFrames; i++) {
+                        ActiveImage.SelectActiveFrame(dimension, i);
+                        onlyAddFrame(ActiveImage);
+                    }
+                    ActiveImage.Dispose();
                 }
+            } else if (ActiveImage != null) {
+                onlyAddFrame(ActiveImage);
+                ActiveImage.Dispose();
             }
-            ActiveImage = Frames[CurrentFrame];
-            framesLoaded = true;
+            
+            if (Frames.Count > 0) {
+                ActiveImage = Frames[CurrentFrame];
+            }
+            FramesLoaded = true;
         }
 
         private void onlyAddFrameDelay(int frameDuration) {
@@ -198,7 +220,7 @@ namespace Chatterino.Common {
                 ReloadImage();
             }
             UsedLastCycle = true;
-            if (framesLoaded) {
+            if (FramesLoaded) {
                 ActiveImage = Frames[frameIndex];
             } else {
                 FrameDimension dimension = new FrameDimension(ActiveImage.FrameDimensionsList[0]);
@@ -227,11 +249,22 @@ namespace Chatterino.Common {
             if (!IsLoaded) {
                 ReloadImage();
             }
-            if (!framesLoaded) {
+            if (!FramesLoaded) {
                 LoadImageFrames();
             }
             UsedLastCycle = true;
             return Frames[frameIndex];
+        }
+
+        public void SetFrame(int frameIndex, Image frame) {
+            if (Frames.Count <= frameIndex) {
+                return;
+            }
+            Frames[frameIndex]?.Dispose();
+            Frames[frameIndex] = frame;
+            if (frameIndex == CurrentFrame) {
+                ActiveImage = Frames[CurrentFrame];
+            }
         }
 
         //gets the total count of frames
@@ -246,13 +279,14 @@ namespace Chatterino.Common {
 
         //Creates a copy and adds a frame to the list. Frame duration is in centiseconds. If frame duration is less than 2 defaults it to 10. 
         public void AddFrame(Image frame, int frameDuration) {
-            if (!framesLoaded) {
+            if (!FramesLoaded) {
                 LoadImageFrames();
             }
             Image newframe = (Image)frame.Clone();
             Frames.Add(newframe);
             FrameDurations.Add(frameDuration < 2 ? 10 : frameDuration);
             TotalFrames++;
+            IsAnimated = true;
         }
 
         //Saves the original stream to the file (does not save added frames)
@@ -281,6 +315,61 @@ namespace Chatterino.Common {
                 }
             }
             return null;
+        }
+        public void Rotate(RotateFlipType type) {
+            if (IsAnimated) {
+                for (int i = 0; i < GetFrameCount(); i++) {
+                    GetFrame(i).RotateFlip(type);
+                }
+            } else {
+                ActiveImage.RotateFlip(type);
+            }
+        }
+        public void ConvertToGreyScale() {
+            if (IsAnimated) {
+                for (int i = 0; i < GetFrameCount(); i++) {
+                    var newImage = _convertImageToGrayScale(GetFrame(i));
+
+                    SetFrame(i, newImage);
+                }
+            } else {
+                var newImage = _convertImageToGrayScale(ActiveImage);
+                ActiveImage = newImage;
+            }  
+        }
+
+        private Image _convertImageToGrayScale(Image original) {
+            Image newBitmap = new Bitmap(original.Width, original.Height);
+
+            //get a graphics object from the new image
+            Graphics g = Graphics.FromImage(newBitmap);
+
+            //create the grayscale ColorMatrix
+            ColorMatrix colorMatrix = new ColorMatrix(
+               new float[][]
+               {
+                   new float[] {.3f, .3f, .3f, 0, 0},
+                   new float[] {.59f, .59f, .59f, 0, 0},
+                   new float[] {.11f, .11f, .11f, 0, 0},
+                   new float[] {0, 0, 0, 1, 0},
+                   new float[] {0, 0, 0, 0, 1}
+               });
+
+            //create some image attributes
+            ImageAttributes attributes = new ImageAttributes();
+
+            //set the color matrix attribute
+            attributes.SetColorMatrix(colorMatrix);
+
+            //draw the original image on the new image
+            //using the grayscale color matrix
+            g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
+               0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+
+            //dispose the Graphics object
+            g.Dispose();
+
+            return newBitmap;
         }
 
         //Draws the current active frame
