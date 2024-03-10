@@ -128,7 +128,7 @@ namespace Chatterino {
                         }
                     }
                 }
-                else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
+                else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifying)
                 {
                     var emote = (LazyLoadedImage)word.Value;
                     var img = emote.Image;
@@ -243,7 +243,7 @@ namespace Chatterino {
                                         rect.Height);
                             }
                         }
-                        else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifier)
+                        else if (word.Type == SpanType.LazyLoadedImage && !word.IsModifying)
                         {
                             var textLength = 2;
 

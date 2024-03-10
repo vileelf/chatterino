@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Chatterino.Common
 {
@@ -16,6 +17,7 @@ namespace Chatterino.Common
         public bool Highlighted { get; set; } = false;
         public List<string> Modifiers { get; set; } = new List<string>();
         public bool IsModifier { get; set; } = false;
+        public bool IsModifying { get; set; } = false;
         public bool DoneModifying { get; set; } = false;
         public FontType Font { get; set; }
         public int Height { get; set; } = 16;
@@ -23,7 +25,7 @@ namespace Chatterino.Common
         public int X { get; set; }
         public int Y { get; set; }
         public int XOffset { get; set; } = 0;
-        public int WidthMultiplier = 1;
+        public int WidthMultiplier { get; set; } = 1;
 
         public bool HasTrailingSpace { get; set; } = true;
 
@@ -90,6 +92,10 @@ namespace Chatterino.Common
             TooltipImage = replacementWord.TooltipImage;
             CopyText = replacementWord.CopyText;
             Highlighted = replacementWord.Highlighted;
+        }
+
+        public bool IsHat() {
+            return Type == SpanType.LazyLoadedImage && ((LazyLoadedImage)Value).IsHat;
         }
     }
 }

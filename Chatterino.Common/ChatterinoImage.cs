@@ -23,9 +23,7 @@ namespace Chatterino.Common {
         public bool IsLoaded;
 
         public ChatterinoImage(MemoryStream stream) {
-            MemoryStream memstream = new MemoryStream();
-            stream.CopyTo(memstream);
-            OriginalImageStream = memstream;
+            OriginalImageStream = stream;
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(stream);
@@ -48,10 +46,8 @@ namespace Chatterino.Common {
 
         public ChatterinoImage(Stream stream) {
             MemoryStream memstream = new MemoryStream();
-            MemoryStream copyStream = new MemoryStream();
             stream.CopyTo(memstream);
-            memstream.CopyTo(copyStream);
-            OriginalImageStream = copyStream;
+            OriginalImageStream = memstream;
             Frames = new List<Image>();
             FrameDurations = new List<int>();
             loadImageFromStream(memstream);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -587,14 +588,20 @@ namespace Chatterino.Common
                     var curword = words[words.Count - 1];
                     if (curword.Type == SpanType.LazyLoadedImage && words.Count > 1) {
                         int v = words.Count - 2;
-                        if (EmoteModifiers.IsPreEmoteModifier(words[words.Count - 2].CopyText) && !curword.IsModifier) {
-                            for (int z = v; z >= 0 && EmoteModifiers.IsPreEmoteModifier(words[z].CopyText); z--) {
-                                curword.Modifiers.Add(words[z].CopyText);
+                        if (EmoteModifiers.IsPreEmoteModifier(words[words.Count - 2].CopyText) && !curword.IsModifier && !curword.IsHat()) {
+                            for (int z = v; z >= 0; z--) {
+                                if (EmoteModifiers.IsPreEmoteModifier(words[z].CopyText)) {
+                                    curword.Modifiers.Add(words[z].CopyText);
+                                    words[z].IsModifying = true;
+                                } else if (!words[z].IsHat()) {
+                                    break;
+                                }
                             }
                         } else if (EmoteModifiers.IsPostEmoteModifier(curword.CopyText)) {
                             for (int z = v; z >= 0; z--) {
-                                if (!words[z].IsModifier) {
+                                if (!words[z].IsModifier && !words[z].IsHat()) {
                                     words[z].Modifiers.Add(curword.CopyText);
+                                    curword.IsModifying = true;
                                     break;
                                 }
                             }
@@ -806,14 +813,12 @@ namespace Chatterino.Common
 
                                 word.Width = (int)w;
                                 word.Height = (int)h;
-                                if (word.IsModifier) {
+                                if (word.IsModifying) {
                                     word.Width = 0;
                                     word.Height = 0;
                                 }
                                 if (word.Modifiers.Count > 0 && !word.DoneModifying) {
-                                    for (int z = 0; z < word.Modifiers.Count; z++) {
-                                        EmoteModifiers.ModifyWord(word, word.Modifiers[z]);
-                                    }
+                                    EmoteModifiers.ModifyWord(word);
                                     word.DoneModifying = true;
                                 }
                                 word.Width *= word.WidthMultiplier;
@@ -882,13 +887,13 @@ namespace Chatterino.Common
 
                     Margin margin = null;
 
-                    if (word.Type == SpanType.LazyLoadedImage && enableHatEmotes && (i > 0 && Words[i - 1].Type != SpanType.Text))
+                    if (word.Type == SpanType.LazyLoadedImage && enableHatEmotes && word.IsHat() && (i > 0 && Words[i - 1].Type != SpanType.Text))
                     {
                         var img = (LazyLoadedImage)word.Value;
 
                         if (img.IsHat)
                         {
-                            x -= Words[i-1].Width + word.Width / 2 - Words[i-1].Width / 2;
+                            x -= Words[i-1].Width < word.Width ? Words[i-1].XOffset + Words[i-1].Width : Words[i-1].Width/2 + word.Width/2;
                         }
                         else if (img.Margin != null)
                         {
@@ -897,13 +902,12 @@ namespace Chatterino.Common
                     } else if (word.Type == SpanType.LazyLoadedImage 
                         && enableHatEmotes 
                         && i < (Words.Count - 1) 
-                        && Words[i + 1].Type == SpanType.LazyLoadedImage 
-                        && ((LazyLoadedImage)Words[i + 1].Value).IsHat
+                        && Words[i + 1].IsHat()
                         ) 
                     {
-                        x += Words[i + 1].Width/2 - word.Width/2;
+                        word.XOffset = Math.Max(Words[i+1].Width/2 - word.Width/2, 0);
                     }
-                    if (!enableHatEmotes || word.Type != SpanType.LazyLoadedImage || !(word.Value as LazyLoadedImage).IsHat) {
+                    if (!enableHatEmotes || !word.IsHat()) {
                         x += word.XOffset;
                     }
                     // word wrapped text

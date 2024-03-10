@@ -8,32 +8,20 @@ namespace Chatterino.Common
     {
         public static readonly Dictionary<string, Func<Word, bool>> PreModifiers= new Dictionary<string, Func<Word, bool>>()
         {
-            { "w!", (x) => { x.WidthMultiplier = 2; x.Tooltip += "\nw!"; return true; } },
+            { "w!", (x) => { x.WidthMultiplier = 2; x.Tooltip += "w!,"; return true; } },
             { "h!",  (x) => {
                 var image = ((LazyLoadedImage)x.Value).Image;
-                if (image == null) {
-                    return false;
-                }
-                var newImage = image.Clone();
-                newImage.Rotate(RotateFlipType.Rotate180FlipY);
-                var newLazyImage = new LazyLoadedImage(newImage);
-                x.Value = newLazyImage;
-                x.Tooltip += "\nh!";
+                image.Rotate(RotateFlipType.Rotate180FlipY);;
+                x.Tooltip += "h!,";
                 return true;
             } },
             { "v!",  (x) => {
                 var image = ((LazyLoadedImage)x.Value).Image;
-                if (image == null) {
-                    return false;
-                }
-                var newImage = image.Clone();
-                newImage.Rotate(RotateFlipType.Rotate180FlipX);
-                var newLazyImage = new LazyLoadedImage(newImage);
-                x.Value = newLazyImage;
-                x.Tooltip += "\nv!";
+                image.Rotate(RotateFlipType.Rotate180FlipX);
+                x.Tooltip += "v!,";
                 return true;
             } },
-            { "z!",  (x) => { if (x.X != 0) {x.XOffset -= 12; } x.Tooltip += "\nz!";  return true; } },
+            { "z!",  (x) => { if (x.X != 0) {x.XOffset -= 12; } x.Tooltip += "z!,";  return true; } },
         };
 
         public static readonly Dictionary<string, Func<Word, bool>> PostModifiers = new Dictionary<string, Func<Word, bool>>()
@@ -43,34 +31,20 @@ namespace Chatterino.Common
                 if (image == null) {
                     return false;
                 }
-                var newImage = image.Clone();
-                newImage.ConvertToGreyScale();
-                var newLazyImage = new LazyLoadedImage(newImage);
-                x.Value = newLazyImage;
-                x.Tooltip += "\nffzCursed";
+                image.ConvertToGreyScale();
+                x.Tooltip += "ffzCursed,";
                 return true; 
             } },
             { "ffzX", (x) => {
                 var image = ((LazyLoadedImage)x.Value).Image;
-                if (image == null) {
-                    return false;
-                }
-                var newImage = image.Clone();
-                newImage.Rotate(RotateFlipType.Rotate180FlipY);
-                var newLazyImage = new LazyLoadedImage(newImage);
-                x.Value = newLazyImage;
-                x.Tooltip += "\nffzX";
+                image.Rotate(RotateFlipType.Rotate180FlipY);
+                x.Tooltip += "ffzX,";
                 return true; 
             } },
-            { "ffzY", (x) => { var image = ((LazyLoadedImage)x.Value).Image;
-                if (image == null) {
-                    return false;
-                }
-                var newImage = image.Clone();
-                newImage.Rotate(RotateFlipType.Rotate180FlipX);
-                var newLazyImage = new LazyLoadedImage(newImage);
-                x.Value = newLazyImage;
-                x.Tooltip += "\nffzY";
+            { "ffzY", (x) => { 
+                var image = ((LazyLoadedImage)x.Value).Image;
+                image.Rotate(RotateFlipType.Rotate180FlipX);
+                x.Tooltip += "ffzY,";
                 return true;
             } },
             { "ffzW", (x) => { x.WidthMultiplier = 2; x.Tooltip += "\nffzW"; return true; } },
@@ -85,14 +59,27 @@ namespace Chatterino.Common
         public static bool IsPostEmoteModifier(string name) {
             return PostModifiers.ContainsKey(name);
         }
-        public static bool ModifyWordPre(Word target, string modifier) {
+        private static bool ModifyWordPre(Word target, string modifier) {
             return PreModifiers.TryGetValue(modifier, out var func) && func(target);
         }
-        public static bool ModifyWordPost(Word target, string modifier) {
+        private static bool ModifyWordPost(Word target, string modifier) {
             return PostModifiers.TryGetValue(modifier, out var func) && func(target);
         }
-        public static bool ModifyWord(Word target, string modifier) {
-            return ModifyWordPre(target, modifier) || ModifyWordPost(target, modifier);
+        public static bool ModifyWord(Word target) {
+            var image = ((LazyLoadedImage)target.Value).Image;
+            if (image == null) {
+                return false;
+            }
+            image = image.Clone();
+            var newImage = new LazyLoadedImage(image);
+            target.Value = newImage;
+            target.Tooltip += "\nModifiers: ";
+            bool returnValue = false;
+            foreach (var modifier in target.Modifiers) {
+                returnValue = ModifyWordPre(target, modifier) || ModifyWordPost(target, modifier);
+            }
+            target.Tooltip = target.Tooltip.TrimEnd(',');
+            return returnValue;
         }
     }
 }
