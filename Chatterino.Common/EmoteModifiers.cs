@@ -51,13 +51,13 @@ namespace Chatterino.Common
         };
 
         public static bool IsEmoteModifier(string name) {
-            return PreModifiers.ContainsKey(name) || PostModifiers.ContainsKey(name);
+            return !string.IsNullOrWhiteSpace(name) && (PreModifiers.ContainsKey(name) || PostModifiers.ContainsKey(name));
         }
         public static bool IsPreEmoteModifier(string name) {
-            return PreModifiers.ContainsKey(name);
+            return !string.IsNullOrWhiteSpace(name) && PreModifiers.ContainsKey(name);
         }
         public static bool IsPostEmoteModifier(string name) {
-            return PostModifiers.ContainsKey(name);
+            return !string.IsNullOrWhiteSpace(name) && PostModifiers.ContainsKey(name);
         }
         private static bool ModifyWordPre(Word target, string modifier) {
             return PreModifiers.TryGetValue(modifier, out var func) && func(target);
