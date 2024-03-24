@@ -1864,7 +1864,7 @@ namespace Chatterino.Common
                     }
                 });
                 
-                //7tv channel emotes https://api.7tv.app/v2/users/{RoomID}/emotes
+                //7tv channel emotes https://api.7tv.app/v3/users/twitch/{RoomID}
                 Task.Run(() =>
                 {
                     try

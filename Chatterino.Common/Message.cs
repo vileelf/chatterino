@@ -600,8 +600,10 @@ namespace Chatterino.Common
                         } else if (EmoteModifiers.IsPostEmoteModifier(curword.CopyText)) {
                             for (int z = v; z >= 0; z--) {
                                 if (!words[z].IsModifier && !words[z].IsHat()) {
-                                    words[z].Modifiers.Add(curword.CopyText);
-                                    curword.IsModifying = true;
+                                    if (words[z].Type == SpanType.LazyLoadedImage) {
+                                        words[z].Modifiers.Add(curword.CopyText);
+                                        curword.IsModifying = true;
+                                    }
                                     break;
                                 }
                             }
