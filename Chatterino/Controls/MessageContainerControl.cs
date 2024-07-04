@@ -23,7 +23,7 @@ namespace Chatterino.Controls
             SmallChange = 4,
         };
 
-        public bool AllowMessageSeperator { get; set; } = true;
+        public bool AllowMessageSeparator { get; set; } = true;
 
         public bool EnableHatEmotes { get; protected set; } = true;
 
@@ -71,7 +71,7 @@ namespace Chatterino.Controls
         protected List<GifEmoteState> GifEmotesOnScreen = new List<GifEmoteState>();
 
         // mouse
-        protected double mouseScrollMultiplyer = 1;
+        protected double mouseScrollMultiplier = 1;
 
         protected Link mouseDownLink = null;
         protected Word mouseDownWord = null;
@@ -552,27 +552,17 @@ namespace Chatterino.Controls
                                 {
                                     var y = yStart;
 
-                                    //for (int i = 0; i < startIndex; i++)
-                                    //{
-                                    //    M[i].IsVisible = false;
-                                    //}
-
                                     for (var i = startIndex; i < M.Length; i++)
                                     {
                                         var msg = M[i];
-                                        //msg.IsVisible = true;
-
+                                        var allowMessageSeparator = (!AppSettings.ChatShowLastReadMessageIndicator || i == 0 ||
+                                            LastReadMessage != M[i-1]) && AllowMessageSeparator;
                                         MessageRenderer.DrawMessage(g, msg, MessagePadding.Left, y, 
                                             selection, i, !App.UseDirectX, GifEmotesOnScreen, 
-                                            allowMessageSeperator: AllowMessageSeperator);
+                                            allowMessageSeperator: allowMessageSeparator);
 
                                         if (y - msg.Height > h)
                                         {
-                                            //for (; i < M.Length; i++)
-                                            //{
-                                            //    M[i].IsVisible = false;
-                                            //}
-
                                             break;
                                         }
 

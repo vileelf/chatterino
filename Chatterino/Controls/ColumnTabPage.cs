@@ -524,7 +524,7 @@ namespace Chatterino.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(App.ColorScheme.ChatSeperator);
+            e.Graphics.Clear(App.ColorScheme.ChatSeparator);
 
             base.OnPaint(e);
         }

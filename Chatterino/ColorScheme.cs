@@ -14,7 +14,7 @@ namespace Chatterino
         public Brush TooltipBackground { get; set; } = Brushes.Black;
         public Brush TooltipText { get; set; } = Brushes.White;
 
-        public Color ChatSeperator { get; set; } = Color.Red;
+        public Color ChatSeparator { get; set; } = Color.Red;
         public Brush ChatBackground { get; set; } = Brushes.White;
         public Brush ChatBackgroundHighlighted { get; set; } = Brushes.LightBlue;
         public Brush ChatBackgroundUsernameHighlighted { get; set; } = Brushes.LightBlue;
@@ -25,8 +25,8 @@ namespace Chatterino
         public Brush ChatInputOuter { get; set; } = Brushes.White;
         public Brush ChatInputInner { get; set; } = Brushes.White;
         public Pen ChatInputBorder { get; set; } = Pens.White;
-        public Pen ChatMessageSeperatorBorder { get; set; } = Pens.Black;
-        public Pen ChatMessageSeperatorBorderInner { get; set; } = Pens.Gray;
+        public Pen ChatMessageSeparatorBorder { get; set; } = Pens.Black;
+        public Pen ChatMessageSeparatorBorderInner { get; set; } = Pens.Gray;
 
         public Pen ChatBorder { get; set; } = Pens.LightGray;
         public Pen ChatBorderFocused { get; set; } = Pens.Black;
@@ -48,6 +48,7 @@ namespace Chatterino
         public Brush TabBG { get; set; } = new SolidBrush(rgb(0xFFFFFF));
         public Brush TabHoverBG { get; set; } = new SolidBrush(rgb(0xCCCCCC));
         public Brush TabSelectedBG { get; set; } = new SolidBrush(rgb(0x8E24AA));
+        public Brush TabButtonsBG { get; set; } = new SolidBrush(rgb(0x8E24AA));
         public Brush TabHighlightedBG { get; set; } = new SolidBrush(rgb(0xFF4444));
         public Brush TabNewMessageBG { get; set; } = new SolidBrush(rgb(0xFF4444));
         public Brush TabIsLiveBG { get; set; } = new SolidBrush(rgb(0xbff7aa));
@@ -61,9 +62,12 @@ namespace Chatterino
 
         public static ColorScheme FromHue(float hue, float multiplier)
         {
-            Func<HSLColor, float, HSLColor> getColor = (hsl, luminosity) => hsl.WithLuminosity(((luminosity - 0.5f) * multiplier) + 0.5f);
+            HSLColor getColor(HSLColor hsl, float luminosity) => hsl.WithLuminosity(((luminosity - 0.5f) * multiplier) + 0.5f);
 
             var scheme = new ColorScheme();
+
+            // Light scheme
+            scheme.IsLightTheme = multiplier > 0;
 
             HSLColor gray;
             if (multiplier > 0.9f || multiplier < -0.9f)
@@ -75,30 +79,22 @@ namespace Chatterino
                 gray = HSLColor.FromRGB(0.5f, 0.5f, 0.515f);
             }
 
-            var highlight = new HSLColor(hue, 1f, 0.5f);
-
-            // Light scheme
-            scheme.IsLightTheme = multiplier > 0;
-
-            //if (scheme.IsLightTheme)
-            //{
-            //    scheme.TabPanelBG = Color.White;
-            //}
-            //else
-            //{
-            //    scheme.TabPanelBG = Color.Gray;
-            //}
+            var highlight = new HSLColor(hue, 1f, scheme.IsLightTheme ? 0.5f : 0.3f);
 
             // Text
             scheme.TextCaret = new SolidBrush(scheme.Text = (multiplier > 0 ? HSLColor.FromRGB(0, 0, 0) : HSLColor.FromRGB(1, 1, 1)).ToColor());
             scheme.ChatBorderFocused = scheme.ChatBorder = getColor(gray, 1f).ToPen();
-            scheme.ChatMessageSeperatorBorder = getColor(gray, 0.99f).ToPen();
-            scheme.ChatMessageSeperatorBorderInner = getColor(gray, 0.8f).ToPen();
+            scheme.ChatMessageSeparatorBorder = getColor(gray, 0.99f).ToPen();
+            scheme.ChatMessageSeparatorBorderInner = getColor(gray, 0.8f).ToPen();
+            scheme.TabText = scheme.IsLightTheme ? HSLColor.FromRGB(0, 0, 0).ToColor() : HSLColor.FromRGB(1, 1, 1).ToColor();
 
-            scheme.ChatSeperator = getColor(gray, 0.75f).ToColor();
+            scheme.ChatSeparator = getColor(gray, 0.75f).ToColor();
 
             // Backgrounds
-            scheme.ChatBackground = getColor(gray, 0.95f).ToBrush();
+            var backgroundMultiplier = multiplier > 0.9f ? 1f : 0.95f;
+            scheme.ChatBackground = getColor(gray, backgroundMultiplier).ToBrush();
+            scheme.TabBG = getColor(gray, backgroundMultiplier).ToBrush();
+            scheme.TabPanelBG = getColor(gray, backgroundMultiplier).ToColor();
 
             if (scheme.IsLightTheme)
             {
@@ -108,12 +104,10 @@ namespace Chatterino
                 scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 1f, 0.5f), 0.9f).ToBrush();
                 scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0xaaf9a4));
                 scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0xc3e0df));
+                scheme.TabIsLiveBG = new SolidBrush(rgb(0xbff7aa));
             }
             else
             {
-                //scheme.ChatBackgroundHighlighted = getColor(HSLColor.FromRGB(0.6f, 0.5f, 0.52f), 0.9f).ToBrush();
-                //scheme.ChatBackgroundHighlighted = new SolidBrush(Color.FromArgb(52, 0, 16));
-
                 var l = multiplier == -1 ? 0 : 20;
                 scheme.ChatBackgroundHighlighted = new SolidBrush(Color.FromArgb(55 + l, 20 + l, 24 + l));
                 scheme.ChatBackgroundUsernameHighlighted = new SolidBrush(Color.FromArgb(61 + l, 49 + l, 28 + l));
@@ -121,9 +115,7 @@ namespace Chatterino
                 scheme.ChatBackgroundWhisper = new SolidBrush(Color.FromArgb(20 + l, 40 + l, 70 + l));
                 scheme.ChatBackgroundSearchResult = new SolidBrush(rgb(0x043000));
                 scheme.ChatBackgroundHighlightedMessage = new SolidBrush(rgb(0x002e2b));
-
-                //scheme.ChatBackgroundResub = getColor(HSLColor.FromRGB(0.52f, 0.5f, 0.6f), 0.8f).ToBrush();
-                //scheme.ChatBackgroundWhisper = getColor(HSLColor.FromRGB(0.5f, 0.55f, 0.5f), 0.8f).ToBrush();
+                scheme.TabIsLiveBG = new SolidBrush(rgb(0x26730D));
             }
 
             scheme.Menu = getColor(gray, 0.90f).ToBrush();
@@ -136,13 +128,13 @@ namespace Chatterino
             scheme.ScrollbarThumb = getColor(gray, 0.8f).ToBrush();
 
             // Highlights
-            scheme.TabSelectedBG = highlight.WithLuminosity(0.5f).WithSaturation(0.5f).ToBrush();
-            scheme.TabHighlightedBG = highlight.WithLuminosity(0.8f).WithSaturation(0.5f).ToBrush();
-            scheme.TabNewMessageBG = highlight.WithLuminosity(0.9f).WithSaturation(0.5f).ToBrush();
-            scheme.TabNewMessageBG = new HatchBrush(HatchStyle.LightUpwardDiagonal, highlight.WithLuminosity(0.85f).WithSaturation(0.5f).ToColor(),
-                highlight.WithLuminosity(0.95f).WithSaturation(0.5f).ToColor());
+            scheme.TabSelectedBG = highlight.WithSaturation(0.5f).ToBrush();
+            scheme.TabHighlightedBG = highlight.WithLuminosity(highlight.Luminosity + 0.3f).WithSaturation(0.5f).ToBrush();
+            scheme.TabNewMessageBG = new HatchBrush(HatchStyle.LightUpwardDiagonal, highlight.WithLuminosity(scheme.IsLightTheme ? 0.85f : 0.65f).WithSaturation(0.5f).ToColor(), highlight.WithLuminosity(scheme.IsLightTheme ? 0.95f : 0.05f).WithSaturation(0.5f).ToColor());
+            scheme.TabHighlightedText = scheme.IsLightTheme ? Color.Black : Color.White;
             scheme.TextFocused = getColor(highlight, 0.25f).ToColor();
 
+            scheme.TabButtonsBG = highlight.WithLuminosity(scheme.IsLightTheme ? highlight.Luminosity : highlight.Luminosity + .3f).WithSaturation(.5f).ToBrush();
             return scheme;
         }
 

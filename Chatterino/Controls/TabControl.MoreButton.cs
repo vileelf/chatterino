@@ -68,7 +68,7 @@ namespace Chatterino.Controls
 
             if (mdown)
             {
-                backgroundBrush = App.ColorScheme.TabSelectedBG;
+                backgroundBrush = App.ColorScheme.TabButtonsBG;
 
                 plusBrush = new SolidBrush(App.ColorScheme.TabSelectedText);
 
@@ -78,14 +78,14 @@ namespace Chatterino.Controls
             {
                 backgroundBrush = App.ColorScheme.TabHoverBG;
 
-                plusBrush = App.ColorScheme.TabSelectedBG;
+                plusBrush = App.ColorScheme.TabButtonsBG;
             }
             else
             {
                 backgroundBrush = new SolidBrush(App.ColorScheme.TabPanelBG);
                 disposeBackgroundBrush = true;
 
-                plusBrush = App.ColorScheme.TabSelectedBG;
+                plusBrush = App.ColorScheme.TabButtonsBG;
             }
 
             e.Graphics.FillRectangle(backgroundBrush, ClientRectangle);

@@ -25,9 +25,9 @@ namespace Chatterino.Controls
 
         public EmoteList()
         {
-            mouseScrollMultiplyer = 0.2;
+            mouseScrollMultiplier = 0.2;
 
-            AllowMessageSeperator = false;
+            AllowMessageSeparator = false;
             EnableHatEmotes = false;
         }
         

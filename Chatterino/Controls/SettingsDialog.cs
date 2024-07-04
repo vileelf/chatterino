@@ -140,9 +140,9 @@ namespace Chatterino.Controls
             Action setNightThemeVisibility = () =>
             {
                 comboThemeNight.Visible = labelNightDesc.Visible = comboThemeNight.Visible =
-                labelThemeNight.Visible = labelThemeNightFrom.Visible = labelNightThemeUntil.Visible =
-                numThemeNightFrom.Visible = numThemeNightUntil.Visible =
-                checkBoxDifferentThemeAtNight.Checked;
+                    labelThemeNight.Visible = labelThemeNightFrom.Visible = labelNightThemeUntil.Visible =
+                    numThemeNightFrom.Visible = numThemeNightUntil.Visible =
+                    checkBoxDifferentThemeAtNight.Checked;
             };
 
             var originalTheme = comboTheme.Text = AppSettings.Theme;
@@ -994,32 +994,5 @@ namespace Chatterino.Controls
             }
             catch { }
         }
-
-        //RESET
-        //void btnResetAll_Click(object sender, EventArgs e)
-        //{
-        //    for (int i = 0; i < tabs.Count; i++)
-        //    {
-        //        ResetPage(i);
-        //    }
-        //}
-
-        //void btnResetCurrent_Click(object sender, EventArgs e)
-        //{
-        //    ResetPage(tabs.SelectedIndex);
-        //}
-
-        //private void ResetPage(int index)
-        //{
-        //    foreach (Control c in tabs[index].Panel.Controls)
-        //    {
-        //        KeyValuePair<string, object> k;
-        //        if (bindings.TryGetValue(c, out k))
-        //        {
-        //            if (c is CheckBox)
-        //                ((CheckBox)c).Checked = (bool)k.Value;
-        //        }
-        //    }
-        //}
     }
 }

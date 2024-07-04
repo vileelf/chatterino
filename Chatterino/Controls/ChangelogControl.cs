@@ -33,7 +33,7 @@ namespace Chatterino.Controls
 
             updateMessageBounds();
 
-            AllowMessageSeperator = false;
+            AllowMessageSeparator = false;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

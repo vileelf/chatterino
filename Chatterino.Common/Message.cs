@@ -585,30 +585,6 @@ namespace Chatterino.Common
                             });
                         }
                     }
-                    var curword = words[words.Count - 1];
-                    if (curword.Type == SpanType.LazyLoadedImage && words.Count > 1) {
-                        int v = words.Count - 2;
-                        if (EmoteModifiers.IsPreEmoteModifier(words[words.Count - 2].CopyText) && !curword.IsModifier && !curword.IsHat()) {
-                            for (int z = v; z >= 0; z--) {
-                                if (EmoteModifiers.IsPreEmoteModifier(words[z].CopyText)) {
-                                    curword.Modifiers.Add(words[z].CopyText);
-                                    words[z].IsModifying = true;
-                                } else if (!words[z].IsHat()) {
-                                    break;
-                                }
-                            }
-                        } else if (EmoteModifiers.IsPostEmoteModifier(curword.CopyText)) {
-                            for (int z = v; z >= 0; z--) {
-                                if (!words[z].IsModifier && !words[z].IsHat()) {
-                                    if (words[z].Type == SpanType.LazyLoadedImage) {
-                                        words[z].Modifiers.Add(curword.CopyText);
-                                        curword.IsModifying = true;
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
                 }
 
                 var splitLength = 0;
@@ -621,6 +597,33 @@ namespace Chatterino.Common
                 }
 
                 i += splitLength + 1;
+            }
+
+            for (var w = 1; w < words.Count; w++) {
+                var curword = words[w];
+                if (curword.Type == SpanType.LazyLoadedImage) {
+                    int v = w - 1;
+                    if (EmoteModifiers.IsPreEmoteModifier(words[v].CopyText) && !curword.IsModifier && !curword.IsHat()) {
+                        for (int z = v; z >= 0; z--) {
+                            if (EmoteModifiers.IsPreEmoteModifier(words[z].CopyText)) {
+                                curword.Modifiers.Add(words[z].CopyText);
+                                words[z].IsModifying = true;
+                            } else if (!words[z].IsHat()) {
+                                break;
+                            }
+                        }
+                    } else if (EmoteModifiers.IsPostEmoteModifier(curword.CopyText)) {
+                        for (int z = v; z >= 0; z--) {
+                            if (!words[z].IsModifier && !words[z].IsHat()) {
+                                if (words[z].Type == SpanType.LazyLoadedImage) {
+                                    words[z].Modifiers.Add(curword.CopyText);
+                                    curword.IsModifying = true;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             Words = words;

@@ -24,9 +24,9 @@ namespace Chatterino.Controls
 
         public MessageDisplay()
         {
-            mouseScrollMultiplyer = 0.2;
+            mouseScrollMultiplier = 0.2;
 
-            AllowMessageSeperator = false;
+            AllowMessageSeparator = false;
             EnableHatEmotes = false;
         }
 

@@ -298,8 +298,8 @@ namespace Chatterino {
 
             if (allowMessageSeperator && AppSettings.ChatSeparateMessages)
             {
-                g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorder, 0, yOffset + 1, message.Width + 128, yOffset + 1);
-                g.DrawLine(App.ColorScheme.ChatMessageSeperatorBorderInner, 0, yOffset, message.Width + 128, yOffset);
+                g.DrawLine(App.ColorScheme.ChatMessageSeparatorBorder, 0, yOffset + 1, message.Width + 128, yOffset + 1);
+                g.DrawLine(App.ColorScheme.ChatMessageSeparatorBorderInner, 0, yOffset, message.Width + 128, yOffset);
             }
         }
 
