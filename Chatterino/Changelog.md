@@ -1,7 +1,14 @@
 ﻿# changelog
 
+# 3.6
+-- Added support for emote modifiers from ffz and bttv like w! h! v! z! ffzY ffzX ffzW ffzCursed
+-- Fixed wide zero width emotes not being centered.
+-- Made dark mode also effect the tab colors.
+-- Fixed chat commands not allowing you to use the " character.
+-- Fixed bug where separate messages overwrite the last read message indicator.
+
 # 3.5
--- Added support for twitch replys. You can disable it in in settings.
+-- Added support for twitch replies. You can disable it in in settings.
 -- Added a setting to use single connection twitch. Should allow you to join 100 channels rather than 50 when twitch implements that limit.
 
 # 3.4.2
