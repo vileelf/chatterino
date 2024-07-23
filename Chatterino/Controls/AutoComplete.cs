@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Drawing;
 using Chatterino.Common;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace Chatterino.Controls
-{
+namespace Chatterino.Controls {
     public class AutoComplete : Form
     {
         
@@ -16,38 +11,50 @@ namespace Chatterino.Controls
             Invalidate();
             Update();
         }
-        
-        private ListBox AutoCompleteListBox = new ListBox();
+
+        private ListBox AutoCompleteListBox = new AutoCompleteListBox();
+        private CustomScrollBar CustomScrollBar = new CustomScrollBar() {
+            SmallChange = 1,
+            Minimum = 0
+        };
         
         public string []items {get;private set;} = null;
         private int selected = 0;
         private ChatControl _chatControl = null;
         private Brush textbrush = Brushes.Black;
         private Color backcolor = Color.White;
-        
+
         public AutoComplete(ChatControl chatControl) {
-            //Font = Fonts.GetFont(Common.FontType.Small);
-
-            //Fonts.FontChanged += (s, e) => Font = Fonts.GetFont(Common.FontType.Small);
-
             FormBorderStyle = FormBorderStyle.None;
 
             Padding = new Padding(8, 4, 8, 4);
             ShowInTaskbar = false;
-            
+
             StartPosition = FormStartPosition.Manual;
             SetStyle(ControlStyles.Selectable, false);
-            this.DoubleBuffered = true;
-            
-            //AutoCompleteListBox.Location = new Point(81, 69);
-            AutoCompleteListBox.Size = new Size(chatControl.Width<300?chatControl.Width:300, 95);
-            Size = AutoCompleteListBox.Size;
+            DoubleBuffered = true;
+
+            Size = new Size(chatControl.Width < 300 ? chatControl.Width : 300, 95);
+
+            CustomScrollBar.Size = new Size(SystemInformation.VerticalScrollBarWidth, Height - 1);
+            CustomScrollBar.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            CustomScrollBar.Scroll += (s, e) => {
+                if (CustomScrollBar.Value < 0 || CustomScrollBar.Value >= items.Length) {
+                    return;
+                }
+                selected = (int)CustomScrollBar.Value;
+                AutoCompleteListBox.SetSelected(selected, true);
+                CustomScrollBar.Invalidate();
+            };
+
+            AutoCompleteListBox.Size = new Size(Width - SystemInformation.VerticalScrollBarWidth, Height);
             AutoCompleteListBox.DrawMode = DrawMode.OwnerDrawFixed;
             AutoCompleteListBox.DrawItem += new DrawItemEventHandler(ListBox_DrawItem);
             AutoCompleteListBox.Enabled = false;
-            this.Enabled = false;
+            Enabled = true;
             Controls.Add(AutoCompleteListBox);
-            this._chatControl = chatControl;
+            Controls.Add(CustomScrollBar);
+            _chatControl = chatControl;
             AppSettings.ThemeChanged += (s, e) => setColors();
             setColors();
         }
@@ -74,6 +81,13 @@ namespace Chatterino.Controls
             this.items = items;
             AutoCompleteListBox.Items.Clear();
             AutoCompleteListBox.Items.AddRange(items);
+            CustomScrollBar.Maximum = items.Length - 1;
+            CustomScrollBar.Value = 0;
+            if (items.Length > 6) {
+                CustomScrollBar.Enabled = true;
+            } else {
+                CustomScrollBar.Enabled = false;
+            }
             selected = 0;
             AutoCompleteListBox.SetSelected(0, true);
         }
@@ -82,13 +96,18 @@ namespace Chatterino.Controls
             AutoCompleteListBox.Items.Clear();
             items = null;
             selected = 0;
+            CustomScrollBar.Maximum = 0;
+            CustomScrollBar.Value = 0;
+            CustomScrollBar.Enabled = false;
         }
         
         public void UpdateLocation(int left, int top) {
-            this.Location = new Point(left, top-this.Height);
-            this._chatControl = App.MainForm.Selected as ChatControl;
-            AutoCompleteListBox.Size = new Size(_chatControl.Width<300?_chatControl.Width:300, 95);
-            Size = AutoCompleteListBox.Size;
+            Location = new Point(left, top-this.Height);
+            _chatControl = App.MainForm.Selected as ChatControl;
+            Size = new Size(_chatControl.Width < 300 ? _chatControl.Width : 300, 95);
+            CustomScrollBar.Size = new Size(SystemInformation.VerticalScrollBarWidth, Height - 1);
+            CustomScrollBar.Location = new Point(Width - SystemInformation.VerticalScrollBarWidth - 1, 1);
+            AutoCompleteListBox.Size = new Size(Width - (CustomScrollBar.Enabled ? SystemInformation.VerticalScrollBarWidth : 0), Height);
         }
         
         public void MoveSelection(bool up) {
@@ -104,6 +123,7 @@ namespace Chatterino.Controls
                 }
             }
             AutoCompleteListBox.SetSelected(selected, true);
+            CustomScrollBar.Value = selected;
         }
         
         public int GetSelectionIndex() {
@@ -120,16 +140,19 @@ namespace Chatterino.Controls
         }
         
         const int WHEEL_DELTA = 120;
-        public void MouseWheel(MouseEventArgs e)
+        protected override void OnMouseWheel(MouseEventArgs e)
         {
             int numticks = e.Delta/WHEEL_DELTA;
             selected -= numticks;
             if (selected<0) {
                 selected = 0;
             } else if (selected >= items.Length) {
-                selected = items.Length;
+                selected = items.Length - 1;
             }
             AutoCompleteListBox.SetSelected(selected, true);
+            CustomScrollBar.Value = selected;
+            CustomScrollBar.Invalidate();
+            base.OnMouseWheel(e);
         }
         
         private const int WS_EX_TOPMOST = 0x00000008;
@@ -171,10 +194,12 @@ namespace Chatterino.Controls
         protected override void OnMouseMove(MouseEventArgs e)
         {
             int index;
-            index = AutoCompleteListBox.IndexFromPoint(e.X,e.Y);
-            if(index!=-1) {
+            index = AutoCompleteListBox.IndexFromPoint(e.X, e.Y);
+            if (index != -1) {
                 selected = index;
                 AutoCompleteListBox.SetSelected(selected, true);
+                CustomScrollBar.Value = selected;
+                CustomScrollBar.Invalidate();
             }
             base.OnMouseMove(e);
         }
@@ -183,10 +208,10 @@ namespace Chatterino.Controls
         {
             int index;
             index = AutoCompleteListBox.IndexFromPoint(e.X,e.Y);
-            if(index!=-1) {
+            if (index != -1) {
                 selected = index;
                 AutoCompleteListBox.SetSelected(selected, true);
-                this._chatControl = App.MainForm.Selected as ChatControl;
+                _chatControl = App.MainForm.Selected as ChatControl;
                 _chatControl.SelectAutoComplete();
             }
             base.OnMouseClick(e);

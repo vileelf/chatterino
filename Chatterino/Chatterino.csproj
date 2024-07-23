@@ -73,6 +73,9 @@
     <Compile Include="Controls\AddChatControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\AutoCompleteListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ChangelogControl.cs">
       <SubType>Component</SubType>
     </Compile>

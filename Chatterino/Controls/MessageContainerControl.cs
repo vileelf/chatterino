@@ -108,7 +108,11 @@ namespace Chatterino.Controls
             
             normalContextMenu.MenuItems.Add("Copy Selection ", (s, e) => { CopySelection(false);});
             normalContextMenu.MenuItems.Add("Append selection to message", (s, e) => {(App.MainForm.Selected as ChatControl)?.PasteText(GetSelectedText(false));});
-            
+            /*normalContextMenu.MenuItems.Add("Reply to message", (s, e) => {
+                if (normalMessage != null)
+                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + normalMessage?.MessageId + " ");
+            });*/
+
             Controls.Add(_scroll);
 
             App.GifEmoteFramesUpdated += App_GifEmoteFramesUpdated;
@@ -181,108 +185,103 @@ namespace Chatterino.Controls
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             try {
-                if ((App.MainForm.Selected as ChatControl) != null && (App.MainForm.Selected as ChatControl).AutoCompleteOpen) {
-                    ChatControl.AutoComplete.MouseWheel(e);
-                }
-                else {
-                    if (_scroll.Enabled)
+                if (_scroll.Enabled)
+                {
+                    var scrollDistance = (int)(e.Delta * AppSettings.ScrollMultiplyer);
+
+                    if (MessageLock != null)
                     {
-                        var scrollDistance = (int)(e.Delta * AppSettings.ScrollMultiplyer);
+                        var graphics = App.UseDirectX ? null : CreateGraphics();
 
-                        if (MessageLock != null)
+                        lock (MessageLock)
                         {
-                            var graphics = App.UseDirectX ? null : CreateGraphics();
-
-                            lock (MessageLock)
+                            if (e.Delta > 0)
                             {
-                                if (e.Delta > 0)
+                                var i = (int)_scroll.Value;
+                                var val = _scroll.Value;
+
+                                var scrollFactor = _scroll.Value % 1;
+                                var currentScrollLeft = (int)(scrollFactor * Messages[i].Height);
+
+                                for (; i >= 0; i--)
                                 {
-                                    var i = (int)_scroll.Value;
-                                    var val = _scroll.Value;
-
-                                    var scrollFactor = _scroll.Value % 1;
-                                    var currentScrollLeft = (int)(scrollFactor * Messages[i].Height);
-
-                                    for (; i >= 0; i--)
+                                    if (scrollDistance < currentScrollLeft)
                                     {
-                                        if (scrollDistance < currentScrollLeft)
-                                        {
-                                            val -= scrollFactor * ((double)scrollDistance / currentScrollLeft);
-                                            _scroll.Value = val;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            scrollDistance -= currentScrollLeft;
-                                            val -= scrollFactor;
-                                        }
-
-                                        if (i == 0)
-                                        {
-                                            _scroll.Value = 0;
-                                        }
-                                        else
-                                        {
-                                            Messages[i - 1].CalculateBounds(graphics,
-                                                Width - MessagePadding.Left - MessagePadding.Right, EnableHatEmotes);
-
-                                            scrollFactor = 1;
-                                            currentScrollLeft = Messages[i - 1].Height;
-                                        }
+                                        val -= scrollFactor * ((double)scrollDistance / currentScrollLeft);
+                                        _scroll.Value = val;
+                                        break;
                                     }
-                                }
-                                else
-                                {
-                                    scrollDistance = -scrollDistance;
-
-                                    var i = (int)_scroll.Value;
-                                    var val = _scroll.Value;
-
-                                    var scrollFactor = 1 - (_scroll.Value % 1);
-                                    var currentScrollLeft = (int)(scrollFactor * Messages[i].Height);
-
-                                    for (; i < Messages.Length; i++)
+                                    else
                                     {
-                                        if (scrollDistance < currentScrollLeft)
-                                        {
-                                            val += scrollFactor * ((double)scrollDistance / currentScrollLeft);
-                                            _scroll.Value = val;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            scrollDistance -= currentScrollLeft;
-                                            val += scrollFactor;
-                                        }
-
-                                        if (i == Messages.Length - 1)
-                                        {
-                                            //_scroll.Value = 0;
-                                        }
-                                        else
-                                        {
-                                            Messages[i + 1].CalculateBounds(graphics, Width - MessagePadding.Left - MessagePadding.Right, EnableHatEmotes);
-
-                                            scrollFactor = 1;
-                                            currentScrollLeft = Messages[i + 1].Height;
-                                        }
+                                        scrollDistance -= currentScrollLeft;
+                                        val -= scrollFactor;
                                     }
 
+                                    if (i == 0)
+                                    {
+                                        _scroll.Value = 0;
+                                    }
+                                    else
+                                    {
+                                        Messages[i - 1].CalculateBounds(graphics,
+                                            Width - MessagePadding.Left - MessagePadding.Right, EnableHatEmotes);
+
+                                        scrollFactor = 1;
+                                        currentScrollLeft = Messages[i - 1].Height;
+                                    }
                                 }
                             }
+                            else
+                            {
+                                scrollDistance = -scrollDistance;
 
-                            graphics?.Dispose();
+                                var i = (int)_scroll.Value;
+                                var val = _scroll.Value;
+
+                                var scrollFactor = 1 - (_scroll.Value % 1);
+                                var currentScrollLeft = (int)(scrollFactor * Messages[i].Height);
+
+                                for (; i < Messages.Length; i++)
+                                {
+                                    if (scrollDistance < currentScrollLeft)
+                                    {
+                                        val += scrollFactor * ((double)scrollDistance / currentScrollLeft);
+                                        _scroll.Value = val;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        scrollDistance -= currentScrollLeft;
+                                        val += scrollFactor;
+                                    }
+
+                                    if (i == Messages.Length - 1)
+                                    {
+                                        //_scroll.Value = 0;
+                                    }
+                                    else
+                                    {
+                                        Messages[i + 1].CalculateBounds(graphics, Width - MessagePadding.Left - MessagePadding.Right, EnableHatEmotes);
+
+                                        scrollFactor = 1;
+                                        currentScrollLeft = Messages[i + 1].Height;
+                                    }
+                                }
+
+                            }
                         }
 
-                        if (e.Delta > 0)
-                            scrollAtBottom = false;
-                        else
-                            checkScrollBarPosition();
-
-                        updateMessageBounds();
-
-                        ProposeInvalidation();
+                        graphics?.Dispose();
                     }
+
+                    if (e.Delta > 0)
+                        scrollAtBottom = false;
+                    else
+                        checkScrollBarPosition();
+
+                    updateMessageBounds();
+
+                    ProposeInvalidation();
                 }
             } catch (Exception ex) {
                 GuiEngine.Current.log(ex.ToString());

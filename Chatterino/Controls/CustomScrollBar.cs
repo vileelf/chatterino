@@ -35,7 +35,7 @@ namespace Chatterino.Controls
             }
         }
 
-        private double min;
+        private double min = 0;
         object minLock = new object();
 
         public double Minimum
@@ -81,14 +81,14 @@ namespace Chatterino.Controls
             }
         }
 
-        private double value;
+        private double value = 0;
 
         public double Value
         {
             get { return value; }
             set
             {
-                this.value = value < 0 ? 0 : (value > max - large ? max - large : value);
+                this.value = value < min ? min : (value > max - large ? max - large : value);
                 updateScroll();
 
                 this.Invoke(Update);
