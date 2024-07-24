@@ -105,16 +105,15 @@ namespace Chatterino.Controls
             urlContextMenu.MenuItems.Add(new MenuItem("Open in Browser", (s, e) => GuiEngine.Current.HandleLink(urlContextMenuLink)));
             urlContextMenu.MenuItems.Add(new MenuItem("Copy link", (s, e) => Clipboard.SetText(urlContextMenuLink.Value as string ?? "")));
             replyMenuItemLink = urlContextMenu.MenuItems.Add("Reply to message", (s, e) => {
-                if (clickedMessage != null)
-                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
+                (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
             });
 
             normalContextMenu.MenuItems.Add("Copy Selection ", (s, e) => { CopySelection(false);});
             normalContextMenu.MenuItems.Add("Append selection to message", (s, e) => {(App.MainForm.Selected as ChatControl)?.PasteText(GetSelectedText(false));});
             replyMenuItem = normalContextMenu.MenuItems.Add("Reply to message", (s, e) => {
-                if (clickedMessage != null)
-                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
+                (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
             });
+
             Controls.Add(_scroll);
 
             App.GifEmoteFramesUpdated += App_GifEmoteFramesUpdated;
@@ -416,7 +415,7 @@ namespace Chatterino.Controls
             var msg = MessageAtPoint(e.Location, out index);
             clickedMessage = msg;
 
-            if (clickedMessage != null && clickedMessage.MessageId != null) {
+            if (AppSettings.EnableReplys && clickedMessage != null && clickedMessage.MessageId != null) {
                 replyMenuItem.Visible = true;
                 replyMenuItemLink.Visible = true;
             } else {
