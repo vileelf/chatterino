@@ -974,6 +974,7 @@ namespace Chatterino.Common
                                         foreach(Message targetmsg in messages) {
                                             if (targetmsg.MessageId == msgId) {
                                                 targetmsg.Disabled = true;
+                                                messages.Add(new Message($"{targetmsg.Username}'s message has been deleted by a moderator.", HSLColor.Gray, true));
                                                 break;
                                             }
                                         }
@@ -1586,6 +1587,7 @@ namespace Chatterino.Common
                 if (msg.MessageId == msgId)
                 {
                     msg.Disabled = true;
+                    AddMessage(new Message($"{msg.Username}'s message has been deleted by a moderator.", HSLColor.Gray, true));
                     break;
                 }
             }
