@@ -27,17 +27,11 @@ namespace Chatterino.Controls
 
         public bool EnableHatEmotes { get; protected set; } = true;
 
-        static ContextMenu urlContextMenu;
+        private ContextMenu urlContextMenu = new ContextMenu();
         private ContextMenu normalContextMenu = new ContextMenu();
-        static Link urlContextMenuLink;
-
-        static MessageContainerControl()
-        {
-            urlContextMenu = new ContextMenu();
-            urlContextMenu.MenuItems.Add(new MenuItem("Open in Browser", (s, e) => GuiEngine.Current.HandleLink(urlContextMenuLink)));
-            urlContextMenu.MenuItems.Add(new MenuItem("Copy link", (s, e) => Clipboard.SetText(urlContextMenuLink.Value as string ?? "")));
-            
-        }
+        private Link urlContextMenuLink;
+        private MenuItem replyMenuItem;
+        private MenuItem replyMenuItemLink;
 
         protected bool scrollAtBottom = true;
 
@@ -86,6 +80,8 @@ namespace Chatterino.Controls
 
         protected object bufferLock = new object();
 
+        private Message clickedMessage = null;
+
         // Constructor
         public MessageContainerControl()
         {
@@ -105,14 +101,20 @@ namespace Chatterino.Controls
 
                 ProposeInvalidation();
             };
-            
+
+            urlContextMenu.MenuItems.Add(new MenuItem("Open in Browser", (s, e) => GuiEngine.Current.HandleLink(urlContextMenuLink)));
+            urlContextMenu.MenuItems.Add(new MenuItem("Copy link", (s, e) => Clipboard.SetText(urlContextMenuLink.Value as string ?? "")));
+            replyMenuItemLink = urlContextMenu.MenuItems.Add("Reply to message", (s, e) => {
+                if (clickedMessage != null)
+                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
+            });
+
             normalContextMenu.MenuItems.Add("Copy Selection ", (s, e) => { CopySelection(false);});
             normalContextMenu.MenuItems.Add("Append selection to message", (s, e) => {(App.MainForm.Selected as ChatControl)?.PasteText(GetSelectedText(false));});
-            /*normalContextMenu.MenuItems.Add("Reply to message", (s, e) => {
-                if (normalMessage != null)
-                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + normalMessage?.MessageId + " ");
-            });*/
-
+            replyMenuItem = normalContextMenu.MenuItems.Add("Reply to message", (s, e) => {
+                if (clickedMessage != null)
+                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + clickedMessage?.MessageId + " ");
+            });
             Controls.Add(_scroll);
 
             App.GifEmoteFramesUpdated += App_GifEmoteFramesUpdated;
@@ -412,6 +414,16 @@ namespace Chatterino.Controls
                 (App.MainForm.Selected as ChatControl)?.CloseAutocomplete();
             }
             var msg = MessageAtPoint(e.Location, out index);
+            clickedMessage = msg;
+
+            if (clickedMessage != null && clickedMessage.MessageId != null) {
+                replyMenuItem.Visible = true;
+                replyMenuItemLink.Visible = true;
+            } else {
+                replyMenuItem.Visible = false;
+                replyMenuItemLink.Visible = false;
+            }
+
             if (msg != null)
             {
                 var word = msg.WordAtPoint(new CommonPoint(e.X - MessagePadding.Left, e.Y - msg.Y));
@@ -430,7 +442,6 @@ namespace Chatterino.Controls
                         {
                             if (mouseDownLink.Type == LinkType.Url)
                             {
-                                urlContextMenuLink = mouseDownLink;
                                 urlContextMenu.Show(this, e.Location);
                             }
                             else
