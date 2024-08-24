@@ -3,22 +3,16 @@ using Chatterino.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
-namespace Chatterino
-{
+namespace Chatterino {
     public partial class MainForm : Form
     {
         private ColumnTabPage lastTabPage = null;
-
+        private bool hasLoadedSize = false;
         public MainForm()
         {
             InitializeComponent();
@@ -29,6 +23,7 @@ namespace Chatterino
                 StartPosition = FormStartPosition.Manual;
                 Location = new Point(Math.Max(0, AppSettings.WindowX), Math.Max(0, AppSettings.WindowY));
                 Size = new Size(Math.Max(AppSettings.WindowWidth, 200), Math.Max(AppSettings.WindowHeight, 200));
+                hasLoadedSize = true;
             }
             catch { }
 
@@ -451,6 +446,22 @@ namespace Chatterino
                     }
                 }
             }
+        }
+
+        protected override void OnLocationChanged(EventArgs e) {
+            if (!hasLoadedSize) { base.OnLocationChanged(e); return; }
+            AppSettings.WindowX = Location.X;
+            AppSettings.WindowY = Location.Y;
+            AppSettings.Save(null);
+            base.OnLocationChanged(e);
+        }
+
+        protected override void OnSizeChanged(EventArgs e) {
+            if (!hasLoadedSize) { base.OnSizeChanged(e); return; }
+            AppSettings.WindowWidth = Width;
+            AppSettings.WindowHeight = Height;
+            AppSettings.Save(null);
+            base.OnSizeChanged(e);
         }
 
         protected override void OnClosing(CancelEventArgs e)
