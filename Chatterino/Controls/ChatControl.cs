@@ -793,6 +793,18 @@ namespace Chatterino.Controls
                     UpdateAutocomplete();
                     break;
 
+                //undo
+                case Keys.Control | Keys.Z:
+                    Input.Logic.Undo();
+                    UpdateAutocomplete();
+                    break;
+
+                //redo
+                case Keys.Control | Keys.Y:
+                    Input.Logic.Redo();
+                    UpdateAutocomplete();
+                    break;
+
                 // home / end
                 case Keys.Home:
                     Input.Logic.SetCaretPosition(0);

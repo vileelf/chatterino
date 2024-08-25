@@ -24,11 +24,16 @@ namespace Chatterino.Common
         }
 
         private string text = "";
+
+        private readonly Stack<string> undoStack = new Stack<string>(10);
+        private readonly Stack<string> redoStack = new Stack<string>(10);
+
         public string Text
         {
             get { return text; }
             private set
             {
+                undoStack.Push(text);
                 text = value;
                 Message = new Message(value);
 
@@ -101,11 +106,27 @@ namespace Chatterino.Common
             invokeChanged();
         }
 
+        public void Undo() {
+            if (undoStack.Peek() == null) { return; }
+            redoStack.Push(text);
+            SetText(undoStack.Pop());
+            undoStack.Pop();
+            invokeChanged();
+        }
+
+        public void Redo() {
+            if (redoStack.Peek() == null) { return; }
+            undoStack.Push(text);
+            SetText(redoStack.Pop());
+            invokeChanged();
+        }
+
         public void Clear()
         {
             SelectionLength = SelectionStart = CaretPosition = 0;
             Text = "";
-
+            undoStack.Clear();
+            redoStack.Clear();
             invokeChanged();
         }
 
