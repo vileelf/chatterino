@@ -110,13 +110,12 @@ namespace Chatterino.Common
             if (undoStack.Peek() == null) { return; }
             redoStack.Push(text);
             SetText(undoStack.Pop());
-            undoStack.Pop();
+            undoStack.Pop(); //SetText pushes to the stack so we have to pop it again.
             invokeChanged();
         }
 
         public void Redo() {
             if (redoStack.Peek() == null) { return; }
-            undoStack.Push(text);
             SetText(redoStack.Pop());
             invokeChanged();
         }
