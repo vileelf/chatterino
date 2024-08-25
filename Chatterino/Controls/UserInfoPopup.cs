@@ -220,7 +220,10 @@ namespace Chatterino.Controls
             // show profile
             btnProfile.Click += (s, e) =>
             {
+                (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                App.MainForm.Focus();
                 Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
+
             };
 
             if (Common.IrcManager.Account.IsAnon || string.Equals(data.UserName, Common.IrcManager.Account.Username, StringComparison.OrdinalIgnoreCase))
@@ -413,6 +416,8 @@ namespace Chatterino.Controls
 
                 btnFollow.Click += (s, e) =>
                 {
+                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                    App.MainForm.Focus();
                     Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
                 };
             }
