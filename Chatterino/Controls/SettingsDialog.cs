@@ -124,10 +124,15 @@ namespace Chatterino.Controls
             {
                 if (dataGridViewAccounts.SelectedCells.Count != 1) return;
 
+
                 var username = (string)dataGridViewAccounts.SelectedCells[0].Value;
+                if (MessageBox.Show($"Are you sure you want to remove {username}?", "Remove account", MessageBoxButtons.YesNo) == DialogResult.No) {
+                    return;
+                }
 
                 AccountManager.RemoveAccount(username);
 
+                dataGridViewAccounts.Rows.RemoveAt(dataGridViewAccounts.SelectedCells[0].RowIndex);
                 buttonAccountRemove.Enabled = dataGridViewAccounts.RowCount != 0;
             };
 
