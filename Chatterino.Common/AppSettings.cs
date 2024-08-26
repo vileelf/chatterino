@@ -110,16 +110,12 @@ namespace Chatterino.Common
             {
                 case "White":
                     return true;
-                    break;
                 case "Light":
                     return true;
-                    break;
                 case "Dark":
                     return false;
-                    break;
                 case "Black":
                     return false;
-                    break;
             }
             return true;
         }
@@ -146,8 +142,6 @@ namespace Chatterino.Common
                     theme = (NightThemeStart <= now.Hour && NightThemeEnd > now.Hour) ? NightTheme : Theme;
                 }
             }
-
-            Console.WriteLine(theme);
 
             if (theme != CurrentTheme)
             {

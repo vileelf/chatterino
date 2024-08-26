@@ -348,7 +348,6 @@ namespace Chatterino.Controls
                     {
                         foreach (var tab in doc.Elements().First().Elements("tab"))
                         {
-                            Console.WriteLine("tab");
 
                             var page = new ColumnTabPage(this);
 
@@ -370,7 +369,6 @@ namespace Chatterino.Controls
                                 {
                                     if (chat.Attribute("type")?.Value == "twitch")
                                     {
-                                        Console.WriteLine("added chat");
 
                                         var channel = chat.Attribute("channel")?.Value;
                                         try

@@ -195,8 +195,6 @@ namespace Chatterino.Controls
             {
                 Console.WriteLine("error:" + exc);
             }
-
-            Console.WriteLine(menu.MenuItems.Count);
         }
 
         // CONSTRUCTOR

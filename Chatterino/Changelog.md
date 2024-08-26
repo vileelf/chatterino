@@ -1,5 +1,14 @@
 ﻿# changelog
 
+# 3.7
+-- Fixed bug making it so you can't type after clicking on the profile button in the user popup.
+-- Made the width/height and location of chatterino save when they are changed.
+-- Added support for the ctrl+z (undo) and ctrl+y (redo) hotkeys when using chat.
+-- Added a reply option to the right click menu when you right click on someone's message.
+-- Added a message when a users message was deleted.
+-- Made it so you can click and drag the scrollbar on the autocomplete popup to scroll through the autocomplete options.
+-- Fixed the remove account button not removing the account from the list and added a confirm dialog asking if your sure.
+
 # 3.6
 -- Added support for emote modifiers from ffz and bttv like w! h! v! z! ffzY ffzX ffzW ffzCursed
 -- Fixed wide zero width emotes not being centered.

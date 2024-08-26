@@ -392,11 +392,8 @@ namespace Chatterino.Common {
 
         private void decodeWebP(MemoryStream stream) {
             Bitmap bmp = null;
-            Bitmap firstbmp = null;
-            bool firstbitmap = true;
             BitmapData bmpData = null;
             IntPtr dec = (IntPtr)0;
-            const int UintBytes = 4;
             byte[] rawWebP = stream.ToArray();
             UIntPtr dataSize = (UIntPtr)rawWebP.Length;
             GCHandle pinnedWebP = GCHandle.Alloc(rawWebP, GCHandleType.Pinned);
