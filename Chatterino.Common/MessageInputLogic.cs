@@ -72,6 +72,7 @@ namespace Chatterino.Common
         public void InsertText(string text)
         {
             removeSelection();
+            undoStack.Pop(); //remove change due to removing selection from the stack.
 
             Text = Text.Insert(CaretPosition, text);
 
