@@ -90,6 +90,7 @@ namespace Chatterino.Controls {
             }
             selected = 0;
             AutoCompleteListBox.SetSelected(0, true);
+            CustomScrollBar.Invalidate();
         }
         
         public void ClearItems() {
@@ -124,6 +125,7 @@ namespace Chatterino.Controls {
             }
             AutoCompleteListBox.SetSelected(selected, true);
             CustomScrollBar.Value = selected;
+            CustomScrollBar.Invalidate();
         }
         
         public int GetSelectionIndex() {

@@ -71,13 +71,13 @@ namespace Chatterino.Common
         // public functions
         public void InsertText(string text)
         {
-            var removeSelection = this.removeSelection();
+            var selectionRemoved = removeSelection();
 
             Text = Text.Insert(CaretPosition, text);
 
-            if (removeSelection) { undoStack.Pop(); } //remove change due to removing selection from the stack.
+            if (selectionRemoved) { undoStack.Pop(); } //remove change due to removing selection from the stack.
 
-            CaretPosition = CaretPosition + text.Length;
+            CaretPosition += text.Length;
             SelectionLength = 0;
             SelectionStart = CaretPosition;
 
