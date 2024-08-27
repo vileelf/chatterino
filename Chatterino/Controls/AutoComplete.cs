@@ -39,9 +39,7 @@ namespace Chatterino.Controls {
             CustomScrollBar.Size = new Size(SystemInformation.VerticalScrollBarWidth, Height - 1);
             CustomScrollBar.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             CustomScrollBar.Scroll += (s, e) => {
-                if (CustomScrollBar.Value < 0 || CustomScrollBar.Value >= items.Length) {
-                    return;
-                }
+                if (CustomScrollBar.Value < 0 || CustomScrollBar.Value >= items.Length) { return; }
                 selected = (int)CustomScrollBar.Value;
                 AutoCompleteListBox.SetSelected(selected, true);
                 CustomScrollBar.Invalidate();

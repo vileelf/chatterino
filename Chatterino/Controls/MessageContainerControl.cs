@@ -392,7 +392,7 @@ namespace Chatterino.Controls
                     }
                     if (word.Link != null)
                     {
-                        mouseDownLink = word.Link;
+                        mouseDownLink = urlContextMenuLink = word.Link;
                     }
                 }
                 graphics?.Dispose();
