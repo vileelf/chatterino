@@ -364,7 +364,11 @@ namespace Chatterino
                 // Install updates
                 if (installUpdatesOnExit)
                 {
-                    Process.Start(UpdaterPath, restartAfterUpdates ? "--restart" :"");
+                    try {
+                        Process.Start(UpdaterPath, restartAfterUpdates ? "--restart" : "");
+                    } catch (Exception e) {
+                        MessageBox.Show($"Failed to install update. You could try running the updater manually at {UpdaterPath}.");
+                    }
                     System.Threading.Thread.Sleep(1000);
                 }
             };
