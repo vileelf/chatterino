@@ -366,7 +366,7 @@ namespace Chatterino
                 {
                     try {
                         Process.Start(UpdaterPath, restartAfterUpdates ? "--restart" : "");
-                    } catch (Exception e) {
+                    } catch (Exception ex) {
                         MessageBox.Show($"Failed to install update. You could try running the updater manually at {UpdaterPath}.");
                     }
                     System.Threading.Thread.Sleep(1000);

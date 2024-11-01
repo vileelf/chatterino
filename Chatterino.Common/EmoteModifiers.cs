@@ -21,6 +21,15 @@ namespace Chatterino.Common
                 x.Tooltip += "v!,";
                 return true;
             } },
+            { "c!",  (x) => {
+                var image = ((LazyLoadedImage)x.Value).Image;
+                if (image == null) {
+                    return false;
+                }
+                image.ConvertToGreyScale();
+                x.Tooltip += "c!,";
+                return true;
+            } },
             { "z!",  (x) => { if (x.X != 0) {x.XOffset -= 12; } x.Tooltip += "z!,";  return true; } },
         };
 
