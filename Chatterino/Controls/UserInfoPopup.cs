@@ -222,25 +222,23 @@ namespace Chatterino.Controls
             {
                 (App.MainForm.Selected as ChatControl)?.Input.Focus();
                 App.MainForm.Focus();
-                Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
+                GuiEngine.Current.HandleLink(new Link(LinkType.Url, "https://www.twitch.tv/" + data.UserName));
 
             };
 
-            if (Common.IrcManager.Account.IsAnon || string.Equals(data.UserName, Common.IrcManager.Account.Username, StringComparison.OrdinalIgnoreCase))
-            {
-                btnBan.Visible = false;
-                btnUnban.Visible = false;
+            if (IrcManager.Account.IsAnon || string.Equals(data.UserName, IrcManager.Account.Username, StringComparison.OrdinalIgnoreCase)) {
                 btnMessage.Visible = false;
                 btnReply.Visible = false;
                 btnNotes.Visible = false;
                 btnWhisper.Visible = false;
                 btnIgnore.Visible = false;
                 btnFollow.Visible = false;
-
-                btnMod.Visible = false;
-                btnUnmod.Visible = false;
                 btnIgnoreHighlights.Visible = false;
+            }
 
+            if (IrcManager.Account.IsAnon || !data.Channel.IsModOrBroadcaster || string.Equals(data.UserName, IrcManager.Account.Username, StringComparison.OrdinalIgnoreCase) || string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase)) {
+                btnBan.Visible = false;
+                btnUnban.Visible = false;
                 btnTimeout1Day.Visible = false;
                 btnTimeout1Month.Visible = false;
                 btnTimeout2Hours.Visible = false;
@@ -249,178 +247,158 @@ namespace Chatterino.Controls
                 btnTimeout5Min.Visible = false;
                 btnTimeout7Days.Visible = false;
                 btnPurge.Visible = false;
+            }
+
+            if (IrcManager.Account.IsAnon || !data.Channel.IsModOrBroadcaster || String.IsNullOrEmpty(data.MessageId)) {
                 btnDelete.Visible = false;
+            }
+
+
+            if (!AppSettings.EnableReplys) {
+                btnReply.Visible = false;
+            }
+
+            if (data.Channel.IsBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                btnMod.Click += (s, e) =>
+                {
+                    data.Channel.SendMessage("/mod " + data.UserName);
+                };
+                btnUnmod.Click += (s, e) =>
+                {
+                    data.Channel.SendMessage("/unmod " + data.UserName);
+                };
             }
             else
             {
-                if (data.Channel.IsModOrBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (String.IsNullOrEmpty(data.MessageId)) {
-                        btnDelete.Visible = false;
-                    }
-                }
-                else
-                {
-                    btnBan.Visible = false;
-                    btnUnban.Visible = false;
+                btnMod.Visible = false;
+                btnUnmod.Visible = false;
+            }
 
-                    btnTimeout1Day.Visible = false;
-                    btnTimeout1Month.Visible = false;
-                    btnTimeout2Hours.Visible = false;
-                    btnTimeout30Mins.Visible = false;
-                    btnTimeout3Days.Visible = false;
-                    btnTimeout5Min.Visible = false;
-                    btnTimeout7Days.Visible = false;
-                    btnPurge.Visible = false;
-                    btnDelete.Visible = false;
-                }
+            // ban
+            btnBan.Click += (s, e) =>
+            {
+                data.Channel.SendMessage("/ban " + data.UserName);
+            };
 
-                if (!AppSettings.EnableReplys) {
-                    btnReply.Visible = false;
-                }
+            btnUnban.Click += (s, e) =>
+            {
+                data.Channel.SendMessage("/unban " + data.UserName);
+            };
 
-                if (data.Channel.IsBroadcaster && !string.Equals(data.UserName, data.Channel.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    btnMod.Click += (s, e) =>
-                    {
-                        data.Channel.SendMessage("/mod " + data.UserName);
-                    };
-                    btnUnmod.Click += (s, e) =>
-                    {
-                        data.Channel.SendMessage("/unmod " + data.UserName);
-                    };
-                }
-                else
-                {
-                    btnMod.Visible = false;
-                    btnUnmod.Visible = false;
-                }
-
-                // ban
-                btnBan.Click += (s, e) =>
-                {
-                    data.Channel.SendMessage("/ban " + data.UserName);
-                };
-
-                btnUnban.Click += (s, e) =>
-                {
-                    data.Channel.SendMessage("/unban " + data.UserName);
-                };
-
-                // purge user
-                btnPurge.Click += (s, e) =>
-                {
-                    data.Channel.SendMessage("/timeout " + data.UserName + " 1");
-                };
+            // purge user
+            btnPurge.Click += (s, e) =>
+            {
+                data.Channel.SendMessage("/timeout " + data.UserName + " 1");
+            };
                 
-                // Delete message
-                btnDelete.Click += (s, e) =>
+            // Delete message
+            btnDelete.Click += (s, e) =>
+            {
+                data.Channel.SendMessage("/delete " + data.MessageId);
+            };
+
+            // Reply to message
+            btnReply.Click += (s, e) => {
+                (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + data.MessageId + " ");
+                (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                App.MainForm.Focus();
+            };
+
+            // ignore user
+            btnIgnore.Text = Common.IrcManager.IsIgnoredUser(data.UserName) ? "Unignore" : "Ignore";
+
+            btnIgnore.Click += (s, e) =>
+            {
+                if (Common.IrcManager.IsIgnoredUser(data.UserName))
                 {
-                    data.Channel.SendMessage("/delete " + data.MessageId);
-                };
-
-                // Reply to message
-                btnReply.Click += (s, e) => {
-                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText("/reply " + data.MessageId + " ");
-                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
-                    App.MainForm.Focus();
-                };
-
-                // ignore user
-                btnIgnore.Text = Common.IrcManager.IsIgnoredUser(data.UserName) ? "Unignore" : "Ignore";
-
-                btnIgnore.Click += (s, e) =>
-                {
-                    if (Common.IrcManager.IsIgnoredUser(data.UserName))
-                    {
-                        string message;
-
-                        if (!Common.IrcManager.TryRemoveIgnoredUser(data.UserName, data.UserId, out message))
-                        {
-                            MessageBox.Show(message, "Error while ignoring user.");
-                        }
-                    }
-                    else
-                    {
-                        string message;
-
-                        if (!Common.IrcManager.TryAddIgnoredUser(data.UserName, data.UserId, out message))
-                        {
-                            MessageBox.Show(message, "Error while unignoring user.");
-                        }
-                    }
-
-                    btnIgnore.Text = Common.IrcManager.IsIgnoredUser(data.UserName) ? "Unignore" : "Ignore";
-                };
-
-                // message user
-                btnMessage.Click += (s, e) =>
-                {
-                    (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText($"/w " + data.UserName + " ");
-                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
-                    App.MainForm.Focus();
-                };
-                
-                // notes
-                btnNotes.Click += (s, e) =>
-                {
-                    using (InputDialogForm dialog = new InputDialogForm("User Notes") { Value = notes }) {
-                        notedialog = true;
-                        DialogResult res = dialog.ShowDialog();
-                        notedialog = false;
-                        this.Focus();
-                        if (res == DialogResult.OK)
-                        {
-                            notes = dialog.Value;
-                            AppSettings.SetNotes(data.UserId, notes);
-                            lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
-                        }
-                    }
-                };
-
-                // highlight ignore
-                btnIgnoreHighlights.Click += (s, e) =>
-                {
-                    if (AppSettings.HighlightIgnoredUsers.ContainsKey(data.UserName))
-                    {
-                        object tmp;
-
-                        AppSettings.HighlightIgnoredUsers.TryRemove(data.UserName, out tmp);
-
-                        btnIgnoreHighlights.Text = "Disable Highlights";
-                    }
-                    else
-                    {
-                        AppSettings.HighlightIgnoredUsers[data.UserName] = null;
-
-                        btnIgnoreHighlights.Text = "Enable Highlights";
-                    }
-                };
-
-                btnIgnoreHighlights.Text = AppSettings.HighlightIgnoredUsers.ContainsKey(data.UserName) ? "Enable Highlights" : "Disable Highlights";
-
-                // follow user
-                var isFollowing = false;
-
-                Task.Run(() =>
-                {
-                    bool result;
                     string message;
 
-                    Common.IrcManager.TryCheckIfFollowing(data.UserName, data.UserId, out result, out message);
-
-                    isFollowing = result;
-
-                    btnFollow.Invoke(() => btnFollow.Text = isFollowing ? "Unfollow" : "Follow");
-                });
-
-                btnFollow.Click += (s, e) =>
+                    if (!Common.IrcManager.TryRemoveIgnoredUser(data.UserName, data.UserId, out message))
+                    {
+                        MessageBox.Show(message, "Error while ignoring user.");
+                    }
+                }
+                else
                 {
-                    (App.MainForm.Selected as ChatControl)?.Input.Focus();
-                    App.MainForm.Focus();
-                    Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
-                };
-            }
+                    string message;
+
+                    if (!Common.IrcManager.TryAddIgnoredUser(data.UserName, data.UserId, out message))
+                    {
+                        MessageBox.Show(message, "Error while unignoring user.");
+                    }
+                }
+
+                btnIgnore.Text = Common.IrcManager.IsIgnoredUser(data.UserName) ? "Unignore" : "Ignore";
+            };
+
+            // message user
+            btnMessage.Click += (s, e) =>
+            {
+                (App.MainForm.Selected as ChatControl)?.Input.Logic.SetText($"/w " + data.UserName + " ");
+                (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                App.MainForm.Focus();
+            };
+                
+            // notes
+            btnNotes.Click += (s, e) =>
+            {
+                using (InputDialogForm dialog = new InputDialogForm("User Notes") { Value = notes }) {
+                    notedialog = true;
+                    DialogResult res = dialog.ShowDialog();
+                    notedialog = false;
+                    this.Focus();
+                    if (res == DialogResult.OK)
+                    {
+                        notes = dialog.Value;
+                        AppSettings.SetNotes(data.UserId, notes);
+                        lblNotes.Invoke(() => lblNotes.Text = $"Notes: {notes}");
+                    }
+                }
+            };
+
+            // highlight ignore
+            btnIgnoreHighlights.Click += (s, e) =>
+            {
+                if (AppSettings.HighlightIgnoredUsers.ContainsKey(data.UserName))
+                {
+                    object tmp;
+
+                    AppSettings.HighlightIgnoredUsers.TryRemove(data.UserName, out tmp);
+
+                    btnIgnoreHighlights.Text = "Disable Highlights";
+                }
+                else
+                {
+                    AppSettings.HighlightIgnoredUsers[data.UserName] = null;
+
+                    btnIgnoreHighlights.Text = "Enable Highlights";
+                }
+            };
+
+            btnIgnoreHighlights.Text = AppSettings.HighlightIgnoredUsers.ContainsKey(data.UserName) ? "Enable Highlights" : "Disable Highlights";
+
+            // follow user
+            var isFollowing = false;
+
+            Task.Run(() =>
+            {
+                bool result;
+                string message;
+
+                Common.IrcManager.TryCheckIfFollowing(data.UserName, data.UserId, out result, out message);
+
+                isFollowing = result;
+
+                btnFollow.Invoke(() => btnFollow.Text = isFollowing ? "Unfollow" : "Follow");
+            });
+
+            btnFollow.Click += (s, e) =>
+            {
+                (App.MainForm.Selected as ChatControl)?.Input.Focus();
+                App.MainForm.Focus();
+                Common.GuiEngine.Current.HandleLink(new Common.Link(Common.LinkType.Url, "https://www.twitch.tv/" + data.UserName));
+            };
         }
 
         private void updateLocation() {

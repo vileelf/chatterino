@@ -46,7 +46,15 @@ namespace Chatterino.Controls
             this.openFileStreamlink = new System.Windows.Forms.OpenFileDialog();
             this.tabs = new Chatterino.Controls.SettingsTabControl();
             this.RightPanel = new System.Windows.Forms.Panel();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.chkDeleteButton = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.chkTimeoutButton = new System.Windows.Forms.CheckBox();
+            this.listView1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddTimeout = new System.Windows.Forms.Button();
+            this.chkBanButton = new System.Windows.Forms.CheckBox();
             this.panel12 = new System.Windows.Forms.Panel();
+            this.chkSingleConnection = new System.Windows.Forms.CheckBox();
             this.chkReplys = new System.Windows.Forms.CheckBox();
             this.chkPreferEmotes = new System.Windows.Forms.CheckBox();
             this.chkAllowSameMessages = new System.Windows.Forms.CheckBox();
@@ -160,12 +168,6 @@ namespace Chatterino.Controls
             this.chkGoLiveTaskbar = new System.Windows.Forms.CheckBox();
             this.chkHighlight = new System.Windows.Forms.CheckBox();
             this.chkPings = new System.Windows.Forms.CheckBox();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.chkTimeoutButton = new System.Windows.Forms.CheckBox();
-            this.listView1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAddTimeout = new System.Windows.Forms.Button();
-            this.chkBanButton = new System.Windows.Forms.CheckBox();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -210,9 +212,10 @@ namespace Chatterino.Controls
             this.spStreamLink = new Chatterino.Controls.SettingsTabPage();
             this.spBrowserExtension = new Chatterino.Controls.SettingsTabPage();
             this.spConnection = new Chatterino.Controls.SettingsTabPage();
-            this.chkSingleConnection = new System.Windows.Forms.CheckBox();
             this.tabs.SuspendLayout();
             this.RightPanel.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.panel12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.panel5.SuspendLayout();
@@ -236,8 +239,6 @@ namespace Chatterino.Controls
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.usernameHightlightTab.SuspendLayout();
-            this.panel13.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -274,8 +275,8 @@ namespace Chatterino.Controls
             this.tabs.Location = new System.Drawing.Point(0, 0);
             this.tabs.Name = "tabs";
             this.tabs.Panel = this.RightPanel;
-            this.tabs.SelectedIndex = 2;
-            this.tabs.SelectedTab = this.settingsTabPage1;
+            this.tabs.SelectedIndex = 9;
+            this.tabs.SelectedTab = this.spModeration;
             this.tabs.Size = new System.Drawing.Size(631, 498);
             this.tabs.TabIndex = 0;
             this.tabs.TabsWidth = 150;
@@ -285,6 +286,7 @@ namespace Chatterino.Controls
             this.RightPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.RightPanel.Controls.Add(this.panel13);
             this.RightPanel.Controls.Add(this.panel12);
             this.RightPanel.Controls.Add(this.panel5);
             this.RightPanel.Controls.Add(this.paneStreamLink);
@@ -293,7 +295,6 @@ namespace Chatterino.Controls
             this.RightPanel.Controls.Add(this.panel4);
             this.RightPanel.Controls.Add(this.panel8);
             this.RightPanel.Controls.Add(this.panel3);
-            this.RightPanel.Controls.Add(this.panel13);
             this.RightPanel.Controls.Add(this.panel10);
             this.RightPanel.Controls.Add(this.panel2);
             this.RightPanel.Controls.Add(this.panel7);
@@ -306,6 +307,85 @@ namespace Chatterino.Controls
             this.RightPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 42);
             this.RightPanel.Size = new System.Drawing.Size(481, 498);
             this.RightPanel.TabIndex = 0;
+            // 
+            // panel13
+            // 
+            this.panel13.Controls.Add(this.chkDeleteButton);
+            this.panel13.Controls.Add(this.groupBox3);
+            this.panel13.Controls.Add(this.chkBanButton);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel13.Location = new System.Drawing.Point(0, 0);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(481, 456);
+            this.panel13.TabIndex = 34;
+            // 
+            // chkDeleteButton
+            // 
+            this.chkDeleteButton.AutoSize = true;
+            this.chkDeleteButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkDeleteButton.Location = new System.Drawing.Point(6, 32);
+            this.chkDeleteButton.Name = "chkDeleteButton";
+            this.chkDeleteButton.Size = new System.Drawing.Size(265, 17);
+            this.chkDeleteButton.TabIndex = 19;
+            this.chkDeleteButton.Text = "Enable \"Delete\" button if moderator or broadcaster";
+            this.chkDeleteButton.UseVisualStyleBackColor = true;
+            this.chkDeleteButton.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.chkTimeoutButton);
+            this.groupBox3.Controls.Add(this.listView1);
+            this.groupBox3.Controls.Add(this.btnAddTimeout);
+            this.groupBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.groupBox3.Location = new System.Drawing.Point(6, 58);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(430, 360);
+            this.groupBox3.TabIndex = 18;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Timeout buttons";
+            // 
+            // chkTimeoutButton
+            // 
+            this.chkTimeoutButton.AutoSize = true;
+            this.chkTimeoutButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkTimeoutButton.Location = new System.Drawing.Point(7, 19);
+            this.chkTimeoutButton.Name = "chkTimeoutButton";
+            this.chkTimeoutButton.Size = new System.Drawing.Size(296, 17);
+            this.chkTimeoutButton.TabIndex = 14;
+            this.chkTimeoutButton.Text = "Enable \"timeout user\" buttons if moderator or broadcaster";
+            this.chkTimeoutButton.UseVisualStyleBackColor = true;
+            // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.AutoScroll = true;
+            this.listView1.ForeColor = System.Drawing.Color.Black;
+            this.listView1.Location = new System.Drawing.Point(9, 71);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(410, 276);
+            this.listView1.TabIndex = 17;
+            // 
+            // btnAddTimeout
+            // 
+            this.btnAddTimeout.ForeColor = System.Drawing.Color.Black;
+            this.btnAddTimeout.Location = new System.Drawing.Point(6, 39);
+            this.btnAddTimeout.Name = "btnAddTimeout";
+            this.btnAddTimeout.Size = new System.Drawing.Size(115, 23);
+            this.btnAddTimeout.TabIndex = 16;
+            this.btnAddTimeout.Text = "Add timeout button";
+            this.btnAddTimeout.UseVisualStyleBackColor = true;
+            // 
+            // chkBanButton
+            // 
+            this.chkBanButton.AutoSize = true;
+            this.chkBanButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkBanButton.Location = new System.Drawing.Point(6, 7);
+            this.chkBanButton.Name = "chkBanButton";
+            this.chkBanButton.Size = new System.Drawing.Size(275, 17);
+            this.chkBanButton.TabIndex = 13;
+            this.chkBanButton.Text = "Enable \"ban user\" button if moderator or broadcaster";
+            this.chkBanButton.UseVisualStyleBackColor = true;
             // 
             // panel12
             // 
@@ -328,6 +408,17 @@ namespace Chatterino.Controls
             this.panel12.Size = new System.Drawing.Size(481, 456);
             this.panel12.TabIndex = 31;
             // 
+            // chkSingleConnection
+            // 
+            this.chkSingleConnection.AutoSize = true;
+            this.chkSingleConnection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.chkSingleConnection.Location = new System.Drawing.Point(15, 251);
+            this.chkSingleConnection.Name = "chkSingleConnection";
+            this.chkSingleConnection.Size = new System.Drawing.Size(285, 17);
+            this.chkSingleConnection.TabIndex = 58;
+            this.chkSingleConnection.Text = "Use single connection for chat (will cause a reconnect)";
+            this.chkSingleConnection.UseVisualStyleBackColor = true;
+            // 
             // chkReplys
             // 
             this.chkReplys.AutoSize = true;
@@ -339,24 +430,13 @@ namespace Chatterino.Controls
             this.chkReplys.Text = "Enable twitch reply feature";
             this.chkReplys.UseVisualStyleBackColor = true;
             // 
-            // chkSingleConnection
-            // 
-            this.chkSingleConnection.AutoSize = true;
-            this.chkSingleConnection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkSingleConnection.Location = new System.Drawing.Point(15, 251);
-            this.chkSingleConnection.Name = "chkSingleConnection";
-            this.chkSingleConnection.Size = new System.Drawing.Size(151, 17);
-            this.chkSingleConnection.TabIndex = 58;
-            this.chkSingleConnection.Text = "Use single connection for chat (will cause a reconnect)";
-            this.chkSingleConnection.UseVisualStyleBackColor = true;
-            // 
             // chkPreferEmotes
             // 
             this.chkPreferEmotes.AutoSize = true;
             this.chkPreferEmotes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkPreferEmotes.Location = new System.Drawing.Point(15, 44);
             this.chkPreferEmotes.Name = "chkPreferEmotes";
-            this.chkPreferEmotes.Size = new System.Drawing.Size(388, 17);
+            this.chkPreferEmotes.Size = new System.Drawing.Size(382, 17);
             this.chkPreferEmotes.TabIndex = 55;
             this.chkPreferEmotes.Text = "Prefer emotes over usernames when tab-completing (unless starting with @)";
             this.chkPreferEmotes.UseVisualStyleBackColor = true;
@@ -786,12 +866,12 @@ namespace Chatterino.Controls
             this.chkTimestampSeconds.Text = "Show seconds in timestamps";
             this.chkTimestampSeconds.UseVisualStyleBackColor = true;
             // 
-            // chkMessageSeperators
+            // chkMessageSeparators
             // 
             this.chkMessageSeparators.AutoSize = true;
             this.chkMessageSeparators.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chkMessageSeparators.Location = new System.Drawing.Point(8, 40);
-            this.chkMessageSeparators.Name = "chkMessageSeperators";
+            this.chkMessageSeparators.Name = "chkMessageSeparators";
             this.chkMessageSeparators.Size = new System.Drawing.Size(119, 17);
             this.chkMessageSeparators.TabIndex = 16;
             this.chkMessageSeparators.Text = "Separate messages";
@@ -1680,72 +1760,6 @@ namespace Chatterino.Controls
             this.chkPings.Text = "Play sound when your name is mentioned";
             this.chkPings.UseVisualStyleBackColor = true;
             // 
-            // panel13
-            // 
-            this.panel13.Controls.Add(this.groupBox3);
-            this.panel13.Controls.Add(this.chkBanButton);
-            this.panel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel13.Location = new System.Drawing.Point(0, 0);
-            this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(481, 456);
-            this.panel13.TabIndex = 34;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.chkTimeoutButton);
-            this.groupBox3.Controls.Add(this.listView1);
-            this.groupBox3.Controls.Add(this.btnAddTimeout);
-            this.groupBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.groupBox3.Location = new System.Drawing.Point(6, 32);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(430, 360);
-            this.groupBox3.TabIndex = 18;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Timeout buttons";
-            // 
-            // chkTimeoutButton
-            // 
-            this.chkTimeoutButton.AutoSize = true;
-            this.chkTimeoutButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkTimeoutButton.Location = new System.Drawing.Point(7, 19);
-            this.chkTimeoutButton.Name = "chkTimeoutButton";
-            this.chkTimeoutButton.Size = new System.Drawing.Size(296, 17);
-            this.chkTimeoutButton.TabIndex = 14;
-            this.chkTimeoutButton.Text = "Enable \"timeout user\" buttons if moderator or broadcaster";
-            this.chkTimeoutButton.UseVisualStyleBackColor = true;
-            // 
-            // listView1
-            // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.AutoScroll = true;
-            this.listView1.ForeColor = System.Drawing.Color.Black;
-            this.listView1.Location = new System.Drawing.Point(9, 71);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(410, 276);
-            this.listView1.TabIndex = 17;
-            // 
-            // btnAddTimeout
-            // 
-            this.btnAddTimeout.ForeColor = System.Drawing.Color.Black;
-            this.btnAddTimeout.Location = new System.Drawing.Point(6, 39);
-            this.btnAddTimeout.Name = "btnAddTimeout";
-            this.btnAddTimeout.Size = new System.Drawing.Size(115, 23);
-            this.btnAddTimeout.TabIndex = 16;
-            this.btnAddTimeout.Text = "Add timeout button";
-            this.btnAddTimeout.UseVisualStyleBackColor = true;
-            // 
-            // chkBanButton
-            // 
-            this.chkBanButton.AutoSize = true;
-            this.chkBanButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.chkBanButton.Location = new System.Drawing.Point(6, 7);
-            this.chkBanButton.Name = "chkBanButton";
-            this.chkBanButton.Size = new System.Drawing.Size(275, 17);
-            this.chkBanButton.TabIndex = 13;
-            this.chkBanButton.Text = "Enable \"ban user\" button if moderator or broadcaster";
-            this.chkBanButton.UseVisualStyleBackColor = true;
-            // 
             // panel10
             // 
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2080,6 +2094,7 @@ namespace Chatterino.Controls
             this.settingsTabPage1.Location = new System.Drawing.Point(0, 60);
             this.settingsTabPage1.Name = "settingsTabPage1";
             this.settingsTabPage1.Panel = this.panel12;
+            this.settingsTabPage1.Selected = false;
             this.settingsTabPage1.Size = new System.Drawing.Size(150, 30);
             this.settingsTabPage1.TabIndex = 12;
             this.settingsTabPage1.Text = "Behaviour";
@@ -2163,7 +2178,6 @@ namespace Chatterino.Controls
             this.spModeration.Location = new System.Drawing.Point(0, 270);
             this.spModeration.Name = "spModeration";
             this.spModeration.Panel = this.panel13;
-            this.spModeration.Selected = false;
             this.spModeration.Size = new System.Drawing.Size(150, 30);
             this.spModeration.TabIndex = 13;
             this.spModeration.Text = "Moderation";
@@ -2217,7 +2231,6 @@ namespace Chatterino.Controls
             this.spConnection.TabIndex = 2;
             this.spConnection.Text = "Connection";
             this.spConnection.Visible = false;
-            
             // 
             // SettingsDialog
             // 
@@ -2236,6 +2249,10 @@ namespace Chatterino.Controls
             this.Text = "Preferences";
             this.tabs.ResumeLayout(false);
             this.RightPanel.ResumeLayout(false);
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
@@ -2272,10 +2289,6 @@ namespace Chatterino.Controls
             this.tabPage2.PerformLayout();
             this.usernameHightlightTab.ResumeLayout(false);
             this.usernameHightlightTab.PerformLayout();
-            this.panel13.ResumeLayout(false);
-            this.panel13.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel7.ResumeLayout(false);
@@ -2461,5 +2474,6 @@ namespace Chatterino.Controls
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox chkReplys;
         private System.Windows.Forms.CheckBox chkSingleConnection;
+        private System.Windows.Forms.CheckBox chkDeleteButton;
     }
 }

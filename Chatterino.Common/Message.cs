@@ -346,7 +346,17 @@ namespace Chatterino.Common
                     }
                 }
             }
-            aftermod:
+            if (channel.IsModOrBroadcaster) {
+                if (AppSettings.EnableDeleteButton) {
+                    words.Add(new Word {
+                        Type = SpanType.LazyLoadedImage,
+                        Value = new LazyLoadedImage(GuiEngine.Current.GetImage(ImageType.Delete)),
+                        Link = new Link(LinkType.DeleteMessage, Tuple.Create(MessageId, channel.Name)),
+                        Tooltip = "Delete Message"
+                    });
+                }
+            }
+        aftermod:
 
             //get number of months subbed
             if (data.Tags.TryGetValue("badge-info", out value))

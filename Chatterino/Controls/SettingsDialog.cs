@@ -765,6 +765,7 @@ namespace Chatterino.Controls
 
             // Moderation
             BindCheckBox(chkBanButton, "EnableBanButton");
+            BindCheckBox(chkDeleteButton, "EnableDeleteButton");
             BindCheckBox(chkTimeoutButton, "EnableTimeoutButton");
 
             var originalTimeoutButtons = new List<int>(AppSettings.TimeoutButtons);
@@ -996,6 +997,10 @@ namespace Chatterino.Controls
                 Process.Start("https://github.com/streamlink/streamlink/releases");
             }
             catch { }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e) {
+
         }
     }
 }

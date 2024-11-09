@@ -200,6 +200,8 @@ namespace Chatterino.Common
 
         public static bool EnableBanButton { get; set; } = false;
         public static bool EnableTimeoutButton { get; set; } = false;
+        public static bool EnableDeleteButton { get; set; } = false;
+
 
         public static List<int> TimeoutButtons { get; set; } = new List<int> { 5 * 60 };
 

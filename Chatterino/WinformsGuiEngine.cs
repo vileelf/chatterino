@@ -137,6 +137,16 @@ namespace Chatterino
                         }
                     }
                     break;
+                case LinkType.DeleteMessage: {
+                        var tuple = _link.Value as Tuple<string, string>;
+
+                        var channel = TwitchChannel.GetChannel(tuple.Item2);
+
+                        if (channel != null) {
+                            channel.SendMessage($"/delete {tuple.Item1}");
+                        }
+                    }
+                    break;
             }
         }
 
@@ -302,28 +312,10 @@ namespace Chatterino
             [ImageType.BadgeTwitchPrime] = Properties.Resources.twitchprime_bg,
             [ImageType.BadgeVerified] = Properties.Resources.partner,
 
-            [ImageType.Cheer1] = Properties.Resources.cheer1,
-            [ImageType.Cheer100] = Properties.Resources.cheer100,
-            [ImageType.Cheer1000] = Properties.Resources.cheer1000,
-            [ImageType.Cheer5000] = Properties.Resources.cheer5000,
-            [ImageType.Cheer10000] = Properties.Resources.cheer10000,
-            [ImageType.Cheer25000] = Properties.Resources._25000,
-            [ImageType.Cheer50000] = Properties.Resources._50000,
-            [ImageType.Cheer75000] = Properties.Resources._75000,
-            [ImageType.Cheer100000] = Properties.Resources.cheer100000,
-            [ImageType.Cheer200000] = Properties.Resources._200000,
-            [ImageType.Cheer300000] = Properties.Resources._300000,
-            [ImageType.Cheer400000] = Properties.Resources._400000,
-            [ImageType.Cheer500000] = Properties.Resources._500000,
-            [ImageType.Cheer600000] = Properties.Resources._600000,
-            [ImageType.Cheer700000] = Properties.Resources._700000,
-            [ImageType.Cheer800000] = Properties.Resources._800000,
-            [ImageType.Cheer900000] = Properties.Resources._900000,
-            [ImageType.Cheer1000000] = Properties.Resources._1000000,
-
             [ImageType.Ban] = Properties.Resources.ban,
             [ImageType.Timeout] = Properties.Resources.timeout,
             [ImageType.TimeoutAlt] = Properties.Resources.timeoutalt,
+            [ImageType.Delete] = Properties.Resources.delete,
         };
 
         ConcurrentDictionary<string, LazyLoadedImage> badges = new ConcurrentDictionary<string, LazyLoadedImage>();
