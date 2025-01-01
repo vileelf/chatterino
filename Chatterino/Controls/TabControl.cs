@@ -373,8 +373,10 @@ namespace Chatterino.Controls
                                         var channel = chat.Attribute("channel")?.Value;
                                         try
                                         {
-                                            var widget = new ChatControl();
-                                            widget.ChannelName = channel;
+                                            var widget = new ChatControl {
+                                                ChannelName = channel,
+                                                ChannelId = chat.Attribute("id")?.Value
+                                            };
                                             column.AddWidget(widget);
                                         }
                                         catch (Exception e)
@@ -457,6 +459,7 @@ namespace Chatterino.Controls
                                     {
                                         x.SetAttributeValue("type", "twitch");
                                         x.SetAttributeValue("channel", widget.ChannelName ?? "");
+                                        x.SetAttributeValue("id", widget.ChannelId ?? "");
                                     }));
                                 }
                             }));

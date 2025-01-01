@@ -745,6 +745,7 @@ namespace Chatterino.Common
                         foreach (var e in emotes)
                         {
                             var data = e["data"];
+                            var strflags = e["flags"];
                             emotename = e["name"];
                             emoteid = data["id"];
                             var host = data["host"];
@@ -773,9 +774,16 @@ namespace Chatterino.Common
                             tooltipurl = Emotes.getUrlFromScale(urlX1, urlX2, urlX4, 4, maxScale, out fake);
                             owner = data.ContainsKey("owner") ? data["owner"] : null;
                             visibility = data["flags"];
-                            if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
-                                zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;
+                            int flags = 0;
+                            visibilityFlags = 0;
+                            if (!string.IsNullOrEmpty(strflags)) {
+                                int.TryParse(strflags, out flags);
                             }
+                            if (!string.IsNullOrEmpty(visibility)) {
+                                int.TryParse(visibility, out visibilityFlags);
+                            }
+                            //fuck you 7tv.
+                            zeroWidth = (visibilityFlags & zeroWidthFlag) > 0 || (flags & 1) > 0;
                             ownername = "";
                             if (owner != null) {
                                 ownername = owner["display_name"];

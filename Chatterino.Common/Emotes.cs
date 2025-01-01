@@ -555,6 +555,7 @@ namespace Chatterino.Common
                             var host = data["host"];
                             var baseUrl = fixFFZUrl(host["url"]);
                             var urls = host["files"];
+                            var strflags = e["flags"];
 
                             int maxScale = 1;
                             string urlX1 = null;
@@ -578,9 +579,16 @@ namespace Chatterino.Common
 
                             owner = data.ContainsKey("owner") ? data["owner"] : null;
                             visibility = data["flags"];
-                            if (!string.IsNullOrEmpty(visibility) && int.TryParse(visibility, out visibilityFlags)) {
-                                zeroWidth = (visibilityFlags & zeroWidthFlag) > 0;
+                            int flags = 0;
+                            visibilityFlags = 0;
+                            if (!string.IsNullOrEmpty(strflags)) {
+                                int.TryParse(strflags, out flags);
                             }
+                            if (!string.IsNullOrEmpty(visibility)) {
+                                int.TryParse(visibility, out visibilityFlags);
+                            }
+                            //fuck you 7tv.
+                            zeroWidth = (visibilityFlags & zeroWidthFlag) > 0 || (flags & 1) > 0;
                             ownername = "";
                             if (owner != null) {
                                 ownername = owner["display_name"];

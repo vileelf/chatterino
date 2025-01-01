@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Chatterino.Common;
+using System;
 using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Chatterino.Common;
 using Message = System.Windows.Forms.Message;
 
-namespace Chatterino.Controls
-{
+namespace Chatterino.Controls {
     public class UserInfoPopup : Form
     {
         private string username;
@@ -49,7 +45,7 @@ namespace Chatterino.Controls
         {
             InitializeComponent();
 
-            TopMost = Common.AppSettings.WindowTopMost;
+            TopMost = AppSettings.WindowTopMost;
 
             Common.AppSettings.WindowTopMostChanged += (s, e) =>
             {

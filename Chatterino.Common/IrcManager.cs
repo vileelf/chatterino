@@ -83,18 +83,44 @@ namespace Chatterino.Common
             return null;
         }
 
-        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likely use UpdateEmotes instead", true)]
+        public static string LoadUserNameFromTwitch(string userId) {
+            // call twitch api
+            if (userId != string.Empty && DefaultClientID != string.Empty) {
+                try {
+                    var request =
+                    WebRequest.Create(
+                        $"https://api.twitch.tv/helix/users?&id={userId}");
+                    if (AppSettings.IgnoreSystemProxy) {
+                        request.Proxy = null;
+                    }
+                    request.Headers["Authorization"] = $"Bearer {IrcManager.Account.OauthToken}";
+                    request.Headers["Client-ID"] = $"{IrcManager.DefaultClientID}";
+
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream()) {
+                            dynamic json = new JsonParser().Parse(stream);
+                            if (json == null || json["data"] == null || json["data"][0] == null) { return null; }
+                            return json["data"][0]["login"];
+                        }
+                    }
+                } catch (Exception e) {
+                    GuiEngine.Current.log("Generic Exception Handler: " + e.ToString());
+                }
+            }
+            return null;
+        }
+
+        [Obsolete("this api handle is back poggers. gonna implement it now.", true)]
         public static void LoadEmotesFromApi(){
             try
             {
                 string userid = Account.UserId, oauth = Account.OauthToken;
-                var request =  WebRequest.Create($"https://api.twitch.tv/helix/users/{userid}/emotes");
+                var request =  WebRequest.Create($"https://api.twitch.tv/helix/chat/emotes/user?user_id={userid}");
 
                 if (AppSettings.IgnoreSystemProxy)
                 {
                     request.Proxy = null;
                 }
-                ((HttpWebRequest)request).Accept = "application/vnd.twitchtv.v5+json";
                 request.Headers["Client-ID"] = $"{DefaultClientID}";
                 request.Headers["Authorization"] = $"OAuth {oauth}";
                 using (var response = request.GetResponse())
@@ -103,7 +129,7 @@ namespace Chatterino.Common
                     {
                         dynamic json = new JsonParser().Parse(stream);
 
-                        foreach (var set in json["emoticon_sets"])
+                        foreach (var set in json["data"])
                         {
 
                             foreach (var emote in set.Value)

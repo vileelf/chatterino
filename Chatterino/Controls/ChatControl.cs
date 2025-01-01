@@ -1,24 +1,20 @@
 ﻿using Chatterino.Common;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Net;
 using System.Linq;
-using System.Text.Json;
-using System.Runtime.CompilerServices;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Message = Chatterino.Common.Message;
-using System.Runtime.InteropServices;
 
-namespace Chatterino.Controls
-{
+namespace Chatterino.Controls {
     public class ChatControl : MessageContainerControl
     {
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
@@ -30,6 +26,17 @@ namespace Chatterino.Controls
 
         // Properties
         public bool IsNetCurrent { get; private set; } = false;
+        string channelId = null;
+        public string ChannelId { get { return channelId; } set {
+                if (channelId != value) {
+                    var channelName = IrcManager.LoadUserNameFromTwitch(value);
+                    if (channelName != null) {
+                        ChannelName = channelName;
+                    }
+                }
+                channelId = value;
+            }
+        }
 
         public const int TopMenuBarHeight = 32;
         public const int ScrollToBottomBarHeight = 24;
