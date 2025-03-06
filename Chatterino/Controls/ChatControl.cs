@@ -579,9 +579,7 @@ namespace Chatterino.Controls {
         
         public void MoveAutoCompleteSelection(bool up) {
             lock (AutoCompleteLock) {
-                if (AutoComplete != null) {
-                    AutoComplete.MoveSelection(up);
-                }
+                AutoComplete?.MoveSelection(up);
             }
         }
         
@@ -1261,7 +1259,9 @@ namespace Chatterino.Controls {
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Emotes", (s, e) =>
                 {
                     _selected.Channel.ReloadEmotes();
-                    Emotes.ReloadSubEmotes();
+                    Task.Run(() => {
+                        Emotes.ReloadSubEmotes();
+                    });
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Reload Global Emotes", (s, e) =>
                 {
@@ -1271,7 +1271,9 @@ namespace Chatterino.Controls {
                 }));
                 _contextMenu.MenuItems.Add(new MenuItem("Reload All Channels Emotes", (s, e) =>
                 {
-                    Emotes.ReloadSubEmotes();
+                    Task.Run(() => {
+                        Emotes.ReloadSubEmotes();
+                    });
                     foreach (var channel in TwitchChannel.Channels)
                     {
                         channel.ReloadEmotes();

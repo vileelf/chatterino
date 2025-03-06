@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Chatterino.Common
             "user:read:blocked_users+user:read:follows+moderator:manage:banned_users+user:manage:whispers+whispers:read+" +
             "channel:edit:commercial+channel:manage:vips+channel:manage:moderators+moderator:manage:announcements+" +
             "moderator:manage:chat_messages+channel:manage:raids+moderator:manage:chat_settings+user:manage:chat_color+" +
-            "channel:manage:broadcast+channel:manage:predictions+user:write:chat";
+            "channel:manage:broadcast+channel:manage:predictions+user:write:chat+user:read:emotes";
         public static IrcClient Client { get; set; }
         public static string LastReceivedWhisperUser { get; set; }
         public static IEnumerable<string> IgnoredUsers => AppSettings.IgnoreViaTwitch ? twitchBlockedUsers.Keys : AppSettings.IgnoredUsers.Keys;
@@ -83,7 +84,7 @@ namespace Chatterino.Common
             return null;
         }
 
-        public static string LoadUserNameFromTwitch(string userId) {
+        public static string LoadUserNameFromTwitch(string userId, bool displayName = false) {
             // call twitch api
             if (userId != string.Empty && DefaultClientID != string.Empty) {
                 try {
@@ -99,7 +100,11 @@ namespace Chatterino.Common
                     using (var response = request.GetResponse()) {
                         using (var stream = response.GetResponseStream()) {
                             dynamic json = new JsonParser().Parse(stream);
-                            if (json == null || json["data"] == null || json["data"][0] == null) { return null; }
+                            if (json == null || json["data"] == null || json["data"].Count == 0 || json["data"][0] == null) { return null; }
+                            if (displayName) {
+                                var name = json["data"][0]["display_name"];
+                                name = string.IsNullOrEmpty(name) ? json["data"][0]["login"] : name;
+                            }
                             return json["data"][0]["login"];
                         }
                     }
@@ -109,48 +114,75 @@ namespace Chatterino.Common
             }
             return null;
         }
-
-        [Obsolete("this api handle is back poggers. gonna implement it now.", true)]
+        
         public static void LoadEmotesFromApi(){
             try
             {
-                string userid = Account.UserId, oauth = Account.OauthToken;
-                var request =  WebRequest.Create($"https://api.twitch.tv/helix/chat/emotes/user?user_id={userid}");
+                string cursor = null;
+                do {
+                    string userid = Account.UserId, oauth = Account.OauthToken;
+                    string after = cursor != null ? $"&after={Uri.EscapeUriString(cursor)}" : "";
+                    var request = WebRequest.Create($"https://api.twitch.tv/helix/chat/emotes/user?user_id={userid}&first=100{after}");
 
-                if (AppSettings.IgnoreSystemProxy)
-                {
-                    request.Proxy = null;
-                }
-                request.Headers["Client-ID"] = $"{DefaultClientID}";
-                request.Headers["Authorization"] = $"OAuth {oauth}";
-                using (var response = request.GetResponse())
-                {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        dynamic json = new JsonParser().Parse(stream);
-
-                        foreach (var set in json["data"])
-                        {
-
-                            foreach (var emote in set.Value)
-                            {
+                    if (AppSettings.IgnoreSystemProxy) {
+                        request.Proxy = null;
+                    }
+                    request.Headers["Client-ID"] = $"{DefaultClientID}";
+                    request.Headers["Authorization"] = $"Bearer {oauth}";
+                    using (var response = request.GetResponse()) {
+                        using (var stream = response.GetResponseStream()) {
+                            dynamic json = new JsonParser().Parse(stream);
+                            dynamic pagination = json["pagination"];
+                            bool hasCurser = pagination.TryGetValue("cursor", out dynamic tempcursor);
+                            string tempCursor2 = tempcursor;
+                            if (cursor == tempCursor2) {
+                                throw new Exception("wtf");
+                            }
+                            if (!hasCurser) {
+                                cursor = null;
+                            } else {
+                                cursor = tempcursor;
+                            }
+                            foreach (var emote in json["data"]) {
                                 string id = emote["id"];
-                                string code = Emotes.GetTwitchEmoteCodeReplacement(emote["code"]);
+                                string code = Emotes.GetTwitchEmoteCodeReplacement(emote["name"]);
+                                string ownerId = emote["owner_id"];
+                                string set = emote["emote_set_id"];
+                                string type = emote["emote_type"];
                                 Emotes.RecentlyUsedEmotes.TryRemove(code, out LazyLoadedImage image);
-                                if (!Emotes.TwitchEmotes.ContainsKey(code))
-                                {
-                                    Emotes.TwitchEmotes[code] = new TwitchEmoteValue
-                                    {
+                                if (!Emotes.TwitchEmotes.ContainsKey(code)) {
+                                    Emotes.TwitchEmotes[code] = new TwitchEmoteValue {
                                         ID = id,
-                                        Set = set.Key,
-                                        OwnerID = set.Key,
+                                        Set = set,
+                                        OwnerID = ownerId,
+                                        Type = type,
+                                        Name = code,
                                         ChannelName = ""
                                     };
                                 }
                             }
                         }
                     }
-                }
+                } while (cursor != null);
+
+                Task.Run(() => {
+                    foreach (var emote in Emotes.TwitchEmotes) {
+                        if (string.IsNullOrEmpty(emote.Value.ChannelName) && !string.IsNullOrEmpty(emote.Value.OwnerID) && emote.Value.OwnerID.ToUpper() != "TWITCH") {
+                            string channelName = null;
+                            Emotes.TwitchEmoteOwnerCache.TryGetValue(emote.Value.OwnerID, out channelName);
+                            channelName = channelName ?? LoadUserNameFromTwitch(emote.Value.OwnerID, true);
+                            Emotes.TwitchEmoteOwnerCache[emote.Value.OwnerID] = channelName;
+                            foreach (var ownerEmote in Emotes.TwitchEmotes.Where(x => x.Value.OwnerID == emote.Value.OwnerID && string.IsNullOrEmpty(x.Value.ChannelName))) {
+                                if (ownerEmote.Value.Name != null) {
+                                    Emotes.TwitchEmotes.TryGetValue(ownerEmote.Value.Name, out var trueEmote);
+                                    trueEmote.ChannelName = channelName;
+                                    Emotes.TwitchEmotes.TryUpdate(ownerEmote.Value.Name, trueEmote, ownerEmote.Value);
+                                }
+                            }
+                        }
+                    }
+                });
+
             }
             catch (Exception e)
             {
@@ -161,33 +193,9 @@ namespace Chatterino.Common
         public static void LoadUsersEmotes()
         {
             
-            //LoadEmotesFromApi();
-            if (loadEmotes == false)
-            {
-                loadEmotes = true;
-                bool isalreadyjoined = false;
-                foreach (var channel in TwitchChannel.Channels)
-                {
-                    if (channel.Name.Equals(Account.Username))
-                    {
-                        isalreadyjoined = true;
-                        break;
-                    }
-                }
-                //part and join the users channel
-                if (isalreadyjoined)
-                {
-                    Client.WriteConnection.WriteLine("PART #" + Account.Username);
-                }
-
-                Client.WriteConnection.WriteLine("JOIN #" + Account.Username);
-
-                if (!isalreadyjoined)
-                {
-                    Client.WriteConnection.WriteLine("PART #" + Account.Username);
-                }
-            }
+            LoadEmotesFromApi();
             Emotes.TriggerEmotesLoaded();
+            
         }
 
         public static void Connect()
@@ -211,7 +219,7 @@ namespace Chatterino.Common
                 }
                 SaveAppSettings(username);
                 Task.Run(() => RetrieveTwitchBlockedUsers(oauth, userId));
-                Task.Run(() => LoadUsersEmotes());
+                LoadUsersEmotes();
             }
 
             LoggedIn?.Invoke(null, EventArgs.Empty);
@@ -493,7 +501,7 @@ namespace Chatterino.Common
                         TwitchChannel.GetChannel((msg.Middle ?? "").TrimStart('#')).Process(c => c.IsVip = true);
                     }
                 }
-                UpdateEmotes(msg);
+                //UpdateEmotes(msg);
             }
             else if (msg.Command == "WHISPER")
             {
@@ -651,7 +659,7 @@ namespace Chatterino.Common
                             });
                     }
                 }
-                UpdateEmotes(msg);
+                //UpdateEmotes(msg);
             }
         }
 
@@ -824,6 +832,7 @@ namespace Chatterino.Common
             }
         }
 
+        [Obsolete("this api handle is dead pepehands. hopefully they revive it someday but not likley", true)]
         public static bool TryCheckIfFollowing(string username, string userid, out bool result, out string message)
         {
             try
@@ -975,6 +984,8 @@ namespace Chatterino.Common
             }
             return false;
         }
+
+        [Obsolete("No longer needed. Use LoadUserEmotes Instead.")]
         private static void UpdateEmotes(IrcMessage msg)
         {
             if (loadEmotes && msg.Tags.TryGetValue("emote-sets", out string value))

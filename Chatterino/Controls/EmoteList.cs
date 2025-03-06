@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Caching;
 using Chatterino.Common;
 
 namespace Chatterino.Controls
@@ -14,6 +15,8 @@ namespace Chatterino.Controls
         public HashSet<LazyLoadedImage> GifEmotes = new HashSet<LazyLoadedImage>();
         
         public bool show_only_channel_emotes;
+
+        public TwitchChannel Channel { get; set; }
 
         protected override Message[] Messages
         {
@@ -29,6 +32,7 @@ namespace Chatterino.Controls
 
             AllowMessageSeparator = false;
             EnableHatEmotes = false;
+            Emotes.EmotesReLoaded += LoadChannel;
         }
         
         private void addGifEmote(LazyLoadedImage emote) {
@@ -43,8 +47,15 @@ namespace Chatterino.Controls
             }
         }
 
+        public void LoadChannel(object sender, EventArgs e) {
+            if (Channel != null) {
+                LoadChannel(Channel);
+            }
+        }
+
         public void LoadChannel(TwitchChannel channel)
         {
+            Channel = channel;
             Task.Run(() =>
             {
                 try {
@@ -101,16 +112,18 @@ namespace Chatterino.Controls
                                         }
                                         words.Add(new Word { Type = SpanType.LazyLoadedImage, Value = twitchemote, Tooltip = twitchemote.Tooltip, TooltipImageUrl = twitchemote.TooltipImageUrl, CopyText = twitchemote.Name, Link = new Link(LinkType.InsertText, emote.Key + " ") });
                                     }
+                                    var firstEmote = emotes.FirstOrDefault();
 
                                     if (words.Count != 0)
                                     {
-                                        if (emotes.Key == "0")
+                                        if (emotes.Key == "0" || emotes.Key == "")
                                         {
                                             messages.Add(new Message("Twitch Emotes"));
                                         }
                                         else
                                         {
-                                            messages.Add(new Message("Twitch Subscriber Emotes"));
+                                            var channelName = firstEmote.Value.ChannelName;
+                                            messages.Add(new Message($"{channelName ?? "Twitch"} Subscriber Emotes"));
                                         }
 
                                         messages.Add(new Message(words));

@@ -309,19 +309,6 @@ namespace Chatterino.Common
             }
         }
         
-        public bool CheckIfFollowing(int RoomID)
-        {
-            bool result;
-            string message;
-            
-            
-
-            Common.IrcManager.TryCheckIfFollowing(null, RoomID.ToString(), out result, out message);
-            
-            IsFollowing = result;
-            return result;
-        }
-        
         public void LoadChannelBits(int RoomID)
         {
             try {
@@ -721,6 +708,9 @@ namespace Chatterino.Common
                 if (File.Exists(SeventvChannelEmotesCache)) {
                     using (var stream = File.OpenRead(SeventvChannelEmotesCache))
                     {
+                        if (stream == null || stream.Length == 0) {
+                            return;
+                        }
                         dynamic json = parser.Parse(stream);
 
                         SeventvChannelEmotes.Clear();
@@ -741,6 +731,9 @@ namespace Chatterino.Common
                         LazyLoadedImage emote;
 
                         var emote_set = json["emote_set"];
+                        if (emote_set == null || emote_set.ContainsKey("emotes") != true) {
+                            return;
+                        }
                         var emotes = emote_set["emotes"];
                         foreach (var e in emotes)
                         {
@@ -1769,58 +1762,32 @@ namespace Chatterino.Common
                     LoadChannelEmotes(RoomID);
                 });
                 
-                Task.Run(() =>
-                {
-                    CheckIfFollowing(RoomID);
-                });
-                
                 //Emotes.ClearTwitchEmoteCache();
                 // bttv channel emotes
                 Task.Run(() =>
                 {
-                    try
-                    {
+                    try {
                         var parser = new JsonParser();
-
-                        //if (!File.Exists(bttvChannelEmotesCache))
-                        {
-                            try
-                            {
-                                
-
-                                if (Util.IsLinux)
-                                {
-                                    if (File.Exists(bttvChannelEmotesCache)) {
-                                        File.Delete(bttvChannelEmotesCache);
-                                    }
-                                    Util.LinuxDownloadFile("https://api.betterttv.net/3/cached/users/twitch/" + RoomID, bttvChannelEmotesCache);
-                                }
-                                else
-                                {
-                                    using (var webClient = new WebClient())
-                                    using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID)) {
-                                        if (File.Exists(bttvChannelEmotesCache)) {
-                                            File.Delete(bttvChannelEmotesCache);
-                                        }
-                                        using (var writeStream = File.OpenWrite(bttvChannelEmotesCache))
-                                        {
-                                            readStream.CopyTo(writeStream);
-                                        }
-                                        readStream.Close();
-                                    }
-                                }
+                        if (Util.IsLinux) {
+                            if (File.Exists(bttvChannelEmotesCache)) {
+                                File.Delete(bttvChannelEmotesCache);
                             }
-                            catch (Exception e)
-                            {
-                                e.Message.Log("emotes");
+                            Util.LinuxDownloadFile("https://api.betterttv.net/3/cached/users/twitch/" + RoomID, bttvChannelEmotesCache);
+                        } else {
+                            using (var webClient = new WebClient())
+                            using (var readStream = webClient.OpenRead("https://api.betterttv.net/3/cached/users/twitch/" + RoomID)) {
+                                if (File.Exists(bttvChannelEmotesCache)) {
+                                    File.Delete(bttvChannelEmotesCache);
+                                }
+                                using (var writeStream = File.OpenWrite(bttvChannelEmotesCache)) {
+                                    readStream.CopyTo(writeStream);
+                                }
+                                readStream.Close();
                             }
                         }
-
                         loadBTTVEmotesFromFile();
                         updateEmoteNameList();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.Message.Log("emotes");
                     }
                 });
@@ -1832,37 +1799,22 @@ namespace Chatterino.Common
                     {
                         var parser = new JsonParser();
 
-                    //if (!File.Exists(ffzChannelEmotesCache))
-                    {
-                            try
-                            {
-
-                                if (Util.IsLinux)
-                                {
+                        if (Util.IsLinux) {
+                            if (File.Exists(ffzChannelEmotesCache)) {
+                                File.Delete(ffzChannelEmotesCache);
+                            }
+                            Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/id/" + RoomID, ffzChannelEmotesCache);
+                        } else {
+                            using (var webClient = new WebClient()) {
+                                using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID)) {
                                     if (File.Exists(ffzChannelEmotesCache)) {
                                         File.Delete(ffzChannelEmotesCache);
                                     }
-                                    Util.LinuxDownloadFile("https://api.frankerfacez.com/v1/room/id/" + RoomID, ffzChannelEmotesCache);
-                                }
-                                else
-                                {
-                                    using (var webClient = new WebClient()) {
-                                        using (var readStream = webClient.OpenRead("https://api.frankerfacez.com/v1/room/id/" + RoomID)) {
-                                            if (File.Exists(ffzChannelEmotesCache)) {
-                                                File.Delete(ffzChannelEmotesCache);
-                                            }
-                                            using (var writeStream = File.OpenWrite(ffzChannelEmotesCache))
-                                            {
-                                                readStream.CopyTo(writeStream);
-                                            }
-                                            readStream.Close();
-                                        }
+                                    using (var writeStream = File.OpenWrite(ffzChannelEmotesCache)) {
+                                        readStream.CopyTo(writeStream);
                                     }
+                                    readStream.Close();
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.Log("emotes");
                             }
                         }
                         loadFFZEmotesFromFile();
@@ -1880,37 +1832,26 @@ namespace Chatterino.Common
                     try
                     {
                         var parser = new JsonParser();
-
+                        if (Util.IsLinux)
                         {
-                            try
-                            {
-
-                                if (Util.IsLinux)
-                                {
+                            if (File.Exists(seventvChannelEmotesCache)) {
+                                File.Delete(seventvChannelEmotesCache);
+                            }
+                            Util.LinuxDownloadFile($"https://7tv.io/v3/users/twitch/{RoomID}", seventvChannelEmotesCache);
+                        }
+                        else
+                        {
+                            using (var webClient = new WebClient()) {
+                                using (var readStream = webClient.OpenRead($"https://7tv.io/v3/users/twitch/{RoomID}")) {
                                     if (File.Exists(seventvChannelEmotesCache)) {
                                         File.Delete(seventvChannelEmotesCache);
                                     }
-                                    Util.LinuxDownloadFile($"https://7tv.io/v3/users/twitch/{RoomID}", seventvChannelEmotesCache);
-                                }
-                                else
-                                {
-                                    using (var webClient = new WebClient()) {
-                                        using (var readStream = webClient.OpenRead($"https://7tv.io/v3/users/twitch/{RoomID}")) {
-                                            if (File.Exists(seventvChannelEmotesCache)) {
-                                                File.Delete(seventvChannelEmotesCache);
-                                            }
-                                            using (var writeStream = File.OpenWrite(seventvChannelEmotesCache))
-                                            {
-                                                readStream.CopyTo(writeStream);
-                                            }
-                                            readStream.Close();
-                                        }
+                                    using (var writeStream = File.OpenWrite(seventvChannelEmotesCache))
+                                    {
+                                        readStream.CopyTo(writeStream);
                                     }
+                                    readStream.Close();
                                 }
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.Log("emotes");
                             }
                         }
                         load7tvEmotesFromFile();

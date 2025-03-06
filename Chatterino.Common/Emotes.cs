@@ -11,6 +11,7 @@ namespace Chatterino.Common
     public static class Emotes
     {
         public static event EventHandler EmotesLoaded;
+        public static event EventHandler EmotesReLoaded;
 
         public static ConcurrentDictionary<string, LazyLoadedImage> RecentlyUsedEmotes =
             new ConcurrentDictionary<string, LazyLoadedImage>();
@@ -44,6 +45,8 @@ namespace Chatterino.Common
             new ConcurrentDictionary<string, LazyLoadedImage>();
 
         private static ConcurrentDictionary<string, string> twitchEmotesCodeReplacements =
+            new ConcurrentDictionary<string, string>();
+        public static ConcurrentDictionary<string, string> TwitchEmoteOwnerCache = 
             new ConcurrentDictionary<string, string>();
 
         public const string TwitchEmoteTemplate = "https://static-cdn.jtvnw.net/emoticons/v2/{id}/{animated}/{darkmode}/{scale}.0";
@@ -631,6 +634,7 @@ namespace Chatterino.Common
 
         internal static void TriggerEmotesLoaded()
         {
+            EmotesReLoaded?.Invoke(null, EventArgs.Empty);
             EmotesLoaded?.Invoke(null, EventArgs.Empty);
         }
 
@@ -644,7 +648,10 @@ namespace Chatterino.Common
             double scale;
             double fake;
             string url = GetTwitchEmoteLink(id, false, out scale);
-            
+            IrcManager.TwitchEmoteValue emote = new IrcManager.TwitchEmoteValue();
+            TwitchEmotes.TryGetValue(name, out emote);
+            var channelName = string.IsNullOrEmpty(emote.ChannelName) ? "Twitch " : $"{emote.ChannelName} Subscriber";
+
             if (!TwitchEmotesByIDCache.TryGetValue(id, out e) || Math.Abs(scale - e.Scale) > .01)
             {
                 e = new LazyLoadedImage
@@ -653,10 +660,12 @@ namespace Chatterino.Common
                     Url = url,
                     TooltipImageUrl = GetTwitchEmoteLink(id, true, out fake),
                     Scale = scale,
-                    Tooltip = name + "\nTwitch Emote",
+                    Tooltip = $"{name}\n {channelName} Emote",
                     IsEmote = true
                 };
                 TwitchEmotesByIDCache[id] = e;
+            } else {
+                e.Tooltip = $"{name}\n {channelName} Emote";
             }
 
             return e;

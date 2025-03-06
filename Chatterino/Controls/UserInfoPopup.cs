@@ -375,20 +375,6 @@ namespace Chatterino.Controls {
             btnIgnoreHighlights.Text = AppSettings.HighlightIgnoredUsers.ContainsKey(data.UserName) ? "Enable Highlights" : "Disable Highlights";
 
             // follow user
-            var isFollowing = false;
-
-            Task.Run(() =>
-            {
-                bool result;
-                string message;
-
-                Common.IrcManager.TryCheckIfFollowing(data.UserName, data.UserId, out result, out message);
-
-                isFollowing = result;
-
-                btnFollow.Invoke(() => btnFollow.Text = isFollowing ? "Unfollow" : "Follow");
-            });
-
             btnFollow.Click += (s, e) =>
             {
                 (App.MainForm.Selected as ChatControl)?.Input.Focus();
