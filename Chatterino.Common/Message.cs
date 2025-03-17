@@ -546,9 +546,13 @@ namespace Chatterino.Common
                         }
 
                         LazyLoadedImage thirdPartyEmote;
-                        if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) && (AppSettings.ChatEnableBttvEmotes && (channel.BttvChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.BttvGlobalEmotes.TryGetValue(s, out thirdPartyEmote))
-                            || (AppSettings.ChatEnableFfzEmotes && (channel.FfzChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.FfzGlobalEmotes.TryGetValue(s, out thirdPartyEmote)))
-                            || (AppSettings.ChatEnable7tvEmotes && (channel.SeventvChannelEmotes.TryGetValue(s, out thirdPartyEmote) || Emotes.SeventvGlobalEmotes.TryGetValue(s, out thirdPartyEmote)))))
+                        if (!AppSettings.ChatIgnoredEmotes.ContainsKey(s) 
+                            && ((AppSettings.ChatEnableBttvEmotes && channel.BttvChannelEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnableFfzEmotes && channel.FfzChannelEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnable7tvEmotes && channel.SeventvChannelEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnableBttvEmotes && Emotes.BttvGlobalEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnableFfzEmotes && Emotes.FfzGlobalEmotes.TryGetValue(s, out thirdPartyEmote))
+                            || (AppSettings.ChatEnable7tvEmotes && Emotes.SeventvGlobalEmotes.TryGetValue(s, out thirdPartyEmote))))
                         {
                             words.Add(new Word {
                                 Type = SpanType.LazyLoadedImage,
