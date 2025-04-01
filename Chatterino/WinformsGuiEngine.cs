@@ -328,9 +328,9 @@ namespace Chatterino
             if (debug)
             {
                 lock (logLock) {
-                    string folder = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+                    string folder = Path.GetDirectoryName(Application.ExecutablePath);
                     StreamWriter file = new StreamWriter(folder + @"\log.txt", true);
-                    file.WriteLine(text);
+                    file.WriteLine($"{DateTime.Now:h:mm:ss}: {text}");
                     file.Close();
                 }
             }
