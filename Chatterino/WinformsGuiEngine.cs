@@ -330,7 +330,7 @@ namespace Chatterino
                 lock (logLock) {
                     string folder = Path.GetDirectoryName(Application.ExecutablePath);
                     StreamWriter file = new StreamWriter(folder + @"\log.txt", true);
-                    file.WriteLine($"{DateTime.Now:h:mm:ss}: {text}");
+                    file.WriteLine($"{DateTime.Now:d/M/yy h:mm:ss}: {text}");
                     file.Close();
                 }
             }
