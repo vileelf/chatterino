@@ -1,5 +1,17 @@
 ﻿# changelog
 
+# 3.8
+-- Fixed a bug with new undo functionality not working well with tab completion.
+-- Fixed issue with the autocomplete not scrolling properly with arrow keys.
+-- Added c! bttv emote modifier.
+-- Fixed a bug preventing the copy link button from working
+-- Now displays an error message when the updater fails to launch.
+-- Added option for inline delete button for moderators.
+-- Fixed some 7tv emotes not being zero width when they should.
+-- Made it so when a streamer changes their name, the chat will change with it.
+-- Now uses twitches new api handle for loading users emotes. Added in streamer names for the categories.
+-- Channel third party emotes now have priority over global versions.
+
 # 3.7
 -- Fixed bug making it so you can't type after clicking on the profile button in the user popup.
 -- Made the width/height and location of chatterino save when they are changed.
