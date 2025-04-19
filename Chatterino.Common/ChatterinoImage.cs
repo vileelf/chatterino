@@ -171,6 +171,7 @@ namespace Chatterino.Common {
         }
 
         private void onlyAddFrame(Image frame) {
+            if (frame == null) { return; }
             Image newframe = (Image)frame.Clone();
             Frames.Add(newframe);
         }
@@ -236,6 +237,9 @@ namespace Chatterino.Common {
             if (!IsLoaded) {
                 ReloadImage();
             }
+            if (frameIndex >= TotalFrames || frameIndex < 0) {
+                return 0;
+            }
             return FrameDurations[frameIndex];
 
         }
@@ -249,11 +253,14 @@ namespace Chatterino.Common {
                 LoadImageFrames();
             }
             UsedLastCycle = true;
+            if (frameIndex >= TotalFrames || frameIndex < 0) {
+                return null;
+            }
             return Frames[frameIndex];
         }
 
         public void SetFrame(int frameIndex, Image frame) {
-            if (Frames.Count <= frameIndex) {
+            if (Frames.Count <= frameIndex || frameIndex < 0) {
                 return;
             }
             Frames[frameIndex]?.Dispose();
@@ -270,7 +277,7 @@ namespace Chatterino.Common {
 
         //Creates a copy and adds a frame to the list. Uses the same frame duration as the previous frame. If no previous frame defaults to 10 centiseconds.
         public void AddFrame(Image frame) {
-            AddFrame(frame, FrameDurations[FrameDurations.Count > 0 ? FrameDurations.Count - 1 : 10]);
+            AddFrame(frame, FrameDurations.Count > 0 ? FrameDurations[FrameDurations.Count - 1] : 10);
         }
 
         //Creates a copy and adds a frame to the list. Frame duration is in centiseconds. If frame duration is less than 2 defaults it to 10. 

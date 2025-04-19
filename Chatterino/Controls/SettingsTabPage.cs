@@ -83,8 +83,7 @@ namespace Chatterino.Controls
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColor);
-            //if (mOver)
-            //    e.Graphics.FillRectangle(Styles.SettingsTabHighlight1, ClientRectangle);
+
             if (selected)
             {
                 using (var gradientBrush = new LinearGradientBrush(new Point(0, 0), new Point(Width, 0)
@@ -92,11 +91,6 @@ namespace Chatterino.Controls
                 {
                     e.Graphics.FillRectangle(gradientBrush, 0, 0, Width, Height);
                 }
-                //using (var gradientBrush = new LinearGradientBrush(new Point(Width-64, 0), new Point(Width, 0)
-                //, Color.Transparent, Color.FromArgb(80,80,80)))
-                //{
-                //    e.Graphics.FillRectangle(gradientBrush, Width-64, 0, 64, Height);
-                //}
             }
             else
             {
@@ -107,19 +101,6 @@ namespace Chatterino.Controls
                 }
             }
 
-            //using (var gradientBrush = new LinearGradientBrush(new Point(0, 0), new Point(16, 0)
-            //    , Color.FromArgb(31, 0, 0, 0), BackColor))
-            //{
-            //    e.Graphics.FillRectangle(gradientBrush, 0, 0, 16, Height);
-            //}
-
-            //e.Graphics.DrawLine(Pens.DimGray, 0, Height-1, Width, Height-1);
-            //e.Graphics.DrawRectangle(Pens.LightGray, 1, 1, Width - 2, Height - 2);
-            //e.Graphics.DrawRectangle(Pens.DimGray, 0, 0, Width - 1, Height - 1);
-            //e.Graphics.FillRectangle(Brushes.Gray, 0, 0, 1, 1);
-            //e.Graphics.FillRectangle(Brushes.Gray, Width-1, 0, 1, 1);
-            //e.Graphics.FillRectangle(Brushes.Gray, Width-1, Height - 1, 1, 1);
-            //e.Graphics.FillRectangle(Brushes.Gray, 0,       Height - 1, 1, 1);
             if (Image != null)
                 image.DrawImage(e.Graphics, (Height - (Math.Min(image.Width, Height - 4))) / 2, (Height - (Math.Min(image.Height, Height - 4))) / 2, Math.Min(image.Width, Height - 4), Math.Min(image.Height, Height - 4));
             e.Graphics.DrawString(Text, Font, Brushes.White, Height, Height / 2 - 7);
